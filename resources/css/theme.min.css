@@ -20509,7 +20509,7 @@ label.form-control {
 .navbar-brand-logo {
   width: 100%;
   min-width: 6.5rem;
-  max-width: 12rem;
+  max-width: 11rem;
 }
 .navbar-brand-logo-short {
   width: 100%;
@@ -21170,6 +21170,11 @@ label.form-control {
     border-right: 0.0625rem solid rgba(231, 234, 243, 0.7);
     height: 100%;
     content: "";
+  }
+}
+@media (max-width: 991.98px) {
+  .navbar-expand-lg .dropdown-menu {
+    background-color: #ffffff;
   }
 }
 @media (min-width: 992px) {

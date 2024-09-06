@@ -28,6 +28,8 @@
 @endsection
 
 @section('scripts')
+  <!-- JS Other Plugins -->
+
   <!-- JS Themes -->
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>
 

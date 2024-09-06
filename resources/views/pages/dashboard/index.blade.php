@@ -29,16 +29,6 @@
             <p class="page-header-text">Here's what's happening in CSTA - SPAM.</p>
           </div>
           <!-- End Col -->
-
-          <div class="col-auto">
-            <!-- Daterangepicker -->
-            <button class="btn btn-ghost-light btn-sm dropdown-toggle" id="js-daterangepicker-predefined">
-              <i class="bi-calendar-week"></i>
-              <span class="js-daterangepicker-predefined-preview ms-1"></span>
-            </button>
-            <!-- End Daterangepicker -->
-          </div>
-          <!-- End Col -->
         </div>
         <!-- End Row -->
       </div>
