@@ -2,8 +2,9 @@
   <div class="navbar-nav-wrap">
     <!-- Logo -->
     <a class="navbar-brand" href="/" aria-label="CSTA - SPAM">
-      <img class="navbar-brand-logo" data-hs-theme-appearance="default" src="{{ Vite::asset('resources/svg/logos/logo.svg') }}" alt="CSTA - SPAM Logo">
-      <img class="navbar-brand-logo" data-hs-theme-appearance="dark" src="{{ Vite::asset('resources/svg/logos-light/logo.svg') }}"
+      <img class="navbar-brand-logo" data-hs-theme-appearance="default" src="{{ Vite::asset('resources/svg/logos/logo-mini.svg') }}"
+        alt="CSTA - SPAM Logo">
+      <img class="navbar-brand-logo" data-hs-theme-appearance="dark" src="{{ Vite::asset('resources/svg/logos-light/logo-mini.svg') }}"
         alt="CSTA - SPAM Logo">
       <img class="navbar-brand-logo-mini" data-hs-theme-appearance="default" src="{{ Vite::asset('resources/svg/logos/logo-short.svg') }}"
         alt="CSTA - SPAM Logo">
