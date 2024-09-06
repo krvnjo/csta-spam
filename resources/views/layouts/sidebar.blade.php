@@ -60,63 +60,9 @@
               </a>
 
               <div class="nav-collapse collapse " id="navbarVerticalMenuPagesEcommerceMenu" data-bs-parent="#navbarVerticalMenuPagesMenu">
-                <a class="nav-link " href="#">Overview</a>
+                <a class="nav-link" href="/properties-assets/overview">Stock Masterlist</a>
 
-                <div id="navbarVerticalMenuPagesMenuEcommerce">
-                  <!-- Collapse -->
-                  <div class="nav-item">
-                    <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesEcommerceProductsMenu"
-                      href="#navbarVerticalMenuPagesEcommerceProductsMenu" role="button" aria-expanded="false"
-                      aria-controls="navbarVerticalMenuPagesEcommerceProductsMenu">
-                      Products
-                    </a>
-
-                    <div class="nav-collapse collapse " id="navbarVerticalMenuPagesEcommerceProductsMenu"
-                      data-bs-parent="#navbarVerticalMenuPagesMenuEcommerce">
-                      <a class="nav-link " href="#">Products</a>
-                      <a class="nav-link " href="#">Product Details</a>
-                      <a class="nav-link " href="#">Add Product</a>
-                    </div>
-                  </div>
-                  <!-- End Collapse -->
-
-                  <!-- Collapse -->
-                  <div class="nav-item">
-                    <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesEcommerceOrdersMenu"
-                      href="#navbarVerticalMenuPagesEcommerceOrdersMenu" role="button" aria-expanded="false"
-                      aria-controls="navbarVerticalMenuPagesEcommerceOrdersMenu">
-                      Orders
-                    </a>
-
-                    <div class="nav-collapse collapse " id="navbarVerticalMenuPagesEcommerceOrdersMenu"
-                      data-bs-parent="#navbarVerticalMenuPagesMenuEcommerce">
-                      <a class="nav-link " href="./ecommerce-orders.html">Orders</a>
-                      <a class="nav-link " href="./ecommerce-order-details.html">Order Details</a>
-                    </div>
-                  </div>
-                  <!-- End Collapse -->
-
-                  <!-- Collapse -->
-                  <div class="nav-item">
-                    <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesEcommerceCustomersMenu"
-                      href="#navbarVerticalMenuPagesEcommerceCustomersMenu" role="button" aria-expanded="false"
-                      aria-controls="navbarVerticalMenuPagesEcommerceCustomersMenu">
-                      Customers
-                    </a>
-
-                    <div class="nav-collapse collapse " id="navbarVerticalMenuPagesEcommerceCustomersMenu"
-                      data-bs-parent="#navbarVerticalMenuPagesMenuEcommerce">
-                      <a class="nav-link " href="./ecommerce-customers.html">Customers</a>
-                      <a class="nav-link " href="./ecommerce-customer-details.html">Customer Details</a>
-                      <a class="nav-link " href="./ecommerce-add-customers.html">Add Customers</a>
-                    </div>
-                  </div>
-                  <!-- End Collapse -->
-                </div>
-
-                <a class="nav-link " href="./ecommerce-referrals.html">Referrals</a>
-                <a class="nav-link " href="./ecommerce-manage-reviews.html">Manage Reviews</a>
-                <a class="nav-link " href="./ecommerce-checkout.html">Checkout</a>
+                <a class="nav-link" href="/properties-inventory/overview">Inventory Masterlist</a>
               </div>
             </div>
             <!-- End Property and Assets -->
