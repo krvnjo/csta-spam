@@ -1,0 +1,11 @@
+/* Custom CSS */
+.bg-custom-image {
+  background-image: url("../img/others/csta-dashboard.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 25rem;
+}
+.dt-width {
+  width: 80px;
+}
