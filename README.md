@@ -1,66 +1,95 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# CSTA - SPAM (Capstone Project)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+<img src="resources/img/github/banner-light.png" alt="Banner" style="width: 100%;">
 
-## About Laravel
+This capstone project is titled "SPAM: Systematized Property and Assets Management for Colegio de Sta. Teresa de Avila". It aims to create a management solution that improves the efficiency and accuracy of tracking the institution’s property, equipment, and assets. The system features QR code generation for streamlined tracking and prescriptive analytics for better decision-making. The study demonstrates how systematic asset management enhances operational efficiency, reduces errors, and supports optimal resource allocation.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Main Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Item Inventory Management
+- Forms/Requisitions Builder
+- Borrowing and Reservation
+- Repair Management
+- Dashboard w/ Prescriptive Analytics
+- Reports Generation
+- File Settings & Maintenance
+- Audit Trailing
 
-## Learning Laravel
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Tech Stack
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+**Frontend**
+- **Languages:** HTML, CSS, JavaScript
+- **CSS Framework:** [Bootstrap 5](https://getbootstrap.com/) (v5.2.2)
+- **JavaScript Library:** [jQuery](https://jquery.com/) (v3.6.0)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+**Backend**
+- **Framework:** [Laravel 11](https://laravel.com/) (v11.21.0)
+- **Language:** PHP (v8.2.12)
+- **Server:** [XAMPP](https://www.apachefriends.org/index.html)(v3.3.0) (includes [Apache](https://httpd.apache.org/) and [MySQL](https://www.mysql.com/) with [MariaDB](https://mariadb.org/) (v10.4.32))
 
-## Laravel Sponsors
+**DevOps**
+- **Version Control:** [Git](https://git-scm.com/) (v2.46.0)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+**Tools & Libraries**
+- **Package Managers:** [npm](https://www.npmjs.com/) (v10.8.1) and [Composer](https://getcomposer.org/) (v2.7.7)
+- **Code Editor:** [PHPStorm](https://www.jetbrains.com/phpstorm/) (v2024.2)
 
-### Premium Partners
+**Other Technologies**
+- **QR Code Generation:** [QRCode.js](https://github.com/davidshimjs/qrcodejs) / [Laravel QR Code](https://github.com/simple-qrcode)
+- **Hardware:** Thermal Printer, QR Code Scanner (optional)
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
 
-## Contributing
+## Clone the Repository/Run Locally
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Clone the project
 
-## Code of Conduct
+```bash
+  git clone https://github.com/krvnjo/csta-spam.git
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Install dependencies
 
-## Security Vulnerabilities
+```bash
+  npm install
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+  composer install
+```
 
-## License
+Copy the contents of .env.example
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+  cp .env.example .env
+```
+
+Generate a key
+
+```bash
+  php artisan key:generate
+```
+
+Migrate the database
+
+```bash
+  php artisan migrate
+```
+
+Run Vite
+
+```bash
+  npm run dev
+```
+
+Serve the project
+
+```bash
+  php artisan serve
+```
+
+
+## Authors/Developers
+
+- Joshua Trazen Achondo - [@JayTee69](https://www.github.com/JayTee69) (GitHub)
+- Rob Meynard Bunag - [@Roro2202](https://www.github.com/Roro2202) (GitHub)
+- Khervin John Quimora - [@krvnjo](https://www.github.com/krvnjo) (GitHub)
