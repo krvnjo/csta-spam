@@ -12,7 +12,7 @@ class PropertyParentController extends Controller
      */
     public function index()
     {
-        //
+        return view('pages.property-asset.overview');
     }
 
     /**
