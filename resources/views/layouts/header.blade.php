@@ -435,7 +435,7 @@
                     <i class="bi-brightness-high me-2"></i>
                     <span class="text-truncate" title="Default (light mode)">Default (light mode)</span>
                   </a>
-                  <a class="dropdown-item active" data-icon="bi-moon" data-value="dark" href="#">
+                  <a class="dropdown-item" data-icon="bi-moon" data-value="dark" href="#">
                     <i class="bi-moon me-2"></i>
                     <span class="text-truncate" title="Dark">Dark</span>
                   </a>
@@ -451,16 +451,16 @@
                 <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu"
                   aria-labelledby="navSubmenuPagesAccountDropdown2">
                   <a class="dropdown-item" href="#">
+                    <i class="bi-question-circle me-2"></i>
                     Need a Help?
-                    <i class="bi-box-arrow-in-up-right"></i>
                   </a>
                   <a class="dropdown-item" href="#">
+                    <i class="bi-info-circle me-2"></i>
                     FAQ List
-                    <i class="bi-box-arrow-in-up-right"></i>
                   </a>
                   <a class="dropdown-item" href="#">
+                    <i class="bi-flag me-2"></i>
                     Report a Problem
-                    <i class="bi-box-arrow-in-up-right"></i>
                   </a>
                 </div>
               </div>

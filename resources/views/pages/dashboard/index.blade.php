@@ -25,7 +25,8 @@
       <div class="page-header page-header-light">
         <div class="row align-items-center">
           <div class="col">
-            <h1 class="page-header-title">Dashboard</h1>
+            <h1 class="page-header-title">Good morning, User.</h1>
+            <p class="page-header-text">Here's what's happening in CSTA - SPAM.</p>
           </div>
           <!-- End Col -->
 
@@ -40,41 +41,6 @@
           <!-- End Col -->
         </div>
         <!-- End Row -->
-
-        <!-- Nav Scroller -->
-        <div class="js-nav-scroller hs-nav-scroller-horizontal">
-          <span class="hs-nav-scroller-arrow-prev hs-nav-scroller-arrow-dark-prev" style="display: none;">
-            <a class="hs-nav-scroller-arrow-link" href="javascript:">
-              <i class="bi-chevron-left"></i>
-            </a>
-          </span>
-
-          <span class="hs-nav-scroller-arrow-next hs-nav-scroller-arrow-dark-next" style="display: none;">
-            <a class="hs-nav-scroller-arrow-link" href="javascript:">
-              <i class="bi-chevron-right"></i>
-            </a>
-          </span>
-
-          <!-- Nav -->
-          <ul class="nav nav-tabs nav-tabs-light page-header-tabs" id="pageHeaderTab" role="tablist">
-            <li class="nav-item">
-              <a class="nav-link active" href="javascript:">Overview</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link disabled" href="javascript:">Status</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link disabled" href="javascript:">
-                Sessions
-                <span class="badge bg-warning text-dark rounded-pill ms-1">
-                  <i class="bi-exclamation-triangle-fill me-1"></i> Verification required
-                </span>
-              </a>
-            </li>
-          </ul>
-          <!-- End Nav -->
-        </div>
-        <!-- End Nav Scroller -->
       </div>
       <!-- End Page Header -->
     </div>
