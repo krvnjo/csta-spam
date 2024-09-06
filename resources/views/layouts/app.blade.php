@@ -20,10 +20,12 @@
 
     <!-- JS Window Config and Appearance -->
     <script src="{{ Vite::asset('resources/js/hs-window-config') }}"></script>
-    <script src="{{ Vite::asset('resources/js/hs.theme-appearance.js') }}"></script>
-    <script src="{{ Vite::asset('resources/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js') }}"></script>
   </head>
   <body class="has-navbar-vertical-aside navbar-vertical-aside-show-xl footer-offset">
+    <!-- JS Appearance -->
+    <script src="{{ Vite::asset('resources/js/hs.theme-appearance.js') }}"></script>
+    <script src="{{ Vite::asset('resources/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js') }}"></script>
+
     <!-- ========== Header ========== -->
     @yield('header')
     <!-- ========== End Header ========== -->
