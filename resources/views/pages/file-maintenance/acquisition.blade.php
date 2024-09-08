@@ -111,16 +111,12 @@
         <!-- Header -->
         <div class="card-header card-header-content-md-between">
           <div class="mb-2 mb-md-0">
-            <form>
-              <!-- Search -->
-              <div class="input-group input-group-merge input-group-flush">
-                <div class="input-group-prepend input-group-text">
-                  <i class="bi-search"></i>
-                </div>
-                <input class="form-control" id="acquisitionDatatableSearch" type="search" aria-label="Search" placeholder="Search">
+            <div class="input-group input-group-merge input-group-flush">
+              <div class="input-group-prepend input-group-text">
+                <i class="bi-search"></i>
               </div>
-              <!-- End Search -->
-            </form>
+              <input class="form-control" id="acquisitionDatatableSearch" type="search" aria-label="Search" placeholder="Search">
+            </div>
           </div>
 
           <div class="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
@@ -266,7 +262,7 @@
                     <label class="form-check-label" for="acquisitionDatatableCheckAll"></label>
                   </div>
                 </th>
-                <th style="width: 25%;">Acquisitions Name</th>
+                <th style="width: 25%;">Acquisition Name</th>
                 <th>Date Created</th>
                 <th>Status</th>
                 <th style="width: 15%;">Action</th>
@@ -371,8 +367,7 @@
 @endsection
 
 @section('sub-content')
-  <x-file-maintenance.add-department />
-  <x-file-maintenance.edit-department />
+  {{-- No Secondary Content --}}
 @endsection
 
 @section('scripts')
@@ -464,8 +459,13 @@
           elVal = $this.val(),
           targetColumnIndex = $this.data("target-column-index");
 
-        // Perform the filtering on the datatable
-        datatable.column(targetColumnIndex).search(elVal).draw();
+        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+          const cellContent = $(datatable.cell(dataIndex, targetColumnIndex).node()).text().trim();
+          return elVal === '' || cellContent === elVal;
+        });
+
+        datatable.draw();
+        $.fn.dataTable.ext.search.pop();
 
         // Update the filter count badge
         let selectedFilterCount = 0;
@@ -477,7 +477,6 @@
           }
         });
 
-        // Show or hide the badge based on the filter count
         const $badge = $('#filterCountBadge');
         if (selectedFilterCount > 0) {
           $badge.text(selectedFilterCount).show();

@@ -129,7 +129,11 @@
                 <a class="nav-link" href="/file-maintenance/acquisitions">Acquisitions</a>
                 <a class="nav-link" href="/file-maintenance/brands">Brands</a>
                 <a class="nav-link" href="/file-maintenance/categories">Categories</a>
+                <a class="nav-link" href="/file-maintenance/conditions">Conditions</a>
+                <a class="nav-link" href="/file-maintenance/designations">Designations</a>
                 <a class="nav-link" href="/file-maintenance/departments">Departments</a>
+                <a class="nav-link" href="/file-maintenance/statuses">Statuses</a>
+                <a class="nav-link" href="/file-maintenance/subcategories">Subcategories</a>
               </div>
             </div>
           </div>
