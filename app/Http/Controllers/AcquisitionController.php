@@ -12,7 +12,15 @@ class AcquisitionController extends Controller
      */
     public function index()
     {
-        //
+        $acquisitions = Acquisition::query()->orderBy('name')->get();
+        $totalAcquisitions = $acquisitions->count();
+        $activeAcquisitions = $acquisitions->where('is_active', 1)->count();
+        $inactiveAcquisitions = $acquisitions->where('is_active', 0)->count();
+
+        $activePercentage = $totalAcquisitions > 0 ? ($activeAcquisitions / $totalAcquisitions) * 100 : 0;
+        $inactivePercentage = $totalAcquisitions > 0 ? ($inactiveAcquisitions / $totalAcquisitions) * 100 : 0;
+
+        return view('pages.file-maintenance.acquisition', compact('acquisitions', 'totalAcquisitions', 'activeAcquisitions', 'inactiveAcquisitions', 'activePercentage', 'inactivePercentage'));
     }
 
     /**

@@ -17,9 +17,8 @@ class DepartmentController extends Controller
         $activeDepartments = $departments->where('is_active', 1)->count();
         $inactiveDepartments = $departments->where('is_active', 0)->count();
 
-        $total = $totalDepartments;
-        $activePercentage = $total > 0 ? ($activeDepartments / $total) * 100 : 0;
-        $inactivePercentage = $total > 0 ? ($inactiveDepartments / $total) * 100 : 0;
+        $activePercentage = $totalDepartments > 0 ? ($activeDepartments / $totalDepartments) * 100 : 0;
+        $inactivePercentage = $totalDepartments > 0 ? ($inactiveDepartments / $totalDepartments) * 100 : 0;
 
         return view('pages.file-maintenance.department', compact('departments', 'totalDepartments', 'activeDepartments', 'inactiveDepartments', 'activePercentage', 'inactivePercentage'));
     }
