@@ -12,7 +12,15 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $categories = Category::query()->orderBy('name')->get();
+        $totalCategories = $categories->count();
+        $activeCategories = $categories->where('is_active', 1)->count();
+        $inactiveCategories = $categories->where('is_active', 0)->count();
+
+        $activePercentage = $totalCategories > 0 ? ($activeCategories / $totalCategories) * 100 : 0;
+        $inactivePercentage = $totalCategories > 0 ? ($inactiveCategories / $totalCategories) * 100 : 0;
+
+        return view('pages.file-maintenance.category', compact('categories', 'totalCategories', 'activeCategories', 'inactiveCategories', 'activePercentage', 'inactivePercentage'));
     }
 
     /**

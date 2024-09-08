@@ -200,7 +200,7 @@
                         <div class="col">
                           <!-- Select -->
                           <div class="tom-select-custom">
-                            <select class="js-select js-datatable-filter form-select form-select-sm" data-target-column-index="4"
+                            <select class="js-select js-datatable-filter form-select form-select-sm" data-target-column-index="3"
                               data-hs-tom-select-options='{
                                 "placeholder": "All Status",
                                 "hideSearch": true,

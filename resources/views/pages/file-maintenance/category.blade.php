@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-  Departments
+  Categories
 @endsection
 
 @section('styles')
@@ -28,18 +28,18 @@
               <ol class="breadcrumb breadcrumb-no-gutter">
                 <li class="breadcrumb-item"><a class="breadcrumb-link" href="/">Home</a></li>
                 <li class="breadcrumb-item"><a class="breadcrumb-link">File Maintenance</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Departments</li>
+                <li class="breadcrumb-item active" aria-current="page">Categories</li>
               </ol>
             </nav>
 
-            <h1 class="page-header-title mt-2">Departments</h1>
+            <h1 class="page-header-title mt-2">Categories</h1>
           </div>
           <!-- End Col -->
 
           <div class="col-sm-auto mt-sm-0 mt-3">
             <div class="d-grid gap-2 d-sm-flex justify-content-sm-end">
-              <button class="btn btn-primary w-100 w-sm-auto" data-bs-toggle="modal" data-bs-target="#addDepartmentModal">
-                <i class="bi-plus me-1"></i> Add a Department
+              <button class="btn btn-primary w-100 w-sm-auto" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+                <i class="bi-plus me-1"></i> Add a Category
               </button>
             </div>
           </div>
@@ -55,20 +55,20 @@
         <div class="card-body">
           <div class="d-flex flex-column flex-md-row align-items-md-center text-md-start text-center">
             <div class="flex-shrink-0">
-              <span class="display-3 text-dark">{{ $totalDepartments }}</span>
+              <span class="display-3 text-dark">{{ $totalCategories }}</span>
             </div>
 
             <div class="flex-grow-1 ms-md-3 my-1 mt-md-0">
               <div class="row">
                 <div class="col-12 col-md">
-                  <span class="d-block">Total Departments</span>
+                  <span class="d-block">Total Categories</span>
                   <span class="badge bg-soft-primary text-primary rounded-pill p-1">
-                    @if ($inactiveDepartments == 0)
+                    @if ($inactiveCategories == 0)
                       <i class="bi-hand-thumbs-up-fill"></i> All good!
-                    @elseif($inactiveDepartments == 1)
+                    @elseif($inactiveCategories == 1)
                       <i class="bi-arrow-clockwise"></i> 1 record can be restored
                     @else
-                      <i class="bi-arrow-clockwise"></i> {{ $inactiveDepartments }} records can be restored
+                      <i class="bi-arrow-clockwise"></i> {{ $inactiveCategories }} records can be restored
                     @endif
                   </span>
                 </div>
@@ -78,12 +78,12 @@
                   <div class="d-flex justify-content-center justify-content-md-start mb-2">
                     <div class="me-3">
                       <span class="legend-indicator bg-success"></span>
-                      Active ({{ $activeDepartments }})
+                      Active ({{ $activeCategories }})
                     </div>
 
                     <div>
                       <span class="legend-indicator bg-danger"></span>
-                      Inactive ({{ $inactiveDepartments }})
+                      Inactive ({{ $inactiveCategories }})
                     </div>
                   </div>
 
@@ -115,16 +115,16 @@
               <div class="input-group-prepend input-group-text">
                 <i class="bi-search"></i>
               </div>
-              <input class="form-control" id="departmentDatatableSearch" type="search" aria-label="Search" placeholder="Search">
+              <input class="form-control" id="categoryDatatableSearch" type="search" aria-label="Search" placeholder="Search">
             </div>
           </div>
 
           <div class="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
             <!-- Datatable Info -->
-            <div id="departmentDatatableCounterInfo" style="display: none;">
+            <div id="categoryDatatableCounterInfo" style="display: none;">
               <div class="d-flex align-items-center">
                 <span class="fs-5 me-3">
-                  <span id="departmentDatatableCounter">0</span>
+                  <span id="categoryDatatableCounter">0</span>
                   Selected
                 </span>
                 <a class="btn btn-outline-danger btn-sm" href="#">
@@ -136,12 +136,12 @@
 
             <!-- Dropdown -->
             <div class="dropdown">
-              <button class="btn btn-white btn-sm dropdown-toggle w-100" id="departmentExportDropdown" data-bs-toggle="dropdown" type="button"
+              <button class="btn btn-white btn-sm dropdown-toggle w-100" id="categoryExportDropdown" data-bs-toggle="dropdown" type="button"
                 aria-expanded="false">
                 <i class="bi-download me-2"></i> Export
               </button>
 
-              <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="departmentExportDropdown">
+              <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="categoryExportDropdown">
                 <span class="dropdown-header">Options</span>
                 <a class="dropdown-item" id="export-copy" href="#">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/copy-icon.svg') }}"
@@ -176,17 +176,17 @@
 
             <!-- Dropdown -->
             <div class="dropdown">
-              <button class="btn btn-white btn-sm w-100" id="departmentFilterDropdown" data-bs-toggle="dropdown" type="button"
+              <button class="btn btn-white btn-sm w-100" id="categoryFilterDropdown" data-bs-toggle="dropdown" type="button"
                 aria-expanded="false">
                 <i class="bi-filter me-1"></i> Filter <span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="filterCountBadge"></span>
               </button>
 
-              <div class="dropdown-menu dropdown-menu-sm-end dropdown-card card-dropdown-filter-centered" aria-labelledby="departmentFilterDropdown"
+              <div class="dropdown-menu dropdown-menu-sm-end dropdown-card card-dropdown-filter-centered" aria-labelledby="categoryFilterDropdown"
                 style="min-width: 22rem;">
                 <!-- Card -->
                 <div class="card">
                   <div class="card-header card-header-content-between">
-                    <h5 class="card-header-title">Department Filters</h5>
+                    <h5 class="card-header-title">Category Filters</h5>
 
                     <button class="btn btn-ghost-secondary btn-icon btn-sm ms-2" type="button">
                       <i class="bi-x-lg"></i>
@@ -201,7 +201,7 @@
                         <div class="col">
                           <!-- Select -->
                           <div class="tom-select-custom">
-                            <select class="js-select js-datatable-filter form-select form-select-sm" data-target-column-index="4"
+                            <select class="js-select js-datatable-filter form-select form-select-sm" data-target-column-index="3"
                               data-hs-tom-select-options='{
                                 "placeholder": "All Status",
                                 "hideSearch": true,
@@ -237,33 +237,32 @@
         <!-- Table -->
         <div class="table-responsive datatable-custom">
           <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table"
-            id="departmentDatatable"
+            id="categoryDatatable"
             data-hs-datatables-options='{
               "columnDefs": [{
-                 "targets": [0, 5],
+                 "targets": [0, 4],
                  "orderable": false
                }],
               "order": [1, "asc"],
               "info": {
-                "totalQty": "#departmentDatatableWithPagination"
+                "totalQty": "#categoryDatatableWithPagination"
               },
-              "search": "#departmentDatatableSearch",
-              "entries": "#departmentDatatableEntries",
+              "search": "#categoryDatatableSearch",
+              "entries": "#categoryDatatableEntries",
               "pageLength": 5,
               "isResponsive": false,
               "isShowPaging": false,
-              "pagination": "departmentDatatablePagination"
+              "pagination": "categoryDatatablePagination"
             }'>
             <thead class="thead-light">
               <tr>
                 <th class="table-column-pe-0">
                   <div class="form-check">
-                    <input class="form-check-input" id="departmentDatatableCheckAll" type="checkbox" value="">
-                    <label class="form-check-label" for="departmentDatatableCheckAll"></label>
+                    <input class="form-check-input" id="categoryDatatableCheckAll" type="checkbox" value="">
+                    <label class="form-check-label" for="categoryDatatableCheckAll"></label>
                   </div>
                 </th>
-                <th style="width: 25%;">Department Name</th>
-                <th style="width: 20%;">Department Code</th>
+                <th style="width: 25%;">Category Name</th>
                 <th>Date Created</th>
                 <th>Status</th>
                 <th style="width: 15%;">Action</th>
@@ -271,19 +270,18 @@
             </thead>
 
             <tbody>
-              @foreach ($departments as $department)
+              @foreach ($categories as $category)
                 <tr>
                   <td class="table-column-pe-0">
                     <div class="form-check">
-                      <input class="form-check-input" id="departmentCheck" type="checkbox" value="">
-                      <label class="form-check-label" for="departmentCheck"></label>
+                      <input class="form-check-input" id="categoryCheck" type="checkbox" value="">
+                      <label class="form-check-label" for="categoryCheck"></label>
                     </div>
                   </td>
-                  <td><span class="d-block h5 mb-0">{{ $department->name }}</span></td>
-                  <td>{{ $department->dept_code }}</td>
-                  <td><i class="bi-calendar-event me-1"></i> {{ $department->created_at->format('M d, Y') }}</td>
+                  <td><span class="d-block h5 mb-0">{{ $category->name }}</span></td>
+                  <td><i class="bi-calendar-event me-1"></i> {{ $category->created_at->format('M d, Y') }}</td>
                   <td>
-                    @if ($department->is_active)
+                    @if ($category->is_active)
                       <span class="legend-indicator bg-success"></span> Active
                     @else
                       <span class="legend-indicator bg-danger"></span> Inactive
@@ -291,14 +289,14 @@
                   </td>
                   <td>
                     <div class="dropdown position-static">
-                      <button class="btn btn-white btn-sm" id="departmentDropdownActions" data-bs-toggle="dropdown" type="button"
+                      <button class="btn btn-white btn-sm" id="categoryDropdownActions" data-bs-toggle="dropdown" type="button"
                         aria-expanded="false">
                         More <i class="bi-chevron-down ms-1"></i>
                       </button>
 
-                      <div class="dropdown-menu dropdown-menu-sm dropdown-menu-end" aria-labelledby="departmentDropdownActions">
+                      <div class="dropdown-menu dropdown-menu-sm dropdown-menu-end" aria-labelledby="categoryDropdownActions">
                         <button class="dropdown-item" type="button" href="#"><i class="bi-pencil-square me-2"></i> Edit Record</button>
-                        @if ($department->is_active)
+                        @if ($category->is_active)
                           <button class="dropdown-item" type="button" href="#"><i class="bi-x-circle me-2"></i> Set to Inactive</button>
                         @else
                           <button class="dropdown-item" type="button" href="#"><i class="bi-check-circle me-2"></i> Set to Active</button>
@@ -324,7 +322,7 @@
 
                 <!-- Select -->
                 <div class="tom-select-custom tom-page-w">
-                  <select class="js-select form-select form-select-borderless" id="departmentDatatableEntries"
+                  <select class="js-select form-select form-select-borderless" id="categoryDatatableEntries"
                     data-hs-tom-select-options='{
                       "searchInDropdown": false,
                       "hideSearch": true
@@ -341,7 +339,7 @@
                 <span class="text-secondary me-2">of</span>
 
                 <!-- Pagination Quantity -->
-                <span id="departmentDatatableWithPagination"></span>
+                <span id="categoryDatatableWithPagination"></span>
               </div>
             </div>
             <!-- End Col -->
@@ -349,7 +347,7 @@
             <div class="col-sm-auto">
               <div class="d-flex justify-content-center justify-content-sm-end">
                 <!-- Pagination -->
-                <nav id="departmentDatatablePagination" aria-label="Activity pagination"></nav>
+                <nav id="categoryDatatablePagination" aria-label="Activity pagination"></nav>
               </div>
             </div>
             <!-- End Col -->
@@ -369,8 +367,7 @@
 @endsection
 
 @section('sub-content')
-  <x-file-maintenance.add-department />
-  <x-file-maintenance.edit-department />
+  {{-- No Secondary Content --}}
 @endsection
 
 @section('scripts')
@@ -394,7 +391,7 @@
   <script>
     // Initialization of Datatables
     $(document).on('ready', function() {
-      HSCore.components.HSDatatables.init($('#departmentDatatable'), {
+      HSCore.components.HSDatatables.init($('#categoryDatatable'), {
         dom: 'Bfrtip',
         buttons: [{
             extend: 'copy',
@@ -421,9 +418,9 @@
           style: 'multi',
           selector: 'td:first-child input[type="checkbox"]',
           classMap: {
-            checkAll: '#departmentDatatableCheckAll',
-            counter: '#departmentDatatableCounter',
-            counterInfo: '#departmentDatatableCounterInfo'
+            checkAll: '#categoryDatatableCheckAll',
+            counter: '#categoryDatatableCounter',
+            counterInfo: '#categoryDatatableCounterInfo'
           }
         },
         language: {
