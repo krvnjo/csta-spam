@@ -5,6 +5,7 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ConditionController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\PropertyParentController;
 use Illuminate\Support\Facades\Route;
 
@@ -47,6 +48,11 @@ Route::controller(ConditionController::class)->group(function () {
 // Department Routes
 Route::controller(DepartmentController::class)->group(function () {
     Route::get('/file-maintenance/departments', 'index')->name('department.index');
+});
+
+// Designation Routes
+Route::controller(DesignationController::class)->group(function () {
+    Route::get('/file-maintenance/designations', 'index')->name('designation.index');
 });
 
 // ============ End File Maintenance Routes ============ //

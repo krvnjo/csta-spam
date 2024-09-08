@@ -12,6 +12,13 @@ class Designation extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'designations';
+
+    protected $fillable = [
+        'name',
+        'dept_id'
+    ];
+
     public function department(): BelongsTo {
         return $this->belongsTo(Department::class, 'dept_id', 'id');
     }
