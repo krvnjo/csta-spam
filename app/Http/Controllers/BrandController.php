@@ -12,7 +12,7 @@ class BrandController extends Controller
      */
     public function index()
     {
-        $brands = Brand::query()->orderBy('name')->get();
+        $brands = Brand::query()->get();
         $totalBrands = $brands->count();
         $activeBrands = $brands->where('is_active', 1)->count();
         $inactiveBrands = $brands->where('is_active', 0)->count();

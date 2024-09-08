@@ -30,6 +30,7 @@ Route::controller(PropertyParentController::class)->group(function () {
 // Acquisition Routes
 Route::controller(AcquisitionController::class)->group(function () {
     Route::get('/file-maintenance/acquisitions', 'index')->name('acquisition.index');
+    Route::post('/file-maintenance/acquisitions', 'store')->name('acquisition.store');
 });
 
 // Brand Routes

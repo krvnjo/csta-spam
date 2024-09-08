@@ -16,6 +16,7 @@ class Acquisition extends Model
     protected $fillable = [
         'name'
     ];
+
     public function property_children(): HasMany {
         return $this->hasMany(PropertyChild::class, 'acqui_id');
     }

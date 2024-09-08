@@ -109,9 +109,9 @@
             </a>
 
             <div class="nav-collapse collapse" id="navbarVerticalMenuUserManagement" data-bs-parent="#navbarVerticalMenu">
-              <a class="nav-link" href="#">User Overview</a>
-              <a class="nav-link" href="#">Add User</a>
+              <a class="nav-link" href="#">Users</a>
               <a class="nav-link" href="#">Roles</a>
+              <a class="nav-link" href="#">Permissions</a>
             </div>
           </div>
           <!-- End User Management -->

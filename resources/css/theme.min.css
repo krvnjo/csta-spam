@@ -20021,6 +20021,9 @@ label.form-control {
   z-index: 2;
   margin-top: -3rem;
 }
+.modal-top-cover path {
+  fill: #ffffff;
+}
 .nav-subtitle {
   display: block;
   color: #8c98a4;

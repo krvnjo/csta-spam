@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-  Acquisitions
+  Subcategories
 @endsection
 
 @section('styles')
@@ -28,18 +28,18 @@
               <ol class="breadcrumb breadcrumb-no-gutter">
                 <li class="breadcrumb-item"><a class="breadcrumb-link" href="/">Home</a></li>
                 <li class="breadcrumb-item"><a class="breadcrumb-link">File Maintenance</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Acquisitions</li>
+                <li class="breadcrumb-item active" aria-current="page">Subcategories</li>
               </ol>
             </nav>
 
-            <h1 class="page-header-title mt-2">Acquisitions</h1>
+            <h1 class="page-header-title mt-2">Subcategories</h1>
           </div>
           <!-- End Col -->
 
           <div class="col-sm-auto mt-sm-0 mt-3">
             <div class="d-grid gap-2 d-sm-flex justify-content-sm-end">
-              <button class="btn btn-primary w-100 w-sm-auto" data-bs-toggle="modal" data-bs-target="#addAcquisitionModal">
-                <i class="bi-plus me-1"></i> Add a Acquisition
+              <button class="btn btn-primary w-100 w-sm-auto" data-bs-toggle="modal" data-bs-target="#addSubcategoryModal">
+                <i class="bi-plus me-1"></i> Add a Subcategory
               </button>
             </div>
           </div>
@@ -55,20 +55,20 @@
         <div class="card-body">
           <div class="d-flex flex-column flex-md-row align-items-md-center text-md-start text-center">
             <div class="flex-shrink-0">
-              <span class="display-3 text-dark">{{ $totalAcquisitions }}</span>
+              <span class="display-3 text-dark">{{ $totalSubcategories }}</span>
             </div>
 
             <div class="flex-grow-1 ms-md-3 my-1 mt-md-0">
               <div class="row">
                 <div class="col-12 col-md">
-                  <span class="d-block">Total Acquisitions</span>
+                  <span class="d-block">Total Subcategories</span>
                   <span class="badge bg-soft-primary text-primary rounded-pill p-1">
-                    @if ($inactiveAcquisitions == 0)
+                    @if ($inactiveSubcategories == 0)
                       <i class="bi-hand-thumbs-up-fill"></i> All good!
-                    @elseif($inactiveAcquisitions == 1)
+                    @elseif($inactiveSubcategories == 1)
                       <i class="bi-arrow-clockwise"></i> 1 record can be restored
                     @else
-                      <i class="bi-arrow-clockwise"></i> {{ $inactiveAcquisitions }} records can be restored
+                      <i class="bi-arrow-clockwise"></i> {{ $inactiveSubcategories }} records can be restored
                     @endif
                   </span>
                 </div>
@@ -78,12 +78,12 @@
                   <div class="d-flex justify-content-center justify-content-md-start mb-2">
                     <div class="me-3">
                       <span class="legend-indicator bg-success"></span>
-                      Active ({{ $activeAcquisitions }})
+                      Active ({{ $activeSubcategories }})
                     </div>
 
                     <div>
                       <span class="legend-indicator bg-danger"></span>
-                      Inactive ({{ $inactiveAcquisitions }})
+                      Inactive ({{ $inactiveSubcategories }})
                     </div>
                   </div>
 
@@ -115,16 +115,16 @@
               <div class="input-group-prepend input-group-text">
                 <i class="bi-search"></i>
               </div>
-              <input class="form-control" id="acquisitionDatatableSearch" type="search" aria-label="Search" placeholder="Search">
+              <input class="form-control" id="subcategoryDatatableSearch" type="search" aria-label="Search" placeholder="Search">
             </div>
           </div>
 
           <div class="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
             <!-- Datatable Info -->
-            <div id="acquisitionDatatableCounterInfo" style="display: none;">
+            <div id="subcategoryDatatableCounterInfo" style="display: none;">
               <div class="d-flex align-items-center">
                 <span class="fs-5 me-3">
-                  <span id="acquisitionDatatableCounter">0</span>
+                  <span id="subcategoryDatatableCounter">0</span>
                   Selected
                 </span>
                 <a class="btn btn-outline-danger btn-sm" href="#">
@@ -136,12 +136,12 @@
 
             <!-- Dropdown -->
             <div class="dropdown">
-              <button class="btn btn-white btn-sm dropdown-toggle w-100" id="acquisitionExportDropdown" data-bs-toggle="dropdown" type="button"
+              <button class="btn btn-white btn-sm dropdown-toggle w-100" id="subcategoryExportDropdown" data-bs-toggle="dropdown" type="button"
                 aria-expanded="false">
                 <i class="bi-download me-2"></i> Export
               </button>
 
-              <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="acquisitionExportDropdown">
+              <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="subcategoryExportDropdown">
                 <span class="dropdown-header">Options</span>
                 <a class="dropdown-item" id="export-copy" href="#">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/copy-icon.svg') }}"
@@ -176,17 +176,17 @@
 
             <!-- Dropdown -->
             <div class="dropdown">
-              <button class="btn btn-white btn-sm w-100" id="acquisitionFilterDropdown" data-bs-toggle="dropdown" type="button"
+              <button class="btn btn-white btn-sm w-100" id="subcategoryFilterDropdown" data-bs-toggle="dropdown" type="button"
                 aria-expanded="false">
                 <i class="bi-filter me-1"></i> Filter <span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="filterCountBadge"></span>
               </button>
 
-              <div class="dropdown-menu dropdown-menu-sm-end dropdown-card card-dropdown-filter-centered" aria-labelledby="acquisitionFilterDropdown"
+              <div class="dropdown-menu dropdown-menu-sm-end dropdown-card card-dropdown-filter-centered" aria-labelledby="subcategoryFilterDropdown"
                 style="min-width: 22rem;">
                 <!-- Card -->
                 <div class="card">
                   <div class="card-header card-header-content-between">
-                    <h5 class="card-header-title">Acquisition Filters</h5>
+                    <h5 class="card-header-title">Subcategory Filters</h5>
 
                     <button class="btn btn-ghost-secondary btn-icon btn-sm ms-2" type="button">
                       <i class="bi-x-lg"></i>
@@ -201,7 +201,7 @@
                         <div class="col">
                           <!-- Select -->
                           <div class="tom-select-custom">
-                            <select class="js-select js-datatable-filter form-select form-select-sm" data-target-column-index="3"
+                            <select class="js-select js-datatable-filter form-select form-select-sm" data-target-column-index="4"
                               data-hs-tom-select-options='{
                                 "placeholder": "All Status",
                                 "hideSearch": true,
@@ -237,53 +237,53 @@
         <!-- Table -->
         <div class="table-responsive datatable-custom">
           <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table"
-            id="acquisitionDatatable"
+            id="subcategoryDatatable"
             data-hs-datatables-options='{
               "columnDefs": [{
-                 "targets": [0, 4],
+                 "targets": [0, 5],
                  "orderable": false
                }],
-              "order": [2, "asc"],
+              "order": [1, "asc"],
               "info": {
-                "totalQty": "#acquisitionDatatableWithPagination"
+                "totalQty": "#subcategoryDatatableWithPagination"
               },
-              "search": "#acquisitionDatatableSearch",
-              "entries": "#acquisitionDatatableEntries",
+              "search": "#subcategoryDatatableSearch",
+              "entries": "#subcategoryDatatableEntries",
               "pageLength": 5,
               "isResponsive": false,
               "isShowPaging": false,
-              "pagination": "acquisitionDatatablePagination"
+              "pagination": "subcategoryDatatablePagination"
             }'>
             <thead class="thead-light">
               <tr>
                 <th class="table-column-pe-0">
                   <div class="form-check">
-                    <input class="form-check-input" id="acquisitionDatatableCheckAll" type="checkbox" value="">
-                    <label class="form-check-label" for="acquisitionDatatableCheckAll"></label>
+                    <input class="form-check-input" id="subcategoryDatatableCheckAll" type="checkbox" value="">
+                    <label class="form-check-label" for="subcategoryDatatableCheckAll"></label>
                   </div>
                 </th>
-                <th style="width: 25%;">Acquisition Name</th>
-                <th>Date Created</th>
-                <th>Status</th>
+                <th style="width: 20%;">Subcategory Name</th>
+                <th>Main Category</th>
+                <th style="width: 20%;">Date Created</th>
+                <th style="width: 15%;">Status</th>
                 <th style="width: 15%;">Action</th>
               </tr>
             </thead>
 
             <tbody>
-              @foreach ($acquisitions as $acquisition)
+              @foreach ($subcategories as $subcategory)
                 <tr>
                   <td class="table-column-pe-0">
                     <div class="form-check">
-                      <input class="form-check-input" id="acquisitionCheck" type="checkbox" value="">
-                      <label class="form-check-label" for="acquisitionCheck"></label>
+                      <input class="form-check-input" id="subcategoryCheck" type="checkbox" value="">
+                      <label class="form-check-label" for="subcategoryCheck"></label>
                     </div>
                   </td>
-                  <td><span class="d-block h5 mb-0">{{ $acquisition->name }}</span></td>
-                  <td><i class="bi-calendar-event me-1"></i>
-                    <div class="d-none">{{ $acquisition->created_at }}</div>{{ $acquisition->created_at->format('M d, Y') }}
-                  </td>
+                  <td><span class="d-block h5 mb-0">{{ $subcategory->name }}</span></td>
+                  <td>{{ $subcategory->category->name }}</td>
+                  <td><i class="bi-calendar-event me-1"></i> {{ $subcategory->created_at->format('M d, Y') }}</td>
                   <td>
-                    @if ($acquisition->is_active)
+                    @if ($subcategory->is_active)
                       <span class="legend-indicator bg-success"></span> Active
                     @else
                       <span class="legend-indicator bg-danger"></span> Inactive
@@ -291,14 +291,14 @@
                   </td>
                   <td>
                     <div class="dropdown position-static">
-                      <button class="btn btn-white btn-sm" id="acquisitionDropdownActions" data-bs-toggle="dropdown" type="button"
+                      <button class="btn btn-white btn-sm" id="subcategoryDropdownActions" data-bs-toggle="dropdown" type="button"
                         aria-expanded="false">
                         More <i class="bi-chevron-down ms-1"></i>
                       </button>
 
-                      <div class="dropdown-menu dropdown-menu-sm dropdown-menu-end" aria-labelledby="acquisitionDropdownActions">
+                      <div class="dropdown-menu dropdown-menu-sm dropdown-menu-end" aria-labelledby="subcategoryDropdownActions">
                         <button class="dropdown-item" type="button" href="#"><i class="bi-pencil-square me-2"></i> Edit Record</button>
-                        @if ($acquisition->is_active)
+                        @if ($subcategory->is_active)
                           <button class="dropdown-item" type="button" href="#"><i class="bi-x-circle me-2"></i> Set to Inactive</button>
                         @else
                           <button class="dropdown-item" type="button" href="#"><i class="bi-check-circle me-2"></i> Set to Active</button>
@@ -324,7 +324,7 @@
 
                 <!-- Select -->
                 <div class="tom-select-custom tom-page-w">
-                  <select class="js-select form-select form-select-borderless" id="acquisitionDatatableEntries"
+                  <select class="js-select form-select form-select-borderless" id="subcategoryDatatableEntries"
                     data-hs-tom-select-options='{
                       "searchInDropdown": false,
                       "hideSearch": true
@@ -341,7 +341,7 @@
                 <span class="text-secondary me-2">of</span>
 
                 <!-- Pagination Quantity -->
-                <span id="acquisitionDatatableWithPagination"></span>
+                <span id="subcategoryDatatableWithPagination"></span>
               </div>
             </div>
             <!-- End Col -->
@@ -349,7 +349,7 @@
             <div class="col-sm-auto">
               <div class="d-flex justify-content-center justify-content-sm-end">
                 <!-- Pagination -->
-                <nav id="acquisitionDatatablePagination" aria-label="Activity pagination"></nav>
+                <nav id="subcategoryDatatablePagination" aria-label="Activity pagination"></nav>
               </div>
             </div>
             <!-- End Col -->
@@ -369,7 +369,7 @@
 @endsection
 
 @section('sub-content')
-  <x-file-maintenance.add-acquisition />
+  {{-- No Secondary Content --}}
 @endsection
 
 @section('scripts')
@@ -386,9 +386,6 @@
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
 
-  <!-- JS Modules -->
-  <script src="{{ Vite::asset('resources/js/modules/file-maintenance/acquisition-crud.js') }}"></script>
-
   <!-- JS Themes -->
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>
 
@@ -396,7 +393,7 @@
   <script>
     // Initialization of Datatables
     $(document).on('ready', function() {
-      HSCore.components.HSDatatables.init($('#acquisitionDatatable'), {
+      HSCore.components.HSDatatables.init($('#subcategoryDatatable'), {
         dom: 'Bfrtip',
         buttons: [{
             extend: 'copy',
@@ -423,9 +420,9 @@
           style: 'multi',
           selector: 'td:first-child input[type="checkbox"]',
           classMap: {
-            checkAll: '#acquisitionDatatableCheckAll',
-            counter: '#acquisitionDatatableCounter',
-            counterInfo: '#acquisitionDatatableCounterInfo'
+            checkAll: '#subcategoryDatatableCheckAll',
+            counter: '#subcategoryDatatableCounter',
+            counterInfo: '#subcategoryDatatableCounterInfo'
           }
         },
         language: {

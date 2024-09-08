@@ -33,3 +33,13 @@ navLinks.forEach((link) => {
   }
 });
 // ============ End Show Active Links JS ============ //
+
+// ============ Remove invalid validation on focus JS ============ //
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("input").forEach((input) => {
+    input.addEventListener("keydown", () => {
+      input.classList.remove("is-invalid");
+    });
+  });
+});
+// ============ End Remove invalid validation on focus JS ============ //

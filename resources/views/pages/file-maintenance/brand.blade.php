@@ -242,7 +242,7 @@
                  "targets": [0, 4],
                  "orderable": false
                }],
-              "order": [1, "asc"],
+              "order": [2, "asc"],
               "info": {
                 "totalQty": "#brandDatatableWithPagination"
               },

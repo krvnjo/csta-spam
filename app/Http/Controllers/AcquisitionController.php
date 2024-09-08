@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Acquisition;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class AcquisitionController extends Controller
 {
@@ -12,7 +13,7 @@ class AcquisitionController extends Controller
      */
     public function index()
     {
-        $acquisitions = Acquisition::query()->orderBy('name')->get();
+        $acquisitions = Acquisition::query()->get();
         $totalAcquisitions = $acquisitions->count();
         $activeAcquisitions = $acquisitions->where('is_active', 1)->count();
         $inactiveAcquisitions = $acquisitions->where('is_active', 0)->count();
@@ -24,19 +25,35 @@ class AcquisitionController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //
+        $validationMessages = [
+            'acquisition.required' => 'Please enter a acquisition name!',
+            'acquisition.regex' => 'It must not contain any numbers and special characters.',
+            'acquisition.max' => 'The acquisition name may not be greater than :max characters.',
+            'acquisition.unique' => 'The acquisition name already exists.',
+        ];
+
+        $validator = Validator::make($request->all(), [
+            'acquisition' => ['required', 'regex:/^[a-zA-Z]+(?:[\'\s\.\-!][a-zA-Z0-9]+)*$/', 'max:30', 'unique:acquisitions,name'],
+        ], $validationMessages);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors()->toArray();
+
+            return response()->json([
+                'success' => false,
+                'errors' => $errors,
+                'data' => $request->all(),
+            ]);
+        } else {
+            Acquisition::query()->create([
+                'name' => trim($request->input('acquisition')),
+            ]);
+            return response()->json(['success' => true]);
+        }
     }
 
     /**
