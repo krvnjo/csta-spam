@@ -5,9 +5,9 @@
 @endsection
 
 @section('styles')
-  <link rel="stylesheet" href="{{ Vite::asset('resources/vendor/daterangepicker/daterangepicker.css') }}">
-  <link rel="stylesheet" href="{{ Vite::asset('resources/vendor/jsvectormap/dist/css/jsvectormap.min.css') }}">
-  <link rel="stylesheet" href="{{ Vite::asset('resources/vendor/tom-select/dist/css/tom-select.bootstrap5.css') }}">
+  <link href="{{ Vite::asset('resources/vendor/daterangepicker/daterangepicker.css') }}" rel="stylesheet">
+  <link href="{{ Vite::asset('resources/vendor/jsvectormap/dist/css/jsvectormap.min.css') }}" rel="stylesheet">
+  <link href="{{ Vite::asset('resources/vendor/tom-select/dist/css/tom-select.bootstrap5.css') }}" rel="stylesheet">
 @endsection
 
 @section('header')
@@ -36,7 +36,7 @@
           <!-- End Col -->
 
           <div class="col-sm-auto">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPropertyModal">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPropertyModal" type="button">
               <i class="bi bi-plus-lg me-1"></i> Add Item
             </button>
           </div>
@@ -46,107 +46,107 @@
       </div>
       <!-- End Page Header -->
 
-      {{--    <!-- Stats -->--}}
-      {{--    <div class="row">--}}
-      {{--      <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3">--}}
-      {{--        <!-- Card -->--}}
-      {{--        <div class="card h-100">--}}
-      {{--          <div class="card-body">--}}
-      {{--            <h6 class="card-subtitle mb-2">Total Stocks</h6>--}}
+      {{--    <!-- Stats --> --}}
+      {{--    <div class="row"> --}}
+      {{--      <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3"> --}}
+      {{--        <!-- Card --> --}}
+      {{--        <div class="card h-100"> --}}
+      {{--          <div class="card-body"> --}}
+      {{--            <h6 class="card-subtitle mb-2">Total Stocks</h6> --}}
 
-      {{--            <div class="row align-items-center gx-2">--}}
-      {{--              <div class="col">--}}
-      {{--                <span class="js-counter display-4 text-dark">24</span>--}}
-      {{--                <span class="text-body fs-5 ms-1">from 22</span>--}}
-      {{--              </div>--}}
-      {{--              <!-- End Col -->--}}
+      {{--            <div class="row align-items-center gx-2"> --}}
+      {{--              <div class="col"> --}}
+      {{--                <span class="js-counter display-4 text-dark">24</span> --}}
+      {{--                <span class="text-body fs-5 ms-1">from 22</span> --}}
+      {{--              </div> --}}
+      {{--              <!-- End Col --> --}}
 
-      {{--              <div class="col-auto">--}}
-      {{--                <span class="badge bg-soft-success text-success p-1">--}}
-      {{--                  <i class="bi-graph-up"></i> 5.0%--}}
-      {{--                </span>--}}
-      {{--              </div>--}}
-      {{--              <!-- End Col -->--}}
-      {{--            </div>--}}
-      {{--            <!-- End Row -->--}}
-      {{--          </div>--}}
-      {{--        </div>--}}
-      {{--        <!-- End Card -->--}}
-      {{--      </div>--}}
+      {{--              <div class="col-auto"> --}}
+      {{--                <span class="badge bg-soft-success text-success p-1"> --}}
+      {{--                  <i class="bi-graph-up"></i> 5.0% --}}
+      {{--                </span> --}}
+      {{--              </div> --}}
+      {{--              <!-- End Col --> --}}
+      {{--            </div> --}}
+      {{--            <!-- End Row --> --}}
+      {{--          </div> --}}
+      {{--        </div> --}}
+      {{--        <!-- End Card --> --}}
+      {{--      </div> --}}
 
-      {{--      <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3">--}}
-      {{--        <!-- Card -->--}}
-      {{--        <div class="card h-100">--}}
-      {{--          <div class="card-body">--}}
-      {{--            <h6 class="card-subtitle mb-2">Total Inventory</h6>--}}
+      {{--      <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3"> --}}
+      {{--        <!-- Card --> --}}
+      {{--        <div class="card h-100"> --}}
+      {{--          <div class="card-body"> --}}
+      {{--            <h6 class="card-subtitle mb-2">Total Inventory</h6> --}}
 
-      {{--            <div class="row align-items-center gx-2">--}}
-      {{--              <div class="col">--}}
-      {{--                <span class="js-counter display-4 text-dark">12</span>--}}
-      {{--                <span class="text-body fs-5 ms-1">from 11</span>--}}
-      {{--              </div>--}}
+      {{--            <div class="row align-items-center gx-2"> --}}
+      {{--              <div class="col"> --}}
+      {{--                <span class="js-counter display-4 text-dark">12</span> --}}
+      {{--                <span class="text-body fs-5 ms-1">from 11</span> --}}
+      {{--              </div> --}}
 
-      {{--              <div class="col-auto">--}}
-      {{--                <span class="badge bg-soft-success text-success p-1">--}}
-      {{--                  <i class="bi-graph-up"></i> 1.2%--}}
-      {{--                </span>--}}
-      {{--              </div>--}}
-      {{--            </div>--}}
-      {{--            <!-- End Row -->--}}
-      {{--          </div>--}}
-      {{--        </div>--}}
-      {{--        <!-- End Card -->--}}
-      {{--      </div>--}}
+      {{--              <div class="col-auto"> --}}
+      {{--                <span class="badge bg-soft-success text-success p-1"> --}}
+      {{--                  <i class="bi-graph-up"></i> 1.2% --}}
+      {{--                </span> --}}
+      {{--              </div> --}}
+      {{--            </div> --}}
+      {{--            <!-- End Row --> --}}
+      {{--          </div> --}}
+      {{--        </div> --}}
+      {{--        <!-- End Card --> --}}
+      {{--      </div> --}}
 
-      {{--      <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3">--}}
-      {{--        <!-- Card -->--}}
-      {{--        <div class="card h-100">--}}
-      {{--          <div class="card-body">--}}
-      {{--            <h6 class="card-subtitle mb-2">New Stocks</h6>--}}
+      {{--      <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3"> --}}
+      {{--        <!-- Card --> --}}
+      {{--        <div class="card h-100"> --}}
+      {{--          <div class="card-body"> --}}
+      {{--            <h6 class="card-subtitle mb-2">New Stocks</h6> --}}
 
-      {{--            <div class="row align-items-center gx-2">--}}
-      {{--              <div class="col">--}}
-      {{--                <span class="js-counter display-4 text-dark">56</span>--}}
-      {{--                <span class="display-4 text-dark">%</span>--}}
-      {{--                <span class="text-body fs-5 ms-1">from 48.7</span>--}}
-      {{--              </div>--}}
+      {{--            <div class="row align-items-center gx-2"> --}}
+      {{--              <div class="col"> --}}
+      {{--                <span class="js-counter display-4 text-dark">56</span> --}}
+      {{--                <span class="display-4 text-dark">%</span> --}}
+      {{--                <span class="text-body fs-5 ms-1">from 48.7</span> --}}
+      {{--              </div> --}}
 
-      {{--              <div class="col-auto">--}}
-      {{--                <span class="badge bg-soft-danger text-danger p-1">--}}
-      {{--                  <i class="bi-graph-down"></i> 2.8%--}}
-      {{--                </span>--}}
-      {{--              </div>--}}
-      {{--            </div>--}}
-      {{--            <!-- End Row -->--}}
-      {{--          </div>--}}
-      {{--        </div>--}}
-      {{--        <!-- End Card -->--}}
-      {{--      </div>--}}
+      {{--              <div class="col-auto"> --}}
+      {{--                <span class="badge bg-soft-danger text-danger p-1"> --}}
+      {{--                  <i class="bi-graph-down"></i> 2.8% --}}
+      {{--                </span> --}}
+      {{--              </div> --}}
+      {{--            </div> --}}
+      {{--            <!-- End Row --> --}}
+      {{--          </div> --}}
+      {{--        </div> --}}
+      {{--        <!-- End Card --> --}}
+      {{--      </div> --}}
 
-      {{--      <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3">--}}
-      {{--        <!-- Card -->--}}
-      {{--        <div class="card h-100">--}}
-      {{--          <div class="card-body">--}}
-      {{--            <h6 class="card-subtitle mb-2">In Maintenance</h6>--}}
+      {{--      <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3"> --}}
+      {{--        <!-- Card --> --}}
+      {{--        <div class="card h-100"> --}}
+      {{--          <div class="card-body"> --}}
+      {{--            <h6 class="card-subtitle mb-2">In Maintenance</h6> --}}
 
-      {{--            <div class="row align-items-center gx-2">--}}
-      {{--              <div class="col">--}}
-      {{--                <span class="js-counter display-4 text-dark">28.6</span>--}}
-      {{--                <span class="display-4 text-dark">%</span>--}}
-      {{--                <span class="text-body fs-5 ms-1">from 28.6%</span>--}}
-      {{--              </div>--}}
+      {{--            <div class="row align-items-center gx-2"> --}}
+      {{--              <div class="col"> --}}
+      {{--                <span class="js-counter display-4 text-dark">28.6</span> --}}
+      {{--                <span class="display-4 text-dark">%</span> --}}
+      {{--                <span class="text-body fs-5 ms-1">from 28.6%</span> --}}
+      {{--              </div> --}}
 
-      {{--              <div class="col-auto">--}}
-      {{--                <span class="badge bg-soft-secondary text-secondary p-1">0.0%</span>--}}
-      {{--              </div>--}}
-      {{--            </div>--}}
-      {{--            <!-- End Row -->--}}
-      {{--          </div>--}}
-      {{--        </div>--}}
-      {{--        <!-- End Card -->--}}
-      {{--      </div>--}}
-      {{--    </div>--}}
-      {{--    <!-- End Stats -->--}}
+      {{--              <div class="col-auto"> --}}
+      {{--                <span class="badge bg-soft-secondary text-secondary p-1">0.0%</span> --}}
+      {{--              </div> --}}
+      {{--            </div> --}}
+      {{--            <!-- End Row --> --}}
+      {{--          </div> --}}
+      {{--        </div> --}}
+      {{--        <!-- End Card --> --}}
+      {{--      </div> --}}
+      {{--    </div> --}}
+      {{--    <!-- End Stats --> --}}
 
       <!-- Card -->
 
@@ -160,7 +160,7 @@
                 <div class="input-group-prepend input-group-text">
                   <i class="bi-search"></i>
                 </div>
-                <input id="propertySearch" type="search" class="form-control" placeholder="Search item" aria-label="Search item">
+                <input class="form-control" id="propertySearch" type="search" aria-label="Search item" placeholder="Search item">
               </div>
               <!-- End Search -->
             </form>
@@ -170,10 +170,10 @@
             <!-- Datatable Info -->
             <div id="propertyDatatableCounterInfo" style="display: none;">
               <div class="d-flex align-items-center">
-              <span class="fs-5 me-3">
-                <span id="propertyDatatableCounter">0</span>
-                Selected
-              </span>
+                <span class="fs-5 me-3">
+                  <span id="propertyDatatableCounter">0</span>
+                  Selected
+                </span>
                 <a class="btn btn-outline-danger btn-md" href="">
                   <i class="bi-trash"></i> Delete
                 </a>
@@ -183,33 +183,35 @@
 
             <!-- Dropdown -->
             <div class="dropdown">
-              <button type="button" class="btn btn-white btn-md dropdown-toggle w-100" id="propertyExportDropdown" data-bs-toggle="dropdown"
-                      aria-expanded="false">
+              <button class="btn btn-white btn-md dropdown-toggle w-100" id="propertyExportDropdown" data-bs-toggle="dropdown" type="button"
+                aria-expanded="false">
                 <i class="bi-download me-2"></i> Export
               </button>
 
               <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="propertyExportDropdown">
                 <span class="dropdown-header">Options</span>
-                <a id="export-copy" class="dropdown-item" href="">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/copy-icon.svg') }}" alt="Image Description">
+                <a class="dropdown-item" id="export-copy" href="">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/copy-icon.svg') }}"
+                    alt="Image Description">
                   Copy
                 </a>
-                <a id="export-print" class="dropdown-item" href="">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/print-icon.svg') }}" alt="Image Description">
+                <a class="dropdown-item" id="export-print" href="">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/print-icon.svg') }}"
+                    alt="Image Description">
                   Print
                 </a>
                 <div class="dropdown-divider"></div>
                 <span class="dropdown-header">Download options</span>
-                <a id="export-excel" class="dropdown-item" href="">
+                <a class="dropdown-item" id="export-excel" href="">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/excel-icon.svg') }}" alt="Image Description">
                   Excel
                 </a>
-                <a id="export-csv" class="dropdown-item" href="">
+                <a class="dropdown-item" id="export-csv" href="">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/components/placeholder-csv-format.svg') }}"
-                       alt="Image Description">
+                    alt="Image Description">
                   .CSV
                 </a>
-                <a id="export-pdf" class="dropdown-item" href="">
+                <a class="dropdown-item" id="export-pdf" href="">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/pdf-icon.svg') }}" alt="Image Description">
                   PDF
                 </a>
@@ -219,8 +221,8 @@
 
             <!-- Dropdown -->
             <div class="dropdown">
-              <button class="btn btn-white" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasPropertyFilter"
-                      aria-controls="offcanvasPropertyFilter">
+              <button class="btn btn-white" data-bs-toggle="offcanvas" data-bs-target="#offcanvasPropertyFilter" type="button"
+                aria-controls="offcanvasPropertyFilter">
                 <i class="bi-filter me-1"></i> Filters
               </button>
             </div>
@@ -231,8 +233,9 @@
 
         <!-- Table -->
         <div class="table-responsive datatable-custom position-relative">
-          <table id="propertyOverviewDatatable" class="table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table table table-hover"
-                 data-hs-datatables-options='{
+          <table class="table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table table table-hover"
+            id="propertyOverviewDatatable"
+            data-hs-datatables-options='{
                    "columnDefs": [{
                       "targets": [0, 5],
                       "orderable": false
@@ -249,73 +252,73 @@
                    "pagination": "propertyDatatablePagination"
                  }'>
             <thead class="thead-light">
-            <tr>
-              <th class="table-column-pe-0">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="propertyDatatableCheckAll">
-                  <label class="form-check-label" for="propertyDatatableCheckAll"></label>
-                </div>
-              </th>
-              <th class="table-column-ps-0">Item Name</th>
-              <th>Category</th>
-              <th>Brand</th>
-              <th>Total Quantity</th>
-              <th>Action</th>
-            </tr>
+              <tr>
+                <th class="table-column-pe-0">
+                  <div class="form-check">
+                    <input class="form-check-input" id="propertyDatatableCheckAll" type="checkbox" value="">
+                    <label class="form-check-label" for="propertyDatatableCheckAll"></label>
+                  </div>
+                </th>
+                <th class="table-column-ps-0">Item Name</th>
+                <th>Category</th>
+                <th>Brand</th>
+                <th>Total Quantity</th>
+                <th>Action</th>
+              </tr>
             </thead>
 
             <tbody>
-            {{--          @foreach ($propertyParents->where('is_active', 1)->where('is_delete', 0)->sortByDesc('updated_at')  as $propertyParent)--}}
-            {{--            <tr>--}}
-            {{--              <td class="table-column-pe-0">--}}
-            {{--                <div class="form-check">--}}
-            {{--                  <input class="form-check-input" type="checkbox" value="" id="datatableCheckAll1">--}}
-            {{--                  <label class="form-check-label" for="datatableCheckAll1"></label>--}}
-            {{--                </div>--}}
-            {{--              </td>--}}
-            {{--              <td class="table-column-ps-0">--}}
-            {{--                <a class="d-flex align-items-center" href="{{ route('prop-child.index', $propertyParent->id) }}">--}}
-            {{--                  <div class="avatar avatar-lg">--}}
-            {{--                    <img class="avatar-img" src="{{ asset('assets/img/uploads/properties/' . $propertyParent->image) }}" alt="Image Description">--}}
-            {{--                  </div>--}}
-            {{--                  <div class="ms-3">--}}
-            {{--                    <span class="d-block h5 mb-0 text-inherit">{{ $propertyParent->name }}</span>--}}
-            {{--                    <span data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="{{ $propertyParent->description }}" style="color:gray">--}}
-            {{--                          {{ Str::limit($propertyParent->description, 15) }}--}}
-            {{--                      </span>--}}
-            {{--                  </div>--}}
-            {{--                </a>--}}
-            {{--              </td>--}}
-            {{--              <td>--}}
-            {{--                <span class="d-block h5 mb-0">{{ $propertyParent->subcategory->category->name }}</span>--}}
-            {{--                <span class="d-block fs-5">{{ $propertyParent->subcategory->name }}</span>--}}
-            {{--              </td>--}}
-            {{--              <td>{{ $propertyParent->brand->name }}</td>--}}
-            {{--              <td>{{ $propertyParent->quantity }}</td>--}}
-            {{--              <td>₱{{ number_format($propertyParent->acq_price, 2) }}</td>--}}
-            {{--              <td>--}}
-            {{--                <div class="btn-group" role="group">--}}
-            {{--                  <a class="btn btn-white btn-sm" href="{{ route('prop-child.index', $propertyParent->id) }}">--}}
-            {{--                    <i class="bi-eye me-1"></i> View All--}}
-            {{--                  </a>--}}
+              {{--          @foreach ($propertyParents->where('is_active', 1)->where('is_delete', 0)->sortByDesc('updated_at') as $propertyParent) --}}
+              {{--            <tr> --}}
+              {{--              <td class="table-column-pe-0"> --}}
+              {{--                <div class="form-check"> --}}
+              {{--                  <input class="form-check-input" type="checkbox" value="" id="propertyCheckAll1"> --}}
+              {{--                  <label class="form-check-label" for="propertyCheckAll1"></label> --}}
+              {{--                </div> --}}
+              {{--              </td> --}}
+              {{--              <td class="table-column-ps-0"> --}}
+              {{--                <a class="d-flex align-items-center" href="{{ route('prop-child.index', $propertyParent->id) }}"> --}}
+              {{--                  <div class="avatar avatar-lg"> --}}
+              {{--                    <img class="avatar-img" src="{{ asset('assets/img/uploads/properties/' . $propertyParent->image) }}" alt="Image Description"> --}}
+              {{--                  </div> --}}
+              {{--                  <div class="ms-3"> --}}
+              {{--                    <span class="d-block h5 mb-0 text-inherit">{{ $propertyParent->name }}</span> --}}
+              {{--                    <span data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="{{ $propertyParent->description }}" style="color:gray"> --}}
+              {{--                          {{ Str::limit($propertyParent->description, 15) }} --}}
+              {{--                      </span> --}}
+              {{--                  </div> --}}
+              {{--                </a> --}}
+              {{--              </td> --}}
+              {{--              <td> --}}
+              {{--                <span class="d-block h5 mb-0">{{ $propertyParent->subcategory->category->name }}</span> --}}
+              {{--                <span class="d-block fs-5">{{ $propertyParent->subcategory->name }}</span> --}}
+              {{--              </td> --}}
+              {{--              <td>{{ $propertyParent->brand->name }}</td> --}}
+              {{--              <td>{{ $propertyParent->quantity }}</td> --}}
+              {{--              <td>₱{{ number_format($propertyParent->acq_price, 2) }}</td> --}}
+              {{--              <td> --}}
+              {{--                <div class="btn-group" role="group"> --}}
+              {{--                  <a class="btn btn-white btn-sm" href="{{ route('prop-child.index', $propertyParent->id) }}"> --}}
+              {{--                    <i class="bi-eye me-1"></i> View All --}}
+              {{--                  </a> --}}
 
-            {{--                  <!-- Button Group -->--}}
-            {{--                  <div class="btn-group">--}}
-            {{--                    <button type="button" class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="productsEditDropdown1"--}}
-            {{--                            data-bs-toggle="dropdown" aria-expanded="false"></button>--}}
+              {{--                  <!-- Button Group --> --}}
+              {{--                  <div class="btn-group"> --}}
+              {{--                    <button type="button" class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="productsEditDropdown1" --}}
+              {{--                            data-bs-toggle="dropdown" aria-expanded="false"></button> --}}
 
-            {{--                    <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="productsEditDropdown1">--}}
-            {{--                      <button class="dropdown-item" type="button" id="btnEditPropParent" data-prop-parent-id="{{ $propertyParent->id }}">--}}
-            {{--                        <i class="bi-pencil-fill dropdown-item-icon"></i> Edit--}}
-            {{--                      </button>--}}
-            {{--                    </div>--}}
-            {{--                  </div>--}}
-            {{--                  <!-- End Button Group -->--}}
+              {{--                    <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="productsEditDropdown1"> --}}
+              {{--                      <button class="dropdown-item" type="button" id="btnEditPropParent" data-prop-parent-id="{{ $propertyParent->id }}"> --}}
+              {{--                        <i class="bi-pencil-fill dropdown-item-icon"></i> Edit --}}
+              {{--                      </button> --}}
+              {{--                    </div> --}}
+              {{--                  </div> --}}
+              {{--                  <!-- End Button Group --> --}}
 
-            {{--                </div>--}}
-            {{--              </td>--}}
-            {{--            </tr>--}}
-            {{--          @endforeach--}}
+              {{--                </div> --}}
+              {{--              </td> --}}
+              {{--            </tr> --}}
+              {{--          @endforeach --}}
 
             </tbody>
           </table>
@@ -331,11 +334,12 @@
 
                 <!-- Select -->
                 <div class="tom-select-custom" style="width: 80px;">
-                  <select id="propertyDatatableEntries" class="js-select form-select form-select-borderless" autocomplete="off"
-                          data-hs-tom-select-options='{
+                  <select class="js-select form-select form-select-borderless" id="propertyDatatableEntries"
+                    data-hs-tom-select-options='{
                             "searchInDropdown": false,
                             "hideSearch": true
-                          }'>
+                          }'
+                    autocomplete="off">
                     <option value="5" selected>5</option>
                     <option value="10">10</option>
                     <option value="15">15</option>
@@ -374,11 +378,13 @@
 @endsection
 
 @section('sub-content')
+  <x-property-asset.add-property />
+
   <!-- Product Filter Modal -->
-  <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasPropertyFilter" aria-labelledby="offcanvasPropertyFilterLabel">
+  <div class="offcanvas offcanvas-end" id="offcanvasPropertyFilter" aria-labelledby="offcanvasPropertyFilterLabel" tabindex="-1">
     <div class="offcanvas-header">
-      <h4 id="offcanvasPropertyFilterLabel" class="mb-0">Filters</h4>
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      <h4 class="mb-0" id="offcanvasPropertyFilterLabel">Filters</h4>
+      <button class="btn-close" data-bs-dismiss="offcanvas" type="button" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
       <span class="text-cap small">Product vendor</span>
@@ -388,56 +394,56 @@
           <div class="d-grid mb-2 gap-2">
             <!-- Form Check -->
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="productAvailabilityFilterRadio" value="" id="productVendorFilterRadio1">
+              <input class="form-check-input" id="productVendorFilterRadio1" name="productAvailabilityFilterRadio" type="radio" value="">
               <label class="form-check-label" for="productVendorFilterRadio1">Google</label>
             </div>
             <!-- End Form Check -->
 
             <!-- Form Check -->
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="productAvailabilityFilterRadio" value="" id="productVendorFilterRadio2">
+              <input class="form-check-input" id="productVendorFilterRadio2" name="productAvailabilityFilterRadio" type="radio" value="">
               <label class="form-check-label" for="productVendorFilterRadio2">Topman</label>
             </div>
             <!-- End Form Check -->
 
             <!-- Form Check -->
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="productAvailabilityFilterRadio" value="" id="productVendorFilterRadio3">
+              <input class="form-check-input" id="productVendorFilterRadio3" name="productAvailabilityFilterRadio" type="radio" value="">
               <label class="form-check-label" for="productVendorFilterRadio3">RayBan</label>
             </div>
             <!-- End Form Check -->
 
             <!-- Form Check -->
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="productAvailabilityFilterRadio" value="" id="productVendorFilterRadio4">
+              <input class="form-check-input" id="productVendorFilterRadio4" name="productAvailabilityFilterRadio" type="radio" value="">
               <label class="form-check-label" for="productVendorFilterRadio4">Mango</label>
             </div>
             <!-- End Form Check -->
 
             <!-- Form Check -->
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="productAvailabilityFilterRadio" value="" id="productVendorFilterRadio5">
+              <input class="form-check-input" id="productVendorFilterRadio5" name="productAvailabilityFilterRadio" type="radio" value="">
               <label class="form-check-label" for="productVendorFilterRadio5">Calvin Klein</label>
             </div>
             <!-- End Form Check -->
 
             <!-- Form Check -->
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="productAvailabilityFilterRadio" value="" id="productVendorFilterRadio6">
+              <input class="form-check-input" id="productVendorFilterRadio6" name="productAvailabilityFilterRadio" type="radio" value="">
               <label class="form-check-label" for="productVendorFilterRadio6">Givenchy</label>
             </div>
             <!-- End Form Check -->
 
             <!-- Form Check -->
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="productAvailabilityFilterRadio" value="" id="productVendorFilterRadio7">
+              <input class="form-check-input" id="productVendorFilterRadio7" name="productAvailabilityFilterRadio" type="radio" value="">
               <label class="form-check-label" for="productVendorFilterRadio7">Asos</label>
             </div>
             <!-- End Form Check -->
 
             <!-- Form Check -->
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="productAvailabilityFilterRadio" value="" id="productVendorFilterRadio8">
+              <input class="form-check-input" id="productVendorFilterRadio8" name="productAvailabilityFilterRadio" type="radio" value="">
               <label class="form-check-label" for="productVendorFilterRadio8">Apple</label>
             </div>
             <!-- End Form Check -->
@@ -448,49 +454,49 @@
           <div class="d-grid mb-2 gap-2">
             <!-- Form Check -->
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="productAvailabilityFilterRadio" value="" id="productVendorFilterRadio9">
+              <input class="form-check-input" id="productVendorFilterRadio9" name="productAvailabilityFilterRadio" type="radio" value="">
               <label class="form-check-label" for="productVendorFilterRadio9">Times</label>
             </div>
             <!-- End Form Check -->
 
             <!-- Form Check -->
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="productAvailabilityFilterRadio" value="" id="productVendorFilterRadio10">
+              <input class="form-check-input" id="productVendorFilterRadio10" name="productAvailabilityFilterRadio" type="radio" value="">
               <label class="form-check-label" for="productVendorFilterRadio10">Asos</label>
             </div>
             <!-- End Form Check -->
 
             <!-- Form Check -->
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="productAvailabilityFilterRadio" value="" id="productVendorFilterRadio11">
+              <input class="form-check-input" id="productVendorFilterRadio11" name="productAvailabilityFilterRadio" type="radio" value="">
               <label class="form-check-label" for="productVendorFilterRadio11">Nike Jordan</label>
             </div>
             <!-- End Form Check -->
 
             <!-- Form Check -->
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="productAvailabilityFilterRadio" value="" id="productVendorFilterRadio12">
+              <input class="form-check-input" id="productVendorFilterRadio12" name="productAvailabilityFilterRadio" type="radio" value="">
               <label class="form-check-label" for="productVendorFilterRadio12">VA RVCA</label>
             </div>
             <!-- End Form Check -->
 
             <!-- Form Check -->
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="productAvailabilityFilterRadio" value="" id="productVendorFilterRadio13">
+              <input class="form-check-input" id="productVendorFilterRadio13" name="productAvailabilityFilterRadio" type="radio" value="">
               <label class="form-check-label" for="productVendorFilterRadio13">Levis</label>
             </div>
             <!-- End Form Check -->
 
             <!-- Form Check -->
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="productAvailabilityFilterRadio" value="" id="productVendorFilterRadio14">
+              <input class="form-check-input" id="productVendorFilterRadio14" name="productAvailabilityFilterRadio" type="radio" value="">
               <label class="form-check-label" for="productVendorFilterRadio14">Beats</label>
             </div>
             <!-- End Form Check -->
 
             <!-- Form Check -->
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="productAvailabilityFilterRadio" value="" id="productVendorFilterRadio15">
+              <input class="form-check-input" id="productVendorFilterRadio15" name="productAvailabilityFilterRadio" type="radio" value="">
               <label class="form-check-label" for="productVendorFilterRadio15">Clarks</label>
             </div>
             <!-- End Form Check -->
@@ -510,14 +516,14 @@
       <div class="d-grid mb-2 gap-2">
         <!-- Form Check -->
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="productAvailabilityFilterRadio" value="" id="productAvailabilityFilterRadio1">
+          <input class="form-check-input" id="productAvailabilityFilterRadio1" name="productAvailabilityFilterRadio" type="radio" value="">
           <label class="form-check-label" for="productAvailabilityFilterRadio1">Available on Online Store</label>
         </div>
         <!-- End Form Check -->
 
         <!-- Form Check -->
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="productAvailabilityFilterRadio" value="" id="productAvailabilityFilterRadio2">
+          <input class="form-check-input" id="productAvailabilityFilterRadio2" name="productAvailabilityFilterRadio" type="radio" value="">
           <label class="form-check-label" for="productAvailabilityFilterRadio2">Unavailable on Online Store</label>
         </div>
         <!-- End Form Check -->
@@ -532,7 +538,7 @@
       <span class="text-cap small">Tagged with</span>
 
       <div class="mb-2">
-        <input type="text" class="form-control" name="tagsName" id="tagsLabel" placeholder="Enter tags here" aria-label="Enter tags here">
+        <input class="form-control" id="tagsLabel" name="tagsName" type="text" aria-label="Enter tags here" placeholder="Enter tags here">
       </div>
 
       <a class="link mt-2" href="">
@@ -546,28 +552,28 @@
       <div class="d-grid mb-2 gap-2">
         <!-- Form Check -->
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="productTypeFilterRadio" value="" id="productTypeFilterRadio1">
+          <input class="form-check-input" id="productTypeFilterRadio1" name="productTypeFilterRadio" type="radio" value="">
           <label class="form-check-label" for="productTypeFilterRadio1">Shoes</label>
         </div>
         <!-- End Form Check -->
 
         <!-- Form Check -->
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="productTypeFilterRadio" value="" id="productTypeFilterRadio2">
+          <input class="form-check-input" id="productTypeFilterRadio2" name="productTypeFilterRadio" type="radio" value="">
           <label class="form-check-label" for="productTypeFilterRadio2">Accessories</label>
         </div>
         <!-- End Form Check -->
 
         <!-- Form Check -->
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="productTypeFilterRadio" value="" id="productTypeFilterRadio3">
+          <input class="form-check-input" id="productTypeFilterRadio3" name="productTypeFilterRadio" type="radio" value="">
           <label class="form-check-label" for="productTypeFilterRadio3">Clothing</label>
         </div>
         <!-- End Form Check -->
 
         <!-- Form Check -->
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="productTypeFilterRadio" value="" id="productTypeFilterRadio4">
+          <input class="form-check-input" id="productTypeFilterRadio4" name="productTypeFilterRadio" type="radio" value="">
           <label class="form-check-label" for="productTypeFilterRadio4">Electronics</label>
         </div>
         <!-- End Form Check -->
@@ -587,13 +593,13 @@
           <i class="bi-search"></i>
         </div>
 
-        <input type="search" class="form-control" placeholder="Search for collections" aria-label="Search for collections">
+        <input class="form-control" type="search" aria-label="Search for collections" placeholder="Search for collections">
       </div>
       <!-- End Input Group -->
 
       <!-- Form Check -->
       <div class="form-check mb-2">
-        <input class="form-check-input" type="radio" value="" id="productCollectionFilterRadio1">
+        <input class="form-check-input" id="productCollectionFilterRadio1" type="radio" value="">
         <label class="form-check-label" for="productCollectionFilterRadio1">Home page</label>
       </div>
       <!-- End Form Check -->
@@ -609,14 +615,14 @@
       <div class="row gx-2">
         <div class="col">
           <div class="d-grid">
-            <button type="button" class="btn btn-white">Clear all filters</button>
+            <button class="btn btn-white" type="button">Clear all filters</button>
           </div>
         </div>
         <!-- End Col -->
 
         <div class="col">
           <div class="d-grid">
-            <button type="button" class="btn btn-primary">Save</button>
+            <button class="btn btn-primary" type="button">Save</button>
           </div>
         </div>
         <!-- End Col -->
@@ -648,11 +654,55 @@
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
+  <script src="{{ Vite::asset('resources/vendor/dropzone/dist/min/dropzone.min.js') }}"></script>
 
   <!-- JS Themes -->
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>
 
   <!-- JS Plugins Init. -->
+
+  <script>
+    (function() {
+      // INITIALIZATION OF DROPZONE
+      // =======================================================
+      HSCore.components.HSDropzone.init('.js-dropzone', {
+        maxFiles: 1, // Limit to 1 file
+        maxFilesize: 1, // File size limit in MB (1MB)
+        acceptedFiles: ".jpeg,.jpg,.png,.pdf", // Specify accepted file types
+        dictDefaultMessage: "Drag and drop your file here or click to upload",
+
+        init: function() {
+          var dropzoneInstance = this;
+
+          // Hiding the message when the file is added
+          this.on("addedfile", function(file) {
+            // Hide the message (browse button and drag area)
+            dropzoneInstance.element.querySelector(".dz-message").style.display = "none";
+          });
+
+          // Show the message when the file is removed
+          this.on("removedfile", function(file) {
+            // Show the message (browse button and drag area) again
+            dropzoneInstance.element.querySelector(".dz-message").style.display = "block";
+          });
+
+          // Error handling for large files
+          this.on("error", function(file, message) {
+            if (file.size > 1048576) { // 1MB in bytes
+              Swal.fire({
+                icon: 'error',
+                title: 'File too large',
+                text: 'File size exceeds the limit of 1MB. Please upload a smaller file.',
+              });
+              this.removeFile(file); // Remove the file from Dropzone
+            }
+          });
+        }
+      });
+    })();
+  </script>
+
+
   <script>
     $(document).on('ready', function() {
       // INITIALIZATION OF DATATABLES
@@ -660,9 +710,9 @@
       HSCore.components.HSDatatables.init($('#propertyOverviewDatatable'), {
         dom: 'Bfrtip',
         buttons: [{
-          extend: 'copy',
-          className: 'd-none'
-        },
+            extend: 'copy',
+            className: 'd-none'
+          },
           {
             extend: 'excel',
             className: 'd-none'
