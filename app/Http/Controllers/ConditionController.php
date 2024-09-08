@@ -12,7 +12,15 @@ class ConditionController extends Controller
      */
     public function index()
     {
-        //
+        $conditions = Condition::query()->orderBy('name')->get();
+        $totalConditions = $conditions->count();
+        $activeConditions = $conditions->where('is_active', 1)->count();
+        $inactiveConditions = $conditions->where('is_active', 0)->count();
+
+        $activePercentage = $totalConditions > 0 ? ($activeConditions / $totalConditions) * 100 : 0;
+        $inactivePercentage = $totalConditions > 0 ? ($inactiveConditions / $totalConditions) * 100 : 0;
+
+        return view('pages.file-maintenance.condition', compact('conditions', 'totalConditions', 'activeConditions', 'inactiveConditions', 'activePercentage', 'inactivePercentage'));
     }
 
     /**

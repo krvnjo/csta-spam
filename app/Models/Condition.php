@@ -12,6 +12,12 @@ class Condition extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'conditions';
+
+    protected $fillable = [
+        'name'
+    ];
+
     public function property(): BelongsTo {
         return $this->belongsTo(PropertyParent::class);
     }

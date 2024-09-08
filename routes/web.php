@@ -3,6 +3,7 @@
 use App\Http\Controllers\AcquisitionController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ConditionController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\PropertyParentController;
 use Illuminate\Support\Facades\Route;
@@ -36,6 +37,11 @@ Route::controller(BrandController::class)->group(function () {
 // Category Routes
 Route::controller(CategoryController::class)->group(function () {
     Route::get('/file-maintenance/categories', 'index')->name('category.index');
+});
+
+// Condition Routes
+Route::controller(ConditionController::class)->group(function () {
+    Route::get('/file-maintenance/conditions', 'index')->name('condition.index');
 });
 
 // Department Routes
