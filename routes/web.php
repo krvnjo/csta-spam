@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AcquisitionController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\PropertyParentController;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +20,11 @@ Route::controller(PropertyParentController::class)->group(function () {
 // ============ End Property & Assets Routes ============ //
 
 // ============ File Maintenance Routes ============ //
+
+// Acquisition Routes
+Route::controller(AcquisitionController::class)->group(function () {
+    Route::get('/file-maintenance/acquisitions', 'index')->name('acquisition.index');
+});
 
 // Department Routes
 Route::controller(DepartmentController::class)->group(function () {

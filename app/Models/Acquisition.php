@@ -11,6 +11,11 @@ class Acquisition extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'acquisitions';
+
+    protected $fillable = [
+        'name'
+    ];
     public function property_children(): HasMany {
         return $this->hasMany(PropertyChild::class, 'acqui_id');
     }

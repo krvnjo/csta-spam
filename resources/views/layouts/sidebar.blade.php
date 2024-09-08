@@ -126,6 +126,7 @@
               </a>
 
               <div class="nav-collapse collapse" id="navbarVerticalMenuFileMaintenance" data-bs-parent="#navbarVerticalMenu">
+                <a class="nav-link" href="/file-maintenance/acquisitions">Acquisitions</a>
                 <a class="nav-link" href="/file-maintenance/brands">Brands</a>
                 <a class="nav-link" href="/file-maintenance/categories">Categories</a>
                 <a class="nav-link" href="/file-maintenance/departments">Departments</a>
