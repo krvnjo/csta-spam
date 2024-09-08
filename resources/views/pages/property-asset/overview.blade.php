@@ -252,11 +252,11 @@
             <tr>
               <th class="table-column-pe-0">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="propertyCheckAll">
-                  <label class="form-check-label" for="propertyCheckAll"></label>
+                  <input class="form-check-input" type="checkbox" value="" id="propertyDatatableCheckAll">
+                  <label class="form-check-label" for="propertyDatatableCheckAll"></label>
                 </div>
               </th>
-              <th class="table-column-ps-0">Property Name</th>
+              <th class="table-column-ps-0">Item Name</th>
               <th>Category</th>
               <th>Brand</th>
               <th>Total Quantity</th>
