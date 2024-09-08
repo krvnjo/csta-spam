@@ -31,13 +31,13 @@
                 <li class="breadcrumb-item active" aria-current="page">Property & Assets</li>
               </ol>
             </nav>
-            <h1 class="page-header-title">Property & Assets Stock In</h1>
+            <h1 class="page-header-title">Stock In</h1>
           </div>
           <!-- End Col -->
 
           <div class="col-sm-auto">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPropertyModal">
-              <i class="bi bi-plus-lg me-1"></i> Add Property
+              <i class="bi bi-plus-lg me-1"></i> Add Item
             </button>
           </div>
           <!-- End Col -->
@@ -160,7 +160,7 @@
                 <div class="input-group-prepend input-group-text">
                   <i class="bi-search"></i>
                 </div>
-                <input id="datatableSearch" type="search" class="form-control" placeholder="Search property" aria-label="Search property">
+                <input id="propertySearch" type="search" class="form-control" placeholder="Search item" aria-label="Search item">
               </div>
               <!-- End Search -->
             </form>
@@ -168,10 +168,10 @@
 
           <div class="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
             <!-- Datatable Info -->
-            <div id="datatableCounterInfo" style="display: none;">
+            <div id="propertyDatatableCounterInfo" style="display: none;">
               <div class="d-flex align-items-center">
               <span class="fs-5 me-3">
-                <span id="datatableCounter">0</span>
+                <span id="propertyDatatableCounter">0</span>
                 Selected
               </span>
                 <a class="btn btn-outline-danger btn-md" href="">
@@ -183,12 +183,12 @@
 
             <!-- Dropdown -->
             <div class="dropdown">
-              <button type="button" class="btn btn-white btn-md dropdown-toggle w-100" id="usersExportDropdown" data-bs-toggle="dropdown"
+              <button type="button" class="btn btn-white btn-md dropdown-toggle w-100" id="propertyExportDropdown" data-bs-toggle="dropdown"
                       aria-expanded="false">
                 <i class="bi-download me-2"></i> Export
               </button>
 
-              <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="usersExportDropdown">
+              <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="propertyExportDropdown">
                 <span class="dropdown-header">Options</span>
                 <a id="export-copy" class="dropdown-item" href="">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/copy-icon.svg') }}" alt="Image Description">
@@ -219,8 +219,8 @@
 
             <!-- Dropdown -->
             <div class="dropdown">
-              <button class="btn btn-white" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasStockFilter"
-                      aria-controls="offcanvasStockFilter">
+              <button class="btn btn-white" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasPropertyFilter"
+                      aria-controls="offcanvasPropertyFilter">
                 <i class="bi-filter me-1"></i> Filters
               </button>
             </div>
@@ -239,21 +239,21 @@
                     }],
                    "order": [],
                    "info": {
-                     "totalQty": "#datatableWithPaginationInfoTotalQty"
+                     "totalQty": "#propertyDatatableWithPaginationInfoTotalQty"
                    },
-                   "search": "#datatableSearch",
-                   "entries": "#datatableEntries",
+                   "search": "#propertyDatatableSearch",
+                   "entries": "#propertyDatatableEntries",
                    "pageLength": 5,
                    "isResponsive": false,
                    "isShowPaging": false,
-                   "pagination": "datatablePagination"
+                   "pagination": "propertyDatatablePagination"
                  }'>
             <thead class="thead-light">
             <tr>
               <th class="table-column-pe-0">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="datatableCheckAll">
-                  <label class="form-check-label" for="datatableCheckAll"></label>
+                  <input class="form-check-input" type="checkbox" value="" id="propertyCheckAll">
+                  <label class="form-check-label" for="propertyCheckAll"></label>
                 </div>
               </th>
               <th class="table-column-ps-0">Property Name</th>
@@ -331,7 +331,7 @@
 
                 <!-- Select -->
                 <div class="tom-select-custom" style="width: 80px;">
-                  <select id="datatableEntries" class="js-select form-select form-select-borderless" autocomplete="off"
+                  <select id="propertyDatatableEntries" class="js-select form-select form-select-borderless" autocomplete="off"
                           data-hs-tom-select-options='{
                             "searchInDropdown": false,
                             "hideSearch": true
@@ -346,7 +346,7 @@
                 <span class="text-secondary me-2">of</span>
 
                 <!-- Pagination Quantity -->
-                <span id="datatableWithPaginationInfoTotalQty"></span>
+                <span id="propertyDatatableWithPaginationInfoTotalQty"></span>
               </div>
             </div>
             <!-- End Col -->
@@ -354,7 +354,7 @@
             <div class="col-sm-auto">
               <div class="d-flex justify-content-center justify-content-sm-end">
                 <!-- Pagination -->
-                <nav id="datatablePagination" aria-label="Activity pagination"></nav>
+                <nav id="propertyDatatablePagination" aria-label="Activity pagination"></nav>
               </div>
             </div>
             <!-- End Col -->
@@ -375,9 +375,9 @@
 
 @section('sub-content')
   <!-- Product Filter Modal -->
-  <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasStockFilter" aria-labelledby="offcanvasStockFilterLabel">
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasPropertyFilter" aria-labelledby="offcanvasPropertyFilterLabel">
     <div class="offcanvas-header">
-      <h4 id="offcanvasEcommerceProductFilterLabel" class="mb-0">Filters</h4>
+      <h4 id="offcanvasPropertyFilterLabel" class="mb-0">Filters</h4>
       <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
@@ -684,9 +684,9 @@
           style: 'multi',
           selector: 'td:first-child input[type="checkbox"]',
           classMap: {
-            checkAll: '#datatableCheckAll',
-            counter: '#datatableCounter',
-            counterInfo: '#datatableCounterInfo'
+            checkAll: '#propertyDatatableCheckAll',
+            counter: '#propertyDatatableCounter',
+            counterInfo: '#propertyDatatableCounterInfo'
           }
         },
         language: {
