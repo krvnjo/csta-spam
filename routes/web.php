@@ -7,6 +7,8 @@ use App\Http\Controllers\ConditionController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\PropertyParentController;
+use App\Http\Controllers\StatusController;
+use App\Http\Controllers\SubcategoryController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -53,6 +55,16 @@ Route::controller(DepartmentController::class)->group(function () {
 // Designation Routes
 Route::controller(DesignationController::class)->group(function () {
     Route::get('/file-maintenance/designations', 'index')->name('designation.index');
+});
+
+// Subcategory Routes
+Route::controller(SubcategoryController::class)->group(function () {
+    Route::get('/file-maintenance/subcategories', 'index')->name('subcategory.index');
+});
+
+// Statuses Routes
+Route::controller(StatusController::class)->group(function () {
+    Route::get('/file-maintenance/statuses', 'index')->name('status.index');
 });
 
 // ============ End File Maintenance Routes ============ //

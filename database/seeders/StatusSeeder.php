@@ -29,15 +29,15 @@ class StatusSeeder extends Seeder
         }
 
         $statuses = [
-            'Available' => 'Ready for use.',
-            'In Use' => 'Currently in use.',
-            'Unavailable' => 'Not accessible.',
-            'Needs Maintenance' => 'Requires repair.',
-            'Under Maintenance' => 'Being repaired.',
-            'Reserved' => 'Booked for future use.',
-            'Missing' => 'Asset is lost.',
-            'End of Life' => 'Beyond serviceable use.',
-            'Disposed' => 'Removed from inventory.',
+            'Available' => 'This asset is ready for use and can be utilized immediately for its intended purpose without any restrictions.',
+            'In Use' => 'The asset is currently being used and is not available for others until it becomes free.',
+            'Unavailable' => 'The asset is not accessible for use at the moment due to unforeseen reasons or temporary constraints.',
+            'Needs Maintenance' => 'The asset is in need of repair or service before it can be safely or effectively used again.',
+            'Under Maintenance' => 'This asset is currently undergoing repairs or servicing to restore its full functionality.',
+            'Reserved' => 'The asset has been booked for a future time and is not available for current use by others.',
+            'Missing' => 'This asset is unaccounted for and cannot be found within the inventory or asset tracking system.',
+            'End of Life' => 'This asset has reached the end of its usable service life and is no longer fit for operational use.',
+            'Disposed' => 'This asset has been permanently removed from the inventory and is no longer available for use or tracking.'
         ];
 
         foreach ($statuses as $status => $description) {

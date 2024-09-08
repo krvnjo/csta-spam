@@ -12,7 +12,15 @@ class StatusController extends Controller
      */
     public function index()
     {
-        //
+        $statuses = Status::query()->orderBy('name')->get();
+        $totalStatuses = $statuses->count();
+        $activeStatuses = $statuses->where('is_active', 1)->count();
+        $inactiveStatuses = $statuses->where('is_active', 0)->count();
+
+        $activePercentage = $totalStatuses > 0 ? ($activeStatuses / $totalStatuses) * 100 : 0;
+        $inactivePercentage = $totalStatuses > 0 ? ($inactiveStatuses / $totalStatuses) * 100 : 0;
+
+        return view('pages.file-maintenance.status', compact('statuses', 'totalStatuses', 'activeStatuses', 'inactiveStatuses', 'activePercentage', 'inactivePercentage'));
     }
 
     /**
