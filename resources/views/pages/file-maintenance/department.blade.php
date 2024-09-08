@@ -373,7 +373,8 @@
 @endsection
 
 @section('sub-content')
-  {{-- No Secondary Content --}}
+  <x-file-maintenance.add-department />
+  <x-file-maintenance.edit-department />
 @endsection
 
 @section('scripts')
