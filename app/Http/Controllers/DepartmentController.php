@@ -12,7 +12,16 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        //
+        $departments = Department::query()->orderBy('name')->get();
+        $totalDepartments = $departments->count();
+        $activeDepartments = $departments->where('is_active', 1)->count();
+        $inactiveDepartments = $departments->where('is_active', 0)->count();
+
+        $total = $totalDepartments;
+        $activePercentage = $total > 0 ? ($activeDepartments / $total) * 100 : 0;
+        $inactivePercentage = $total > 0 ? ($inactiveDepartments / $total) * 100 : 0;
+
+        return view('pages.file-maintenance.department', compact('departments', 'totalDepartments', 'activeDepartments', 'inactiveDepartments', 'activePercentage', 'inactivePercentage'));
     }
 
     /**

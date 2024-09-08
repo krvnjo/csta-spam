@@ -12,6 +12,13 @@ class Department extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'departments';
+
+    protected $fillable = [
+        'name',
+        'dept_code'
+    ];
+
     public function designations(): HasMany {
         return $this->hasMany(Designation::class, 'dept_id', 'id');
     }

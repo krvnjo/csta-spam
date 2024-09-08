@@ -1,8 +1,8 @@
 <footer class="footer">
   <div class="row justify-content-between align-items-center">
-    <div class="col">
+    <div class="col text-center text-sm-start">
       <p class="fs-6 mt-1">
-        @ CSTA - SPAM. 2024 | A capstone project developed by <span class="d-none d-sm-inline-block">Achondo, Bunag, and Quimora</span>
+        @ CSTA - SPAM. 2024 | A capstone project developed by Achondo, Bunag, and Quimora
       </p>
     </div>
     <!-- End Col -->

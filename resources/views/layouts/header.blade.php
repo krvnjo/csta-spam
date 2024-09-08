@@ -2,13 +2,10 @@
   <div class="navbar-nav-wrap">
     <!-- Logo -->
     <a class="navbar-brand" href="/" aria-label="CSTA - SPAM">
-      <img class="navbar-brand-logo" data-hs-theme-appearance="default" src="{{ Vite::asset('resources/svg/logos/logo.svg') }}" alt="CSTA - SPAM Logo">
-      <img class="navbar-brand-logo" data-hs-theme-appearance="dark" src="{{ Vite::asset('resources/svg/logos-light/logo.svg') }}"
-        alt="CSTA - SPAM Logo">
-      <img class="navbar-brand-logo-mini" data-hs-theme-appearance="default" src="{{ Vite::asset('resources/svg/logos/logo-short.svg') }}"
-        alt="CSTA - SPAM Logo">
-      <img class="navbar-brand-logo-mini" data-hs-theme-appearance="dark" src="{{ Vite::asset('resources/svg/logos-light/logo-short.svg') }}"
-        alt="CSTA - SPAM Logo">
+      <img class="navbar-brand-logo-mini d-block" data-hs-theme-appearance="default" src="{{ Vite::asset('resources/svg/logos/logo-short.svg') }}"
+        alt="CSTA - SPAM Logo" style="width: 2rem">
+      <img class="navbar-brand-logo-mini d-block" data-hs-theme-appearance="dark" src="{{ Vite::asset('resources/svg/logos-light/logo-short.svg') }}"
+        alt="CSTA - SPAM Logo" style="width: 2rem">
     </a>
     <!-- End Logo -->
 
@@ -141,7 +138,7 @@
     <div class="navbar-nav-wrap-content-end">
       <!-- Navbar -->
       <ul class="navbar-nav">
-        <li class="nav-item d-none d-sm-inline-block">
+        <li class="nav-item d-sm-inline-block">
           <!-- Notification -->
           <div class="dropdown">
             <button class="btn btn-ghost-secondary btn-icon rounded-circle" id="navbarNotificationsDropdown" data-bs-toggle="dropdown"
