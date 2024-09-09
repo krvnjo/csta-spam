@@ -16,6 +16,10 @@
     height: 100%;
 }
 .custom-modal-body {
-    max-height: 40rem; /* Adjust this value to fit your design */
+    max-height: 40rem;
     overflow-y: auto;
+}
+.tom-select input[type="text"] {
+    caret-color: transparent;
+    pointer-events: none;
 }
