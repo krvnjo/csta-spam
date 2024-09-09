@@ -15,10 +15,9 @@
         <!-- Form -->
         <form id="frmAddAcquisition" method="post" novalidate>
           @csrf
-          <label class="col col-form-label form-label" for="txtAddAcquisition">Acquisition Name</label>
-          <span class="font-13" style="color: red">*</span>
+          <label class="col col-form-label form-label" for="txtAddAcquisition">Acquisition Name <span class="text-danger">*</span></label>
           <input class="form-control" id="txtAddAcquisition" name="acquisition" type="text" placeholder="Enter a Acquisition" required>
-          <span class="invalid-feedback" id="acquisitionValidation"></span>
+          <span class="invalid-feedback" id="valAddAcquisition"></span>
         </form>
         <!-- End Form -->
       </div>
@@ -31,9 +30,9 @@
           <!-- End Col -->
 
           <div class="col-sm-auto">
-            <div class="d-flex gap-3">
-              <button class="btn btn-white" data-bs-dismiss="modal" type="button" aria-label="Close">Cancel</button>
-              <button class="btn btn-primary" form="frmAddAcquisition" type="submit">Add</button>
+            <div class="d-flex gap-2">
+              <button class="btn btn-white" data-bs-dismiss="modal" type="button">Cancel</button>
+              <button class="btn btn-primary" form="frmAddAcquisition" type="submit">Save</button>
             </div>
           </div>
           <!-- End Col -->

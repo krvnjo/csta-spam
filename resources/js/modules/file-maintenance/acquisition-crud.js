@@ -1,49 +1,166 @@
 $(document).ready(function () {
   const acquisitionDatatable = $("#acquisitionDatatable");
+  let unsavedChanges = false;
+  let formSubmitted = false;
 
-  // Store an Acquisition
-  $("#frmAddAcquisition").on("submit", function (event) {
-    event.preventDefault();
+  // Create an Acquisition
+  const acquisitionAddModal = $("#addAcquisitionModal");
+  const acquisitionAddForm = $("#frmAddAcquisition");
+  const acquisitionAddText = $("#txtAddAcquisition");
+  const acquisitionAddValid = $("#valAddAcquisition");
 
-    const addAcquisitionFormElements = {
-      form: $(this),
-      acquisition: $("#txtAddAcquisition"),
-      acquisitionValidation: $("#acquisitionValidation"),
-    };
+  handleUnsavedChanges(acquisitionAddModal, acquisitionAddForm, unsavedChanges, formSubmitted);
 
-    const addAcquisitionFormData = {
-      _token: $("input[name=_token]").val(),
-      acquisition: addAcquisitionFormElements.acquisition.val(),
-    };
+  acquisitionAddForm.on("submit", function (e) {
+    e.preventDefault();
 
     $.ajax({
-      url: "/file-maintenance/acquisitions",
-      method: "post",
-      data: addAcquisitionFormData,
+      url: "/file-maintenance/acquisitions/create",
+      method: "POST",
+      data: {
+        _token: $("input[name=_token]").val(),
+        acquisition: acquisitionAddText.val(),
+      },
       success: function (response) {
         if (response.success) {
-          addAcquisitionFormElements.acquisition.val("");
-          $("#addAcquisitionModal").modal("hide");
-          Swal.fire({
-            title: "Added Successfully!",
-            text: "Acquisition has been added.",
-            icon: "success",
-            confirmButtonText: "OK",
-          }).then((result) => {
-            if (result.isConfirmed) {
-              location.reload();
-            }
-          });
+          unsavedChanges = false;
+          formSubmitted = true;
+          showSuccessAlert(response, acquisitionAddModal, acquisitionAddForm);
         } else {
-          if (response.errors.acquisition) {
-            addAcquisitionFormElements.acquisition.addClass("is-invalid");
-            addAcquisitionFormElements.acquisitionValidation.text(response.errors.acquisition[0]);
-          }
+          acquisitionAddText.addClass("is-invalid");
+          acquisitionAddValid.text(response.errors.acquisition[0]);
         }
       },
-      error: function () {
-        Swal.fire("Oops! An error has occurred!", "There's an error while adding the acquisition. Please try again.", "error").then((r) => {});
+      error: function (jqXHR, textStatus, errorThrown) {
+        showErrorAlert("An unexpected error occurred when adding the record. Please try again later.", jqXHR, textStatus, errorThrown);
       },
     });
   });
+  // End Create an Acquisition
+
+  // Edit and Update an Acquisition
+  const acquisitionEditModal = $("#editAcquisitionModal");
+  const acquisitionEditForm = $("#frmEditAcquisition");
+  const acquisitionEditId = $("#txtEditAcquisitionId");
+  const acquisitionEditText = $("#txtEditAcquisition");
+  const acquisitionEditValid = $("#valEditAcquisition");
+
+  acquisitionDatatable.on("click", "#btnEditAcquisition", function () {
+    const acquisitionId = $(this).closest("tr").find("td[data-acquisition-id]").data("acquisition-id");
+
+    $.ajax({
+      url: "/file-maintenance/acquisitions/edit",
+      method: "GET",
+      data: {
+        _token: $("input[name=_token]").val(),
+        id: acquisitionId,
+      },
+      success: function (response) {
+        acquisitionEditModal.modal("toggle");
+        acquisitionEditId.val(response.id);
+        acquisitionEditText.val(response.name);
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        showErrorAlert("An unexpected error occurred when editing the record. Please try again later.", jqXHR, textStatus, errorThrown);
+      },
+    });
+  });
+
+  handleUnsavedChanges(acquisitionEditModal, acquisitionEditForm);
+
+  acquisitionEditForm.on("submit", function (e) {
+    e.preventDefault();
+
+    $.ajax({
+      url: "/file-maintenance/acquisitions/update/" + acquisitionEditId.val(),
+      method: "PATCH",
+      data: {
+        _token: $("input[name=_token]").val(),
+        id: acquisitionEditId.val(),
+        acquisition: acquisitionEditText.val(),
+      },
+      success: function (response) {
+        if (response.success) {
+          unsavedChanges = false;
+          formSubmitted = true;
+          showSuccessAlert(response, acquisitionEditModal, acquisitionEditForm);
+        } else {
+          acquisitionEditText.addClass("is-invalid");
+          acquisitionEditValid.text(response.errors.acquisition[0]);
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        showErrorAlert("An unexpected error occurred when editing the record. Please try again later.", jqXHR, textStatus, errorThrown);
+      },
+    });
+  });
+
+  $(".btnStatusAcquisition").on("click", function () {
+    const acquisitionId = $(this).closest("tr").find("td[data-acquisition-id]").data("acquisition-id");
+    const status = $(this).data("status");
+
+    Swal.fire({
+      title: "Change status?",
+      text: "Are you sure you want to set it to inactive?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, set it to inactive!",
+      cancelButtonText: "No, cancel!",
+      customClass: {
+        confirmButton: "btn btn-primary",
+        cancelButton: "btn btn-secondary",
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: "/file-maintenance/acquisitions/update/" + acquisitionId,
+          method: "PATCH",
+          data: {
+            _token: $("input[name=_token]").val(),
+            status: status,
+          },
+          success: function (response) {
+            showSuccessAlert(response);
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            showErrorAlert("An unexpected error has occurred. Please try again later.", jqXHR, textStatus, errorThrown);
+          },
+        });
+      }
+    });
+  });
+  // End Edit and Update an Acquisition
+
+  // Delete an Acquisition
+  acquisitionDatatable.on("click", "#btnDeleteAcquisition", function () {
+    const acquisitionId = $(this).closest("tr").find("td[data-acquisition-id]").data("acquisition-id");
+
+    Swal.fire({
+      title: "Delete Record?",
+      text: "Are you sure you want to delete the acquisition?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel!",
+      customClass: {
+        confirmButton: "btn btn-danger",
+        cancelButton: "btn btn-secondary",
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: "/file-maintenance/acquisitions/delete/" + acquisitionId,
+          method: "DELETE",
+          data: { _token: $("input[name=_token]").val() },
+          success: function (response) {
+            showSuccessAlert(response);
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            showErrorAlert("An unexpected error occurred when deleting the record. Please try again later.", jqXHR, textStatus, errorThrown);
+          },
+        });
+      }
+    });
+  });
+  // End Delete an Acquisition
 });

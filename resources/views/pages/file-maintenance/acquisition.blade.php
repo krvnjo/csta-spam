@@ -63,12 +63,12 @@
                 <div class="col-12 col-md">
                   <span class="d-block">Total Acquisitions</span>
                   <span class="badge bg-soft-primary text-primary rounded-pill p-1">
-                    @if ($inactiveAcquisitions == 0)
+                    @if ($deletedAcquisitions == 0)
                       <i class="bi-hand-thumbs-up-fill"></i> All good!
-                    @elseif($inactiveAcquisitions == 1)
-                      <i class="bi-arrow-clockwise"></i> 1 record can be restored
+                    @elseif($deletedAcquisitions == 1)
+                      <i class="bi-arrow-clockwise"></i> 1 record can be restored from trash
                     @else
-                      <i class="bi-arrow-clockwise"></i> {{ $inactiveAcquisitions }} records can be restored
+                      <i class="bi-arrow-clockwise"></i> {{ $deletedAcquisitions }} records can be restored from trash
                     @endif
                   </span>
                 </div>
@@ -124,7 +124,7 @@
             <div id="acquisitionDatatableCounterInfo" style="display: none;">
               <div class="d-flex align-items-center">
                 <span class="fs-5 me-3">
-                  <span id="acquisitionDatatableCounter">0</span>
+                  <span id="acquisitionDatatableCounter"></span>
                   Selected
                 </span>
                 <a class="btn btn-outline-danger btn-sm" href="#">
@@ -201,7 +201,7 @@
                         <div class="col">
                           <!-- Select -->
                           <div class="tom-select-custom">
-                            <select class="js-select js-datatable-filter form-select form-select-sm" data-target-column-index="3"
+                            <select class="js-select js-datatable-filter form-select form-select-sm" data-target-column-index="4"
                               data-hs-tom-select-options='{
                                 "placeholder": "All Status",
                                 "hideSearch": true,
@@ -236,14 +236,14 @@
 
         <!-- Table -->
         <div class="table-responsive datatable-custom">
-          <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table"
+          <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100"
             id="acquisitionDatatable"
             data-hs-datatables-options='{
               "columnDefs": [{
-                 "targets": [0, 4],
+                 "targets": [0, 5],
                  "orderable": false
                }],
-              "order": [2, "asc"],
+              "order": [3, "desc"],
               "info": {
                 "totalQty": "#acquisitionDatatableWithPagination"
               },
@@ -262,6 +262,7 @@
                     <label class="form-check-label" for="acquisitionDatatableCheckAll"></label>
                   </div>
                 </th>
+                <th class="d-none">Acquisition Id</th>
                 <th style="width: 25%;">Acquisition Name</th>
                 <th>Date Created</th>
                 <th>Status</th>
@@ -278,8 +279,10 @@
                       <label class="form-check-label" for="acquisitionCheck"></label>
                     </div>
                   </td>
+                  <td class="d-none" data-acquisition-id="{{ Crypt::encryptString($acquisition->id) }}"></td>
                   <td><span class="d-block h5 mb-0">{{ $acquisition->name }}</span></td>
-                  <td><i class="bi-calendar-event me-1"></i>
+                  <td>
+                    <i class="bi-calendar-event me-1"></i>
                     <div class="d-none">{{ $acquisition->created_at }}</div>{{ $acquisition->created_at->format('M d, Y') }}
                   </td>
                   <td>
@@ -292,19 +295,26 @@
                   <td>
                     <div class="dropdown position-static">
                       <button class="btn btn-white btn-sm" id="acquisitionDropdownActions" data-bs-toggle="dropdown" type="button"
-                        aria-expanded="false">
-                        More <i class="bi-chevron-down ms-1"></i>
+                        aria-expanded="false"> More <i class="bi-chevron-down ms-1"></i>
                       </button>
 
-                      <div class="dropdown-menu dropdown-menu-sm dropdown-menu-end" aria-labelledby="acquisitionDropdownActions">
-                        <button class="dropdown-item" type="button" href="#"><i class="bi-pencil-square me-2"></i> Edit Record</button>
+                      <div class="dropdown-menu dropdown-menu-sm dropdown-menu-end">
+                        <button class="dropdown-item" id="btnEditAcquisition" type="button">
+                          <i class="bi-pencil-square me-2"></i> Edit Record
+                        </button>
                         @if ($acquisition->is_active)
-                          <button class="dropdown-item" type="button" href="#"><i class="bi-x-circle me-2"></i> Set to Inactive</button>
+                          <button class="dropdown-item btnStatusAcquisition" data-status="0" type="button">
+                            <i class="bi-x-circle me-2"></i> Set to Inactive
+                          </button>
                         @else
-                          <button class="dropdown-item" type="button" href="#"><i class="bi-check-circle me-2"></i> Set to Active</button>
+                          <button class="dropdown-item btnStatusAcquisition" data-status="1" type="button">
+                            <i class="bi-check-circle me-2"></i> Set to Active
+                          </button>
                         @endif
                         <div class="dropdown-divider"></div>
-                        <button class="dropdown-item text-danger" type="button" href="#"><i class="bi-trash me-2"></i> Delete</button>
+                        <button class="dropdown-item text-danger" id="btnDeleteAcquisition" type="button">
+                          <i class="bi-trash me-2"></i> Delete
+                        </button>
                       </div>
                     </div>
                   </td>
@@ -370,6 +380,7 @@
 
 @section('sub-content')
   <x-file-maintenance.add-acquisition />
+  <x-file-maintenance.edit-acquisition />
 @endsection
 
 @section('scripts')

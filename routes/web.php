@@ -30,7 +30,10 @@ Route::controller(PropertyParentController::class)->group(function () {
 // Acquisition Routes
 Route::controller(AcquisitionController::class)->group(function () {
     Route::get('/file-maintenance/acquisitions', 'index')->name('acquisition.index');
-    Route::post('/file-maintenance/acquisitions', 'store')->name('acquisition.store');
+    Route::post('/file-maintenance/acquisitions/create', 'store')->name('acquisition.store');
+    Route::get('/file-maintenance/acquisitions/edit', 'edit')->name('acquisition.edit');
+    Route::patch('/file-maintenance/acquisitions/update/{acquisition}', 'update')->name('acquisition.update');
+    Route::delete('/file-maintenance/acquisitions/delete/{acquisition}', 'destroy')->name('acquisition.delete');
 });
 
 // Brand Routes
