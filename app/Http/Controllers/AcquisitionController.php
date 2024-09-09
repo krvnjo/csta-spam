@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Acquisition;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class AcquisitionController extends Controller
 {
@@ -13,15 +14,27 @@ class AcquisitionController extends Controller
      */
     public function index()
     {
-        $acquisitions = Acquisition::query()->get();
+        $acquisitions = Acquisition::query()->whereNull('deleted_at')->get();
         $totalAcquisitions = $acquisitions->count();
+
         $activeAcquisitions = $acquisitions->where('is_active', 1)->count();
         $inactiveAcquisitions = $acquisitions->where('is_active', 0)->count();
+        $deletedAcquisitions = $acquisitions->whereNotNull('deleted_at')->count();
 
         $activePercentage = $totalAcquisitions > 0 ? ($activeAcquisitions / $totalAcquisitions) * 100 : 0;
         $inactivePercentage = $totalAcquisitions > 0 ? ($inactiveAcquisitions / $totalAcquisitions) * 100 : 0;
 
-        return view('pages.file-maintenance.acquisition', compact('acquisitions', 'totalAcquisitions', 'activeAcquisitions', 'inactiveAcquisitions', 'activePercentage', 'inactivePercentage'));
+        return view('pages.file-maintenance.acquisition',
+            compact(
+                'acquisitions',
+                'totalAcquisitions',
+                'activeAcquisitions',
+                'inactiveAcquisitions',
+                'deletedAcquisitions',
+                'activePercentage',
+                'inactivePercentage'
+            )
+        );
     }
 
     /**
@@ -29,39 +42,40 @@ class AcquisitionController extends Controller
      */
     public function store(Request $request)
     {
-        $validationMessages = [
-            'acquisition.required' => 'Please enter a acquisition name!',
-            'acquisition.regex' => 'It must not contain any numbers and special characters.',
+        $acquisitionValidationMessages = [
+            'acquisition.required' => 'Please enter an acquisition name!',
+            'acquisition.regex' => 'The acquisition name may only contain letters, spaces, and hyphens.',
+            'acquisition.min' => 'The acquisition name must be at least :min characters.',
             'acquisition.max' => 'The acquisition name may not be greater than :max characters.',
-            'acquisition.unique' => 'The acquisition name already exists.',
+            'acquisition.unique' => 'This acquisition name already exists.',
         ];
 
-        $validator = Validator::make($request->all(), [
-            'acquisition' => ['required', 'regex:/^[a-zA-Z]+(?:[\'\s\.\-!][a-zA-Z0-9]+)*$/', 'max:30', 'unique:acquisitions,name'],
-        ], $validationMessages);
+        $acquisitionValidator = Validator::make($request->all(), [
+            'acquisition' => [
+                'required',
+                'regex:/^[a-zA-Z]+(?:[\- ][a-zA-Z]+)*$/',
+                'min:3',
+                'max:30',
+                'unique:acquisitions,name'
+            ],
+        ], $acquisitionValidationMessages);
 
-        if ($validator->fails()) {
-            $errors = $validator->errors()->toArray();
-
+        if ($acquisitionValidator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $errors,
-                'data' => $request->all(),
+                'errors' => $acquisitionValidator->errors(),
             ]);
         } else {
             Acquisition::query()->create([
-                'name' => trim($request->input('acquisition')),
+                'name' => ucwords(strtolower(trim($request->input('acquisition')))),
             ]);
-            return response()->json(['success' => true]);
-        }
-    }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Acquisition $acquisition)
-    {
-        //
+            return response()->json([
+                'success' => true,
+                'title' => 'Saved Successfully!',
+                'text' => 'The acquisition has been added successfully!',
+            ]);
+        }
     }
 
     /**
@@ -69,7 +83,7 @@ class AcquisitionController extends Controller
      */
     public function edit(Acquisition $acquisition)
     {
-        //
+        return response()->json($acquisition);
     }
 
     /**
@@ -77,7 +91,43 @@ class AcquisitionController extends Controller
      */
     public function update(Request $request, Acquisition $acquisition)
     {
-        //
+        if ($request->has('acquisition')) {
+            $acquisitionValidationMessages = [
+                'acquisition.required' => 'Please enter an acquisition name!',
+                'acquisition.regex' => 'The acquisition name may only contain letters, spaces, and hyphens.',
+                'acquisition.min' => 'The acquisition name must be at least :min characters.',
+                'acquisition.max' => 'The acquisition name may not be greater than :max characters.',
+                'acquisition.unique' => 'This acquisition name already exists.',
+            ];
+
+            $acquisitionValidator = Validator::make($request->all(), [
+                'acquisition' => [
+                    'required',
+                    'regex:/^[a-zA-Z]+(?:[\- ][a-zA-Z]+)*$/',
+                    'min:3',
+                    'max:30',
+                    Rule::unique('acquisitions', 'name')->ignore($acquisition->id)
+                ],
+            ], $acquisitionValidationMessages);
+
+            if ($acquisitionValidator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $acquisitionValidator->errors(),
+                ]);
+            } else {
+                $acquisition->name = ucwords(strtolower(trim($request->input('acquisition'))));
+                $acquisition->save();
+            }
+        } elseif ($request->has('status')) {
+            $acquisition->is_active = $request->input('status');
+            $acquisition->save();
+        }
+        return response()->json([
+            'success' => true,
+            'title' => 'Updated Successfully!',
+            'text' => 'The acquisition has been updated successfully!',
+        ]);
     }
 
     /**
@@ -85,6 +135,14 @@ class AcquisitionController extends Controller
      */
     public function destroy(Acquisition $acquisition)
     {
-        //
+        $acquisition->is_active = 0;
+        $acquisition->delete();
+        $acquisition->save();
+
+        return response()->json([
+            'success' => true,
+            'title' => 'Deleted Successfully!',
+            'text' => 'The acquisition has been deleted and can be restored from the recycle bin.',
+        ]);
     }
 }
