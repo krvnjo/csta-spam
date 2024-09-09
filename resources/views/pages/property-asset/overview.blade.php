@@ -268,57 +268,57 @@
             </thead>
 
             <tbody>
-              {{--          @foreach ($propertyParents->where('is_active', 1)->where('is_delete', 0)->sortByDesc('updated_at') as $propertyParent) --}}
-              {{--            <tr> --}}
-              {{--              <td class="table-column-pe-0"> --}}
-              {{--                <div class="form-check"> --}}
-              {{--                  <input class="form-check-input" type="checkbox" value="" id="propertyCheckAll1"> --}}
-              {{--                  <label class="form-check-label" for="propertyCheckAll1"></label> --}}
-              {{--                </div> --}}
-              {{--              </td> --}}
-              {{--              <td class="table-column-ps-0"> --}}
-              {{--                <a class="d-flex align-items-center" href="{{ route('prop-child.index', $propertyParent->id) }}"> --}}
-              {{--                  <div class="avatar avatar-lg"> --}}
-              {{--                    <img class="avatar-img" src="{{ asset('assets/img/uploads/properties/' . $propertyParent->image) }}" alt="Image Description"> --}}
-              {{--                  </div> --}}
-              {{--                  <div class="ms-3"> --}}
-              {{--                    <span class="d-block h5 mb-0 text-inherit">{{ $propertyParent->name }}</span> --}}
-              {{--                    <span data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="{{ $propertyParent->description }}" style="color:gray"> --}}
-              {{--                          {{ Str::limit($propertyParent->description, 15) }} --}}
-              {{--                      </span> --}}
-              {{--                  </div> --}}
-              {{--                </a> --}}
-              {{--              </td> --}}
-              {{--              <td> --}}
-              {{--                <span class="d-block h5 mb-0">{{ $propertyParent->subcategory->category->name }}</span> --}}
-              {{--                <span class="d-block fs-5">{{ $propertyParent->subcategory->name }}</span> --}}
-              {{--              </td> --}}
-              {{--              <td>{{ $propertyParent->brand->name }}</td> --}}
-              {{--              <td>{{ $propertyParent->quantity }}</td> --}}
-              {{--              <td>₱{{ number_format($propertyParent->acq_price, 2) }}</td> --}}
-              {{--              <td> --}}
-              {{--                <div class="btn-group" role="group"> --}}
-              {{--                  <a class="btn btn-white btn-sm" href="{{ route('prop-child.index', $propertyParent->id) }}"> --}}
-              {{--                    <i class="bi-eye me-1"></i> View All --}}
-              {{--                  </a> --}}
+              @foreach ($propertyParents->where('is_active', 1)->where('deleted_at', null)->sortByDesc('updated_at') as $propertyParent)
+                <tr>
+                  <td class="table-column-pe-0">
+                    <div class="form-check">
+                      <input class="form-check-input" id="propertyCheckAll1" type="checkbox" value="">
+                      <label class="form-check-label" for="propertyCheckAll1"></label>
+                    </div>
+                  </td>
+                  <td class="table-column-ps-0">
+                    <a class="d-flex align-items-center" href="{{ route('prop-child.index', $propertyParent->id) }}">
+                      <div class="avatar avatar-lg">
+                        <img class="avatar-img" src="{{ asset('assets/img/uploads/properties/' . $propertyParent->image) }}" alt="Image Description">
+                      </div>
+                      <div class="ms-3">
+                        <span class="d-block h5 mb-0 text-inherit">{{ $propertyParent->name }}</span>
+                        <span data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="{{ $propertyParent->description }}"
+                          style="color:gray">
+                          {{ Str::limit($propertyParent->description, 15) }}
+                        </span>
+                      </div>
+                    </a>
+                  </td>
+                  <td>
+                    <span class="d-block h5 mb-0">{{ $propertyParent->subcategory->category->name }}</span>
+                    <span class="d-block fs-5">{{ $propertyParent->subcategory->name }}</span>
+                  </td>
+                  <td>{{ $propertyParent->brand->name }}</td>
+                  <td>{{ $propertyParent->quantity }}</td>
+                  <td>
+                    <div class="btn-group" role="group">
+                      <a class="btn btn-white btn-sm" href="{{ route('prop-child.index', $propertyParent->id) }}">
+                        <i class="bi-eye me-1"></i> View All
+                      </a>
 
-              {{--                  <!-- Button Group --> --}}
-              {{--                  <div class="btn-group"> --}}
-              {{--                    <button type="button" class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="productsEditDropdown1" --}}
-              {{--                            data-bs-toggle="dropdown" aria-expanded="false"></button> --}}
+                      <!-- Button Group -->
+                      <div class="btn-group">
+                        <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="productsEditDropdown1"
+                          data-bs-toggle="dropdown" type="button" aria-expanded="false"></button>
 
-              {{--                    <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="productsEditDropdown1"> --}}
-              {{--                      <button class="dropdown-item" type="button" id="btnEditPropParent" data-prop-parent-id="{{ $propertyParent->id }}"> --}}
-              {{--                        <i class="bi-pencil-fill dropdown-item-icon"></i> Edit --}}
-              {{--                      </button> --}}
-              {{--                    </div> --}}
-              {{--                  </div> --}}
-              {{--                  <!-- End Button Group --> --}}
+                        <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="productsEditDropdown1">
+                          <button class="dropdown-item" id="btnEditPropParent" data-prop-parent-id="{{ $propertyParent->id }}" type="button">
+                            <i class="bi-pencil-fill dropdown-item-icon"></i> Edit
+                          </button>
+                        </div>
+                      </div>
+                      <!-- End Button Group -->
 
-              {{--                </div> --}}
-              {{--              </td> --}}
-              {{--            </tr> --}}
-              {{--          @endforeach --}}
+                    </div>
+                  </td>
+                </tr>
+              @endforeach
 
             </tbody>
           </table>
@@ -378,7 +378,7 @@
 @endsection
 
 @section('sub-content')
-  <x-property-asset.add-property />
+  <x-property-asset.add-property :brands="$brands" :subcategories="$subcategories" :conditions="$conditions" :acquisitions="$acquisitions" />
 
   <!-- Product Filter Modal -->
   <div class="offcanvas offcanvas-end" id="offcanvasPropertyFilter" aria-labelledby="offcanvasPropertyFilterLabel" tabindex="-1">
@@ -666,42 +666,36 @@
       // INITIALIZATION OF DROPZONE
       // =======================================================
       HSCore.components.HSDropzone.init('.js-dropzone', {
-        maxFiles: 1, // Limit to 1 file
-        maxFilesize: 1, // File size limit in MB (1MB)
-        acceptedFiles: ".jpeg,.jpg,.png,.pdf", // Specify accepted file types
+        maxFiles: 1,
+        maxFilesize: 1,
+        acceptedFiles: ".jpeg,.jpg,.png",
         dictDefaultMessage: "Drag and drop your file here or click to upload",
 
         init: function() {
           var dropzoneInstance = this;
 
-          // Hiding the message when the file is added
           this.on("addedfile", function(file) {
-            // Hide the message (browse button and drag area)
             dropzoneInstance.element.querySelector(".dz-message").style.display = "none";
           });
 
-          // Show the message when the file is removed
           this.on("removedfile", function(file) {
-            // Show the message (browse button and drag area) again
             dropzoneInstance.element.querySelector(".dz-message").style.display = "block";
           });
 
-          // Error handling for large files
           this.on("error", function(file, message) {
-            if (file.size > 1048576) { // 1MB in bytes
+            if (file.size > 1048576) {
               Swal.fire({
                 icon: 'error',
                 title: 'File too large',
                 text: 'File size exceeds the limit of 1MB. Please upload a smaller file.',
               });
-              this.removeFile(file); // Remove the file from Dropzone
+              this.removeFile(file);
             }
           });
         }
       });
     })();
   </script>
-
 
   <script>
     $(document).on('ready', function() {
