@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Acquisition;
+use App\Models\Brand;
+use App\Models\Condition;
 use App\Models\PropertyParent;
+use App\Models\Subcategory;
 use Illuminate\Http\Request;
 
 class PropertyParentController extends Controller
@@ -12,7 +16,14 @@ class PropertyParentController extends Controller
      */
     public function index()
     {
-        return view('pages.property-asset.overview');
+        $propertyParents = PropertyParent::with(['subcategory.category', 'brand'])->where('is_active', 1)->where('deleted_at', null)->get();
+
+        $subcategories = Subcategory::query()->select('id','name')->where('is_active', 1)->get();
+        $brands = Brand::query()->select('id','name')->where('is_active', 1)->get();
+        $conditions = Condition::query()->select('id','name')->where('is_active', 1)->get();
+        $acquisitions = Acquisition::query()->select('id','name')->where('is_active', 1)->get();
+
+        return view('pages.property-asset.overview', compact('brands','subcategories','conditions','acquisitions','propertyParents'));
     }
 
     /**

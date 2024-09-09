@@ -19,6 +19,10 @@
     max-height: 40rem; /* Adjust this value to fit your design */
     overflow-y: auto;
 }
+.tom-select input[type="text"] {
+    caret-color: transparent;
+    pointer-events: none;
+}
 .red-mark {
   color: #ff0000;
 }
