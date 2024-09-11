@@ -659,6 +659,9 @@
   <!-- JS Themes -->
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>
 
+  <!-- JS Modules -->
+  <script src="{{ Vite::asset('resources/js/modules/properties-assets/property-modules.js') }}"></script>
+
   <!-- JS Plugins Init. -->
 
   <script>

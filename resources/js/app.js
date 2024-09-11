@@ -1,67 +1,59 @@
 import "./bootstrap";
-import Swal from "sweetalert2";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import Swal from "sweetalert2";
 
 window.Swal = Swal;
 
-// ============ Show Active Links JS ============ //
-const navLinks = document.querySelectorAll("#navbarVerticalMenu .nav-link");
-const currentPath = window.location.pathname;
+$(document).ready(function () {
+  // ============ Show Active Links JS ============ //
+  const navLinks = $("#navbarVerticalMenu .nav-link");
+  const currentPath = window.location.pathname;
 
-navLinks.forEach((link) => {
-  if (currentPath === link.getAttribute("href")) {
-    link.classList.add("active");
+  navLinks.each(function () {
+    const link = $(this);
+    if (currentPath === link.attr("href")) {
+      link.addClass("active");
 
-    // Find and open all ancestor 'nav-collapse' elements
-    let currentCollapse = link.closest(".nav-collapse");
+      let currentCollapse = link.closest(".nav-collapse");
 
-    while (currentCollapse) {
-      currentCollapse.classList.add("show");
+      while (currentCollapse.length) {
+        currentCollapse.addClass("show");
+        const dropdownToggle = currentCollapse.prev();
+        if (dropdownToggle.hasClass("dropdown-toggle")) {
+          currentCollapse = currentCollapse.parent().closest(".nav-collapse");
 
-      // If it's a dropdown, mark the toggle as active
-      const dropdownToggle = currentCollapse.previousElementSibling;
-      if (dropdownToggle.classList.contains("dropdown-toggle")) {
-        // Move up to the next parent collapse
-        currentCollapse = currentCollapse.parentNode.closest(".nav-collapse");
-        if (currentCollapse) {
-          dropdownToggle.classList.remove("active");
-        } else {
-          dropdownToggle.classList.add("active");
+          if (currentCollapse.length) {
+            dropdownToggle.removeClass("active");
+          } else {
+            dropdownToggle.addClass("active");
+          }
         }
       }
     }
-  }
-});
-// ============ End Show Active Links JS ============ //
-
-// ============ Remove invalid validation on focus JS ============ //
-document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll("input").forEach((input) => {
-    input.addEventListener("keydown", () => {
-      input.classList.remove("is-invalid");
-    });
   });
-});
-// ============ End Remove invalid validation on focus JS ============ //
+  // ============ End Show Active Links JS ============ //
 
-// ============ Show Success Alert in File Maintenance Function ============ //
+  // ============ Remove invalid validation on keydown JS ============ //
+  $("input").on("keydown", function () {
+    $(this).removeClass("is-invalid");
+    $(this).siblings(".invalid-feedback").html("");
+  });
+  // ============ End Remove invalid validation on keydown JS ============ //
+});
+
+// ============ Show Alerts in File Maintenance Function ============ //
 function showSuccessAlert(response, modal, form) {
-  form[0].reset();
-  modal.modal("hide");
+  cleanModalForm(modal, form);
   Swal.fire({
     title: response.title,
     text: response.text,
     icon: "success",
     confirmButtonText: "OK",
-  }).then((r) => {
+  }).then(() => {
     location.reload();
   });
 }
 
-window.showSuccessAlert = showSuccessAlert;
-// ============ End Show Success Alert in File Maintenance Function ============ //
-
-// ============ Show Error Alert in File Maintenance Function ============ //
 function showErrorAlert(customMessage, jqXHR, textStatus, errorThrown, modal, form) {
   let errorMessage = customMessage || "An unexpected error occurred. Please try again later.";
 
@@ -73,17 +65,45 @@ function showErrorAlert(customMessage, jqXHR, textStatus, errorThrown, modal, fo
     errorMessage = "Error: " + errorThrown;
   }
 
+  cleanModalForm(modal, form);
   Swal.fire({
     title: "Oops... Something went wrong!",
     text: errorMessage,
     icon: "error",
     confirmButtonText: "OK",
-  }).then((result) => {
-    form[0].reset();
-    modal.modal("hide");
+  }).then(() => {
     location.reload();
   });
 }
 
+function cleanModalForm(modal, form) {
+  form.trigger("reset");
+  form.find(":input").removeClass("is-invalid").siblings(".invalid-feedback").empty();
+
+  form.find('select').each(function() {
+    const tomSelectInstance = this.tomselect;
+    if (tomSelectInstance) {
+      tomSelectInstance.clear();
+      tomSelectInstance.setValue('');
+    } else {
+      $(this).val('');
+    }
+  });
+
+  form.find('.js-dropzone').each(function() {
+    const dropzoneElement = this;
+    const dropzoneInstance = Dropzone.forElement(dropzoneElement);
+    if (dropzoneInstance) {
+      dropzoneInstance.removeAllFiles(true);
+    }
+  });
+
+  modal.hide();
+}
+
+
+
+window.showSuccessAlert = showSuccessAlert;
 window.showErrorAlert = showErrorAlert;
-// ============ End Show Error Alert in File Maintenance Function ============ //
+window.cleanModalForm = cleanModalForm;
+// ============ End Show Alerts in File Maintenance Function ============ //
