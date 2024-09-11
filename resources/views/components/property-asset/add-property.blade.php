@@ -19,7 +19,7 @@
       </div>
 
       <!-- End Header -->
-      <form id="frmAddProperty" action="/properties-assets" method="post" enctype="multipart/form-data">
+      <form id="frmAddProperty" method="post" novalidate enctype="multipart/form-data">
         @csrf
 
         <div class="modal-body custom-modal-body">
@@ -27,18 +27,17 @@
             <div class="col-lg-6">
               <div class="mb-3">
                 <label class="form-label" for="txtPropertyName">Item Name:
-                  <span class="font-13" style="color: red">*</span></label>
-                <input class="form-control" id="txtPropertyName" name="propertyName" type="text"
-                  title="Only alphanumeric characters are allowed, and the input cannot be all spaces" placeholder="Stock Name" minlength="5"
-                  required pattern="^(?=.*[A-Za-z0-9])[A-Za-z0-9 ]+$" />
+                  <span class="text-danger">*</span></label>
+                <input class="form-control" id="txtPropertyName" name="propertyName" type="text" placeholder="Stock Name" />
+                <span class="invalid-feedback" id="valAddName"></span>
               </div>
             </div>
 
             <div class="col-lg-6">
               <div class="mb-3">
                 <label class="form-label" for="txtSerialNumber"> Serial Number: </label>
-                <input class="form-control" id="txtSerialNumber" name="serialNumber" type="text" title="Only alphanumeric characters are allowed"
-                  placeholder="Serial Number" pattern="[A-Za-z0-9]*" />
+                <input class="form-control" id="txtSerialNumber" name="serialNumber" type="text" placeholder="Serial Number" />
+                <span class="invalid-feedback" id="valAddSerial"></span>
               </div>
             </div>
           </div>
@@ -48,14 +47,15 @@
               <div class="tom-select-custom mb-3">
                 <label class="form-label" for="cbxCategory">
                   Category:
-                  <span class="font-13" style="color: red">*</span>
+                  <span class="text-danger">*</span>
                 </label>
-                <select class="js-select form-select" id="cbxCategory" name="category" required autocomplete="off">
+                <select class="js-select form-select" id="cbxCategory" name="category" autocomplete="off">
                   <option value="" disabled selected>Select Category...</option>
                   @foreach ($subcategories as $category)
                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                   @endforeach
                 </select>
+                <span class="invalid-feedback" id="valAddCategory"></span>
               </div>
             </div>
 
@@ -63,21 +63,22 @@
               <div class="tom-select-custom mb-3">
                 <label class="form-label" for="cbxBrand">
                   Brand:
-                  <span class="font-13" style="color: red">*</span></label>
-                <select class="js-select form-select" id="cbxBrand" name="brand" required autocomplete="off">
+                  <span class="text-danger">*</span></label>
+                <select class="js-select form-select" id="cbxBrand" name="brand" autocomplete="off">
                   <option value="" disabled selected>Select Brand...</option>
                   @foreach ($brands as $brand)
                     <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                   @endforeach
                 </select>
+                <span class="invalid-feedback" id="valAddBrand"></span>
               </div>
             </div>
 
             <div class="col-lg-4">
               <div class="mb-3">
-                <label class="form-label" for="txtQuantity">Quantity: <span class="font-13" style="color: red">*</span></label>
-                <input class="form-control" id="txtQuantity" name="quantity" type="number" placeholder="1" min="1" minlength="1"
-                  max="500" required />
+                <label class="form-label" for="txtQuantity">Quantity: <span class="text-danger">*</span></label>
+                <input class="form-control" id="txtQuantity" name="quantity" type="number" placeholder="1" />
+                <span class="invalid-feedback" id="valAddQty"></span>
               </div>
             </div>
           </div>
@@ -86,9 +87,8 @@
             <div class="col-lg">
               <div class="mb-3">
                 <label class="form-label" for="txtDescription">Description:</label>
-                <textarea class="form-control" id="txtDescription" name="description"
-                  title="Only alphanumeric characters and the following special characters are allowed: %,-,&quot;'" style="resize: none" placeholder="Description"
-                  minlength="5"></textarea>
+                <textarea class="form-control" id="txtDescription" name="description" style="resize: none" placeholder="Description"></textarea>
+                <span class="invalid-feedback" id="valAddDesc"></span>
               </div>
             </div>
           </div>
@@ -98,13 +98,14 @@
               <div class="tom-select-custom mb-3">
                 <label class="form-label" for="cbxAcquiredType">
                   Acquired Type:
-                  <span class="font-13" style="color: red">*</span></label>
-                <select class="js-select form-select cbxAcquiredType" id="cbxAcquiredType" name="acquiredType" required autocomplete="off">
+                  <span class="text-danger">*</span></label>
+                <select class="js-select form-select cbxAcquiredType" id="cbxAcquiredType" name="acquiredType" autocomplete="off">
                   <option value="" disabled selected>Select Acquired Type...</option>
                   @foreach ($acquisitions as $acquired)
                     <option value="{{ $acquired->id }}">{{ $acquired->name }}</option>
                   @endforeach
                 </select>
+                <span class="invalid-feedback" id="valAddAcquired"></span>
               </div>
             </div>
 
@@ -112,8 +113,9 @@
               <div class="mb-3">
                 <label class="form-label" for="dtpAcquired">
                   Date Acquired:
-                  <span class="font-13" style="color: red">*</span></label>
-                <input class="form-control" id="dtpAcquired" name="dateAcquired" type="date" required max="{{ now()->toDateString() }}" />
+                  <span class="text-danger">*</span></label>
+                <input class="form-control" id="dtpAcquired" name="dateAcquired" type="date" max="{{ now()->toDateString() }}" />
+                <span class="invalid-feedback" id="valAddDtpAcq"></span>
               </div>
             </div>
           </div>
@@ -123,13 +125,14 @@
               <div class="tom-select-custom mb-3">
                 <label class="form-label" for="cbxCondition">
                   Condition:
-                  <span class="font-13" style="color: red">*</span></label>
-                <select class="js-select form-select" id="cbxCondition" name="condition" required autocomplete="off">
+                  <span class="text-danger">*</span></label>
+                <select class="js-select form-select" id="cbxCondition" name="condition" autocomplete="off">
                   <option value="" disabled selected>Select Condition...</option>
                   @foreach ($conditions as $condition)
                     <option value="{{ $condition->id }}">{{ $condition->name }}</option>
                   @endforeach
                 </select>
+                <span class="invalid-feedback" id="valAddCondition"></span>
               </div>
             </div>
 
@@ -145,16 +148,15 @@
             <div class="col-lg">
               <div class="mb-3">
                 <label class="form-label" for="txtRemarks">Remarks:</label>
-                <textarea class="form-control" id="txtRemarks" name="remarks"
-                  title="Only alphanumeric characters and the following special characters are allowed: %,-,&quot;'" style="resize: none" placeholder="Remarks"
-                  minlength="5"></textarea>
+                <textarea class="form-control" id="txtRemarks" name="remarks" style="resize: none" placeholder="Remarks"></textarea>
+                <span class="invalid-feedback" id="valAddRemarks"></span>
               </div>
             </div>
           </div>
           <div class="row">
             <div class="col-lg">
               <div class="mb-3">
-                <label class="form-label" for="txtR">Image:</label>
+                <label class="form-label" for="propertyDropzone">Image:</label>
                 <div style="padding-left: 1.4rem">
                   <!-- Dropzone -->
                   <div class="js-dropzone row dz-dropzone dz-dropzone-card" id="propertyDropzone">
@@ -177,32 +179,12 @@
 
         <div class="modal-footer">
           <button class="btn btn-secondary" type="button">Close</button>
-          <button class="btn btn-primary" type="submit">Save</button>
+          <button class="btn btn-primary" form="frmAddProperty" type="submit">Save</button>
         </div>
       </form>
     </div>
   </div>
 </div>
-
-<script>
-  document.getElementById('txtDescription').addEventListener('input', function() {
-    const pattern = /^(?!%+$|,+|-+|\s+$)[A-Za-z0-9%,\- ×'"]+$/;
-    if (!pattern.test(this.value)) {
-      this.setCustomValidity("Only alphanumeric characters and the following special characters are allowed: %,-,&quot;'");
-    } else {
-      this.setCustomValidity('');
-    }
-  });
-
-  document.getElementById('txtRemarks').addEventListener('input', function() {
-    const pattern = /^(?!%+$|,+|-+|\s+$)[A-Za-z0-9%,\- ×'"]+$/;
-    if (!pattern.test(this.value)) {
-      this.setCustomValidity("Only alphanumeric characters and the following special characters are allowed: %,-,&quot;'");
-    } else {
-      this.setCustomValidity('');
-    }
-  });
-</script>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
@@ -258,6 +240,17 @@
       return formIsDirty || dropzone.files.length > 0;
     }
 
+    // Function to clear validation error classes and messages
+    function clearValidationErrors() {
+      form.querySelectorAll('input, select, textarea').forEach((input) => {
+        input.classList.remove('is-invalid');
+        const feedback = input.nextElementSibling;
+        if (feedback && feedback.classList.contains('invalid-feedback')) {
+          feedback.textContent = '';
+        }
+      });
+    }
+
     // Check input changes
     inputs.forEach(input => {
       input.addEventListener('change', () => {
@@ -295,6 +288,8 @@
             allowEnterKey: false
           }).then((result) => {
             if (result.isConfirmed) {
+              clearValidationErrors(); // Clear validation errors before resetting the form
+
               form.reset();
 
               // Reset select inputs
@@ -322,10 +317,10 @@
             }
           });
         } else {
+          clearValidationErrors(); // Clear validation errors when no warning is needed
           $('#addPropertyModal').modal('hide');
         }
       });
     });
   });
-
 </script>

@@ -22,6 +22,7 @@ Route::get('/', function () {
 // Property Parent Routes
 Route::controller(PropertyParentController::class)->group(function () {
     Route::get('/properties-assets/overview', 'index')->name('prop-asset.index');
+    Route::post('/properties-assets/overview/create', 'store')->name('prop-asset.store');
 });
 
 
