@@ -1,7 +1,5 @@
 $(document).ready(function () {
   const acquisitionDatatable = $("#acquisitionDatatable");
-  let unsavedChanges = false;
-  let formSubmitted = false;
 
   // Create an Acquisition
   const acquisitionAddModal = $("#addAcquisitionModal");
@@ -9,7 +7,7 @@ $(document).ready(function () {
   const acquisitionAddText = $("#txtAddAcquisition");
   const acquisitionAddValid = $("#valAddAcquisition");
 
-  handleUnsavedChanges(acquisitionAddModal, acquisitionAddForm, unsavedChanges, formSubmitted);
+  handleUnsavedChanges(acquisitionAddModal, acquisitionAddForm);
 
   acquisitionAddForm.on("submit", function (e) {
     e.preventDefault();
@@ -23,8 +21,6 @@ $(document).ready(function () {
       },
       success: function (response) {
         if (response.success) {
-          unsavedChanges = false;
-          formSubmitted = true;
           showSuccessAlert(response, acquisitionAddModal, acquisitionAddForm);
         } else {
           acquisitionAddText.addClass("is-invalid");
@@ -72,7 +68,7 @@ $(document).ready(function () {
     e.preventDefault();
 
     $.ajax({
-      url: "/file-maintenance/acquisitions/update/" + acquisitionEditId.val(),
+      url: "/file-maintenance/acquisitions/update",
       method: "PATCH",
       data: {
         _token: $("input[name=_token]").val(),
@@ -81,8 +77,6 @@ $(document).ready(function () {
       },
       success: function (response) {
         if (response.success) {
-          unsavedChanges = false;
-          formSubmitted = true;
           showSuccessAlert(response, acquisitionEditModal, acquisitionEditForm);
         } else {
           acquisitionEditText.addClass("is-invalid");
@@ -90,7 +84,7 @@ $(document).ready(function () {
         }
       },
       error: function (jqXHR, textStatus, errorThrown) {
-        showErrorAlert("An unexpected error occurred when editing the record. Please try again later.", jqXHR, textStatus, errorThrown);
+        showErrorAlert("An unexpected error occurred when updating the record. Please try again later.", jqXHR, textStatus, errorThrown);
       },
     });
   });
@@ -98,13 +92,20 @@ $(document).ready(function () {
   $(".btnStatusAcquisition").on("click", function () {
     const acquisitionId = $(this).closest("tr").find("td[data-acquisition-id]").data("acquisition-id");
     const status = $(this).data("status");
+    let statusName = "";
+
+    if (status === 1) {
+      statusName = "active";
+    } else {
+      statusName = "inactive";
+    }
 
     Swal.fire({
       title: "Change status?",
-      text: "Are you sure you want to set it to inactive?",
+      text: "Are you sure you want to set it to " + statusName + "?",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes, set it to inactive!",
+      confirmButtonText: "Yes, set it to " + statusName + "!",
       cancelButtonText: "No, cancel!",
       customClass: {
         confirmButton: "btn btn-primary",
@@ -113,10 +114,11 @@ $(document).ready(function () {
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: "/file-maintenance/acquisitions/update/" + acquisitionId,
+          url: "/file-maintenance/acquisitions/update",
           method: "PATCH",
           data: {
             _token: $("input[name=_token]").val(),
+            id: acquisitionId,
             status: status,
           },
           success: function (response) {
@@ -149,9 +151,12 @@ $(document).ready(function () {
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: "/file-maintenance/acquisitions/delete/" + acquisitionId,
+          url: "/file-maintenance/acquisitions/delete",
           method: "DELETE",
-          data: { _token: $("input[name=_token]").val() },
+          data: {
+            _token: $("input[name=_token]").val(),
+            id: acquisitionId,
+          },
           success: function (response) {
             showSuccessAlert(response);
           },

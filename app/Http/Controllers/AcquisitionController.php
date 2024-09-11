@@ -84,9 +84,7 @@ class AcquisitionController extends Controller
      */
     public function edit(Request $request)
     {
-        $id = Crypt::decryptString($request->input('id'));
-
-        $acquisition = Acquisition::query()->findOrFail($id);
+        $acquisition = Acquisition::query()->findOrFail(Crypt::decryptString($request->input('id')));
 
         return response()->json([
             'id' => $request->input('id'),
@@ -97,8 +95,10 @@ class AcquisitionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Acquisition $acquisition)
+    public function update(Request $request)
     {
+        $acquisition = Acquisition::query()->findOrFail(Crypt::decryptString($request->input('id')));
+
         if ($request->has('acquisition')) {
             $acquisitionValidationMessages = [
                 'acquisition.required' => 'Please enter an acquisition name!',
@@ -141,8 +141,10 @@ class AcquisitionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Acquisition $acquisition)
+    public function destroy(Request $request)
     {
+        $acquisition = Acquisition::query()->findOrFail(Crypt::decryptString($request->input('id')));
+
         $acquisition->is_active = 0;
         $acquisition->delete();
         $acquisition->save();

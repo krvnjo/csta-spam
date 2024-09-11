@@ -112,8 +112,10 @@ function cleanModalForm(modal, form) {
 window.cleanModalForm = cleanModalForm;
 // ============ End Clean Modal Form Function ============ //
 
-function handleUnsavedChanges(modal, form, unsavedChanges, formSubmitted) {
+function handleUnsavedChanges(modal, form) {
   let initialFormValues = {};
+  let unsavedChanges = false;
+  let formSubmitted = false;
 
   function getFormValues() {
     let values = {};
@@ -130,12 +132,17 @@ function handleUnsavedChanges(modal, form, unsavedChanges, formSubmitted) {
 
   form.on("input change", ":input", function () {
     const currentFormValues = getFormValues();
+    unsavedChanges = false;
 
     for (let key in initialFormValues) {
       if (initialFormValues[key] !== currentFormValues[key]) {
         unsavedChanges = true;
         break;
       }
+    }
+
+    if (!unsavedChanges) {
+      initialFormValues = getFormValues();
     }
   });
 
@@ -162,7 +169,7 @@ function handleUnsavedChanges(modal, form, unsavedChanges, formSubmitted) {
         }
       });
     } else {
-      cleanModalForm(modal, form);
+      form.find(":input").removeClass("is-invalid").siblings(".invalid-feedback").empty();
     }
   });
 }
