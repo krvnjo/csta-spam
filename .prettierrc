@@ -1,5 +1,5 @@
 {
-  "printWidth": 150,
+  "printWidth": 120,
   "tabWidth": 2,
   "embeddedLanguageFormatting": "auto",
   "plugins": ["@shufo/prettier-plugin-blade"],
@@ -10,7 +10,7 @@
         "parser": "blade",
         "extraLiners": "",
         "indentInnerHtml": true,
-        "printWidth": 150,
+        "printWidth": 120,
         "sortHtmlAttributes": "code-guide",
         "tabWidth": 2
       }

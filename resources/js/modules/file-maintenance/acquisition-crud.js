@@ -1,7 +1,5 @@
 $(document).ready(function () {
-  const acquisitionDatatable = $("#acquisitionDatatable");
-  let unsavedChanges = false;
-  let formSubmitted = false;
+  const acquisitionDatatable = $("#acquisitionDatatable").DataTable();
 
   // Create an Acquisition
   const acquisitionAddModal = $("#addAcquisitionModal");
@@ -9,7 +7,7 @@ $(document).ready(function () {
   const acquisitionAddText = $("#txtAddAcquisition");
   const acquisitionAddValid = $("#valAddAcquisition");
 
-  handleUnsavedChanges(acquisitionAddModal, acquisitionAddForm, unsavedChanges, formSubmitted);
+  handleUnsavedChanges(acquisitionAddModal, acquisitionAddForm);
 
   acquisitionAddForm.on("submit", function (e) {
     e.preventDefault();
@@ -18,13 +16,11 @@ $(document).ready(function () {
       url: "/file-maintenance/acquisitions/create",
       method: "POST",
       data: {
-        _token: $("input[name=_token]").val(),
+        _token: $('meta[name="csrf-token"]').attr("content"),
         acquisition: acquisitionAddText.val(),
       },
       success: function (response) {
         if (response.success) {
-          unsavedChanges = false;
-          formSubmitted = true;
           showSuccessAlert(response, acquisitionAddModal, acquisitionAddForm);
         } else {
           acquisitionAddText.addClass("is-invalid");
@@ -32,18 +28,25 @@ $(document).ready(function () {
         }
       },
       error: function (jqXHR, textStatus, errorThrown) {
-        showErrorAlert("An unexpected error occurred when adding the record. Please try again later.", jqXHR, textStatus, errorThrown);
+        showErrorAlert(
+          "An unexpected error occurred when adding the record. Please try again later.",
+          jqXHR,
+          textStatus,
+          errorThrown,
+        );
       },
     });
   });
   // End Create an Acquisition
 
-  // Edit and Update an Acquisition
+  // Edit an Acquisition
   const acquisitionEditModal = $("#editAcquisitionModal");
   const acquisitionEditForm = $("#frmEditAcquisition");
   const acquisitionEditId = $("#txtEditAcquisitionId");
   const acquisitionEditText = $("#txtEditAcquisition");
   const acquisitionEditValid = $("#valEditAcquisition");
+
+  handleUnsavedChanges(acquisitionEditModal, acquisitionEditForm);
 
   acquisitionDatatable.on("click", "#btnEditAcquisition", function () {
     const acquisitionId = $(this).closest("tr").find("td[data-acquisition-id]").data("acquisition-id");
@@ -61,18 +64,23 @@ $(document).ready(function () {
         acquisitionEditText.val(response.name);
       },
       error: function (jqXHR, textStatus, errorThrown) {
-        showErrorAlert("An unexpected error occurred when editing the record. Please try again later.", jqXHR, textStatus, errorThrown);
+        showErrorAlert(
+          "An unexpected error occurred when editing the record. Please try again later.",
+          jqXHR,
+          textStatus,
+          errorThrown,
+        );
       },
     });
   });
+  // End Edit an Acquisition
 
-  handleUnsavedChanges(acquisitionEditModal, acquisitionEditForm);
-
+  // Update an Acquisition
   acquisitionEditForm.on("submit", function (e) {
     e.preventDefault();
 
     $.ajax({
-      url: "/file-maintenance/acquisitions/update/" + acquisitionEditId.val(),
+      url: "/file-maintenance/acquisitions/update",
       method: "PATCH",
       data: {
         _token: $("input[name=_token]").val(),
@@ -81,8 +89,6 @@ $(document).ready(function () {
       },
       success: function (response) {
         if (response.success) {
-          unsavedChanges = false;
-          formSubmitted = true;
           showSuccessAlert(response, acquisitionEditModal, acquisitionEditForm);
         } else {
           acquisitionEditText.addClass("is-invalid");
@@ -90,7 +96,12 @@ $(document).ready(function () {
         }
       },
       error: function (jqXHR, textStatus, errorThrown) {
-        showErrorAlert("An unexpected error occurred when editing the record. Please try again later.", jqXHR, textStatus, errorThrown);
+        showErrorAlert(
+          "An unexpected error occurred when updating the record. Please try again later.",
+          jqXHR,
+          textStatus,
+          errorThrown,
+        );
       },
     });
   });
@@ -98,13 +109,20 @@ $(document).ready(function () {
   $(".btnStatusAcquisition").on("click", function () {
     const acquisitionId = $(this).closest("tr").find("td[data-acquisition-id]").data("acquisition-id");
     const status = $(this).data("status");
+    let statusName = "";
+
+    if (status === 1) {
+      statusName = "active";
+    } else {
+      statusName = "inactive";
+    }
 
     Swal.fire({
       title: "Change status?",
-      text: "Are you sure you want to set it to inactive?",
+      text: "Are you sure you want to set it to " + statusName + "?",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes, set it to inactive!",
+      confirmButtonText: "Yes, set it to " + statusName + "!",
       cancelButtonText: "No, cancel!",
       customClass: {
         confirmButton: "btn btn-primary",
@@ -113,10 +131,11 @@ $(document).ready(function () {
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: "/file-maintenance/acquisitions/update/" + acquisitionId,
+          url: "/file-maintenance/acquisitions/update",
           method: "PATCH",
           data: {
             _token: $("input[name=_token]").val(),
+            id: acquisitionId,
             status: status,
           },
           success: function (response) {
@@ -129,7 +148,7 @@ $(document).ready(function () {
       }
     });
   });
-  // End Edit and Update an Acquisition
+  // End Update an Acquisition
 
   // Delete an Acquisition
   acquisitionDatatable.on("click", "#btnDeleteAcquisition", function () {
@@ -149,14 +168,69 @@ $(document).ready(function () {
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: "/file-maintenance/acquisitions/delete/" + acquisitionId,
+          url: "/file-maintenance/acquisitions/delete",
           method: "DELETE",
-          data: { _token: $("input[name=_token]").val() },
+          data: {
+            _token: $("input[name=_token]").val(),
+            id: acquisitionId,
+          },
           success: function (response) {
             showSuccessAlert(response);
           },
           error: function (jqXHR, textStatus, errorThrown) {
-            showErrorAlert("An unexpected error occurred when deleting the record. Please try again later.", jqXHR, textStatus, errorThrown);
+            showErrorAlert(
+              "An unexpected error occurred when deleting the record. Please try again later.",
+              jqXHR,
+              textStatus,
+              errorThrown,
+            );
+          },
+        });
+      }
+    });
+  });
+
+  $("#btnMultiDeleteAcquisition").on("click", function () {
+    let checkedCheckboxes = acquisitionDatatable.rows().nodes().to$().find("input.form-check-input:checked");
+
+    let ids = checkedCheckboxes
+      .map(function () {
+        return $(this).closest("tr").find("[data-acquisition-id]").data("acquisition-id");
+      })
+      .get();
+
+    console.log(ids);
+
+    Swal.fire({
+      title: "Delete Records?",
+      text: "Are you sure you want to delete all the selected acquisitions?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel!",
+      customClass: {
+        confirmButton: "btn btn-danger",
+        cancelButton: "btn btn-secondary",
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: "/file-maintenance/acquisitions/delete",
+          method: "DELETE",
+          data: {
+            _token: $("input[name=_token]").val(),
+            id: ids,
+          },
+          success: function (response) {
+            showSuccessAlert(response);
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            showErrorAlert(
+              "An unexpected error occurred when deleting the record. Please try again later.",
+              jqXHR,
+              textStatus,
+              errorThrown,
+            );
           },
         });
       }

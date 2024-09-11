@@ -42,6 +42,7 @@ $(document).ready(function () {
 });
 
 // ============ Show Alerts Function ============ //
+// Success Alert
 function showSuccessAlert(response, modal, form) {
   if (modal && form) {
     cleanModalForm(modal, form);
@@ -59,6 +60,7 @@ function showSuccessAlert(response, modal, form) {
 
 window.showSuccessAlert = showSuccessAlert;
 
+// Error Alert
 function showErrorAlert(customMessage, jqXHR, textStatus, errorThrown) {
   let errorMessage = customMessage || "Something went wrong. Please try again or contact support.";
 
@@ -81,39 +83,11 @@ function showErrorAlert(customMessage, jqXHR, textStatus, errorThrown) {
 }
 
 window.showErrorAlert = showErrorAlert;
-// ============ End Show Alerts Function ============ //
 
-// ============ Clean Modal Form Function ============ //
-function cleanModalForm(modal, form) {
-  form.trigger("reset");
-  form.find(":input").removeClass("is-invalid").siblings(".invalid-feedback").empty();
-
-  form.find("select").each(function () {
-    const tomSelectInstance = this.tomselect;
-    if (tomSelectInstance) {
-      tomSelectInstance.clear();
-      tomSelectInstance.setValue("");
-    } else {
-      $(this).val("");
-    }
-  });
-
-  form.find(".js-dropzone").each(function () {
-    const dropzoneElement = this;
-    const dropzoneInstance = Dropzone.forElement(dropzoneElement);
-    if (dropzoneInstance) {
-      dropzoneInstance.removeAllFiles(true);
-    }
-  });
-
-  modal.hide();
-}
-
-window.cleanModalForm = cleanModalForm;
-// ============ End Clean Modal Form Function ============ //
-
-function handleUnsavedChanges(modal, form, unsavedChanges, formSubmitted) {
+// Unsaved Changes Alert
+function handleUnsavedChanges(modal, form) {
   let initialFormValues = {};
+  let unsavedChanges = false;
 
   function getFormValues() {
     let values = {};
@@ -125,11 +99,12 @@ function handleUnsavedChanges(modal, form, unsavedChanges, formSubmitted) {
 
   modal.on("show.bs.modal", function () {
     initialFormValues = getFormValues();
-    unsavedChanges = formSubmitted = false;
+    unsavedChanges = false;
   });
 
   form.on("input change", ":input", function () {
     const currentFormValues = getFormValues();
+    unsavedChanges = false;
 
     for (let key in initialFormValues) {
       if (initialFormValues[key] !== currentFormValues[key]) {
@@ -137,10 +112,14 @@ function handleUnsavedChanges(modal, form, unsavedChanges, formSubmitted) {
         break;
       }
     }
+
+    if (!unsavedChanges) {
+      initialFormValues = getFormValues();
+    }
   });
 
   modal.on("hide.bs.modal", function (e) {
-    if (!formSubmitted && unsavedChanges) {
+    if (unsavedChanges) {
       e.preventDefault();
 
       Swal.fire({
@@ -162,9 +141,60 @@ function handleUnsavedChanges(modal, form, unsavedChanges, formSubmitted) {
         }
       });
     } else {
-      cleanModalForm(modal, form);
+      cleanModalForm(modal, form, "edit");
     }
   });
 }
 
 window.handleUnsavedChanges = handleUnsavedChanges;
+// ============ End Show Alerts Function ============ //
+
+// ============ Clean Modal Form Function ============ //
+function cleanModalForm(modal, form, flag = "add") {
+  form.find(":input").removeClass("is-invalid").siblings(".invalid-feedback").empty();
+
+  if (flag === "add") {
+    form.trigger("reset");
+
+    form.find("select").each(function () {
+      const tomSelectInstance = this.tomselect;
+      if (tomSelectInstance) {
+        tomSelectInstance.clear();
+        tomSelectInstance.setValue("");
+      } else {
+        $(this).val("");
+      }
+    });
+
+    form.find(".js-dropzone").each(function () {
+      const dropzoneElement = this;
+      const dropzoneInstance = Dropzone.forElement(dropzoneElement);
+      if (dropzoneInstance) {
+        dropzoneInstance.removeAllFiles(true);
+      }
+    });
+  }
+  modal.hide();
+}
+
+window.cleanModalForm = cleanModalForm;
+// ============ End Clean Modal Form Function ============ //
+
+function updateFilterCountBadge(filterCountId) {
+  let selectedFilterCount = 0;
+
+  $(".js-datatable-filter").each(function () {
+    if ($(this).val() !== "") {
+      selectedFilterCount++;
+    }
+  });
+
+  const $badge = filterCountId;
+  if (selectedFilterCount > 0) {
+    $badge.text(selectedFilterCount).show();
+  } else {
+    $badge.hide();
+  }
+}
+
+window.updateFilterCountBadge = updateFilterCountBadge;

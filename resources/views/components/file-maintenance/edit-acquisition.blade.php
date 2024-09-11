@@ -17,7 +17,7 @@
           @csrf
           @method('PATCH')
           <input id="txtEditAcquisitionId" type="hidden">
-          <label class="col col-form-label form-label" for="txtEditAcquisition">Acquisition Name</label> <span class="font-13 red-mark">*</span>
+          <label class="col col-form-label form-label" for="txtEditAcquisition">Acquisition Name <span class="text-danger">*</span></label>
           <input class="form-control" id="txtEditAcquisition" name="acquisition" type="text" placeholder="Enter a Acquisition" required>
           <span class="invalid-feedback" id="valEditAcquisition"></span>
         </form>
@@ -33,7 +33,7 @@
 
           <div class="col-sm-auto">
             <div class="d-flex gap-2">
-              <button class="btn btn-white" data-bs-dismiss="modal" type="button" aria-label="Close">Cancel</button>
+              <button class="btn btn-white" data-bs-dismiss="modal" type="button">Cancel</button>
               <button class="btn btn-primary" form="frmEditAcquisition" type="submit">Save</button>
             </div>
           </div>

@@ -32,7 +32,7 @@
           <div class="col-sm-auto">
             <div class="d-flex gap-2">
               <button class="btn btn-white" data-bs-dismiss="modal" type="button">Cancel</button>
-              <button class="btn btn-primary" form="frmAddAcquisition" type="submit">Save</button>
+              <button class="btn btn-primary" id="btnSaveAcquisition" form="frmAddAcquisition" type="submit">Save</button>
             </div>
           </div>
           <!-- End Col -->

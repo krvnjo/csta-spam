@@ -20,7 +20,9 @@ class AcquisitionController extends Controller
 
         $activeAcquisitions = $acquisitions->where('is_active', 1)->count();
         $inactiveAcquisitions = $acquisitions->where('is_active', 0)->count();
-        $deletedAcquisitions = $acquisitions->whereNotNull('deleted_at')->count();
+
+        $deletedAcquisitions = Acquisition::withTrashed()->get();
+        $deletedAcquisitions = $deletedAcquisitions->whereNotNull('deleted_at')->count();
 
         $activePercentage = $totalAcquisitions > 0 ? ($activeAcquisitions / $totalAcquisitions) * 100 : 0;
         $inactivePercentage = $totalAcquisitions > 0 ? ($inactiveAcquisitions / $totalAcquisitions) * 100 : 0;
@@ -84,9 +86,7 @@ class AcquisitionController extends Controller
      */
     public function edit(Request $request)
     {
-        $id = Crypt::decryptString($request->input('id'));
-
-        $acquisition = Acquisition::query()->findOrFail($id);
+        $acquisition = Acquisition::query()->findOrFail(Crypt::decryptString($request->input('id')));
 
         return response()->json([
             'id' => $request->input('id'),
@@ -97,8 +97,10 @@ class AcquisitionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Acquisition $acquisition)
+    public function update(Request $request)
     {
+        $acquisition = Acquisition::query()->findOrFail(Crypt::decryptString($request->input('id')));
+
         if ($request->has('acquisition')) {
             $acquisitionValidationMessages = [
                 'acquisition.required' => 'Please enter an acquisition name!',
@@ -141,16 +143,30 @@ class AcquisitionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Acquisition $acquisition)
+    public function destroy(Request $request)
     {
-        $acquisition->is_active = 0;
-        $acquisition->delete();
-        $acquisition->save();
+        $ids = $request->input('id');
+
+        if (!is_array($ids)) {
+            $ids = [$ids];
+        }
+
+        $ids = array_map(function ($id) {
+            return Crypt::decryptString($id);
+        }, $ids);
+
+        $acquisitions = Acquisition::query()->whereIn('id', $ids)->get();
+
+        foreach ($acquisitions as $acquisition) {
+            $acquisition->is_active = 0;
+            $acquisition->save();
+            $acquisition->delete();
+        }
 
         return response()->json([
             'success' => true,
             'title' => 'Deleted Successfully!',
-            'text' => 'The acquisition has been deleted and can be restored from the recycle bin.',
+            'text' => count($acquisitions) > 1 ? 'The acquisitions have been deleted and can be restored from the recycle bin.' : 'The acquisition has been deleted and can be restored from the recycle bin.',
         ]);
     }
 }
