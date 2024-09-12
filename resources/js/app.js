@@ -53,6 +53,9 @@ function showSuccessAlert(response, modal, form) {
     text: response.text,
     icon: "success",
     confirmButtonText: "OK",
+    customClass: {
+      confirmButton: "btn btn-secondary",
+    },
   }).then(() => {
     location.reload();
   });
@@ -61,22 +64,19 @@ function showSuccessAlert(response, modal, form) {
 window.showSuccessAlert = showSuccessAlert;
 
 // Error Alert
-function showErrorAlert(customMessage, jqXHR, textStatus, errorThrown) {
-  let errorMessage = customMessage || "Something went wrong. Please try again or contact support.";
-
-  if (jqXHR && jqXHR.responseJSON && jqXHR.responseJSON.message) {
-    errorMessage = jqXHR.responseJSON.message;
-  } else if (jqXHR && jqXHR.responseText) {
-    errorMessage = "It looks like there's a problem. Please try again.";
-  } else if (errorThrown) {
-    errorMessage = "Oops! Something went wrong. Please refresh the page or try again later.";
+function showErrorAlert(response, modal, form) {
+  if (modal && form) {
+    cleanModalForm(modal, form);
   }
 
   Swal.fire({
-    title: "Uh-oh! Something went wrong.",
-    text: errorMessage,
+    title: response.title,
+    text: response.text,
     icon: "error",
     confirmButtonText: "Got it",
+    customClass: {
+      confirmButton: "btn btn-secondary",
+    },
   }).then(() => {
     location.reload();
   });
@@ -100,6 +100,11 @@ function handleUnsavedChanges(modal, form) {
   modal.on("show.bs.modal", function () {
     initialFormValues = getFormValues();
     unsavedChanges = false;
+
+    let firstInput = form.find(":input").first();
+    if (firstInput.length) {
+      firstInput.focus();
+    }
   });
 
   form.on("input change", ":input", function () {
@@ -180,6 +185,7 @@ function cleanModalForm(modal, form, flag = "add") {
 window.cleanModalForm = cleanModalForm;
 // ============ End Clean Modal Form Function ============ //
 
+// ============ Update Filter Count Function ============ //
 function updateFilterCountBadge(filterCountId) {
   let selectedFilterCount = 0;
 
@@ -198,3 +204,4 @@ function updateFilterCountBadge(filterCountId) {
 }
 
 window.updateFilterCountBadge = updateFilterCountBadge;
+// ============ End Update Filter Count Function ============ //

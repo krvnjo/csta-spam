@@ -11,9 +11,11 @@ use App\Http\Controllers\StatusController;
 use App\Http\Controllers\SubcategoryController;
 use Illuminate\Support\Facades\Route;
 
+// ============ Dashboard Routes ============ //
 Route::get('/', function () {
     return view('pages.dashboard.index');
 });
+// ============ End Dashboard Routes ============ //
 
 // ============ Property & Assets Routes ============ //
 

@@ -21,19 +21,15 @@ $(document).ready(function () {
       },
       success: function (response) {
         if (response.success) {
+          acquisitionAddModal.modal("hide");
           showSuccessAlert(response, acquisitionAddModal, acquisitionAddForm);
         } else {
           acquisitionAddText.addClass("is-invalid");
           acquisitionAddValid.text(response.errors.acquisition[0]);
         }
       },
-      error: function (jqXHR, textStatus, errorThrown) {
-        showErrorAlert(
-          "An unexpected error occurred when adding the record. Please try again later.",
-          jqXHR,
-          textStatus,
-          errorThrown,
-        );
+      error: function (response) {
+        showErrorAlert(response.responseJSON, acquisitionAddModal, acquisitionAddForm);
       },
     });
   });
@@ -55,7 +51,7 @@ $(document).ready(function () {
       url: "/file-maintenance/acquisitions/edit",
       method: "GET",
       data: {
-        _token: $("input[name=_token]").val(),
+        _token: $('meta[name="csrf-token"]').attr("content"),
         id: acquisitionId,
       },
       success: function (response) {
@@ -63,13 +59,8 @@ $(document).ready(function () {
         acquisitionEditId.val(response.id);
         acquisitionEditText.val(response.name);
       },
-      error: function (jqXHR, textStatus, errorThrown) {
-        showErrorAlert(
-          "An unexpected error occurred when editing the record. Please try again later.",
-          jqXHR,
-          textStatus,
-          errorThrown,
-        );
+      error: function (response) {
+        showErrorAlert(response.responseJSON, acquisitionAddModal, acquisitionAddForm);
       },
     });
   });
@@ -83,25 +74,21 @@ $(document).ready(function () {
       url: "/file-maintenance/acquisitions/update",
       method: "PATCH",
       data: {
-        _token: $("input[name=_token]").val(),
+        _token: $('meta[name="csrf-token"]').attr("content"),
         id: acquisitionEditId.val(),
         acquisition: acquisitionEditText.val(),
       },
       success: function (response) {
         if (response.success) {
+          acquisitionAddModal.modal("hide");
           showSuccessAlert(response, acquisitionEditModal, acquisitionEditForm);
         } else {
           acquisitionEditText.addClass("is-invalid");
           acquisitionEditValid.text(response.errors.acquisition[0]);
         }
       },
-      error: function (jqXHR, textStatus, errorThrown) {
-        showErrorAlert(
-          "An unexpected error occurred when updating the record. Please try again later.",
-          jqXHR,
-          textStatus,
-          errorThrown,
-        );
+      error: function (response) {
+        showErrorAlert(response.responseJSON, acquisitionAddModal, acquisitionAddForm);
       },
     });
   });
@@ -109,7 +96,7 @@ $(document).ready(function () {
   $(".btnStatusAcquisition").on("click", function () {
     const acquisitionId = $(this).closest("tr").find("td[data-acquisition-id]").data("acquisition-id");
     const status = $(this).data("status");
-    let statusName = "";
+    let statusName;
 
     if (status === 1) {
       statusName = "active";
@@ -134,15 +121,15 @@ $(document).ready(function () {
           url: "/file-maintenance/acquisitions/update",
           method: "PATCH",
           data: {
-            _token: $("input[name=_token]").val(),
+            _token: $('meta[name="csrf-token"]').attr("content"),
             id: acquisitionId,
             status: status,
           },
           success: function (response) {
             showSuccessAlert(response);
           },
-          error: function (jqXHR, textStatus, errorThrown) {
-            showErrorAlert("An unexpected error has occurred. Please try again later.", jqXHR, textStatus, errorThrown);
+          error: function (response) {
+            showErrorAlert(response.responseJSON, acquisitionAddModal, acquisitionAddForm);
           },
         });
       }
@@ -171,19 +158,14 @@ $(document).ready(function () {
           url: "/file-maintenance/acquisitions/delete",
           method: "DELETE",
           data: {
-            _token: $("input[name=_token]").val(),
+            _token: $('meta[name="csrf-token"]').attr("content"),
             id: acquisitionId,
           },
           success: function (response) {
             showSuccessAlert(response);
           },
-          error: function (jqXHR, textStatus, errorThrown) {
-            showErrorAlert(
-              "An unexpected error occurred when deleting the record. Please try again later.",
-              jqXHR,
-              textStatus,
-              errorThrown,
-            );
+          error: function (response) {
+            showErrorAlert(response.responseJSON, acquisitionAddModal, acquisitionAddForm);
           },
         });
       }
@@ -198,8 +180,6 @@ $(document).ready(function () {
         return $(this).closest("tr").find("[data-acquisition-id]").data("acquisition-id");
       })
       .get();
-
-    console.log(ids);
 
     Swal.fire({
       title: "Delete Records?",
@@ -218,19 +198,14 @@ $(document).ready(function () {
           url: "/file-maintenance/acquisitions/delete",
           method: "DELETE",
           data: {
-            _token: $("input[name=_token]").val(),
+            _token: $('meta[name="csrf-token"]').attr("content"),
             id: ids,
           },
           success: function (response) {
             showSuccessAlert(response);
           },
-          error: function (jqXHR, textStatus, errorThrown) {
-            showErrorAlert(
-              "An unexpected error occurred when deleting the record. Please try again later.",
-              jqXHR,
-              textStatus,
-              errorThrown,
-            );
+          error: function (response) {
+            showErrorAlert(response.responseJSON, acquisitionAddModal, acquisitionAddForm);
           },
         });
       }

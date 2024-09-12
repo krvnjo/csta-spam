@@ -241,7 +241,7 @@
                 <th class="d-none">Acquisition Id</th>
                 <th style="width: 25%;">Acquisition Name</th>
                 <th>Date Created</th>
-                <th>Status</th>
+                <th style="width: 20%;">Status</th>
                 <th style="width: 15%;">Action</th>
               </tr>
             </thead>
@@ -257,7 +257,12 @@
                   </td>
                   <td class="d-none" data-acquisition-id="{{ Crypt::encryptString($acquisition->id) }}"></td>
                   <td><span class="d-block h5 mb-0">{{ $acquisition->name }}</span></td>
-                  <td><i class="bi-calendar-event me-1"></i>{{ $acquisition->created_at->format('M d, Y H:i:s') }}</td>
+                  <td>
+                    <span data-bs-toggle="tooltip" data-bs-placement="top"
+                      title="Modified on: {{ $acquisition->updated_at->format('M d, Y') }}">
+                      <i class="bi-calendar-event me-1"></i>
+                      {{ $acquisition->created_at->format('M d, Y H:i:s') }}
+                    </span>
                   <td>
                     @if ($acquisition->is_active)
                       <span class="badge bg-soft-success text-success">
@@ -319,7 +324,6 @@
                     autocomplete="off">
                     <option value="5" selected>5</option>
                     <option value="10">10</option>
-                    <option value="15">15</option>
                     <option value="20">20</option>
                     <option value="{{ $totalAcquisitions }}">All</option>
                   </select>
@@ -384,33 +388,33 @@
   <!-- JS Plugins Init. -->
   <script>
     // Initialization of Datatables
-    $(document).on('ready', function() {
-      HSCore.components.HSDatatables.init($('#acquisitionDatatable'), {
-        dom: 'Bfrtip',
+    $(document).on("ready", function() {
+      HSCore.components.HSDatatables.init($("#acquisitionDatatable"), {
+        dom: "Bfrtip",
         buttons: [{
-            extend: 'copy',
-            className: 'd-none'
+            extend: "copy",
+            className: "d-none"
           },
           {
-            extend: 'excel',
-            className: 'd-none'
+            extend: "excel",
+            className: "d-none"
           },
           {
-            extend: 'pdf',
-            className: 'd-none'
+            extend: "pdf",
+            className: "d-none"
           },
           {
-            extend: 'print',
-            className: 'd-none'
-          },
+            extend: "print",
+            className: "d-none"
+          }
         ],
         select: {
-          style: 'multi',
-          selector: 'td:first-child input[type="checkbox"]',
+          style: "multi",
+          selector: "td:first-child input[type=\"checkbox\"]",
           classMap: {
-            checkAll: '#acquisitionDatatableCheckAll',
-            counter: '#acquisitionDatatableCounter',
-            counterInfo: '#acquisitionDatatableCounterInfo'
+            checkAll: "#acquisitionDatatableCheckAll",
+            counter: "#acquisitionDatatableCounter",
+            counterInfo: "#acquisitionDatatableCounterInfo"
           }
         },
         language: {
@@ -422,34 +426,34 @@
         }
       });
 
-      const datatable = HSCore.components.HSDatatables.getItem(0)
+      const datatable = HSCore.components.HSDatatables.getItem(0);
 
-      $('#export-copy').click(function() {
-        datatable.button('.buttons-copy').trigger()
+      $("#export-copy").click(function() {
+        datatable.button(".buttons-copy").trigger();
       });
 
-      $('#export-excel').click(function() {
-        datatable.button('.buttons-excel').trigger()
+      $("#export-excel").click(function() {
+        datatable.button(".buttons-excel").trigger();
       });
 
-      $('#export-pdf').click(function() {
-        datatable.button('.buttons-pdf').trigger()
+      $("#export-pdf").click(function() {
+        datatable.button(".buttons-pdf").trigger();
       });
 
-      $('#export-print').click(function() {
-        datatable.button('.buttons-print').trigger()
+      $("#export-print").click(function() {
+        datatable.button(".buttons-print").trigger();
       });
 
-      $('.js-datatable-filter').on('change', function() {
+      $(".js-datatable-filter").on("change", function() {
         let $this = $(this);
-        let elVal = $this.val() === 'null' ? '' : $this.val();
+        let elVal = $this.val() === "null" ? "" : $this.val();
         let targetColumnIndex = $this.data("target-column-index");
 
-        elVal = elVal.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        elVal = elVal.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
         datatable.column(targetColumnIndex).search(elVal, true, false, false).draw();
 
-        updateFilterCountBadge($('#acquisitionFilterCount'));
+        updateFilterCountBadge($("#acquisitionFilterCount"));
       });
     });
 
@@ -458,30 +462,30 @@
       window.onload = function() {
         // INITIALIZATION OF NAVBAR VERTICAL ASIDE
         // =======================================================
-        new HSSideNav('.js-navbar-vertical-aside').init()
+        new HSSideNav(".js-navbar-vertical-aside").init();
 
 
         // INITIALIZATION OF NAV SCROLLER
         // =======================================================
-        new HsNavScroller('.js-nav-scroller', {
+        new HsNavScroller(".js-nav-scroller", {
           delay: 400
-        })
+        });
 
 
         // INITIALIZATION OF FORM SEARCH
         // =======================================================
-        new HSFormSearch('.js-form-search')
+        new HSFormSearch(".js-form-search");
 
 
         // INITIALIZATION OF BOOTSTRAP DROPDOWN
         // =======================================================
-        HSBsDropdown.init()
+        HSBsDropdown.init();
 
 
         // INITIALIZATION OF SELECT
         // =======================================================
-        HSCore.components.HSTomSelect.init('.js-select')
-      }
-    })()
+        HSCore.components.HSTomSelect.init(".js-select");
+      };
+    })();
   </script>
 @endsection
