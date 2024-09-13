@@ -13,6 +13,12 @@ class Brand extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'brands';
+
+    protected $fillable = [
+        'name'
+    ];
+
     public function property_parents(): HasMany {
         return $this->hasMany(PropertyParent::class, 'brand_id');
     }

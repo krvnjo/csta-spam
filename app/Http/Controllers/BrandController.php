@@ -12,7 +12,15 @@ class BrandController extends Controller
      */
     public function index()
     {
-        //
+        $brands = Brand::query()->get();
+        $totalBrands = $brands->count();
+        $activeBrands = $brands->where('is_active', 1)->count();
+        $inactiveBrands = $brands->where('is_active', 0)->count();
+
+        $activePercentage = $totalBrands > 0 ? ($activeBrands / $totalBrands) * 100 : 0;
+        $inactivePercentage = $totalBrands > 0 ? ($inactiveBrands / $totalBrands) * 100 : 0;
+
+        return view('pages.file-maintenance.brand', compact('brands', 'totalBrands', 'activeBrands', 'inactiveBrands', 'activePercentage', 'inactivePercentage'));
     }
 
     /**

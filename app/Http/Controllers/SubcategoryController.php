@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Subcategory;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,17 @@ class SubcategoryController extends Controller
      */
     public function index()
     {
-        //
+        $subcategories = Subcategory::with('category')->orderBy('name')->get();
+        $categories = Category::query()->orderBy('name')->get();
+
+        $totalSubcategories = $subcategories->count();
+        $activeSubcategories = $subcategories->where('is_active', 1)->count();
+        $inactiveSubcategories = $subcategories->where('is_active', 0)->count();
+
+        $activePercentage = $totalSubcategories > 0 ? ($activeSubcategories / $totalSubcategories) * 100 : 0;
+        $inactivePercentage = $totalSubcategories > 0 ? ($inactiveSubcategories / $totalSubcategories) * 100 : 0;
+
+        return view('pages.file-maintenance.subcategory', compact('subcategories', 'categories', 'totalSubcategories', 'activeSubcategories', 'inactiveSubcategories', 'activePercentage', 'inactivePercentage'));
     }
 
     /**

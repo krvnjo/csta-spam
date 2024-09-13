@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>@yield('title') | {{ env('APP_NAME') }}</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>@yield('title') | {{ config('app.name') }} </title>
 
     <!-- Vite Asset Bundling -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -24,7 +25,9 @@
   <body class="has-navbar-vertical-aside navbar-vertical-aside-show-xl footer-offset">
     <!-- JS Appearance -->
     <script src="{{ Vite::asset('resources/js/hs.theme-appearance.js') }}"></script>
-    <script src="{{ Vite::asset('resources/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js') }}"></script>
+    <script
+      src="{{ Vite::asset('resources/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js') }}">
+    </script>
 
     <!-- ========== Header ========== -->
     @yield('header')
@@ -50,7 +53,8 @@
     <script src="{{ Vite::asset('resources/vendor/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ Vite::asset('resources/vendor/jquery-migrate/dist/jquery-migrate.min.js') }}"></script>
     <script src="{{ Vite::asset('resources/vendor/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ Vite::asset('resources/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside.min.js') }}"></script>
+    <script src="{{ Vite::asset('resources/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside.min.js') }}">
+    </script>
     <script src="{{ Vite::asset('resources/vendor/hs-form-search/dist/hs-form-search.min.js') }}"></script>
     <script src="{{ Vite::asset('resources/vendor/hs-nav-scroller/dist/hs-nav-scroller.min.js') }}"></script>
 

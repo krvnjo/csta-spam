@@ -12,6 +12,13 @@ class Status extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'statuses';
+
+    protected $fillable = [
+        'name',
+        'description',
+    ];
+
     public function property(): BelongsTo {
         return $this->belongsTo(PropertyParent::class);
     }

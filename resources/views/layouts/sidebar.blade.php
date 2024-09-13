@@ -109,9 +109,9 @@
             </a>
 
             <div class="nav-collapse collapse" id="navbarVerticalMenuUserManagement" data-bs-parent="#navbarVerticalMenu">
-              <a class="nav-link" href="#">User Overview</a>
-              <a class="nav-link" href="#">Add User</a>
+              <a class="nav-link" href="#">Users</a>
               <a class="nav-link" href="#">Roles</a>
+              <a class="nav-link" href="#">Permissions</a>
             </div>
           </div>
           <!-- End User Management -->
@@ -129,7 +129,11 @@
                 <a class="nav-link" href="/file-maintenance/acquisitions">Acquisitions</a>
                 <a class="nav-link" href="/file-maintenance/brands">Brands</a>
                 <a class="nav-link" href="/file-maintenance/categories">Categories</a>
+                <a class="nav-link" href="/file-maintenance/conditions">Conditions</a>
                 <a class="nav-link" href="/file-maintenance/departments">Departments</a>
+                <a class="nav-link" href="/file-maintenance/designations">Designations</a>
+                <a class="nav-link" href="/file-maintenance/statuses">Statuses</a>
+                <a class="nav-link" href="/file-maintenance/subcategories">Subcategories</a>
               </div>
             </div>
           </div>

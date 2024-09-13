@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-  Departments
+  Designations
 @endsection
 
 @section('styles')
@@ -28,18 +28,18 @@
               <ol class="breadcrumb breadcrumb-no-gutter">
                 <li class="breadcrumb-item"><a class="breadcrumb-link" href="/">Home</a></li>
                 <li class="breadcrumb-item"><a class="breadcrumb-link">File Maintenance</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Departments</li>
+                <li class="breadcrumb-item active" aria-current="page">Designations</li>
               </ol>
             </nav>
 
-            <h1 class="page-header-title mt-2">Departments</h1>
+            <h1 class="page-header-title mt-2">Designations</h1>
           </div>
           <!-- End Col -->
 
           <div class="col-sm-auto mt-sm-0 mt-3">
             <div class="d-grid gap-2 d-sm-flex justify-content-sm-end">
-              <button class="btn btn-primary w-100 w-sm-auto" data-bs-toggle="modal" data-bs-target="#addDepartmentModal">
-                <i class="bi-plus me-1"></i> Add a Department
+              <button class="btn btn-primary w-100 w-sm-auto" data-bs-toggle="modal" data-bs-target="#addDesignationModal">
+                <i class="bi-plus me-1"></i> Add a Designation
               </button>
             </div>
           </div>
@@ -55,20 +55,20 @@
         <div class="card-body">
           <div class="d-flex flex-column flex-md-row align-items-md-center text-md-start text-center">
             <div class="flex-shrink-0">
-              <span class="display-3 text-dark">{{ $totalDepartments }}</span>
+              <span class="display-3 text-dark">{{ $totalDesignations }}</span>
             </div>
 
             <div class="flex-grow-1 ms-md-3 my-1 mt-md-0">
               <div class="row">
                 <div class="col-12 col-md">
-                  <span class="d-block">Total Departments</span>
+                  <span class="d-block">Total Designations</span>
                   <span class="badge bg-soft-primary text-primary rounded-pill p-1">
-                    @if ($inactiveDepartments == 0)
+                    @if ($inactiveDesignations == 0)
                       <i class="bi-hand-thumbs-up-fill"></i> All good!
-                    @elseif($inactiveDepartments == 1)
+                    @elseif($inactiveDesignations == 1)
                       <i class="bi-arrow-clockwise"></i> 1 record can be restored
                     @else
-                      <i class="bi-arrow-clockwise"></i> {{ $inactiveDepartments }} records can be restored
+                      <i class="bi-arrow-clockwise"></i> {{ $inactiveDesignations }} records can be restored
                     @endif
                   </span>
                 </div>
@@ -78,12 +78,12 @@
                   <div class="d-flex justify-content-center justify-content-md-start mb-2">
                     <div class="me-3">
                       <span class="legend-indicator bg-success"></span>
-                      Active ({{ $activeDepartments }})
+                      Active ({{ $activeDesignations }})
                     </div>
 
                     <div>
                       <span class="legend-indicator bg-danger"></span>
-                      Inactive ({{ $inactiveDepartments }})
+                      Inactive ({{ $inactiveDesignations }})
                     </div>
                   </div>
 
@@ -115,16 +115,16 @@
               <div class="input-group-prepend input-group-text">
                 <i class="bi-search"></i>
               </div>
-              <input class="form-control" id="departmentDatatableSearch" type="search" aria-label="Search" placeholder="Search">
+              <input class="form-control" id="designationDatatableSearch" type="search" aria-label="Search" placeholder="Search">
             </div>
           </div>
 
           <div class="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
             <!-- Datatable Info -->
-            <div id="departmentDatatableCounterInfo" style="display: none;">
+            <div id="designationDatatableCounterInfo" style="display: none;">
               <div class="d-flex align-items-center">
                 <span class="fs-5 me-3">
-                  <span id="departmentDatatableCounter">0</span>
+                  <span id="designationDatatableCounter">0</span>
                   Selected
                 </span>
                 <a class="btn btn-outline-danger btn-sm" href="#">
@@ -136,12 +136,12 @@
 
             <!-- Dropdown -->
             <div class="dropdown">
-              <button class="btn btn-white btn-sm dropdown-toggle w-100" id="departmentExportDropdown" data-bs-toggle="dropdown" type="button"
+              <button class="btn btn-white btn-sm dropdown-toggle w-100" id="designationExportDropdown" data-bs-toggle="dropdown" type="button"
                 aria-expanded="false">
                 <i class="bi-download me-2"></i> Export
               </button>
 
-              <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="departmentExportDropdown">
+              <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="designationExportDropdown">
                 <span class="dropdown-header">Options</span>
                 <a class="dropdown-item" id="export-copy" href="#">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/copy-icon.svg') }}"
@@ -176,17 +176,17 @@
 
             <!-- Dropdown -->
             <div class="dropdown">
-              <button class="btn btn-white btn-sm w-100" id="departmentFilterDropdown" data-bs-toggle="dropdown" type="button"
+              <button class="btn btn-white btn-sm w-100" id="designationFilterDropdown" data-bs-toggle="dropdown" type="button"
                 aria-expanded="false">
                 <i class="bi-filter me-1"></i> Filter <span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="filterCountBadge"></span>
               </button>
 
-              <div class="dropdown-menu dropdown-menu-sm-end dropdown-card card-dropdown-filter-centered" aria-labelledby="departmentFilterDropdown"
+              <div class="dropdown-menu dropdown-menu-sm-end dropdown-card card-dropdown-filter-centered" aria-labelledby="designationFilterDropdown"
                 style="min-width: 22rem;">
                 <!-- Card -->
                 <div class="card">
                   <div class="card-header card-header-content-between">
-                    <h5 class="card-header-title">Department Filters</h5>
+                    <h5 class="card-header-title">Designation Filters</h5>
 
                     <button class="btn btn-ghost-secondary btn-icon btn-sm ms-2" type="button">
                       <i class="bi-x-lg"></i>
@@ -237,7 +237,7 @@
         <!-- Table -->
         <div class="table-responsive datatable-custom">
           <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table"
-            id="departmentDatatable"
+            id="designationDatatable"
             data-hs-datatables-options='{
               "columnDefs": [{
                  "targets": [0, 5],
@@ -245,45 +245,45 @@
                }],
               "order": [1, "asc"],
               "info": {
-                "totalQty": "#departmentDatatableWithPagination"
+                "totalQty": "#designationDatatableWithPagination"
               },
-              "search": "#departmentDatatableSearch",
-              "entries": "#departmentDatatableEntries",
+              "search": "#designationDatatableSearch",
+              "entries": "#designationDatatableEntries",
               "pageLength": 5,
               "isResponsive": false,
               "isShowPaging": false,
-              "pagination": "departmentDatatablePagination"
+              "pagination": "designationDatatablePagination"
             }'>
             <thead class="thead-light">
               <tr>
                 <th class="table-column-pe-0">
                   <div class="form-check">
-                    <input class="form-check-input" id="departmentDatatableCheckAll" type="checkbox" value="">
-                    <label class="form-check-label" for="departmentDatatableCheckAll"></label>
+                    <input class="form-check-input" id="designationDatatableCheckAll" type="checkbox" value="">
+                    <label class="form-check-label" for="designationDatatableCheckAll"></label>
                   </div>
                 </th>
-                <th style="width: 25%;">Department Name</th>
-                <th style="width: 20%;">Department Code</th>
+                <th>Designation Name</th>
+                <th>Main Department</th>
                 <th>Date Created</th>
                 <th>Status</th>
-                <th style="width: 15%;">Action</th>
+                <th>Action</th>
               </tr>
             </thead>
 
             <tbody>
-              @foreach ($departments as $department)
+              @foreach ($designations as $designation)
                 <tr>
                   <td class="table-column-pe-0">
                     <div class="form-check">
-                      <input class="form-check-input" id="departmentCheck" type="checkbox" value="">
-                      <label class="form-check-label" for="departmentCheck"></label>
+                      <input class="form-check-input" id="designationCheck" type="checkbox" value="">
+                      <label class="form-check-label" for="designationCheck"></label>
                     </div>
                   </td>
-                  <td><span class="d-block h5 mb-0">{{ $department->name }}</span></td>
-                  <td>{{ $department->dept_code }}</td>
-                  <td><i class="bi-calendar-event me-1"></i> {{ $department->created_at->format('M d, Y') }}</td>
+                  <td><span class="d-block h5 mb-0">{{ $designation->name }}</span></td>
+                  <td>{{ $designation->department->name }}</td>
+                  <td><i class="bi-calendar-event me-1"></i> {{ $designation->created_at->format('M d, Y') }}</td>
                   <td>
-                    @if ($department->is_active)
+                    @if ($designation->is_active)
                       <span class="legend-indicator bg-success"></span> Active
                     @else
                       <span class="legend-indicator bg-danger"></span> Inactive
@@ -291,14 +291,14 @@
                   </td>
                   <td>
                     <div class="dropdown position-static">
-                      <button class="btn btn-white btn-sm" id="departmentDropdownActions" data-bs-toggle="dropdown" type="button"
+                      <button class="btn btn-white btn-sm" id="designationDropdownActions" data-bs-toggle="dropdown" type="button"
                         aria-expanded="false">
                         More <i class="bi-chevron-down ms-1"></i>
                       </button>
 
-                      <div class="dropdown-menu dropdown-menu-sm dropdown-menu-end" aria-labelledby="departmentDropdownActions">
+                      <div class="dropdown-menu dropdown-menu-sm dropdown-menu-end" aria-labelledby="designationDropdownActions">
                         <button class="dropdown-item" type="button" href="#"><i class="bi-pencil-square me-2"></i> Edit Record</button>
-                        @if ($department->is_active)
+                        @if ($designation->is_active)
                           <button class="dropdown-item" type="button" href="#"><i class="bi-x-circle me-2"></i> Set to Inactive</button>
                         @else
                           <button class="dropdown-item" type="button" href="#"><i class="bi-check-circle me-2"></i> Set to Active</button>
@@ -324,7 +324,7 @@
 
                 <!-- Select -->
                 <div class="tom-select-custom tom-page-w">
-                  <select class="js-select form-select form-select-borderless" id="departmentDatatableEntries"
+                  <select class="js-select form-select form-select-borderless" id="designationDatatableEntries"
                     data-hs-tom-select-options='{
                       "searchInDropdown": false,
                       "hideSearch": true
@@ -341,7 +341,7 @@
                 <span class="text-secondary me-2">of</span>
 
                 <!-- Pagination Quantity -->
-                <span id="departmentDatatableWithPagination"></span>
+                <span id="designationDatatableWithPagination"></span>
               </div>
             </div>
             <!-- End Col -->
@@ -349,7 +349,7 @@
             <div class="col-sm-auto">
               <div class="d-flex justify-content-center justify-content-sm-end">
                 <!-- Pagination -->
-                <nav id="departmentDatatablePagination" aria-label="Activity pagination"></nav>
+                <nav id="designationDatatablePagination" aria-label="Activity pagination"></nav>
               </div>
             </div>
             <!-- End Col -->
@@ -369,8 +369,7 @@
 @endsection
 
 @section('sub-content')
-  <x-file-maintenance.add-department />
-  <x-file-maintenance.edit-department />
+  {{-- No Secondary Content --}}
 @endsection
 
 @section('scripts')
@@ -394,7 +393,7 @@
   <script>
     // Initialization of Datatables
     $(document).on('ready', function() {
-      HSCore.components.HSDatatables.init($('#departmentDatatable'), {
+      HSCore.components.HSDatatables.init($('#designationDatatable'), {
         dom: 'Bfrtip',
         buttons: [{
             extend: 'copy',
@@ -421,9 +420,9 @@
           style: 'multi',
           selector: 'td:first-child input[type="checkbox"]',
           classMap: {
-            checkAll: '#departmentDatatableCheckAll',
-            counter: '#departmentDatatableCounter',
-            counterInfo: '#departmentDatatableCounterInfo'
+            checkAll: '#designationDatatableCheckAll',
+            counter: '#designationDatatableCounter',
+            counterInfo: '#designationDatatableCounterInfo'
           }
         },
         language: {
