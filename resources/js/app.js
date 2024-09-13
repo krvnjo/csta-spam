@@ -92,9 +92,23 @@ function handleUnsavedChanges(modal, form) {
   function getFormValues() {
     let values = {};
     form.find(":input").each(function () {
-      values[$(this).attr("name")] = $(this).val();
+      if ($(this).attr("type") === "checkbox") {
+        values[$(this).attr("name")] = $(this).is(":checked");
+      } else {
+        values[$(this).attr("name")] = $(this).val();
+      }
     });
     return values;
+  }
+
+  function hasChanges() {
+    const currentFormValues = getFormValues();
+    for (let key in initialFormValues) {
+      if (initialFormValues[key] !== currentFormValues[key]) {
+        return true;
+      }
+    }
+    return false;
   }
 
   modal.on("show.bs.modal", function () {
@@ -108,19 +122,7 @@ function handleUnsavedChanges(modal, form) {
   });
 
   form.on("input change", ":input", function () {
-    const currentFormValues = getFormValues();
-    unsavedChanges = false;
-
-    for (let key in initialFormValues) {
-      if (initialFormValues[key] !== currentFormValues[key]) {
-        unsavedChanges = true;
-        break;
-      }
-    }
-
-    if (!unsavedChanges) {
-      initialFormValues = getFormValues();
-    }
+    unsavedChanges = hasChanges();
   });
 
   modal.on("hide.bs.modal", function (e) {

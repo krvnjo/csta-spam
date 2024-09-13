@@ -17,8 +17,8 @@ class AcquisitionController extends Controller
     public function index()
     {
         $acquisitions = Acquisition::query()->whereNull('deleted_at')->get();
-        $totalAcquisitions = $acquisitions->count();
 
+        $totalAcquisitions = $acquisitions->count();
         $deletedAcquisitions = Acquisition::onlyTrashed()->count();
         $activeAcquisitions = $acquisitions->where('is_active', 1)->count();
         $inactiveAcquisitions = $acquisitions->where('is_active', 0)->count();
