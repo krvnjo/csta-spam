@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Color;
 use App\Models\Condition;
 use App\Models\Priority;
 use App\Models\Status;
@@ -14,6 +15,32 @@ class StatusSeeder extends Seeder
      */
     public function run(): void
     {
+        $colors = [
+            'Primary' => 'badge bg-primary fs-6',
+            'Primary-soft' => 'badge bg-soft-primary text-primary fs-6',
+            'Secondary' => 'badge bg-secondary fs-6',
+            'Secondary-soft' => 'badge bg-soft-secondary text-secondary fs-6',
+            'Success' => 'badge bg-success fs-6',
+            'Success-soft' => 'badge bg-soft-success text-success fs-6',
+            'Danger' => 'badge bg-danger fs-6',
+            'Danger-soft' => 'badge bg-soft-danger text-danger fs-6',
+            'Warning' => 'badge bg-warning fs-6',
+            'Warning-soft' => 'badge bg-soft-warning text-warning fs-6',
+            'Info' => 'badge bg-info fs-6',
+            'Info-soft' => 'badge bg-soft-info text-info fs-6',
+            'Light' => 'badge bg-light text-dark fs-6',
+            'Light-soft' => 'badge bg-soft-light text-dark fs-6',
+            'Dark' => 'badge bg-dark fs-6',
+            'Dark-soft' => 'badge bg-soft-dark text-dark fs-6',
+        ];
+
+        foreach ($colors as $color => $class) {
+            Color::query()->create([
+                'name' => $color,
+                'color_class' => $class
+            ]);
+        }
+
         $conditions = [
             'Working' => 'In good operational condition.',
             'Working w/ Minor Defects' => 'Operational with minor issues that do not affect functionality significantly.',
@@ -29,21 +56,49 @@ class StatusSeeder extends Seeder
         }
 
         $statuses = [
-            'Available' => 'This asset is ready for use and can be utilized immediately for its intended purpose without any restrictions.',
-            'In Use' => 'The asset is currently being used and is not available for others until it becomes free.',
-            'Unavailable' => 'The asset is not accessible for use at the moment due to unforeseen reasons or temporary constraints.',
-            'Needs Maintenance' => 'The asset is in need of repair or service before it can be safely or effectively used again.',
-            'Under Maintenance' => 'This asset is currently undergoing repairs or servicing to restore its full functionality.',
-            'Reserved' => 'The asset has been booked for a future time and is not available for current use by others.',
-            'Missing' => 'This asset is unaccounted for and cannot be found within the inventory or asset tracking system.',
-            'End of Life' => 'This asset has reached the end of its usable service life and is no longer fit for operational use.',
-            'Disposed' => 'This asset has been permanently removed from the inventory and is no longer available for use or tracking.'
+            'Available' => [
+                'description' => 'Asset is ready for immediate use without any restrictions.',
+                'color_id' => 1,
+            ],
+            'In Use' => [
+                'description' => 'Asset is currently in use and not available for others.',
+                'color_id' => 2,
+            ],
+            'Unavailable' => [
+                'description' => 'Asset is temporarily inaccessible due to unforeseen reasons.',
+                'color_id' => 3,
+            ],
+            'Needs Maintenance' => [
+                'description' => 'Asset requires repair or service before it can be used again.',
+                'color_id' => 4,
+            ],
+            'Under Maintenance' => [
+                'description' => 'Asset is being repaired or serviced to restore functionality.',
+                'color_id' => 5,
+            ],
+            'Reserved' => [
+                'description' => 'Asset is booked for future use and unavailable for others.',
+                'color_id' => 6,
+            ],
+            'Missing' => [
+                'description' => 'Asset is unaccounted for and cannot be found in the inventory.',
+                'color_id' => 7,
+            ],
+            'End of Life' => [
+                'description' => 'Asset has reached the end of its useful life and is no longer usable.',
+                'color_id' => 8,
+            ],
+            'Disposed' => [
+                'description' => 'Asset has been permanently removed from inventory and use.',
+                'color_id' => 9,
+            ]
         ];
 
-        foreach ($statuses as $status => $description) {
+        foreach ($statuses as $status => $data) {
             Status::query()->create([
                 'name' => $status,
-                'description' => $description
+                'description' => $data['description'],
+                'color_id' => $data['color_id']
             ]);
         }
 

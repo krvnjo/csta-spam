@@ -7,8 +7,10 @@ use App\Http\Controllers\ConditionController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\PropertyParentController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\SubcategoryController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 // ============ Dashboard Routes ============ //
@@ -26,78 +28,103 @@ Route::controller(PropertyParentController::class)->group(function () {
 
 // ============ End Property & Assets Routes ============ //
 
+// ============ User Management Routes ============ //
+
+// User Routes
+Route::prefix('user-management/users')->name('user.')->controller(UserController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::post('/create', 'store')->name('store');
+    Route::get('/edit/{id}', 'edit')->name('edit');
+    Route::patch('/update/{id}', 'update')->name('update');
+    Route::delete('/delete/{id}', 'destroy')->name('delete');
+});
+
+// Roles Routes
+Route::prefix('user-management/roles')->name('role.')->controller(RoleController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::post('/create', 'store')->name('store');
+    Route::get('/edit/{id}', 'edit')->name('edit');
+    Route::patch('/update/{id}', 'update')->name('update');
+    Route::delete('/delete/{id}', 'destroy')->name('delete');
+});
+
+// Permissions Routes
+
+
+// ============ End User Management Routes ============ //
+
 // ============ File Maintenance Routes ============ //
 
 // Acquisition Routes
-Route::controller(AcquisitionController::class)->group(function () {
-    Route::get('/file-maintenance/acquisitions', 'index')->name('acquisition.index');
-    Route::post('/file-maintenance/acquisitions/create', 'store')->name('acquisition.store');
-    Route::get('/file-maintenance/acquisitions/edit', 'edit')->name('acquisition.edit');
-    Route::patch('/file-maintenance/acquisitions/update', 'update')->name('acquisition.update');
-    Route::delete('/file-maintenance/acquisitions/delete', 'destroy')->name('acquisition.delete');
+Route::prefix('file-maintenance/acquisitions')->name('acquisition.')->controller(AcquisitionController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::post('/create', 'store')->name('store');
+    Route::get('/edit/{id}', 'edit')->name('edit');
+    Route::patch('/update/{id}', 'update')->name('update');
+    Route::delete('/delete/{id}', 'destroy')->name('delete');
 });
 
 // Brand Routes
-Route::controller(BrandController::class)->group(function () {
-    Route::get('/file-maintenance/brands', 'index')->name('brand.index');
-    Route::post('/file-maintenance/brands/create', 'store')->name('brand.store');
-    Route::get('/file-maintenance/brands/edit', 'edit')->name('brand.edit');
-    Route::patch('/file-maintenance/brands/update', 'update')->name('brand.update');
-    Route::delete('/file-maintenance/brands/delete', 'destroy')->name('brand.delete');
+Route::prefix('file-maintenance/brands')->name('brand.')->controller(BrandController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::post('/create', 'store')->name('store');
+    Route::get('/edit/{id}', 'edit')->name('edit');
+    Route::patch('/update/{id}', 'update')->name('update');
+    Route::delete('/delete/{id}', 'destroy')->name('delete');
 });
 
 // Category Routes
-Route::controller(CategoryController::class)->group(function () {
-    Route::get('/file-maintenance/categories', 'index')->name('category.index');
-    Route::post('/file-maintenance/categories/create', 'store')->name('category.store');
-    Route::get('/file-maintenance/categories/edit', 'edit')->name('category.edit');
-    Route::patch('/file-maintenance/categories/update', 'update')->name('category.update');
-    Route::delete('/file-maintenance/categories/delete', 'destroy')->name('category.delete');
+Route::prefix('file-maintenance/categories')->name('category.')->controller(CategoryController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::post('/create', 'store')->name('store');
+    Route::get('/edit/{id}', 'edit')->name('edit');
+    Route::patch('/update/{id}', 'update')->name('update');
+    Route::delete('/delete/{id}', 'destroy')->name('delete');
 });
 
 // Condition Routes
-Route::controller(ConditionController::class)->group(function () {
-    Route::get('/file-maintenance/conditions', 'index')->name('condition.index');
-    Route::post('/file-maintenance/conditions/create', 'store')->name('condition.store');
-    Route::get('/file-maintenance/conditions/edit', 'edit')->name('condition.edit');
-    Route::patch('/file-maintenance/conditions/update', 'update')->name('condition.update');
-    Route::delete('/file-maintenance/conditions/delete', 'destroy')->name('condition.delete');
+Route::prefix('file-maintenance/conditions')->name('condition.')->controller(ConditionController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::post('/create', 'store')->name('store');
+    Route::get('/edit/{id}', 'edit')->name('edit');
+    Route::patch('/update/{id}', 'update')->name('update');
+    Route::delete('/delete/{id}', 'destroy')->name('delete');
 });
 
 // Department Routes
-Route::controller(DepartmentController::class)->group(function () {
-    Route::get('/file-maintenance/departments', 'index')->name('department.index');
-    Route::post('/file-maintenance/departments/create', 'store')->name('department.store');
-    Route::get('/file-maintenance/departments/edit', 'edit')->name('department.edit');
-    Route::patch('/file-maintenance/departments/update', 'update')->name('department.update');
-    Route::delete('/file-maintenance/departments/delete', 'destroy')->name('department.delete');
+Route::prefix('file-maintenance/departments')->name('department.')->controller(DepartmentController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::post('/create', 'store')->name('store');
+    Route::get('/edit/{id}', 'edit')->name('edit');
+    Route::patch('/update/{id}', 'update')->name('update');
+    Route::delete('/delete/{id}', 'destroy')->name('delete');
 });
 
 // Designation Routes
-Route::controller(DesignationController::class)->group(function () {
-    Route::get('/file-maintenance/designations', 'index')->name('designation.index');
-    Route::post('/file-maintenance/designations/create', 'store')->name('designation.store');
-    Route::get('/file-maintenance/designations/edit', 'edit')->name('designation.edit');
-    Route::patch('/file-maintenance/designations/update', 'update')->name('designation.update');
-    Route::delete('/file-maintenance/designations/delete', 'destroy')->name('designation.delete');
+Route::prefix('file-maintenance/designations')->name('designation.')->controller(DesignationController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::post('/create', 'store')->name('store');
+    Route::get('/edit/{id}', 'edit')->name('edit');
+    Route::patch('/update/{id}', 'update')->name('update');
+    Route::delete('/delete/{id}', 'destroy')->name('delete');
 });
 
 // Subcategory Routes
-Route::controller(SubcategoryController::class)->group(function () {
-    Route::get('/file-maintenance/subcategories', 'index')->name('subcategory.index');
-    Route::post('/file-maintenance/subcategories/create', 'store')->name('subcategory.store');
-    Route::get('/file-maintenance/subcategories/edit', 'edit')->name('subcategory.edit');
-    Route::patch('/file-maintenance/subcategories/update', 'update')->name('subcategory.update');
-    Route::delete('/file-maintenance/subcategories/delete', 'destroy')->name('subcategory.delete');
+Route::prefix('file-maintenance/subcategories')->name('subcategory.')->controller(SubcategoryController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::post('/create', 'store')->name('store');
+    Route::get('/edit/{id}', 'edit')->name('edit');
+    Route::patch('/update/{id}', 'update')->name('update');
+    Route::delete('/delete/{id}', 'destroy')->name('delete');
 });
 
-// Statuses Routes
-Route::controller(StatusController::class)->group(function () {
-    Route::get('/file-maintenance/statuses', 'index')->name('status.index');
-    Route::post('/file-maintenance/statuses/create', 'store')->name('status.store');
-    Route::get('/file-maintenance/statuses/edit', 'edit')->name('status.edit');
-    Route::patch('/file-maintenance/statuses/update', 'update')->name('status.update');
-    Route::delete('/file-maintenance/statuses/delete', 'destroy')->name('status.delete');
+// Status Routes
+Route::prefix('file-maintenance/statuses')->name('status.')->controller(StatusController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::post('/create', 'store')->name('store');
+    Route::get('/edit/{id}', 'edit')->name('edit');
+    Route::patch('/update/{id}', 'update')->name('update');
+    Route::delete('/delete/{id}', 'destroy')->name('delete');
 });
 
 // ============ End File Maintenance Routes ============ //

@@ -16,7 +16,7 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        $departments = Department::query()->with('designations')->whereNull('deleted_at')->get();
+        $departments = Department::query()->whereNull('deleted_at')->get();
 
         $totalDepartments = $departments->count();
         $deletedDepartments = Department::onlyTrashed()->count();

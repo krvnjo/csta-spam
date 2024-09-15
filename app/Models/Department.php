@@ -25,11 +25,6 @@ class Department extends Model
         'is_active'
     ];
 
-    public function designations(): HasMany
-    {
-        return $this->hasMany(Designation::class, 'dept_id', 'id');
-    }
-
     public function property(): BelongsTo
     {
         return $this->belongsTo(PropertyParent::class);

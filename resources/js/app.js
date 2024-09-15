@@ -34,7 +34,7 @@ $(document).ready(function () {
   // ============ End Show Active Links JS ============ //
 
   // ============ Remove invalid validation on keydown JS ============ //
-  $("input").on("keydown", function () {
+  $("input, textarea, select").on("keydown change", function () {
     $(this).removeClass("is-invalid");
     $(this).siblings(".invalid-feedback").html("");
   });
