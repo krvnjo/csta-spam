@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Department;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -12,15 +14,20 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $users = User::query()->whereNull('deleted_at')->get();
+        $roles = Role::query()->select('id', 'name')->where('is_active', '=', 1)->whereNull('deleted_at')->get();
+        $depts = Department::query()->select('id', 'name')->where('is_active', '=', 1)->whereNull('deleted_at')->get();
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $totalUsers = $users->count();
+
+        return view('pages.user-management.user',
+            compact(
+                'users',
+                'roles',
+                'depts',
+                'totalUsers'
+            )
+        );
     }
 
     /**
@@ -32,17 +39,9 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(User $user)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $user)
+    public function edit(Request $request)
     {
         //
     }
@@ -50,7 +49,7 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request)
     {
         //
     }
@@ -58,7 +57,7 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(Request $request)
     {
         //
     }

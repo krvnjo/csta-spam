@@ -1,15 +1,17 @@
-<aside class="js-navbar-vertical-aside navbar navbar-vertical-aside navbar-vertical navbar-vertical-fixed navbar-expand-xl navbar-bordered bg-white">
+<aside
+  class="js-navbar-vertical-aside navbar navbar-vertical-aside navbar-vertical navbar-vertical-fixed navbar-expand-xl navbar-bordered bg-white">
   <div class="navbar-vertical-container">
     <div class="navbar-vertical-footer-offset">
       <!-- Logo -->
       <a class="navbar-brand" href="/" aria-label="CSTA - SPAM Logo">
-        <img class="navbar-brand-logo" data-hs-theme-appearance="default" src="{{ Vite::asset('resources/svg/logos/logo.svg') }}" alt="CSTA - SPAM Logo">
-        <img class="navbar-brand-logo" data-hs-theme-appearance="dark" src="{{ Vite::asset('resources/svg/logos-light/logo.svg') }}"
-          alt="CSTA - SPAM Logo">
-        <img class="navbar-brand-logo-mini" data-hs-theme-appearance="default" src="{{ Vite::asset('resources/svg/logos/logo-short.svg') }}"
-          alt="CSTA - SPAM Logo">
-        <img class="navbar-brand-logo-mini" data-hs-theme-appearance="dark" src="{{ Vite::asset('resources/svg/logos-light/logo-short.svg') }}"
-          alt="CSTA - SPAM Logo">
+        <img class="navbar-brand-logo" data-hs-theme-appearance="default"
+          src="{{ Vite::asset('resources/svg/logos/logo.svg') }}" alt="CSTA - SPAM Logo">
+        <img class="navbar-brand-logo" data-hs-theme-appearance="dark"
+          src="{{ Vite::asset('resources/svg/logos-light/logo.svg') }}" alt="CSTA - SPAM Logo">
+        <img class="navbar-brand-logo-mini" data-hs-theme-appearance="default"
+          src="{{ Vite::asset('resources/svg/logos/logo-short.svg') }}" alt="CSTA - SPAM Logo">
+        <img class="navbar-brand-logo-mini" data-hs-theme-appearance="dark"
+          src="{{ Vite::asset('resources/svg/logos-light/logo-short.svg') }}" alt="CSTA - SPAM Logo">
       </a>
       <!-- End Logo -->
 
@@ -52,14 +54,15 @@
           <div id="navbarVerticalMenuPagesMenu">
             <!-- Property and Assets -->
             <div class="nav-item">
-              <a class="nav-link dropdown-toggle " data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesEcommerceMenu"
-                href="#navbarVerticalMenuPagesEcommerceMenu" role="button" aria-expanded="false"
-                aria-controls="navbarVerticalMenuPagesEcommerceMenu">
+              <a class="nav-link dropdown-toggle " data-bs-toggle="collapse"
+                data-bs-target="#navbarVerticalMenuPagesEcommerceMenu" href="#navbarVerticalMenuPagesEcommerceMenu"
+                role="button" aria-expanded="false" aria-controls="navbarVerticalMenuPagesEcommerceMenu">
                 <i class="bi-box-seam nav-icon"></i>
                 <span class="nav-link-title">P&A Management</span>
               </a>
 
-              <div class="nav-collapse collapse " id="navbarVerticalMenuPagesEcommerceMenu" data-bs-parent="#navbarVerticalMenuPagesMenu">
+              <div class="nav-collapse collapse " id="navbarVerticalMenuPagesEcommerceMenu"
+                data-bs-parent="#navbarVerticalMenuPagesMenu">
                 <a class="nav-link" href="/properties-assets/overview">Stock Masterlist</a>
 
                 <a class="nav-link" href="/properties-inventory/overview">Inventory Masterlist</a>
@@ -102,16 +105,18 @@
 
           <!-- User Management -->
           <div class="nav-item">
-            <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuUserManagement"
-              href="#navbarVerticalMenuUserManagement" role="button" aria-expanded="false" aria-controls="navbarVerticalMenuUserManagement">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="collapse"
+              data-bs-target="#navbarVerticalMenuUserManagement" href="#navbarVerticalMenuUserManagement" role="button"
+              aria-expanded="false" aria-controls="navbarVerticalMenuUserManagement">
               <i class="bi-people nav-icon"></i>
               <span class="nav-link-title">User Management</span>
             </a>
 
-            <div class="nav-collapse collapse" id="navbarVerticalMenuUserManagement" data-bs-parent="#navbarVerticalMenu">
-              <a class="nav-link" href="#">Users</a>
-              <a class="nav-link" href="#">Roles</a>
-              <a class="nav-link" href="#">Permissions</a>
+            <div class="nav-collapse collapse" id="navbarVerticalMenuUserManagement"
+              data-bs-parent="#navbarVerticalMenu">
+              <a class="nav-link" href="/user-management/users">Users</a>
+              <a class="nav-link" href="/user-management/roles">Roles</a>
+              <a class="nav-link" href="/user-management/permissions">Permissions</a>
             </div>
           </div>
           <!-- End User Management -->
@@ -119,13 +124,15 @@
           <!-- File Maintenance -->
           <div class="nav-item">
             <div class="nav-item">
-              <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuFileMaintenance"
-                href="#navbarVerticalMenuFileMaintenance" role="button" aria-expanded="false" aria-controls="navbarVerticalMenuFileMaintenance">
+              <a class="nav-link dropdown-toggle" data-bs-toggle="collapse"
+                data-bs-target="#navbarVerticalMenuFileMaintenance" href="#navbarVerticalMenuFileMaintenance"
+                role="button" aria-expanded="false" aria-controls="navbarVerticalMenuFileMaintenance">
                 <i class="bi-folder2-open nav-icon"></i>
                 <span class="nav-link-title">File Maintenance</span>
               </a>
 
-              <div class="nav-collapse collapse" id="navbarVerticalMenuFileMaintenance" data-bs-parent="#navbarVerticalMenu">
+              <div class="nav-collapse collapse" id="navbarVerticalMenuFileMaintenance"
+                data-bs-parent="#navbarVerticalMenu">
                 <a class="nav-link" href="/file-maintenance/acquisitions">Acquisitions</a>
                 <a class="nav-link" href="/file-maintenance/brands">Brands</a>
                 <a class="nav-link" href="/file-maintenance/categories">Categories</a>

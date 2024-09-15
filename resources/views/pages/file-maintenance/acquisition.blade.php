@@ -38,7 +38,7 @@
             <div class="d-grid gap-2 d-sm-flex justify-content-sm-end">
               <button class="btn btn-primary w-100 w-sm-auto" data-bs-toggle="modal"
                 data-bs-target="#addAcquisitionModal">
-                <i class="bi-plus me-1"></i> Add a Acquisition
+                <i class="bi-plus me-1"></i> Add an Acquisition
               </button>
             </div>
           </div>
@@ -93,7 +93,7 @@
       </div>
       <!-- End Active and Inactive Acquisitions Card -->
 
-      <!-- Card -->
+      <!-- Datatable Card -->
       <div class="card">
         <!-- Header -->
         <div class="card-header card-header-content-md-between">
@@ -209,7 +209,7 @@
         </div>
         <!-- End Header -->
 
-        <!-- Table -->
+        <!-- Acquisition Table -->
         <div class="table-responsive datatable-custom">
           <table
             class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100"
@@ -305,7 +305,7 @@
             </tbody>
           </table>
         </div>
-        <!-- End Table -->
+        <!-- End Acquisition Table -->
 
         <!-- Footer -->
         <div class="card-footer">
@@ -314,7 +314,6 @@
               <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
                 <span class="me-2">Showing:</span>
 
-                <!-- Select -->
                 <div class="tom-select-custom tom-page-w">
                   <select class="js-select form-select form-select-borderless" id="acquisitionDatatableEntries"
                     data-hs-tom-select-options='{
@@ -328,29 +327,22 @@
                     <option value="{{ $totalAcquisitions }}">All</option>
                   </select>
                 </div>
-                <!-- End Select -->
 
                 <span class="text-secondary me-2">of</span>
-
-                <!-- Pagination Quantity -->
                 <span id="acquisitionDatatableWithPagination"></span>
               </div>
             </div>
-            <!-- End Col -->
 
             <div class="col-sm-auto">
               <div class="d-flex justify-content-center justify-content-sm-end">
-                <!-- Pagination -->
                 <nav id="acquisitionDatatablePagination" aria-label="Activity pagination"></nav>
               </div>
             </div>
-            <!-- End Col -->
           </div>
-          <!-- End Row -->
         </div>
         <!-- End Footer -->
       </div>
-      <!-- End Card -->
+      <!-- End Datatable Card -->
     </div>
     <!-- End Content -->
   </main>

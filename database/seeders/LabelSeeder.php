@@ -31,7 +31,8 @@ class LabelSeeder extends Seeder
             'A4Tech',
             'Carrier',
             'MSI',
-            'TCL'
+            'TCL',
+            'Samsung'
         ];
 
         foreach ($brands as $brand) {
@@ -43,11 +44,9 @@ class LabelSeeder extends Seeder
         $categories = [
             'Electronics',
             'Furniture',
-            'Appliances',
             'Tools',
             'Equipment',
-            'Supplies',
-            'Materials'
+            'Supplies'
         ];
 
         foreach ($categories as $category) {
@@ -65,7 +64,7 @@ class LabelSeeder extends Seeder
             'Chair' => '2',
             'Desks' => '2',
             'Bench' => '2',
-            'Air Conditioner' => '3',
+            'Air Conditioner' => '3'
         ];
 
         foreach ($subcategories as $subcategory => $categId) {

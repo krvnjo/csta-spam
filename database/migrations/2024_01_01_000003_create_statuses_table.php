@@ -1,16 +1,23 @@
 <?php
 
+use App\Models\Color;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
+        Schema::create('colors', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 50)->unique();
+            $table->string('color_class', 100)->unique();
+            $table->timestamps();
+        });
+
         Schema::create('conditions', function (Blueprint $table) {
             $table->id();
             $table->string('name', 100)->unique();
@@ -22,8 +29,9 @@ return new class extends Migration
 
         Schema::create('statuses', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 100)->unique();
+            $table->string('name', 50)->unique();
             $table->text('description');
+            $table->foreignIdFor(Color::class, 'color_id')->constrained('colors')->cascadeOnDelete();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
             $table->softDeletes();
@@ -46,5 +54,6 @@ return new class extends Migration
         Schema::dropIfExists('priorities');
         Schema::dropIfExists('statuses');
         Schema::dropIfExists('conditions');
+        Schema::dropIfExists('colors');
     }
 };

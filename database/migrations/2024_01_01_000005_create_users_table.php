@@ -25,7 +25,7 @@ return new class extends Migration
             $table->id();
             $table->string('user_name', 20)->unique();
             $table->string('pass_hash');
-            $table->string('image')->nullable()->default('default.jpg');
+            $table->string('image')->default('default.jpg');
             $table->string('lname', 100);
             $table->string('fname', 100);
             $table->string('mname', 100)->nullable();
@@ -34,7 +34,6 @@ return new class extends Migration
             $table->string('email', 255)->unique();
             $table->string('phone', 20)->unique()->nullable();
             $table->timestamp('last_login')->nullable();
-            $table->rememberToken();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
             $table->softDeletes();
