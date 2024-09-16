@@ -26,9 +26,12 @@ Route::name('dashboard.')->controller(DashboardController::class)->group(functio
 // ============ Property & Assets Routes ============ //
 
 // Property Parent Routes
-Route::controller(PropertyParentController::class)->group(function () {
-    Route::get('/properties-assets/overview', 'index')->name('prop-asset.index');
-    Route::post('/properties-assets/overview/create', 'store')->name('prop-asset.store');
+Route::prefix('properties-assets/stocks')->name('prop-asset.')->controller(PropertyParentController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::post('/create', 'store')->name('store');
+    Route::get('/edit/{id}', 'edit')->name('edit');
+    Route::patch('/update/{id}', 'update')->name('update');
+    Route::delete('/delete/{id}', 'destroy')->name('delete');
 });
 
 // ============ End Property & Assets Routes ============ //

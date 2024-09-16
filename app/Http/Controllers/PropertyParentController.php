@@ -5,10 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Acquisition;
 use App\Models\Brand;
 use App\Models\Condition;
+use App\Models\PropertyChild;
 use App\Models\PropertyParent;
 use App\Models\Subcategory;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Throwable;
 
 class PropertyParentController extends Controller
 {
@@ -39,19 +43,14 @@ class PropertyParentController extends Controller
             'propertyName.max' => 'The item name may not be greater than :max characters.',
             'propertyName.unique' => 'This item name already exists.',
 
-            'serialNumber.regex' => 'Please enter an item name!',
-            'serialNumber.max' => 'The serial number may not be greater than :max characters.',
-            'serialNumber.unique' => 'This item name already exists.',
-
             'category.required' => 'Please choose a category!',
 
             'brand.required' => 'Please choose a brand!',
 
-            'quantity.required' => 'Please choose a brand!',
+            'quantity.required' => 'Please enter the quantity!',
             'quantity.min' => 'The quantity must be at least :min.',
-            'quantity.minlength' => 'The quantity must be at least :min.',
+            'quantity.integer' => 'The quantity must be a whole number',
             'quantity.max' => 'The quantity may not be greater than :max.',
-
 
             'description.regex' => 'The description may only contain letters, spaces, and hyphens.',
             'description.min' => 'The description must be at least :min characters.',
@@ -60,71 +59,130 @@ class PropertyParentController extends Controller
             'acquiredType.required' => 'Please choose a acquisition type!',
 
             'condition.required' => 'Please choose a condition!',
-
-            'remarks.regex' => 'The remarks may only contain letters, spaces, and hyphens.',
-            'remarks.min' => 'The remarks must be at least :min characters.',
-            'remarks.max' => 'The remarks may not be greater than :max characters.',
         ];
+        try {
+            $propertyValidator = Validator::make($request->all(), [
+                'propertyName' => [
+                    'required',
+                    'regex:/^(?=.*[A-Za-z0-9])[A-Za-z0-9 ]+$/',
+                    'min:3',
+                    'max:50',
+                    'unique:property_parents,name'
+                ],
+                'category' => [
+                    'required'
+                ],
+                'brand' => [
+                    'required'
+                ],
+                'quantity' => [
+                    'required',
+                    'integer',
+                    'min:1',
+                    'max:500'
+                ],
+                'description' => [
+                    'nullable',
+                    'regex:/^[A-Za-z0-9%,\- ×"]+$/',
+                    'min:3',
+                    'max:100'
+                ],
+                'acquiredType' => [
+                    'required'
+                ],
+                'acquiredDate' => [
+                    'required'
+                ],
+                'condition' => [
+                    'required'
+                ],
+            ], $propertValidationMessages);
+            if ($propertyValidator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $propertyValidator->errors(),
+                ]);
+            } else {
+                if ($request->hasFile('propertyImage')) {
+                    $file = $request->file('propertyImage');
+                    if ($file !== null && $file->isValid()) {
+                        $filename = time() . '_' . $file->getClientOriginalName();
+                        $file->move(resource_path('img/uploads/prop-asset/'), $filename);
+                        $imageFileName = $filename;
+                    } else {
+                        $imageFileName = 'default.jpg';
+                    }
+                } else {
+                    $imageFileName = 'default.jpg';
+                }
 
-        $propertyValidator = Validator::make($request->all(), [
-            'propertyName' => [
-                'required',
-                'regex:/^(?=.*[A-Za-z0-9])[A-Za-z0-9 ]+$/',
-                'min:3',
-                'max:50',
-                'unique:property_parents,name'
-            ],
-            'serialNumber' => [
-                'regex:/[A-Za-z0-9]*/',
-                'max:70',
-                'unique:property_child,serial_num'
-            ],
-            'category' => [
-                'required'
-            ],
-            'brand' => [
-                'required'
-            ],
-            'quantity' => [
-                'required',
-                'min:1',
-                'minlength:1',
-                'max:500'
-            ],
-            'description' => [
-                'regex:/^(?!%+$|,+|-+|\s+$)[A-Za-z0-9%,\- ×"]+$/',
-                'min:3',
-                'max:100'
-            ],
-            'acquiredType' => [
-                'required'
-            ],
-            'acquiredDate' => [
-                'required'
-            ],
-            'condition' => [
-                'required'
-            ],
-            'remarks' => [
-                'regex:/^(?!%+$|,+|-+|\s+$)[A-Za-z0-9%,\- ×"]+$/',
-                'min:3',
-                'max:100'
-            ],
-        ], $propertValidationMessages);
+                $subcateg = Subcategory::query()->find(request('category'));
+                $categ_id = $subcateg->categ_id;
 
-        if ($propertyValidator->fails()) {
+                $parentProperty = PropertyParent::query()->create([
+                    'name' => ucwords(strtolower(trim(request('propertyName')))),
+                    'image' => $imageFileName,
+                    'brand_id' => (int)request('brand'),
+                    'subcateg_id' => (int)request('category'),
+                    'description' => trim(request('description')),
+                    'quantity' => request('quantity'),
+                    'categ_id' => $categ_id,
+                ]);
+
+                $propertyQuantity = $request->input('quantity');
+                $currentYear = Carbon::now()->year;
+
+                $lastCode = PropertyChild::query()
+                    ->where('prop_code', 'LIKE', "$currentYear%")
+                    ->orderBy('prop_code', 'desc')
+                    ->value('prop_code');
+
+                $nextNumber = $lastCode ? (int)substr($lastCode, 4) + 1 : 1;
+
+                for ($i = 0; $i < $propertyQuantity; $i++) {
+                    $code = $currentYear . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
+                    $nextNumber++;
+
+                    try {
+                        PropertyChild::query()->create([
+                            'prop_id' => $parentProperty->id,
+                            'prop_code' => $code,
+                            'type_id' => (int)request('acquiredType'),
+                            'acq_date' => Carbon::parse(request('dateAcquired')),
+                            'warranty_date' => Carbon::parse(request('warranty')),
+                            'stock_date' => now(),
+                            'status_id' => 1,
+                            'dept_id' => 1,
+                            'desig_id' => 1,
+                            'condi_id' => 1,
+                        ]);
+                    } catch (\Exception $e) {
+                        return response()->json([
+                            'success' => false,
+                            'title' => 'Oops! Something went wrong.',
+                            'text' => 'An error occurred while adding item. Please try again later.',
+                        ], 500);
+
+                    }
+                }
+
+                return response()->json([
+                    'success' => true,
+                    'title' => 'Saved Successfully!',
+                    'text' => 'The item has been added successfully!'
+                ]);
+
+
+            }
+        } catch (Throwable) {
             return response()->json([
                 'success' => false,
-                'errors' => $propertyValidator->errors(),
-            ]);
-        } else {
+                'title' => 'Oops! Something went wrong.',
+                'text' => 'An error occurred while adding item. Please try again later.',
+            ], 500);
 
-            return response()->json([
-                'success' => true,
-                'title' => 'Saved Successfully!',
-                'text' => 'The acquisition has been added successfully!',
-            ]);
         }
+
     }
 
     /**
