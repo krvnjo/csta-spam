@@ -277,9 +277,17 @@
                     </div>
                   </td>
                   <td class="table-column-ps-0">
-                    <a class="d-flex align-items-center" href="{{ route('prop-child.index', $propertyParent->id) }}">
+                    <a class="d-flex align-items-center" href="">
                       <div class="avatar avatar-lg">
-                        <img class="avatar-img" src="{{ asset('assets/img/uploads/properties/' . $propertyParent->image) }}" alt="Image Description">
+                        @php
+                          $imagePath = 'resources/img/uploads/prop-asset/' . $propertyParent->image;
+                          $imageFullPath = resource_path($imagePath);
+
+                          if (!file_exists($imageFullPath)) {
+                              $imagePath = 'resources/img/uploads/prop-asset/default.jpg';
+                          }
+                        @endphp
+                        <img class="avatar-img" src="{{ Vite::asset($imagePath) }}" alt="Image Description">
                       </div>
                       <div class="ms-3">
                         <span class="d-block h5 mb-0 text-inherit">{{ $propertyParent->name }}</span>
@@ -298,7 +306,7 @@
                   <td>{{ $propertyParent->quantity }}</td>
                   <td>
                     <div class="btn-group" role="group">
-                      <a class="btn btn-white btn-sm" href="{{ route('prop-child.index', $propertyParent->id) }}">
+                      <a class="btn btn-white btn-sm" href="">
                         <i class="bi-eye me-1"></i> View All
                       </a>
 
@@ -800,10 +808,6 @@
         // =======================================================
         new HSFormSearch('.js-form-search')
 
-
-        // INITIALIZATION OF BOOTSTRAP DROPDOWN
-        // =======================================================
-        HSBsDropdown.init()
       }
     })()
   </script>

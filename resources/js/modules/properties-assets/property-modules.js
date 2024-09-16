@@ -1,105 +1,147 @@
 $(document).ready(function () {
   const propertyDatatable = $("#propertyOverviewDatatable");
 
-// Create a Property
+  // Create a Property
   const propertyAddModal = $("#addPropertyModal");
   const propertyAddForm = $("#frmAddProperty");
-  const propertyAddName = $("#txtPropertyName");
-  const propertyAddSerial = $("#txtSerialNumber");
-  const propertyAddCategory = $("#cbxCategory");
-  const propertyAddBrand = $("#cbxBrand");
-  const propertyAddQty = $("#txtQuantity");
-  const propertyAddDesc = $("#txtDescription");
-  const propertyAddAcquired = $("#cbxAcquiredType");
-  const propertyAddDateAcq = $("#dtpAcquired");
-  const propertyAddCondition = $("#cbxCondition");
-  const propertyAddWarranty = $("#dtpWarranty");
-  const propertyAddRemarks = $("#txtRemarks");
-  const propertyAddImage = $("#propertyDropzone");
 
-  const propAddNameValid = $("#valAddName");
-  const propAddSerialValid = $("#valAddSerial");
-  const propAddCategoryValid = $("#valAddCategory");
-  const propAddBrandValid = $("#valAddBrand");
-  const propAddQtyValid = $("#valAddQty");
-  const propAddDescValid = $("#valAddDesc");
-  const propAddAcquiredValid = $("#valAddAcquired");
-  const propAddDtpAcqValid = $("#valAddDtpAcq");
-  const propAddConditionValid = $("#valAddCondition");
+  // Required fields
+  const requiredFields = {
+    propertyName: $("#txtPropertyName"),
+    category: $("#cbxCategory"),
+    brand: $("#cbxBrand"),
+    quantity: $("#txtQuantity"),
+    acquiredType: $("#cbxAcquiredType"),
+    acquiredDate: $("#dtpAcquired"),
+    condition: $("#cbxCondition")
+  };
+
+  // Non-required fields
+  const nonRequiredFields = {
+    description: $("#txtDescription"),
+    warranty: $("#dtpWarranty"),
+    remarks: $("#txtRemarks")
+  };
+
+  // Dropzone instance
+  const propertyDropzone = Dropzone.forElement("#propertyDropzone");
+
+  // Validation message elements
+  const validationMessages = {
+    propertyName: $("#valAddName"),
+    category: $("#valAddCategory"),
+    brand: $("#valAddBrand"),
+    quantity: $("#valAddQty"),
+    description: $("#valAddDesc"),
+    acquiredType: $("#valAddAcquired"),
+    acquiredDate: $("#valAddDtpAcq"),
+    condition: $("#valAddCondition")
+  };
+
+  // Function to clear validation errors
+  function clearValidationErrors() {
+    propertyAddForm.find(".is-invalid").removeClass("is-invalid");
+    propertyAddForm.find(".tom-select-invalid").removeClass("tom-select-invalid");
+    Object.values(validationMessages).forEach(el => el.text(""));
+  }
+
+  // Function to check if a field has been modified
+  function isFieldModified(field) {
+    return field.data('modified') === true;
+  }
+
+  // Mark fields as modified when they change
+  propertyAddForm.find("input, select, textarea").on("input change", function() {
+    $(this).data('modified', true);
+    $(this).removeClass("is-invalid");
+    const fieldName = $(this).attr('name');
+    if (validationMessages[fieldName]) {
+      validationMessages[fieldName].text("");
+    }
+  });
+
+  // Special handling for tom-select dropdowns
+  [requiredFields.category, requiredFields.brand, requiredFields.acquiredType, requiredFields.condition].forEach(function(select) {
+    if (select[0].tomselect) {
+      select[0].tomselect.on('change', function() {
+        select.data('modified', true);
+        select.removeClass("is-invalid");
+        select[0].tomselect.wrapper.classList.remove("tom-select-invalid");
+        const fieldName = select.attr('name');
+        if (validationMessages[fieldName]) {
+          validationMessages[fieldName].text("");
+        }
+      });
+    }
+  });
+
+  // Special handling for date inputs
+  [requiredFields.acquiredDate, nonRequiredFields.warranty].forEach(function(dateInput) {
+    dateInput.on('changeDate', function() {
+      dateInput.data('modified', true);
+      dateInput.removeClass("is-invalid");
+      const fieldName = dateInput.attr('name');
+      if (validationMessages[fieldName]) {
+        validationMessages[fieldName].text("");
+      }
+    });
+  });
 
   propertyAddForm.on("submit", function (e) {
     e.preventDefault();
 
+    const formData = new FormData();
+
+    formData.append('_token', $('meta[name="csrf-token"]').attr("content"));
+
+    // Append form fields to FormData
+    Object.entries(requiredFields).forEach(([key, field]) => {
+      // Check if the field is a tom-select dropdown
+      if (field[0].tomselect) {
+        // Use tom-select's getValue() method to get the selected value
+        formData.append(key, field[0].tomselect.getValue());
+      } else {
+        // Otherwise, use the usual .val() method for other input types
+        formData.append(key, field.val());
+      }
+    });
+
+    Object.entries(nonRequiredFields).forEach(([key, field]) => formData.append(key, field.val()));
+
+    // Append the file if it exists in Dropzone
+    if (propertyDropzone.files.length > 0) {
+      formData.append("propertyImage", propertyDropzone.files[0]);
+    }
+
+
     $.ajax({
-      url: "/properties-assets/overview/create",
+      url: "/properties-assets/stocks/create",
       method: "POST",
-      data: {
-        _token: $("input[name=_token]").val(),
-        propertyName: propertyAddName.val(),
-        serialNumber: propertyAddSerial.val(),
-        category: propertyAddCategory.val(),
-        brand: propertyAddBrand.val(),
-        quantity: propertyAddQty.val(),
-        description: propertyAddDesc.val(),
-        acquiredType: propertyAddAcquired.val(),
-        acquiredDate: propertyAddDateAcq.val(),
-        condition: propertyAddCondition.val(),
-        warranty: propertyAddWarranty.val(),
-        remarks: propertyAddRemarks.val(),
-      },
+      data: formData,
+      processData: false,
+      contentType: false,
       success: function (response) {
         if (response.success) {
-          // Remove any previous validation errors
-          propertyAddName.removeClass("is-invalid");
-          propertyAddSerial.removeClass("is-invalid");
-          propertyAddCategory.removeClass("is-invalid");
-          propertyAddBrand.removeClass("is-invalid");
-          propertyAddQty.removeClass("is-invalid");
-          propertyAddDesc.removeClass("is-invalid");
-          propertyAddAcquired.removeClass("is-invalid");
-          propertyAddDateAcq.removeClass("is-invalid");
-          propertyAddCondition.removeClass("is-invalid");
-
-          // Show success alert
+          clearValidationErrors();
           showSuccessAlert(response, propertyAddModal, propertyAddForm);
+          propertyDropzone.removeAllFiles();
         } else {
-          // Validate fields and display errors
-          if (response.errors.propertyName) {
-            propertyAddName.addClass("is-invalid");
-            propAddNameValid.text(response.errors.propertyName[0]);
-          }
-          if (response.errors.serialNumber) {
-            propertyAddSerial.addClass("is-invalid");
-            propAddSerialValid.text(response.errors.serialNumber[0]);
-          }
-          if (response.errors.category) {
-            propertyAddCategory.addClass("is-invalid");
-            propAddCategoryValid.text(response.errors.category[0]);
-          }
-          if (response.errors.brand) {
-            propertyAddBrand.addClass("is-invalid");
-            propAddBrandValid.text(response.errors.brand[0]);
-          }
-          if (response.errors.quantity) {
-            propertyAddQty.addClass("is-invalid");
-            propAddQtyValid.text(response.errors.quantity[0]);
-          }
-          if (response.errors.description) {
-            propertyAddDesc.addClass("is-invalid");
-            propAddDescValid.text(response.errors.description[0]);
-          }
-          if (response.errors.acquiredType) {
-            propertyAddAcquired.addClass("is-invalid");
-            propAddAcquiredValid.text(response.errors.acquiredType[0]);
-          }
-          if (response.errors.acquiredDate) {
-            propertyAddDateAcq.addClass("is-invalid");
-            propAddDtpAcqValid.text(response.errors.acquiredDate[0]);
-          }
-          if (response.errors.condition) {
-            propertyAddCondition.addClass("is-invalid");
-            propAddConditionValid.text(response.errors.condition[0]);
-          }
+          Object.keys(response.errors).forEach(function(fieldName) {
+            const field = requiredFields[fieldName] || nonRequiredFields[fieldName];
+            const validationMessage = validationMessages[fieldName];
+
+            if (field && validationMessage) {
+              // Always show error for required fields, regardless of modification status
+              if (requiredFields[fieldName] || isFieldModified(field)) {
+                field.addClass("is-invalid");
+                // Special handling for tom-select dropdowns
+                if (field[0].tomselect) {
+                  field[0].tomselect.wrapper.classList.add("tom-select-invalid");
+                }
+                validationMessage.text(response.errors[fieldName][0]);
+              }
+            }
+          });
         }
       },
       error: function (jqXHR, textStatus, errorThrown) {
@@ -115,5 +157,4 @@ $(document).ready(function () {
     });
   });
   // End Create a Property
-
 });

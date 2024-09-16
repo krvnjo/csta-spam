@@ -60,7 +60,7 @@
               </a>
 
               <div class="nav-collapse collapse " id="navbarVerticalMenuPagesEcommerceMenu" data-bs-parent="#navbarVerticalMenuPagesMenu">
-                <a class="nav-link" href="/properties-assets/overview">Stock Masterlist</a>
+                <a class="nav-link" href="/properties-assets/stocks">Stock Masterlist</a>
 
                 <a class="nav-link" href="/properties-inventory/overview">Inventory Masterlist</a>
               </div>

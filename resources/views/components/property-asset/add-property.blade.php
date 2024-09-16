@@ -28,16 +28,23 @@
               <div class="mb-3">
                 <label class="form-label" for="txtPropertyName">Item Name:
                   <span class="text-danger">*</span></label>
-                <input class="form-control" id="txtPropertyName" name="propertyName" type="text" placeholder="Stock Name" />
+                <input class="form-control" id="txtPropertyName" name="propertyName" type="text" placeholder="Stock Name" autocomplete="off" />
                 <span class="invalid-feedback" id="valAddName"></span>
               </div>
             </div>
 
             <div class="col-lg-6">
-              <div class="mb-3">
-                <label class="form-label" for="txtSerialNumber"> Serial Number: </label>
-                <input class="form-control" id="txtSerialNumber" name="serialNumber" type="text" placeholder="Serial Number" />
-                <span class="invalid-feedback" id="valAddSerial"></span>
+              <div class="tom-select-custom mb-3">
+                <label class="form-label" for="cbxCondition">
+                  Condition:
+                  <span class="text-danger">*</span></label>
+                <select class="js-select form-select" id="cbxCondition" name="condition" autocomplete="off">
+                  <option value="" disabled selected>Select Condition...</option>
+                  @foreach ($conditions as $condition)
+                    <option value="{{ $condition->id }}">{{ $condition->name }}</option>
+                  @endforeach
+                </select>
+                <span class="invalid-feedback" id="valAddCondition"></span>
               </div>
             </div>
           </div>
@@ -77,7 +84,7 @@
             <div class="col-lg-4">
               <div class="mb-3">
                 <label class="form-label" for="txtQuantity">Quantity: <span class="text-danger">*</span></label>
-                <input class="form-control" id="txtQuantity" name="quantity" type="number" placeholder="1" />
+                <input class="form-control" id="txtQuantity" name="quantity" type="number" placeholder="0" min="1" max="500" />
                 <span class="invalid-feedback" id="valAddQty"></span>
               </div>
             </div>
@@ -94,7 +101,7 @@
           </div>
 
           <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-4">
               <div class="tom-select-custom mb-3">
                 <label class="form-label" for="cbxAcquiredType">
                   Acquired Type:
@@ -109,7 +116,7 @@
               </div>
             </div>
 
-            <div class="col-lg-6">
+            <div class="col-lg-4">
               <div class="mb-3">
                 <label class="form-label" for="dtpAcquired">
                   Date Acquired:
@@ -118,25 +125,8 @@
                 <span class="invalid-feedback" id="valAddDtpAcq"></span>
               </div>
             </div>
-          </div>
 
-          <div class="row">
-            <div class="col-lg-6">
-              <div class="tom-select-custom mb-3">
-                <label class="form-label" for="cbxCondition">
-                  Condition:
-                  <span class="text-danger">*</span></label>
-                <select class="js-select form-select" id="cbxCondition" name="condition" autocomplete="off">
-                  <option value="" disabled selected>Select Condition...</option>
-                  @foreach ($conditions as $condition)
-                    <option value="{{ $condition->id }}">{{ $condition->name }}</option>
-                  @endforeach
-                </select>
-                <span class="invalid-feedback" id="valAddCondition"></span>
-              </div>
-            </div>
-
-            <div class="col-lg-6">
+            <div class="col-lg-4">
               <div class="mb-3">
                 <label class="form-label" for="dtpWarranty"> Warranty Date: </label>
                 <input class="form-control" id="dtpWarranty" name="warranty" type="date" min="{{ now()->toDateString() }}" />
@@ -144,15 +134,6 @@
             </div>
           </div>
 
-          <div class="row">
-            <div class="col-lg">
-              <div class="mb-3">
-                <label class="form-label" for="txtRemarks">Remarks:</label>
-                <textarea class="form-control" id="txtRemarks" name="remarks" style="resize: none" placeholder="Remarks"></textarea>
-                <span class="invalid-feedback" id="valAddRemarks"></span>
-              </div>
-            </div>
-          </div>
           <div class="row">
             <div class="col-lg">
               <div class="mb-3">
