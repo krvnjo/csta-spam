@@ -19,15 +19,13 @@
     <link data-hs-appearance="default" href="{{ Vite::asset('resources/css/theme.min.css') }}" rel="stylesheet">
     <link data-hs-appearance="dark" href="{{ Vite::asset('resources/css/theme-dark.min.css') }}" rel="stylesheet">
 
-    <!-- JS Window Config and Appearance -->
+    <!-- JS Window Config -->
     <script src="{{ Vite::asset('resources/js/hs-window-config') }}"></script>
   </head>
   <body class="has-navbar-vertical-aside navbar-vertical-aside-show-xl footer-offset">
     <!-- JS Appearance -->
     <script src="{{ Vite::asset('resources/js/hs.theme-appearance.js') }}"></script>
-    <script
-      src="{{ Vite::asset('resources/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js') }}">
-    </script>
+    <script src="{{ Vite::asset('resources/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js') }}"></script>
 
     <!-- ========== Header ========== -->
     @yield('header')
@@ -53,10 +51,8 @@
     <script src="{{ Vite::asset('resources/vendor/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ Vite::asset('resources/vendor/jquery-migrate/dist/jquery-migrate.min.js') }}"></script>
     <script src="{{ Vite::asset('resources/vendor/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ Vite::asset('resources/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside.min.js') }}">
-    </script>
+    <script src="{{ Vite::asset('resources/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside.min.js') }}"></script>
     <script src="{{ Vite::asset('resources/vendor/hs-form-search/dist/hs-form-search.min.js') }}"></script>
-    <script src="{{ Vite::asset('resources/vendor/hs-nav-scroller/dist/hs-nav-scroller.min.js') }}"></script>
 
     <!-- JS Plugins -->
     @yield('scripts')

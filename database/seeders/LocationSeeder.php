@@ -14,7 +14,7 @@ class LocationSeeder extends Seeder
     public function run(): void
     {
         $depts = [
-            'CSTA Administration' => 'CSTA-AD',
+            'CSTA Administration' => 'CSTA-ADMIN',
             'School of Information Technology' => 'SIT',
             'School of Education' => 'SED',
             'School of Tourism Management' => 'STM',
@@ -36,9 +36,9 @@ class LocationSeeder extends Seeder
             'GYM IT Laboratory 3' => '2',
             'GYM IT Laboratory 4' => '2',
             'GYM IT Laboratory 5' => '2',
-            'GYM IT Hallway' => '2',
-            'GYM Technical Laboratory' => '2',
-            'GYM IT Networking Lab' => '2'
+            'GYM IT Technical Laboratory' => '2',
+            'GYM IT Networking Lab' => '2',
+            'GYM IT Hallway' => '2'
         ];
 
         foreach ($designations as $designation => $deptId) {

@@ -26,17 +26,10 @@
 .red-mark {
   color: #ff0000;
 }
-.modal-top-cover-icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
+.navbar-brand-logo-mini {
+  width: 2rem;
 }
-.custom-modal-body {
-    max-height: 40rem;
-    overflow-y: auto;
-}
-.tom-select input[type="text"] {
-    caret-color: transparent;
-    pointer-events: none;
+.card-body-height {
+  max-height: 300px;
+  overflow-y: auto;
 }

@@ -4,17 +4,23 @@ use App\Http\Controllers\AcquisitionController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ConditionController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\PropertyParentController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\SubcategoryController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 // ============ Dashboard Routes ============ //
-Route::get('/', function () {
-    return view('pages.dashboard.index');
+
+// Admin Dashboard Routes
+Route::name('dashboard.')->controller(DashboardController::class)->group(function () {
+    Route::resource('/', DashboardController::class);
 });
+
 // ============ End Dashboard Routes ============ //
 
 // ============ Property & Assets Routes ============ //
@@ -25,53 +31,65 @@ Route::controller(PropertyParentController::class)->group(function () {
     Route::post('/properties-assets/overview/create', 'store')->name('prop-asset.store');
 });
 
-
 // ============ End Property & Assets Routes ============ //
+
+// ============ User Management Routes ============ //
+
+// User Routes
+Route::prefix('user-management/users')->name('user.')->controller(UserController::class)->group(function () {
+    Route::resource('/', UserController::class);
+});
+
+// Roles Routes
+Route::prefix('user-management/roles')->name('role.')->controller(RoleController::class)->group(function () {
+    Route::resource('/', RoleController::class);
+});
+
+// Permissions Routes
+
+
+// ============ End User Management Routes ============ //
 
 // ============ File Maintenance Routes ============ //
 
 // Acquisition Routes
-Route::controller(AcquisitionController::class)->group(function () {
-    Route::get('/file-maintenance/acquisitions', 'index')->name('acquisition.index');
-    Route::post('/file-maintenance/acquisitions/create', 'store')->name('acquisition.store');
-    Route::get('/file-maintenance/acquisitions/edit', 'edit')->name('acquisition.edit');
-    Route::patch('/file-maintenance/acquisitions/update', 'update')->name('acquisition.update');
-    Route::delete('/file-maintenance/acquisitions/delete', 'destroy')->name('acquisition.delete');
+Route::prefix('file-maintenance/acquisitions')->name('acquisition.')->controller(AcquisitionController::class)->group(function () {
+    Route::resource('/', AcquisitionController::class);
 });
 
 // Brand Routes
-Route::controller(BrandController::class)->group(function () {
-    Route::get('/file-maintenance/brands', 'index')->name('brand.index');
+Route::prefix('file-maintenance/brands')->name('brand.')->controller(BrandController::class)->group(function () {
+    Route::resource('/', BrandController::class);
 });
 
 // Category Routes
-Route::controller(CategoryController::class)->group(function () {
-    Route::get('/file-maintenance/categories', 'index')->name('category.index');
+Route::prefix('file-maintenance/categories')->name('category.')->controller(CategoryController::class)->group(function () {
+    Route::resource('/', CategoryController::class);
 });
 
 // Condition Routes
-Route::controller(ConditionController::class)->group(function () {
-    Route::get('/file-maintenance/conditions', 'index')->name('condition.index');
+Route::prefix('file-maintenance/conditions')->name('condition.')->controller(ConditionController::class)->group(function () {
+    Route::resource('/', ConditionController::class);
 });
 
 // Department Routes
-Route::controller(DepartmentController::class)->group(function () {
-    Route::get('/file-maintenance/departments', 'index')->name('department.index');
+Route::prefix('file-maintenance/departments')->name('department.')->controller(DepartmentController::class)->group(function () {
+    Route::resource('/', DepartmentController::class);
 });
 
 // Designation Routes
-Route::controller(DesignationController::class)->group(function () {
-    Route::get('/file-maintenance/designations', 'index')->name('designation.index');
+Route::prefix('file-maintenance/designations')->name('designation.')->controller(DesignationController::class)->group(function () {
+    Route::resource('/', DesignationController::class);
 });
 
 // Subcategory Routes
-Route::controller(SubcategoryController::class)->group(function () {
-    Route::get('/file-maintenance/subcategories', 'index')->name('subcategory.index');
+Route::prefix('file-maintenance/subcategories')->name('subcategory.')->controller(SubcategoryController::class)->group(function () {
+    Route::resource('/', SubcategoryController::class);
 });
 
-// Statuses Routes
-Route::controller(StatusController::class)->group(function () {
-    Route::get('/file-maintenance/statuses', 'index')->name('status.index');
+// Status Routes
+Route::prefix('file-maintenance/statuses')->name('status.')->controller(StatusController::class)->group(function () {
+    Route::resource('/', StatusController::class);
 });
 
 // ============ End File Maintenance Routes ============ //

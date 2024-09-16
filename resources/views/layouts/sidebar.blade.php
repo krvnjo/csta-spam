@@ -2,7 +2,7 @@
   <div class="navbar-vertical-container">
     <div class="navbar-vertical-footer-offset">
       <!-- Logo -->
-      <a class="navbar-brand" href="/" aria-label="CSTA - SPAM Logo">
+      <a class="navbar-brand" href="{{ route('dashboard.index') }}" aria-label="CSTA - SPAM Logo">
         <img class="navbar-brand-logo" data-hs-theme-appearance="default" src="{{ Vite::asset('resources/svg/logos/logo.svg') }}" alt="CSTA - SPAM Logo">
         <img class="navbar-brand-logo" data-hs-theme-appearance="dark" src="{{ Vite::asset('resources/svg/logos-light/logo.svg') }}"
           alt="CSTA - SPAM Logo">
@@ -13,7 +13,7 @@
       </a>
       <!-- End Logo -->
 
-      <!-- Sidebar Vertical Toggle -->
+      <!-- Sidebar Toggle -->
       <button class="js-navbar-vertical-aside-toggle-invoker navbar-aside-toggler" type="button">
         <i class="bi-arrow-bar-left navbar-toggler-short-align"
           data-bs-template='<div class="tooltip d-none d-md-block" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
@@ -22,7 +22,7 @@
           data-bs-template='<div class="tooltip d-none d-md-block" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
           data-bs-toggle="tooltip" data-bs-placement="right" title="Expand"></i>
       </button>
-      <!-- End Sidebar Vertical Toggle -->
+      <!-- End Sidebar Toggle -->
 
       <!-- Sidebar -->
       <div class="navbar-vertical-content">
@@ -35,15 +35,6 @@
             </a>
           </div>
           <!-- End Dashboard -->
-
-          <!-- Forms Builder -->
-          <div class="nav-item">
-            <a class="nav-link" data-placement="left" href="#">
-              <i class="bi-receipt nav-icon"></i>
-              <span class="nav-link-title">Forms Builder</span>
-            </a>
-          </div>
-          <!-- End Forms Builder -->
 
           <!-- Main Menu -->
           <span class="dropdown-header mt-4">Main Menu</span>
@@ -109,9 +100,8 @@
             </a>
 
             <div class="nav-collapse collapse" id="navbarVerticalMenuUserManagement" data-bs-parent="#navbarVerticalMenu">
-              <a class="nav-link" href="#">Users</a>
-              <a class="nav-link" href="#">Roles</a>
-              <a class="nav-link" href="#">Permissions</a>
+              <a class="nav-link" href="{{ route('user.index') }}">Users</a>
+              <a class="nav-link" href="{{ route('role.index') }}">Roles</a>
             </div>
           </div>
           <!-- End User Management -->
@@ -126,14 +116,14 @@
               </a>
 
               <div class="nav-collapse collapse" id="navbarVerticalMenuFileMaintenance" data-bs-parent="#navbarVerticalMenu">
-                <a class="nav-link" href="/file-maintenance/acquisitions">Acquisitions</a>
-                <a class="nav-link" href="/file-maintenance/brands">Brands</a>
-                <a class="nav-link" href="/file-maintenance/categories">Categories</a>
-                <a class="nav-link" href="/file-maintenance/conditions">Conditions</a>
-                <a class="nav-link" href="/file-maintenance/departments">Departments</a>
-                <a class="nav-link" href="/file-maintenance/designations">Designations</a>
-                <a class="nav-link" href="/file-maintenance/statuses">Statuses</a>
-                <a class="nav-link" href="/file-maintenance/subcategories">Subcategories</a>
+                <a class="nav-link" href="{{ route('acquisition.index') }}">Acquisitions</a>
+                <a class="nav-link" href="{{ route('brand.index') }}">Brands</a>
+                <a class="nav-link" href="{{ route('category.index') }}">Categories</a>
+                <a class="nav-link" href="{{ route('condition.index') }}">Conditions</a>
+                <a class="nav-link" href="{{ route('department.index') }}">Departments</a>
+                <a class="nav-link" href="{{ route('designation.index') }}">Designations</a>
+                <a class="nav-link" href="{{ route('status.index') }}">Statuses</a>
+                <a class="nav-link" href="{{ route('subcategory.index') }}">Subcategories</a>
               </div>
             </div>
           </div>

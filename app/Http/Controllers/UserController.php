@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Department;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Throwable;
 
 class UserController extends Controller
 {
@@ -12,15 +15,20 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $users = User::with('role', 'department')->whereNull('deleted_at')->get();
+        $roles = Role::query()->whereNull('deleted_at')->where('is_active', 1)->orderBy('name')->pluck('name', 'id');
+        $depts = Department::query()->whereNull('deleted_at')->where('is_active', 1)->orderBy('name')->pluck('name', 'id');
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $totalUsers = $users->count();
+
+        return view('pages.user-management.user',
+            compact(
+                'users',
+                'roles',
+                'depts',
+                'totalUsers',
+            )
+        );
     }
 
     /**
@@ -28,15 +36,30 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        try {
+            User::create([
+                'user_name' => $request->user,
+                'pass_hash' => bcrypt($request->pass),
+                'fname' => $request->fname,
+                'lname' => $request->lname,
+                'role_id' => $request->role,
+                'dept_id' => $request->dept,
+                'email' => $request->email,
+                'phone_num' => $request->phone,
+            ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(User $user)
-    {
-        //
+            return response()->json([
+                'success' => true,
+                'title' => 'Saved Successfully!',
+                'text' => 'The user has been added successfully!',
+            ]);
+        } catch (Throwable) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Oops! Something went wrong.',
+                'text' => 'An error occurred while adding the user. Please try again.',
+            ], 500);
+        }
     }
 
     /**

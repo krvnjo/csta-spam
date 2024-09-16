@@ -12,16 +12,14 @@
 
       <!-- Body -->
       <div class="modal-body">
-        <!-- Form -->
         <form id="frmAddAcquisition" method="post" novalidate>
           @csrf
           <label class="col col-form-label form-label" for="txtAddAcquisition">Acquisition Name <span
               class="text-danger">*</span></label>
           <input class="form-control" id="txtAddAcquisition" name="acquisition" type="text"
-            placeholder="Enter a Acquisition" required>
+            placeholder="Enter an Acquisition" required>
           <span class="invalid-feedback" id="valAddAcquisition"></span>
         </form>
-        <!-- End Form -->
       </div>
       <!-- End Body -->
 
@@ -29,17 +27,13 @@
       <div class="modal-footer">
         <div class="row align-items-sm-center flex-grow-1 mx-n2">
           <div class="col-sm mb-2 mb-sm-0"></div>
-          <!-- End Col -->
-
           <div class="col-sm-auto">
             <div class="d-flex gap-2">
               <button class="btn btn-white" data-bs-dismiss="modal" type="button">Cancel</button>
               <button class="btn btn-primary" form="frmAddAcquisition" type="submit">Save</button>
             </div>
           </div>
-          <!-- End Col -->
         </div>
-        <!-- End Row -->
       </div>
       <!-- End Footer -->
     </div>

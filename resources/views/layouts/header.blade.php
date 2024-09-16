@@ -1,16 +1,16 @@
 <header class="navbar navbar-expand-lg navbar-fixed navbar-height navbar-container navbar-bordered bg-white" id="header">
   <div class="navbar-nav-wrap">
     <!-- Logo -->
-    <a class="navbar-brand" href="/" aria-label="CSTA - SPAM">
+    <a class="navbar-brand" href="{{ route('dashboard.index') }}" aria-label="CSTA - SPAM">
       <img class="navbar-brand-logo-mini d-block" data-hs-theme-appearance="default" src="{{ Vite::asset('resources/svg/logos/logo-short.svg') }}"
-        alt="CSTA - SPAM Logo" style="width: 2rem">
+        alt="CSTA - SPAM Logo">
       <img class="navbar-brand-logo-mini d-block" data-hs-theme-appearance="dark" src="{{ Vite::asset('resources/svg/logos-light/logo-short.svg') }}"
-        alt="CSTA - SPAM Logo" style="width: 2rem">
+        alt="CSTA - SPAM Logo">
     </a>
     <!-- End Logo -->
 
     <div class="navbar-nav-wrap-content-start">
-      <!-- Navbar Vertical Toggle -->
+      <!-- Sidebar Toggle -->
       <button class="js-navbar-vertical-aside-toggle-invoker navbar-aside-toggler" type="button">
         <i class="bi-arrow-bar-left navbar-toggler-short-align" data-bs-placement="right"
           data-bs-template='<div class="tooltip d-none d-md-block" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
@@ -19,16 +19,14 @@
           data-bs-template='<div class="tooltip d-none d-md-block" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
           data-bs-toggle="tooltip" title="Expand"></i>
       </button>
-      <!-- End Navbar Vertical Toggle -->
+      <!-- End Sidebar Toggle -->
 
       <!-- Search Form -->
       <div class="dropdown ms-2">
-        <!-- Input Group -->
+        <!-- Search Input Group -->
         <div class="d-none d-lg-block">
           <div class="input-group input-group-merge input-group-borderless input-group-hover-light navbar-input-group">
-            <div class="input-group-prepend input-group-text">
-              <i class="bi-search"></i>
-            </div>
+            <div class="input-group-prepend input-group-text"><i class="bi-search"></i></div>
 
             <input class="js-form-search form-control"
               data-hs-form-search-options='{
@@ -38,10 +36,8 @@
                 "toggleIconOnFocus": true,
                 "activeClass": "focus"
               }'
-              type="search" aria-label="Search in front" placeholder="Search in CSTA - SPAM">
-            <a class="input-group-append input-group-text" href="#">
-              <i class="bi-x-lg" id="clearSearchResultsIcon" style="display: none;"></i>
-            </a>
+              type="search" placeholder="Search in CSTA - SPAM">
+            <a class="input-group-append input-group-text"><i class="bi-x-lg" id="clearSearchResultsIcon" style="display: none;"></i></a>
           </div>
         </div>
 
@@ -56,95 +52,106 @@
           type="button">
           <i class="bi-search"></i>
         </button>
-        <!-- End Input Group -->
+        <!-- End Search Input Group -->
 
         <!-- Card Search Content -->
         <div class="hs-form-search-menu-content dropdown-menu dropdown-menu-form-search navbar-dropdown-menu-borderless flex-grow-1"
           id="searchDropdownMenu">
           <div class="card">
-            <!-- Body -->
-            <div class="card-body-height" style="max-height: 250px; overflow-y: auto;">
+            <div class="card-body-height">
               <div class="d-lg-none">
                 <div class="input-group input-group-merge navbar-input-group mb-5">
-                  <div class="input-group-prepend input-group-text">
-                    <i class="bi-search"></i>
-                  </div>
-
-                  <input class="form-control" type="search" aria-label="Search in CSTA - SPAM" placeholder="Search in CSTA - SPAM">
-                  <a class="input-group-append input-group-text" href="#">
-                    <i class="bi-x-lg"></i>
-                  </a>
+                  <div class="input-group-prepend input-group-text"><i class="bi-search"></i></div>
+                  <input class="form-control" type="search" placeholder="Search in CSTA - SPAM">
+                  <a class="input-group-append input-group-text"><i class="bi-x-lg"></i></a>
                 </div>
               </div>
 
               <span class="dropdown-header">Recent searches</span>
+              <a class="dropdown-item" href="#">
+                <div class="d-flex align-items-center">
+                  <div class="flex-shrink-0">
+                    <span class="icon icon-soft-dark icon-xs icon-circle">
+                      <i class="bi-box"></i>
+                    </span>
+                  </div>
+                  <div class="flex-grow-1 text-truncate ms-2">
+                    <span>Property and Assets</span>
+                  </div>
+                </div>
+              </a>
 
-              <div class="dropdown-item bg-transparent text-wrap">
-                <a class="btn btn-soft-dark btn-xs rounded-pill" href="#">
-                  Property & Assets <i class="bi-search ms-1"></i>
-                </a>
-                <a class="btn btn-soft-dark btn-xs rounded-pill" href="#">
-                  Notification Panel <i class="bi-search ms-1"></i>
-                </a>
-              </div>
+              <a class="dropdown-item" href="#">
+                <div class="d-flex align-items-center">
+                  <div class="flex-shrink-0">
+                    <span class="icon icon-soft-dark icon-xs icon-circle">
+                      <i class="bi-bar-chart"></i>
+                    </span>
+                  </div>
+                  <div class="flex-grow-1 text-truncate ms-2">
+                    <span>Dashboard</span>
+                  </div>
+                </div>
+              </a>
 
               <div class="dropdown-divider"></div>
 
-              <span class="dropdown-header">Suggested Searches</span>
-
-              <a class="dropdown-item" href="/">
+              <span class="dropdown-header">Suggested</span>
+              <a class="dropdown-item" href="#">
                 <div class="d-flex align-items-center">
                   <div class="flex-shrink-0">
                     <span class="icon icon-soft-dark icon-xs icon-circle">
                       <i class="bi-question-square"></i>
                     </span>
                   </div>
-
                   <div class="flex-grow-1 text-truncate ms-2">
                     <span>What is CSTA - SPAM?</span>
                   </div>
                 </div>
               </a>
 
-              <a class="dropdown-item" href="/">
+              <a class="dropdown-item" href="#">
                 <div class="d-flex align-items-center">
                   <div class="flex-shrink-0">
                     <span class="icon icon-soft-dark icon-xs icon-circle">
                       <i class="bi-paint-bucket"></i>
                     </span>
                   </div>
-
                   <div class="flex-grow-1 text-truncate ms-2">
                     <span>How to change theme color?</span>
                   </div>
                 </div>
               </a>
-            </div>
-            <!-- End Body -->
 
-            <!-- Footer -->
-            <a class="card-footer text-center" href="/">
-              See all results <i class="bi-chevron-right small"></i>
-            </a>
-            <!-- End Footer -->
+              <a class="dropdown-item" href="#">
+                <div class="d-flex align-items-center">
+                  <div class="flex-shrink-0">
+                    <span class="icon icon-soft-dark icon-xs icon-circle">
+                      <i class="bi-question-square"></i>
+                    </span>
+                  </div>
+                  <div class="flex-grow-1 text-truncate ms-2">
+                    <span>Frequently Asked Questions</span>
+                  </div>
+                </div>
+              </a>
+            </div>
+
+            <a class="card-footer text-center" href="#">See all results <i class="bi-chevron-right small"></i></a>
           </div>
         </div>
         <!-- End Card Search Content -->
-
       </div>
       <!-- End Search Form -->
     </div>
 
     <div class="navbar-nav-wrap-content-end">
-      <!-- Navbar -->
       <ul class="navbar-nav">
+        <!-- Notification -->
         <li class="nav-item d-sm-inline-block">
-          <!-- Notification -->
           <div class="dropdown">
             <button class="btn btn-ghost-secondary btn-icon rounded-circle" id="navbarNotificationsDropdown" data-bs-toggle="dropdown"
-              data-bs-auto-close="outside" data-bs-dropdown-animation type="button" aria-expanded="false">
-              <i class="bi-bell"></i>
-              <span class="btn-status btn-sm-status btn-status-danger"></span>
+              data-bs-auto-close="outside" data-bs-dropdown-animation type="button" aria-expanded="false"><i class="bi-bell"></i>
             </button>
 
             <div class="dropdown-menu dropdown-menu-end dropdown-card navbar-dropdown-menu navbar-dropdown-menu-borderless"
@@ -158,10 +165,8 @@
 
                 <!-- Body -->
                 <div class="card-body-height">
-                  <!-- Tab Content -->
                   <div class="tab-content" id="notificationTabContent">
                     <div class="tab-pane fade show active" id="notificationNavOne" role="tabpanel" aria-labelledby="notificationNavOne-tab">
-                      <!-- List Group -->
                       <ul class="list-group list-group-flush navbar-card-list-group">
                         <!-- Item -->
                         <li class="list-group-item form-check-select">
@@ -245,7 +250,8 @@
 
                             <div class="col ms-n2">
                               <h5 class="mb-1">from Google</h5>
-                              <p class="text-body fs-5">Start using forms to capture the information of prospects visiting your Google website
+                              <p class="text-body fs-5">Start using forms to capture the information of prospects
+                                visiting your Google website
                               </p>
                             </div>
                             <!-- End Col -->
@@ -259,151 +265,37 @@
                         </li>
                         <!-- End Item -->
                       </ul>
-                      <!-- End List Group -->
                     </div>
                   </div>
-                  <!-- End Tab Content -->
                 </div>
                 <!-- End Body -->
 
                 <!-- Card Footer -->
-                <a class="card-footer text-center" href="#">
-                  View all notifications <i class="bi-chevron-right"></i>
-                </a>
+                <a class="card-footer text-center" href="#">View all notifications <i class="bi-chevron-right"></i></a>
                 <!-- End Card Footer -->
               </div>
             </div>
           </div>
-          <!-- End Notification -->
         </li>
+        <!-- End Notification -->
 
-        <li class="nav-item d-none d-sm-inline-block">
-          <!-- Apps -->
-          <div class="dropdown">
-            <button class="btn btn-icon btn-ghost-secondary rounded-circle" id="navbarAppsDropdown" data-bs-toggle="dropdown"
-              data-bs-dropdown-animation type="button" aria-expanded="false">
-              <i class="bi-app-indicator"></i>
-            </button>
-
-            <div class="dropdown-menu dropdown-menu-end dropdown-card navbar-dropdown-menu navbar-dropdown-menu-borderless"
-              aria-labelledby="navbarAppsDropdown" style="width: 25rem;">
-              <div class="card">
-                <!-- Header -->
-                <div class="card-header">
-                  <h4 class="card-title">Web apps &amp; services</h4>
-                </div>
-                <!-- End Header -->
-
-                <!-- Body -->
-                <div class="card-body card-body-height">
-                  <a class="dropdown-item" href="#">
-                    <div class="d-flex align-items-center">
-                      <div class="flex-shrink-0">
-                        <img class="avatar avatar-xs avatar-4x3" src="{{ Vite::asset('resources/svg/brands/atlassian-icon.svg') }}"
-                          alt="Image Description">
-                      </div>
-                      <div class="flex-grow-1 text-truncate ms-3">
-                        <h5 class="mb-0">Atlassian</h5>
-                        <p class="card-text text-body">Security and control across Cloud</p>
-                      </div>
-                    </div>
-                  </a>
-
-                  <a class="dropdown-item" href="#">
-                    <div class="d-flex align-items-center">
-                      <div class="flex-shrink-0">
-                        <img class="avatar avatar-xs avatar-4x3" src="{{ Vite::asset('resources/svg/brands/slack-icon.svg') }}"
-                          alt="Image Description">
-                      </div>
-                      <div class="flex-grow-1 text-truncate ms-3">
-                        <h5 class="mb-0">Slack <span class="badge bg-primary rounded-pill text-uppercase ms-1">Try</span></h5>
-                        <p class="card-text text-body">Email collaboration software</p>
-                      </div>
-                    </div>
-                  </a>
-
-                  <a class="dropdown-item" href="#">
-                    <div class="d-flex align-items-center">
-                      <div class="flex-shrink-0">
-                        <img class="avatar avatar-xs avatar-4x3" src="{{ Vite::asset('resources/svg/brands/google-webdev-icon.svg') }}"
-                          alt="Image Description">
-                      </div>
-                      <div class="flex-grow-1 text-truncate ms-3">
-                        <h5 class="mb-0">Google webdev</h5>
-                        <p class="card-text text-body">Work involved in developing a website</p>
-                      </div>
-                    </div>
-                  </a>
-
-                  <a class="dropdown-item" href="#">
-                    <div class="d-flex align-items-center">
-                      <div class="flex-shrink-0">
-                        <img class="avatar avatar-xs avatar-4x3" src="{{ Vite::asset('resources/svg/brands/frontapp-icon.svg') }}"
-                          alt="Image Description">
-                      </div>
-                      <div class="flex-grow-1 text-truncate ms-3">
-                        <h5 class="mb-0">Frontapp</h5>
-                        <p class="card-text text-body">The inbox for teams</p>
-                      </div>
-                    </div>
-                  </a>
-
-                  <a class="dropdown-item" href="#">
-                    <div class="d-flex align-items-center">
-                      <div class="flex-shrink-0">
-                        <img class="avatar avatar-xs avatar-4x3" src="{{ Vite::asset('resources/svg/illustrations/review-rating-shield.svg') }}"
-                          alt="Image Description">
-                      </div>
-                      <div class="flex-grow-1 text-truncate ms-3">
-                        <h5 class="mb-0">HS Support</h5>
-                        <p class="card-text text-body">Customer service and support</p>
-                      </div>
-                    </div>
-                  </a>
-
-                  <a class="dropdown-item" href="#">
-                    <div class="d-flex align-items-center">
-                      <div class="flex-shrink-0">
-                        <div class="avatar avatar-sm avatar-soft-dark">
-                          <span class="avatar-initials"><i class="bi-grid"></i></span>
-                        </div>
-                      </div>
-                      <div class="flex-grow-1 text-truncate ms-3">
-                        <h5 class="mb-0">More Front products</h5>
-                        <p class="card-text text-body">Check out more HS products</p>
-                      </div>
-                    </div>
-                  </a>
-                </div>
-                <!-- End Body -->
-
-                <!-- Footer -->
-                <a class="card-footer text-center" href="#">
-                  View all apps <i class="bi-chevron-right"></i>
-                </a>
-                <!-- End Footer -->
-              </div>
-            </div>
-          </div>
-          <!-- End Apps -->
-        </li>
-
+        <!-- Account -->
         <li class="nav-item">
-          <!-- Account -->
           <div class="dropdown">
-            <a class="navbar-dropdown-account-wrapper" id="accountNavbarDropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside"
-              data-bs-dropdown-animation href="#" aria-expanded="false">
+            <button class="btn navbar-dropdown-account-wrapper" id="accountNavbarDropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside"
+              data-bs-dropdown-animation type="button" aria-expanded="false">
               <div class="avatar avatar-sm avatar-circle">
-                <img class="avatar-img" src="{{ Vite::asset('resources/img/uploads/user-avatar/default.jpg') }}" alt="User Image">
+                <img class="avatar-img" src="{{ Vite::asset('resources/img/uploads/user-images/default.jpg') }}" alt="User Image">
               </div>
-            </a>
+            </button>
 
             <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-account"
               aria-labelledby="accountNavbarDropdown" style="width: 16rem;">
+              <!-- Profile Header -->
               <div class="dropdown-item-text">
                 <div class="d-flex align-items-center">
                   <div class="avatar avatar-sm avatar-circle">
-                    <img class="avatar-img" src="{{ Vite::asset('resources/img/uploads/user-avatar/default.jpg') }}" alt="User Image">
+                    <img class="avatar-img" src="{{ Vite::asset('resources/img/uploads/user-images/default.jpg') }}" alt="User Image">
                   </div>
                   <div class="flex-grow-1 ms-3">
                     <h5 class="mb-0">Sample User</h5>
@@ -411,67 +303,58 @@
                   </div>
                 </div>
               </div>
+              <!-- End Profile Header -->
 
               <div class="dropdown-divider"></div>
 
-              <a class="dropdown-item" href="#">My Profile</a>
+              <!-- Account Settings -->
               <a class="dropdown-item" href="#">Account Settings</a>
+              <!-- End Account Settings -->
 
-              <!-- Dropdown -->
+              <!-- System Appearance -->
               <div class="dropdown">
-                <a class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" id="selectThemeDropdown" data-bs-toggle="dropdown"
-                  href="#" aria-expanded="false">System Appearance</a>
+                <button class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" id="selectThemeDropdown" data-bs-toggle="dropdown"
+                  type="button" aria-expanded="false">System Appearance</button>
 
                 <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu"
                   aria-labelledby="selectThemeDropdown">
-                  <a class="dropdown-item" data-icon="bi-moon-stars" data-value="auto" href="#">
-                    <i class="bi-moon-stars me-2"></i>
-                    <span class="text-truncate" title="Auto (system default)">Auto (system default)</span>
-                  </a>
-                  <a class="dropdown-item" data-icon="bi-brightness-high" data-value="default" href="#">
-                    <i class="bi-brightness-high me-2"></i>
-                    <span class="text-truncate" title="Default (light mode)">Default (light mode)</span>
-                  </a>
-                  <a class="dropdown-item" data-icon="bi-moon" data-value="dark" href="#">
-                    <i class="bi-moon me-2"></i>
-                    <span class="text-truncate" title="Dark">Dark</span>
-                  </a>
+                  <button class="dropdown-item" data-icon="bi-moon-stars" data-value="auto" type="button">
+                    <i class="bi-moon-stars me-2"></i><span class="text-truncate" title="Auto (system default)">Auto (system default)</span>
+                  </button>
+                  <button class="dropdown-item" data-icon="bi-brightness-high" data-value="default" type="button">
+                    <i class="bi-brightness-high me-2"></i><span class="text-truncate" title="Default (light mode)">Default (light mode)</span>
+                  </button>
+                  <button class="dropdown-item" data-icon="bi-moon" data-value="dark" type="button">
+                    <i class="bi-moon me-2"></i><span class="text-truncate" title="Dark">Dark</span>
+                  </button>
                 </div>
               </div>
-              <!-- End Dropdown -->
+              <!-- End System Appearance -->
 
-              <!-- Dropdown -->
+              <!-- Help & Support -->
               <div class="dropdown">
-                <a class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" id="navSubmenuPagesAccountDropdown2"
-                  data-bs-toggle="dropdown" href="javascript:" aria-expanded="false">Help & Support</a>
+                <button class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" id="navSubmenuPagesAccountDropdown2"
+                  data-bs-toggle="dropdown" type="button" aria-expanded="false">Help & Support</button>
 
                 <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu"
                   aria-labelledby="navSubmenuPagesAccountDropdown2">
-                  <a class="dropdown-item" href="#">
-                    <i class="bi-question-circle me-2"></i>
-                    Need a Help?
-                  </a>
-                  <a class="dropdown-item" href="#">
-                    <i class="bi-info-circle me-2"></i>
-                    FAQ List
-                  </a>
-                  <a class="dropdown-item" href="#">
-                    <i class="bi-flag me-2"></i>
-                    Report a Problem
-                  </a>
+                  <a class="dropdown-item" href="#"><i class="bi-question-circle me-2"></i>Need a Help?</a>
+                  <a class="dropdown-item" href="#"><i class="bi-info-circle me-2"></i>FAQ List</a>
+                  <a class="dropdown-item" href="#"><i class="bi-flag me-2"></i>Report a Problem</a>
                 </div>
               </div>
-              <!-- End Dropdown -->
+              <!-- End Help & Support -->
 
               <div class="dropdown-divider"></div>
 
+              <!-- Sign out -->
               <a class="dropdown-item" href="#">Sign out</a>
+              <!-- End Sign out -->
             </div>
           </div>
-          <!-- End Account -->
         </li>
+        <!-- End Account -->
       </ul>
-      <!-- End Navbar -->
     </div>
   </div>
 </header>
