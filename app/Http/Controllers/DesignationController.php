@@ -13,39 +13,35 @@ class DesignationController extends Controller
      */
     public function index()
     {
-        $designations = Designation::with('department')->orderBy('name')->get();
-        $departments = Department::query()->orderBy('name')->get();
+        $designations = Designation::with('department')->whereNull('deleted_at')->get();
+        $departments = Department::query()->whereNull('deleted_at')->where('is_active', 1)->orderBy('name')->pluck('name', 'id');
 
         $totalDesignations = $designations->count();
+        $deletedDesignations = Designation::onlyTrashed()->count();
         $activeDesignations = $designations->where('is_active', 1)->count();
         $inactiveDesignations = $designations->where('is_active', 0)->count();
 
         $activePercentage = $totalDesignations > 0 ? ($activeDesignations / $totalDesignations) * 100 : 0;
         $inactivePercentage = $totalDesignations > 0 ? ($inactiveDesignations / $totalDesignations) * 100 : 0;
 
-        return view('pages.file-maintenance.designation', compact('designations', 'departments', 'totalDesignations', 'activeDesignations', 'inactiveDesignations', 'activePercentage', 'inactivePercentage'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return view('pages.file-maintenance.designation',
+            compact(
+                'designations',
+                'departments',
+                'totalDesignations',
+                'deletedDesignations',
+                'activeDesignations',
+                'inactiveDesignations',
+                'activePercentage',
+                'inactivePercentage'
+            )
+        );
     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Designation $designation)
     {
         //
     }

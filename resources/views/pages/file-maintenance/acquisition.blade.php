@@ -36,8 +36,7 @@
 
           <div class="col-sm-auto mt-sm-0 mt-3">
             <div class="d-grid gap-2 d-sm-flex justify-content-sm-end">
-              <button class="btn btn-primary w-100 w-sm-auto" data-bs-toggle="modal"
-                data-bs-target="#addAcquisitionModal">
+              <button class="btn btn-primary w-100 w-sm-auto" data-bs-toggle="modal" data-bs-target="#addAcquisitionModal">
                 <i class="bi-plus me-1"></i> Add an Acquisition
               </button>
             </div>
@@ -102,8 +101,7 @@
               <div class="input-group-prepend input-group-text">
                 <i class="bi-search"></i>
               </div>
-              <input class="form-control" id="acquisitionDatatableSearch" type="search" aria-label="Search"
-                placeholder="Search">
+              <input class="form-control" id="acquisitionDatatableSearch" type="search" aria-label="Search" placeholder="Search">
             </div>
           </div>
 
@@ -123,31 +121,30 @@
 
             <!-- Export Options Dropdown -->
             <div class="dropdown">
-              <button class="btn btn-white btn-sm dropdown-toggle w-100" id="acquisitionExportDropdown"
-                data-bs-toggle="dropdown" type="button" aria-expanded="false"><i class="bi-download me-2"></i> Export
+              <button class="btn btn-white btn-sm dropdown-toggle w-100" id="acquisitionExportDropdown" data-bs-toggle="dropdown" type="button"
+                aria-expanded="false"><i class="bi-download me-2"></i> Export
               </button>
 
               <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="acquisitionExportDropdown">
                 <span class="dropdown-header">Options</span>
                 <button class="dropdown-item" id="export-copy" type="button">
-                  <img class="avatar avatar-xss avatar-4x3 me-2"
-                    src="{{ Vite::asset('resources/svg/illustrations/copy-icon.svg') }}" alt="Copy Icon"> Copy
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/copy-icon.svg') }}" alt="Copy Icon">
+                  Copy
                 </button>
                 <button class="dropdown-item" id="export-print" type="button">
-                  <img class="avatar avatar-xss avatar-4x3 me-2"
-                    src="{{ Vite::asset('resources/svg/illustrations/print-icon.svg') }}" alt="Print Icon"> Print
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/print-icon.svg') }}"
+                    alt="Print Icon"> Print
                 </button>
 
                 <div class="dropdown-divider"></div>
 
                 <span class="dropdown-header">Download options</span>
                 <button class="dropdown-item" id="export-excel" type="button">
-                  <img class="avatar avatar-xss avatar-4x3 me-2"
-                    src="{{ Vite::asset('resources/svg/brands/excel-icon.svg') }}" alt="Excel Icon"> Excel
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/excel-icon.svg') }}" alt="Excel Icon">
+                  Excel
                 </button>
                 <button class="dropdown-item" id="export-pdf" type="button">
-                  <img class="avatar avatar-xss avatar-4x3 me-2"
-                    src="{{ Vite::asset('resources/svg/brands/pdf-icon.svg') }}" alt="PDF Icon"> PDF
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/pdf-icon.svg') }}" alt="PDF Icon"> PDF
                 </button>
               </div>
             </div>
@@ -155,14 +152,14 @@
 
             <!-- Datatable Filter Dropdown -->
             <div class="dropdown">
-              <button class="btn btn-white btn-sm w-100" id="acquisitionFilterDropdown" data-bs-toggle="dropdown"
-                type="button" aria-expanded="false">
+              <button class="btn btn-white btn-sm w-100" id="acquisitionFilterDropdown" data-bs-toggle="dropdown" type="button"
+                aria-expanded="false">
                 <i class="bi-filter me-1"></i> Filter <span class="badge bg-soft-dark text-dark rounded-circle ms-1"
                   id="acquisitionFilterCount"></span>
               </button>
 
-              <div class="dropdown-menu dropdown-menu-sm-end dropdown-card card-dropdown-filter-centered"
-                aria-labelledby="acquisitionFilterDropdown" style="min-width: 22rem;">
+              <div class="dropdown-menu dropdown-menu-sm-end dropdown-card card-dropdown-filter-centered" aria-labelledby="acquisitionFilterDropdown"
+                style="min-width: 22rem;">
                 <div class="card">
                   <div class="card-header card-header-content-between">
                     <h5 class="card-header-title">Acquisition Filters</h5>
@@ -179,8 +176,7 @@
                       <div class="row">
                         <div class="col">
                           <div class="tom-select-custom">
-                            <select class="js-select js-datatable-filter form-select form-select-sm"
-                              data-target-column-index="4"
+                            <select class="js-select js-datatable-filter form-select form-select-sm" data-target-column-index="4"
                               data-hs-tom-select-options='{
                                 "placeholder": "All Status",
                                 "hideSearch": true,
@@ -211,8 +207,7 @@
 
         <!-- Acquisition Table -->
         <div class="table-responsive datatable-custom">
-          <table
-            class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100"
+          <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100"
             id="acquisitionDatatable"
             data-hs-datatables-options='{
               "columnDefs": [{
@@ -258,8 +253,7 @@
                   <td class="d-none" data-acquisition-id="{{ Crypt::encryptString($acquisition->id) }}"></td>
                   <td><span class="d-block h5 mb-0">{{ $acquisition->name }}</span></td>
                   <td>
-                    <span data-bs-toggle="tooltip" data-bs-placement="top"
-                      title="Modified on: {{ $acquisition->updated_at->format('M d, Y') }}">
+                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="Modified on: {{ $acquisition->updated_at->format('M d, Y') }}">
                       <i class="bi-calendar-event me-1"></i>
                       {{ $acquisition->created_at->format('M d, Y H:i:s') }}
                     </span>
@@ -276,8 +270,8 @@
                   </td>
                   <td>
                     <div class="dropdown position-static">
-                      <button class="btn btn-white btn-sm" id="acquisitionDropdownActions" data-bs-toggle="dropdown"
-                        type="button" aria-expanded="false"> More <i class="bi-chevron-down ms-1"></i>
+                      <button class="btn btn-white btn-sm" id="acquisitionDropdownActions" data-bs-toggle="dropdown" type="button"
+                        aria-expanded="false"> More <i class="bi-chevron-down ms-1"></i>
                       </button>
 
                       <div class="dropdown-menu dropdown-menu-sm dropdown-menu-end">
@@ -457,21 +451,9 @@
         new HSSideNav(".js-navbar-vertical-aside").init();
 
 
-        // INITIALIZATION OF NAV SCROLLER
-        // =======================================================
-        new HsNavScroller(".js-nav-scroller", {
-          delay: 400
-        });
-
-
         // INITIALIZATION OF FORM SEARCH
         // =======================================================
         new HSFormSearch(".js-form-search");
-
-
-        // INITIALIZATION OF BOOTSTRAP DROPDOWN
-        // =======================================================
-        HSBsDropdown.init();
 
 
         // INITIALIZATION OF SELECT

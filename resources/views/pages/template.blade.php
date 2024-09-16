@@ -16,7 +16,7 @@
 @endsection
 
 @section('main-content')
-  {{-- No Main Content --}}
+  {{-- Main Content --}}
 @endsection
 
 @section('footer')
@@ -24,7 +24,7 @@
 @endsection
 
 @section('sub-content')
-  {{-- No Secondary Content --}}
+  {{-- Sub Content --}}
 @endsection
 
 @section('scripts')
@@ -40,24 +40,12 @@
       window.onload = function() {
         // INITIALIZATION OF NAVBAR VERTICAL ASIDE
         // =======================================================
-        new HSSideNav('.js-navbar-vertical-aside').init()
-
-
-        // INITIALIZATION OF NAV SCROLLER
-        // =======================================================
-        new HsNavScroller('.js-nav-scroller', {
-          delay: 400
-        })
+        new HSSideNav('.js-navbar-vertical-aside').init();
 
 
         // INITIALIZATION OF FORM SEARCH
         // =======================================================
-        new HSFormSearch('.js-form-search')
-
-
-        // INITIALIZATION OF BOOTSTRAP DROPDOWN
-        // =======================================================
-        HSBsDropdown.init()
+        new HSFormSearch('.js-form-search');
       }
     })()
   </script>

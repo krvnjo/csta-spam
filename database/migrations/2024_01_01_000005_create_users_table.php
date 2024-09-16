@@ -25,24 +25,18 @@ return new class extends Migration
             $table->id();
             $table->string('user_name', 20)->unique();
             $table->string('pass_hash');
-            $table->string('image')->default('default.jpg');
             $table->string('lname', 100);
             $table->string('fname', 100);
             $table->string('mname', 100)->nullable();
             $table->foreignIdFor(Role::class, 'role_id')->constrained('roles')->cascadeOnDelete();
             $table->foreignIdFor(Department::class, 'dept_id')->constrained('departments')->cascadeOnDelete();
             $table->string('email', 255)->unique();
-            $table->string('phone', 20)->unique()->nullable();
+            $table->string('phone_num', 20)->unique()->nullable();
+            $table->string('user_image')->default('default.jpg');
             $table->timestamp('last_login')->nullable();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
             $table->softDeletes();
-        });
-
-        Schema::create('password_reset_tokens', function (Blueprint $table) {
-            $table->string('email')->primary();
-            $table->string('token');
-            $table->timestamp('created_at')->nullable();
         });
 
         Schema::create('sessions', function (Blueprint $table) {
@@ -61,7 +55,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('sessions');
-        Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('users');
         Schema::dropIfExists('roles');
     }

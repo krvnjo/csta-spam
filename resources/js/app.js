@@ -5,6 +5,14 @@ import Swal from "sweetalert2";
 window.Swal = Swal;
 
 $(document).ready(function () {
+  // ============ Ajax CSRF Token ============ //
+  $.ajaxSetup({
+    headers: {
+      "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+    },
+  });
+  // ============ End Ajax CSRF Token ============ //
+
   // ============ Show Active Links JS ============ //
   const navLinks = $("#navbarVerticalMenu .nav-link");
   const currentPath = window.location.pathname;

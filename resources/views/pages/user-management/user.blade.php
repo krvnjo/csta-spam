@@ -104,11 +104,13 @@
                 <span class="dropdown-header">Download options</span>
                 <button class="dropdown-item" id="export-excel" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2"
-                    src="{{ Vite::asset('resources/svg/brands/excel-icon.svg') }}" alt="Excel Icon"> Excel
+                    src="{{ Vite::asset('resources/svg/brands/excel-icon.svg') }}" alt="Excel Icon">
+                  Excel
                 </button>
                 <button class="dropdown-item" id="export-pdf" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2"
-                    src="{{ Vite::asset('resources/svg/brands/pdf-icon.svg') }}" alt="PDF Icon"> PDF
+                    src="{{ Vite::asset('resources/svg/brands/pdf-icon.svg') }}" alt="PDF Icon">
+                  PDF
                 </button>
               </div>
             </div>
@@ -136,20 +138,41 @@
                   <div class="card-body">
                     <div class="mb-4">
                       <small class="text-cap text-body">Roles</small>
-
                       <div class="row">
                         <div class="col">
                           <div class="tom-select-custom">
                             <select class="js-select js-datatable-filter form-select form-select-sm"
                               data-target-column-index="4"
                               data-hs-tom-select-options='{
-                                "placeholder": "All Status",
+                                "placeholder": "All Roles",
                                 "hideSearch": true,
                                 "dropdownWidth": "100%"
                               }'>
                               <option value=""></option>
-                              @foreach ($roles as $role)
-                                <option value="{{ $role->name }}">{{ $role->name }}</option>
+                              @foreach ($roles as $name)
+                                <option value="{{ $name }}">{{ $name }}</option>
+                              @endforeach
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="mb-4">
+                      <small class="text-cap text-body">Departments</small>
+                      <div class="row">
+                        <div class="col">
+                          <div class="tom-select-custom">
+                            <select class="js-select js-datatable-filter form-select form-select-sm"
+                              data-target-column-index="4"
+                              data-hs-tom-select-options='{
+                                "placeholder": "All Departments",
+                                "hideSearch": true,
+                                "dropdownWidth": "100%"
+                              }'>
+                              <option value=""></option>
+                              @foreach ($depts as $name)
+                                <option value="{{ $name }}">{{ $name }}</option>
                               @endforeach
                             </select>
                           </div>
@@ -159,7 +182,6 @@
 
                     <div class="mb-4">
                       <small class="text-cap text-body">Status</small>
-
                       <div class="row">
                         <div class="col">
                           <div class="tom-select-custom">
@@ -223,7 +245,7 @@
                   </div>
                 </th>
                 <th class="d-none"></th>
-                <th class="table-column-ps-0">Name</th>
+                <th>Name</th>
                 <th>Username</th>
                 <th>Role & Department</th>
                 <th>Phone</th>
@@ -241,17 +263,16 @@
                   </div>
                 </td>
                 <td class="d-none" data-user-id="{{ Crypt::encryptString($user->id) }}"></td>
-                <td class="table-column-ps-0">
-                  <span class="d-flex align-items-center">
+                <td>
+                  <span class="d-flex align-items-center" data-bs-toggle="tooltip" data-bs-placement="top"
+                    title="Last Login: {{ $user->last_login ? $user->last_login->format('M d, Y h:i A') : 'Never' }}">
                     <div class="avatar avatar-circle">
                       <img class="avatar-img"
-                        src="{{ Vite::asset('resources/img/uploads/user-avatar/' . $user->image) }}" alt="User Avatar">
+                        src="{{ Vite::asset('resources/img/uploads/user-images/' . $user->user_image) }}"
+                        alt="User Avatar">
                     </div>
                     <div class="ms-3">
-                      <span class="d-block h5 text-inherit mb-0" data-bs-toggle="tooltip" data-bs-placement="top"
-                        title="Last Login: {{ $user->last_login ? $user->last_login->format('M d, Y h:i A') : 'Never' }}">
-                        {{ $user->fname . ' ' . $user->lname }}
-                      </span>
+                      <span class="d-block h5 text-inherit mb-0">{{ $user->fname . ' ' . $user->lname }}</span>
                       <span class="d-block fs-5 text-body">{{ $user->email }}</span>
                     </div>
                   </span>
@@ -261,7 +282,7 @@
                   <span class="d-block h5 mb-0">{{ $user->role->name }}</span>
                   <span class="d-block fs-5">{{ $user->department->name }}</span>
                 </td>
-                <td>{{ $user->phone }}</td>
+                <td>{{ $user->phone_num }}</td>
                 <td>
                   <span data-bs-toggle="tooltip" data-bs-placement="top"
                     title="Modified on: {{ $user->updated_at->format('M d, Y') }}">
@@ -282,7 +303,7 @@
                 <td>
                   <div class="dropdown position-static">
                     <button class="btn btn-white btn-sm" id="acquisitionDropdownActions" data-bs-toggle="dropdown"
-                      type="button" aria-expanded="false"> More <i class="bi-chevron-down ms-1"></i>
+                      type="button" aria-expanded="false">More <i class="bi-chevron-down ms-1"></i>
                     </button>
 
                     <div class="dropdown-menu dropdown-menu-sm dropdown-menu-end">
@@ -359,11 +380,16 @@
 @endsection
 
 @section('sub-content')
+  <x-user-management.add-user :roles="$roles" :depts="$depts" />
+  <x-user-management.edit-user :roles="$roles" :depts="$depts" />
 @endsection
 
 @section('scripts')
   <!-- JS Other Plugins -->
   <script src="{{ Vite::asset('resources/vendor/tom-select/dist/js/tom-select.complete.min.js') }}"></script>
+  <script src="{{ Vite::asset('resources/vendor/hs-file-attach/dist/hs-file-attach.min.js') }}"></script>
+  <script src="{{ Vite::asset('resources/vendor/imask/dist/imask.min.js') }}"></script>
+  <script src="{{ Vite::asset('resources/vendor/hs-toggle-password/dist/js/hs-toggle-password.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables/media/js/jquery.dataTables.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables.net.extensions/select/select.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
@@ -376,6 +402,7 @@
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
 
   <!-- JS Modules -->
+  <script src="{{ Vite::asset('resources/js/modules/user-management/user-crud.js') }}"></script>
 
   <!-- JS Themes -->
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>
@@ -418,7 +445,7 @@
               <img class="mb-3" src="{{ Vite::asset('resources/svg/illustrations-light/oc-error.svg') }}" alt="No Record to Show" style="width: 10rem;" data-hs-theme-appearance="dark">
             <p class="mb-0">The users table is empty. No records to show</p>
             </div>`
-        }
+        },
       });
 
       const datatable = HSCore.components.HSDatatables.getItem(0);
@@ -444,9 +471,7 @@
         let elVal = $this.val() === "null" ? "" : $this.val();
         let targetColumnIndex = $this.data("target-column-index");
 
-        if (elVal === "Active" || elVal === "Inactive") {
-          elVal = elVal.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        }
+        elVal = elVal.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
         datatable.column(targetColumnIndex).search(elVal, true, false, false).draw();
 
@@ -482,6 +507,21 @@
         // INITIALIZATION OF SELECT
         // =======================================================
         HSCore.components.HSTomSelect.init(".js-select");
+
+
+        // INITIALIZATION OF FILE ATTACHMENT
+        // =======================================================
+        new HSFileAttach('.js-file-attach');
+
+
+        // INITIALIZATION OF INPUT MASK
+        // =======================================================
+        HSCore.components.HSMask.init('.js-input-mask');
+
+
+        // INITIALIZATION OF TOGGLE PASSWORD
+        // =======================================================
+        new HSTogglePassword('.js-toggle-password');
       };
     })();
   </script>

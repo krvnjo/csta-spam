@@ -2,32 +2,28 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, SoftDeletes;
+    use SoftDeletes;
+
+    protected $table = 'users';
 
     protected $fillable = [
         'user_name',
         'pass_hash',
-        'image',
         'lname',
         'fname',
         'mname',
         'role_id',
         'dept_id',
         'email',
-        'phone',
+        'phone_num',
+        'user_image',
         'is_active'
-    ];
-
-    protected $casts = [
-        'last_login' => 'datetime',
     ];
 
     public function department(): HasOne
