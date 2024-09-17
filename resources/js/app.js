@@ -15,11 +15,13 @@ $(document).ready(function () {
 
   // ============ Show Active Links JS ============ //
   const navLinks = $("#navbarVerticalMenu .nav-link");
-  const currentPath = window.location.pathname;
+  const currentRouteName = $('meta[name="current-route"]').attr("content");
 
   navLinks.each(function () {
     const link = $(this);
-    if (currentPath === link.attr("href")) {
+    const routeName = link.data("route");
+
+    if (currentRouteName === routeName) {
       link.addClass("active");
 
       let currentCollapse = link.closest(".nav-collapse");

@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AcquisitionController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ConditionController;
@@ -54,11 +53,6 @@ Route::prefix('user-management/roles')->name('role.')->controller(RoleController
 // ============ End User Management Routes ============ //
 
 // ============ File Maintenance Routes ============ //
-
-// Acquisition Routes
-Route::prefix('file-maintenance/acquisitions')->name('acquisition.')->controller(AcquisitionController::class)->group(function () {
-    Route::resource('/', AcquisitionController::class);
-});
 
 // Brand Routes
 Route::prefix('file-maintenance/brands')->name('brand.')->controller(BrandController::class)->group(function () {
