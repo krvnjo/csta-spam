@@ -116,18 +116,24 @@ function handleUnsavedChanges(modal, form, saveButton = null) {
     const currentFormValues = getFormValues();
     for (let key in initialFormValues) {
       if (initialFormValues[key] !== currentFormValues[key]) {
-        saveButton.prop("disabled", false);
+        if (saveButton) {
+          saveButton.prop("disabled", false);
+        }
         return true;
       }
     }
-    saveButton.prop("disabled", true);
+    if (saveButton) {
+      saveButton.prop("disabled", true);
+    }
     return false;
   }
 
   modal.on("show.bs.modal", function () {
     setTimeout(() => {
       initialFormValues = getFormValues();
-      saveButton.prop("disabled", true);
+      if (saveButton) {
+        saveButton.prop("disabled", true);
+      }
       unsavedChanges = false;
     }, 100);
   });
@@ -167,7 +173,7 @@ function handleUnsavedChanges(modal, form, saveButton = null) {
 window.handleUnsavedChanges = handleUnsavedChanges;
 
 // Clean Modal Form
-function cleanModalForm(modal, form, flag = null) {
+function cleanModalForm(modal, form, flag = "add") {
   form.find(":input").removeClass("is-invalid").siblings(".invalid-feedback").empty();
 
   form.find("select").each(function () {
@@ -177,7 +183,7 @@ function cleanModalForm(modal, form, flag = null) {
     }
   });
 
-  if (flag !== "edit") {
+  if (flag === "add") {
     form.trigger("reset");
 
     form.find("select").each(function () {

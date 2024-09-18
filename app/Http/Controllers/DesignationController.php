@@ -49,7 +49,7 @@ class DesignationController extends Controller
     {
         $designationValidationMessages = [
             'designation.required' => 'Please enter a designation name!',
-            'designation.regex' => 'The designation name may not contain special symbols.',
+            'designation.regex' => 'It must not contain special symbols and multiple spaces.',
             'designation.min' => 'The designation name must be at least :min characters.',
             'designation.max' => 'The designation name may not be greater than :max characters.',
             'designation.unique' => 'This designation name already exists.',
