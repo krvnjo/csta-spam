@@ -1,40 +1,36 @@
 $(document).ready(function () {
-  const departmentDatatable = $("#departmentDatatable").DataTable();
+  const departmentsDatatable = $("#departmentsDatatable").DataTable();
 
-  // Create a Department
-  const departmentAddModal = $("#addDepartmentModal");
+  // ============ Create a Department ============ //
+  const departmentAddModal = $("#modalAddDepartment");
   const departmentAddForm = $("#frmAddDepartment");
-  const departmentAddText = $("#txtAddDepartment");
-  const departmentAddValid = $("#valAddDepartment");
-  const deptCodeAddText = $("#txtAddDeptCode");
-  const deptCodeAddValid = $("#valAddDeptCode");
 
-  handleUnsavedChanges(departmentAddModal, departmentAddForm);
+  handleUnsavedChanges(departmentAddModal, departmentAddForm, $("#btnAddSaveDepartment"));
 
   departmentAddForm.on("submit", function (e) {
     e.preventDefault();
 
+    const addFormData = new FormData(departmentAddForm[0]);
+
     $.ajax({
-      url: "/file-maintenance/departments/create",
+      url: "/file-maintenance/departments",
       method: "POST",
-      data: {
-        _token: $('meta[name="csrf-token"]').attr("content"),
-        department: departmentAddText.val(),
-        deptcode: deptCodeAddText.val(),
-      },
+      data: addFormData,
+      dataType: "json",
+      processData: false,
+      contentType: false,
       success: function (response) {
         if (response.success) {
-          departmentAddModal.modal("hide");
           showSuccessAlert(response, departmentAddModal, departmentAddForm);
         } else {
           if (response.errors.department) {
-            departmentAddText.addClass("is-invalid");
-            departmentAddValid.text(response.errors.department[0]);
+            $("#txtAddDepartment").addClass("is-invalid");
+            $("#valAddDepartment").text(response.errors.department[0]);
           }
 
           if (response.errors.deptcode) {
-            deptCodeAddText.addClass("is-invalid");
-            deptCodeAddValid.text(response.errors.deptcode[0]);
+            $("#txtAddDeptCode").addClass("is-invalid");
+            $("#valAddDeptCode").text(response.errors.deptcode[0]);
           }
         }
       },
@@ -43,83 +39,120 @@ $(document).ready(function () {
       },
     });
   });
-  // End Create a Department
+  // ============ End Create a Department ============ //
 
-  // Edit a Department
-  const departmentEditModal = $("#editDepartmentModal");
+  // ============ View a Department ============ //
+  departmentsDatatable.on("click", ".btnViewDepartment", function () {
+    const departmentId = $(this).closest("tr").find("td[data-department-id]").data("department-id");
+
+    $.ajax({
+      url: "/file-maintenance/departments/show",
+      method: "GET",
+      data: { id: departmentId },
+      success: function (response) {
+        $("#modalViewDepartment").modal("toggle");
+
+        $("#lblViewDepartment").text(response.department);
+        $("#lblViewDeptCode").text(response.deptcode);
+
+        const designations = response.designations;
+        const dropdownDesignation = $("#designationsDropdownMenu").empty();
+
+        $("#lblViewTotalDesignations").text(`${designations.length} designations in this department`);
+
+        if (designations.length) {
+          designations.forEach((designation) => {
+            dropdownDesignation.append($("<span>").addClass("dropdown-item").text(designation));
+          });
+        } else {
+          dropdownDesignation.append('<span class="dropdown-item text-muted">No designations available.</span>');
+        }
+
+        const departmentStatus =
+          response.status === 1
+            ? `<span class="badge bg-soft-success text-success"><span class="legend-indicator bg-success"></span>Active</span>`
+            : `<span class="badge bg-soft-danger text-danger"><span class="legend-indicator bg-danger"></span>Inactive</span>`;
+
+        $("#lblViewStatus").html(departmentStatus);
+        $("#lblViewDateCreated").text(response.created);
+        $("#lblViewDateUpdated").text(response.updated);
+      },
+      error: function (response) {
+        showErrorAlert(response.responseJSON);
+      },
+    });
+  });
+  // ============ End View a Department ============ //
+
+  // ============ Update a Department ============ //
+  const departmentEditModal = $("#modalEditDepartment");
   const departmentEditForm = $("#frmEditDepartment");
-  const departmentEditId = $("#txtEditDepartmentId");
-  const departmentEditText = $("#txtEditDepartment");
-  const departmentEditValid = $("#valEditDepartment");
-  const deptCodeEditText = $("#txtEditDeptCode");
-  const deptCodeEditValid = $("#valEditDeptCode");
 
-  handleUnsavedChanges(departmentEditModal, departmentEditForm);
+  handleUnsavedChanges(departmentEditModal, departmentEditForm, $("#btnEditSaveDepartment"));
 
-  departmentDatatable.on("click", "#btnEditDepartment", function () {
+  departmentsDatatable.on("click", ".btnEditDepartment", function () {
     const departmentId = $(this).closest("tr").find("td[data-department-id]").data("department-id");
 
     $.ajax({
       url: "/file-maintenance/departments/edit",
       method: "GET",
-      data: {
-        _token: $('meta[name="csrf-token"]').attr("content"),
-        id: departmentId,
-      },
+      data: { id: departmentId },
       success: function (response) {
         departmentEditModal.modal("toggle");
-        departmentEditId.val(response.id);
-        departmentEditText.val(response.name);
-        deptCodeEditText.val(response.deptcode);
+
+        $("#txtEditDepartmentId").val(response.id);
+        $("#txtEditDepartment").val(response.department);
+        $("#txtEditDeptCode").val(response.deptcode);
       },
       error: function (response) {
-        showErrorAlert(response.responseJSON, departmentAddModal, departmentAddForm);
+        showErrorAlert(response.responseJSON, departmentEditModal, departmentEditForm);
       },
     });
   });
-  // End Edit a Department
 
-  // Update a Department
   departmentEditForm.on("submit", function (e) {
     e.preventDefault();
 
+    const editFormData = new FormData(departmentEditForm[0]);
+
+    editFormData.append("_method", "PATCH");
+    editFormData.append("id", $("#txtEditDepartmentId").val());
+    editFormData.append("department", $("#txtEditDepartment").val());
+    editFormData.append("deptcode", $("#txtEditDeptCode").val());
+
     $.ajax({
       url: "/file-maintenance/departments/update",
-      method: "PATCH",
-      data: {
-        _token: $('meta[name="csrf-token"]').attr("content"),
-        id: departmentEditId.val(),
-        department: departmentEditText.val(),
-        deptcode: deptCodeEditText.val(),
-      },
+      method: "POST",
+      data: editFormData,
+      processData: false,
+      contentType: false,
       success: function (response) {
         if (response.success) {
-          departmentAddModal.modal("hide");
           showSuccessAlert(response, departmentEditModal, departmentEditForm);
         } else {
           if (response.errors.department) {
-            departmentEditText.addClass("is-invalid");
-            departmentEditValid.text(response.errors.department[0]);
+            $("#txtEditDepartment").addClass("is-invalid");
+            $("#valEditDepartment").text(response.errors.department[0]);
           }
 
           if (response.errors.deptcode) {
-            deptCodeEditText.addClass("is-invalid");
-            deptCodeEditValid.text(response.errors.deptcode[0]);
+            $("#txtEditDeptCode").addClass("is-invalid");
+            $("#valEditDeptCode").text(response.errors.deptcode[0]);
           }
         }
       },
       error: function (response) {
-        showErrorAlert(response.responseJSON, departmentAddModal, departmentAddForm);
+        showErrorAlert(response.responseJSON, departmentEditModal, departmentEditForm);
       },
     });
   });
 
-  $(".btnStatusDepartment").on("click", function () {
+  departmentsDatatable.on("click", ".btnStatusDepartment", function () {
     const departmentId = $(this).closest("tr").find("td[data-department-id]").data("department-id");
-    const status = $(this).data("status");
+    const departmentSetStatus = $(this).data("status");
     let statusName;
 
-    if (status === 1) {
+    if (departmentSetStatus === 1) {
       statusName = "active";
     } else {
       statusName = "inactive";
@@ -142,24 +175,23 @@ $(document).ready(function () {
           url: "/file-maintenance/departments/update",
           method: "PATCH",
           data: {
-            _token: $('meta[name="csrf-token"]').attr("content"),
             id: departmentId,
-            status: status,
+            status: departmentSetStatus,
           },
           success: function (response) {
             showSuccessAlert(response);
           },
           error: function (response) {
-            showErrorAlert(response.responseJSON, departmentAddModal, departmentAddForm);
+            showErrorAlert(response.responseJSON);
           },
         });
       }
     });
   });
-  // End Update a Department
+  // ============ End Update a Department ============ //
 
-  // Delete a Department
-  departmentDatatable.on("click", "#btnDeleteDepartment", function () {
+  // ============ Delete a Department ============ //
+  departmentsDatatable.on("click", ".btnDeleteDepartment", function () {
     const departmentId = $(this).closest("tr").find("td[data-department-id]").data("department-id");
 
     Swal.fire({
@@ -178,15 +210,12 @@ $(document).ready(function () {
         $.ajax({
           url: "/file-maintenance/departments/delete",
           method: "DELETE",
-          data: {
-            _token: $('meta[name="csrf-token"]').attr("content"),
-            id: departmentId,
-          },
+          data: { id: departmentId },
           success: function (response) {
             showSuccessAlert(response);
           },
           error: function (response) {
-            showErrorAlert(response.responseJSON, departmentAddModal, departmentAddForm);
+            showErrorAlert(response.responseJSON);
           },
         });
       }
@@ -194,9 +223,9 @@ $(document).ready(function () {
   });
 
   $("#btnMultiDeleteDepartment").on("click", function () {
-    let checkedCheckboxes = departmentDatatable.rows().nodes().to$().find("input.form-check-input:checked");
+    let checkedCheckboxes = departmentsDatatable.rows().nodes().to$().find("input.form-check-input:checked");
 
-    let ids = checkedCheckboxes
+    let departmentIds = checkedCheckboxes
       .map(function () {
         return $(this).closest("tr").find("[data-department-id]").data("department-id");
       })
@@ -218,19 +247,16 @@ $(document).ready(function () {
         $.ajax({
           url: "/file-maintenance/departments/delete",
           method: "DELETE",
-          data: {
-            _token: $('meta[name="csrf-token"]').attr("content"),
-            id: ids,
-          },
+          data: { id: departmentIds },
           success: function (response) {
             showSuccessAlert(response);
           },
           error: function (response) {
-            showErrorAlert(response.responseJSON, departmentAddModal, departmentAddForm);
+            showErrorAlert(response.responseJSON);
           },
         });
       }
     });
   });
-  // End Delete a Department
+  // ============ End Delete a Department ============ //
 });

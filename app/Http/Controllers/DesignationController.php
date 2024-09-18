@@ -78,9 +78,9 @@ class DesignationController extends Controller
                 ]);
             } else {
                 Designation::query()->create([
-                    'name' => $this->formatDesignation($request->input('designation')),
+                    'name' => $this->formatInput($request->input('designation')),
                     'dept_id' => $request->input('department'),
-                    'is active' => 1,
+                    'is_active' => 1,
                 ]);
 
                 return response()->json([
@@ -96,24 +96,6 @@ class DesignationController extends Controller
                 'text' => 'An error occurred while adding the designation. Please try again later.',
             ], 500);
         }
-    }
-
-    /**
-     * Format Designation Input.
-     */
-    public function formatDesignation($input)
-    {
-        $words = explode(' ', trim($input));
-
-        $formattedWords = array_map(function ($word) {
-            $preserveWords = ['GYM', 'CSTA', 'STSN', 'IT', 'HM', 'TM', 'EDUC', 'SHTM', 'of', 'is', 'from', 'as'];
-            if (in_array(strtoupper($word), $preserveWords)) {
-                return strtoupper($word);
-            }
-            return ucfirst(strtolower($word));
-        }, $words);
-
-        return implode(' ', $formattedWords);
     }
 
     /**
@@ -202,7 +184,7 @@ class DesignationController extends Controller
                         'errors' => $designationValidator->errors(),
                     ]);
                 } else {
-                    $designation->name = $request->input('designation');
+                    $designation->name = $this->formatInput($request->input('designation'));
                     $designation->dept_id = $request->input('department');
                 }
             } elseif ($request->has('status')) {

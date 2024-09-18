@@ -71,7 +71,12 @@ Route::prefix('file-maintenance/conditions')->name('condition.')->controller(Con
 
 // Department Routes
 Route::prefix('file-maintenance/departments')->name('department.')->controller(DepartmentController::class)->group(function () {
-    Route::resource('/', DepartmentController::class);
+    Route::get('/', 'index')->name('index');
+    Route::post('/', 'store')->name('store')->middleware('expectsJson');
+    Route::get('/show', 'show')->name('show')->middleware('expectsJson');
+    Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
+    Route::patch('/update', 'update')->name('update')->middleware('expectsJson');
+    Route::delete('/delete', 'destroy')->name('delete')->middleware('expectsJson');
 });
 
 // Designation Routes

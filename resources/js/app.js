@@ -96,7 +96,7 @@ function showErrorAlert(response, modal = null, form = null) {
 window.showErrorAlert = showErrorAlert;
 
 // Unsaved Changes Alert
-function handleUnsavedChanges(modal, form, saveButton = null) {
+function handleUnsavedChanges(modal, form, saveButton) {
   let initialFormValues = {};
   let unsavedChanges = false;
 
@@ -116,24 +116,18 @@ function handleUnsavedChanges(modal, form, saveButton = null) {
     const currentFormValues = getFormValues();
     for (let key in initialFormValues) {
       if (initialFormValues[key] !== currentFormValues[key]) {
-        if (saveButton) {
-          saveButton.prop("disabled", false);
-        }
+        saveButton.prop("disabled", false);
         return true;
       }
     }
-    if (saveButton) {
-      saveButton.prop("disabled", true);
-    }
+    saveButton.prop("disabled", true);
     return false;
   }
 
   modal.on("show.bs.modal", function () {
     setTimeout(() => {
       initialFormValues = getFormValues();
-      if (saveButton) {
-        saveButton.prop("disabled", true);
-      }
+      saveButton.prop("disabled", true);
       unsavedChanges = false;
     }, 100);
   });
