@@ -77,11 +77,11 @@ Route::prefix('file-maintenance/departments')->name('department.')->controller(D
 // Designation Routes
 Route::prefix('file-maintenance/designations')->name('designation.')->controller(DesignationController::class)->group(function () {
     Route::get('/', 'index')->name('index');
-    Route::post('/', 'store')->name('store');
-    Route::get('/show', 'show')->name('show');
-    Route::get('/edit', 'edit')->name('edit');
-    Route::patch('/update', 'update')->name('update');
-    Route::delete('/delete', 'destroy')->name('delete');
+    Route::post('/', 'store')->name('store')->middleware('expectsJson');
+    Route::get('/show', 'show')->name('show')->middleware('expectsJson');
+    Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
+    Route::patch('/update', 'update')->name('update')->middleware('expectsJson');
+    Route::delete('/delete', 'destroy')->name('delete')->middleware('expectsJson');
 });
 
 // Subcategory Routes
