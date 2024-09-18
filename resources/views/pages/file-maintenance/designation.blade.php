@@ -28,7 +28,7 @@
               <ol class="breadcrumb breadcrumb-no-gutter">
                 <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ route('dashboard.index') }}">Home</a></li>
                 <li class="breadcrumb-item"><a class="breadcrumb-link">File Maintenance</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Designations</li>
+                <li class="breadcrumb-item active">Designations</li>
               </ol>
             </nav>
             <h1 class="page-header-title mt-2">Designations</h1>
@@ -36,8 +36,8 @@
 
           <div class="col-sm-auto mt-sm-0 mt-3">
             <div class="d-grid gap-2 d-sm-flex justify-content-sm-end">
-              <button class="btn btn-primary w-100 w-sm-auto" data-bs-toggle="modal" data-bs-target="#addDesignationModal">
-                <i class="bi-plus me-1"></i> Add a Designation
+              <button class="btn btn-primary w-100 w-sm-auto" data-bs-toggle="modal" data-bs-target="#modalAddDesignation">
+                <i class="bi-plus me-1"></i> Add Designation
               </button>
             </div>
           </div>
@@ -59,9 +59,11 @@
                   <span class="d-block">Total Designations</span>
                   <span class="badge bg-soft-primary text-primary rounded-pill p-1">
                     @if ($deletedDesignations == 0)
-                      <i class="bi-hand-thumbs-up-fill"></i> All good!
+                      <i class="bi-hand-thumbs-up-fill"></i> Everything looks great!
+                    @elseif ($deletedDesignations == 1)
+                      <i class="bi-arrow-counterclockwise"></i>{{ $deletedDesignations }} record can be restored from bin.
                     @else
-                      <i class="bi-arrow-clockwise"></i> {{ $deletedDesignations }} record/s can be restored from bin
+                      <i class="bi-arrow-counterclockwise"></i>{{ $deletedDesignations }} records can be restored from bin.
                     @endif
                   </span>
                 </div>
@@ -79,10 +81,8 @@
                   </div>
 
                   <div class="progress rounded-pill">
-                    <div class="progress-bar bg-success" role="progressbar" aria-valuemax="100" aria-valuemin="0"
-                      aria-valuenow="{{ $activePercentage }}" style="width: {{ $activePercentage }}%"></div>
-                    <div class="progress-bar bg-danger" role="progressbar" aria-valuemax="100" aria-valuemin="0"
-                      aria-valuenow="{{ $inactivePercentage }}" style="width: {{ $inactivePercentage }}%"></div>
+                    <div class="progress-bar bg-success" style="width: {{ $activePercentage }}%"></div>
+                    <div class="progress-bar bg-danger" style="width: {{ $inactivePercentage }}%"></div>
                   </div>
                 </div>
               </div>
@@ -98,9 +98,7 @@
         <div class="card-header card-header-content-md-between">
           <div class="mb-2 mb-md-0">
             <div class="input-group input-group-merge input-group-flush">
-              <div class="input-group-prepend input-group-text">
-                <i class="bi-search"></i>
-              </div>
+              <div class="input-group-prepend input-group-text"><i class="bi-search"></i></div>
               <input class="form-control" id="designationsDatatableSearch" type="search" placeholder="Search">
             </div>
           </div>
@@ -163,6 +161,31 @@
                   </div>
 
                   <div class="card-body">
+                    <!-- Departments Filter -->
+                    <div class="mb-4">
+                      <small class="text-cap text-body">Departments</small>
+                      <div class="row">
+                        <div class="col">
+                          <div class="tom-select-custom">
+                            <select class="js-select js-datatable-filter form-select form-select-sm" data-target-column-index="3"
+                              data-hs-tom-select-options='{
+                                "allowEmptyOption": true,
+                                "placeholder": "All Departments",
+                                "hideSearch": true,
+                                "dropdownWidth": "100%"
+                              }'>
+                              <option value="">All Departments</option>
+                              @foreach ($departments as $name)
+                                <option value="{{ $name }}">{{ $name }}</option>
+                              @endforeach
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- End Departments Filter -->
+
+                    <!-- End Active and Inactive Filter -->
                     <div class="mb-4">
                       <small class="text-cap text-body">Status</small>
                       <div class="row">
@@ -189,6 +212,7 @@
                         </div>
                       </div>
                     </div>
+                    <!-- End Active and Inactive Filter -->
                   </div>
                 </div>
               </div>
@@ -247,11 +271,7 @@
                   <td class="d-none" data-designation-id="{{ Crypt::encryptString($designation->id) }}"></td>
                   <td><span class="d-block h5 mb-0">{{ $designation->name }}</span></td>
                   <td>{{ $designation->department->name }}</td>
-                  <td>
-                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="Modified on: {{ $designation->updated_at->format('M d, Y') }}">
-                      <i class="bi-calendar-event me-1"></i>
-                      {{ $designation->created_at->format('M d, Y H:i:s') }}
-                    </span>
+                  <td><span><i class="bi-calendar-event me-1"></i> {{ $designation->created_at->format('M d, Y h:i:s') }}</span></td>
                   <td>
                     @if ($designation->is_active)
                       <span class="badge bg-soft-success text-success">
@@ -265,8 +285,8 @@
                   </td>
                   <td>
                     <div class="btn-group" role="group">
-                      <button class="btn btn-white btn-sm" id="btnEditDesignation" type="button">
-                        <i class="bi-pencil-fill me-1"></i> Edit
+                      <button class="btn btn-white btn-sm btnViewDesignation" type="button">
+                        <i class="bi-eye"></i> View
                       </button>
 
                       <div class="btn-group">
@@ -274,17 +294,20 @@
                           data-bs-toggle="dropdown" type="button" aria-expanded="false"></button>
 
                         <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="designationActionDropdown">
+                          <button class="dropdown-item btnEditDesignation" type="button">
+                            <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
+                          </button>
                           @if ($designation->is_active)
                             <button class="dropdown-item btnStatusDesignation" data-status="0" type="button">
-                              <i class="bi-x-lg dropdown-item-icon"></i> Set to Inactive
+                              <i class="bi-x-circle-fill dropdown-item-icon text-danger fs-7"></i> Set to Inactive
                             </button>
                           @else
                             <button class="dropdown-item btnStatusDesignation" data-status="1" type="button">
-                              <i class="bi-check-lg dropdown-item-icon"></i> Set to Active
+                              <i class="bi-check-circle-fill dropdown-item-icon text-success"></i> Set to Active
                             </button>
                           @endif
                           <div class="dropdown-divider"></div>
-                          <button class="dropdown-item text-danger" id="btnDeleteDesignation" type="button">
+                          <button class="dropdown-item text-danger btnDeleteDesignation" type="button">
                             <i class="bi-trash dropdown-item-icon text-danger"></i> Delete
                           </button>
                         </div>
@@ -321,6 +344,7 @@
 
                 <span class="text-secondary me-2">of</span>
                 <span id="designationsDatatableWithPagination"></span>
+                <span class="text-secondary ms-2">records</span>
               </div>
             </div>
 
@@ -344,8 +368,9 @@
 @endsection
 
 @section('sub-content')
-  <x-file-maintenance.add-designation />
-  <x-file-maintenance.edit-designation />
+  <x-file-maintenance.add-designation :departments="$departments" />
+  <x-file-maintenance.view-designation />
+  <x-file-maintenance.edit-designation :departments="$departments" />
 @endsection
 
 @section('scripts')
@@ -404,7 +429,7 @@
           zeroRecords: `<div class="text-center p-4">
               <img class="mb-3" src="{{ Vite::asset('resources/svg/illustrations/oc-error.svg') }}" alt="No Record to Show" style="width: 10rem;" data-hs-theme-appearance="default">
               <img class="mb-3" src="{{ Vite::asset('resources/svg/illustrations-light/oc-error.svg') }}" alt="No Record to Show" style="width: 10rem;" data-hs-theme-appearance="dark">
-            <p class="mb-0">No records to show.</p>
+            <p class="mb-0">No records to display.</p>
             </div>`
         }
       });

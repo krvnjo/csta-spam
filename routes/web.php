@@ -76,7 +76,12 @@ Route::prefix('file-maintenance/departments')->name('department.')->controller(D
 
 // Designation Routes
 Route::prefix('file-maintenance/designations')->name('designation.')->controller(DesignationController::class)->group(function () {
-    Route::resource('/', DesignationController::class);
+    Route::get('/', 'index')->name('index');
+    Route::post('/', 'store')->name('store');
+    Route::get('/show', 'show')->name('show');
+    Route::get('/edit', 'edit')->name('edit');
+    Route::patch('/update', 'update')->name('update');
+    Route::delete('/delete', 'destroy')->name('delete');
 });
 
 // Subcategory Routes
