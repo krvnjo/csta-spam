@@ -42,7 +42,7 @@ $(document).ready(function () {
   // ============ End Create a Designation ============ //
 
   // ============ View a Designation ============ //
-  $(".btnViewDesignation").on("click", function () {
+  designationsDatatable.on("click", ".btnViewDesignation", function () {
     const designationId = $(this).closest("tr").find("td[data-designation-id]").data("designation-id");
 
     $.ajax({
@@ -85,7 +85,7 @@ $(document).ready(function () {
 
   handleUnsavedChanges(designationEditModal, designationEditForm, designationSaveButton);
 
-  $(".btnEditDesignation").on("click", function () {
+  designationsDatatable.on("click", ".btnEditDesignation", function () {
     const designationId = $(this).closest("tr").find("td[data-designation-id]").data("designation-id");
 
     $.ajax({
@@ -142,7 +142,7 @@ $(document).ready(function () {
     });
   });
 
-  $(".btnStatusDesignation").on("click", function () {
+  designationsDatatable.on("click", ".btnStatusDesignation", function () {
     const designationId = $(this).closest("tr").find("td[data-designation-id]").data("designation-id");
     const designationSetStatus = $(this).data("status");
     let statusName;
@@ -186,7 +186,7 @@ $(document).ready(function () {
   // ============ End Update a Designation ============ //
 
   // ============ Delete a Designation ============ //
-  $(".btnDeleteDesignation").on("click", function () {
+  designationsDatatable.on("click", ".btnDeleteDesignation", function () {
     const designationId = $(this).closest("tr").find("td[data-designation-id]").data("designation-id");
 
     Swal.fire({
