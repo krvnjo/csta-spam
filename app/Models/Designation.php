@@ -6,7 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property mixed $id
+ * @property mixed|string $name
+ * @property mixed|int $dept_id
+ * @property mixed|int $is_active
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ */
 class Designation extends Model
 {
     use SoftDeletes;
@@ -21,7 +30,7 @@ class Designation extends Model
 
     public function department(): BelongsTo
     {
-        return $this->belongsTo(Department::class, 'dept_id', 'id');
+        return $this->belongsTo(Department::class, 'dept_id');
     }
 
     public function property(): BelongsTo

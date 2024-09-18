@@ -15,11 +15,13 @@ $(document).ready(function () {
 
   // ============ Show Active Links JS ============ //
   const navLinks = $("#navbarVerticalMenu .nav-link");
-  const currentPath = window.location.pathname;
+  const currentRouteName = $('meta[name="current-route"]').attr("content");
 
   navLinks.each(function () {
     const link = $(this);
-    if (currentPath === link.attr("href")) {
+    const routeName = link.data("route");
+
+    if (currentRouteName === routeName) {
       link.addClass("active");
 
       let currentCollapse = link.closest(".nav-collapse");
@@ -45,6 +47,7 @@ $(document).ready(function () {
   $("input, textarea, select").on("keydown change", function () {
     $(this).removeClass("is-invalid");
     $(this).siblings(".invalid-feedback").html("");
+    $(this).next(".ts-wrapper").removeClass("is-invalid");
   });
   // ============ End Remove invalid validation on keydown JS ============ //
 });
@@ -72,7 +75,7 @@ function showSuccessAlert(response, modal, form) {
 window.showSuccessAlert = showSuccessAlert;
 
 // Error Alert
-function showErrorAlert(response, modal, form) {
+function showErrorAlert(response, modal = null, form = null) {
   if (modal && form) {
     cleanModalForm(modal, form);
   }
@@ -93,7 +96,7 @@ function showErrorAlert(response, modal, form) {
 window.showErrorAlert = showErrorAlert;
 
 // Unsaved Changes Alert
-function handleUnsavedChanges(modal, form) {
+function handleUnsavedChanges(modal, form, saveButton = null) {
   let initialFormValues = {};
   let unsavedChanges = false;
 
@@ -113,20 +116,19 @@ function handleUnsavedChanges(modal, form) {
     const currentFormValues = getFormValues();
     for (let key in initialFormValues) {
       if (initialFormValues[key] !== currentFormValues[key]) {
+        saveButton.prop("disabled", false);
         return true;
       }
     }
+    saveButton.prop("disabled", true);
     return false;
   }
 
   modal.on("show.bs.modal", function () {
-    initialFormValues = getFormValues();
-    unsavedChanges = false;
-
-    let firstInput = form.find(":input").first();
-    if (firstInput.length) {
-      firstInput.focus();
-    }
+    setTimeout(() => {
+      initialFormValues = getFormValues();
+      unsavedChanges = false;
+    }, 100);
   });
 
   form.on("input change", ":input", function () {
@@ -150,8 +152,8 @@ function handleUnsavedChanges(modal, form) {
         },
       }).then((result) => {
         if (result.isConfirmed) {
-          unsavedChanges = false;
           cleanModalForm(modal, form);
+          unsavedChanges = false;
           modal.modal("hide");
         }
       });
@@ -162,13 +164,19 @@ function handleUnsavedChanges(modal, form) {
 }
 
 window.handleUnsavedChanges = handleUnsavedChanges;
-// ============ End Show Alerts Function ============ //
 
-// ============ Clean Modal Form Function ============ //
-function cleanModalForm(modal, form, flag = "add") {
+// Clean Modal Form
+function cleanModalForm(modal, form, flag = null) {
   form.find(":input").removeClass("is-invalid").siblings(".invalid-feedback").empty();
 
-  if (flag === "add") {
+  form.find("select").each(function () {
+    const tsWrapper = $(this).next(".ts-wrapper");
+    if (tsWrapper.length) {
+      tsWrapper.removeClass("is-invalid");
+    }
+  });
+
+  if (flag !== "edit") {
     form.trigger("reset");
 
     form.find("select").each(function () {
@@ -193,7 +201,7 @@ function cleanModalForm(modal, form, flag = "add") {
 }
 
 window.cleanModalForm = cleanModalForm;
-// ============ End Clean Modal Form Function ============ //
+// ============ End Show Alerts Function ============ //
 
 // ============ Update Filter Count Function ============ //
 function updateFilterCountBadge(filterCountId) {

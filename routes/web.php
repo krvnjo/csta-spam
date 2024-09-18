@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AcquisitionController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ConditionController;
@@ -55,11 +54,6 @@ Route::prefix('user-management/roles')->name('role.')->controller(RoleController
 
 // ============ File Maintenance Routes ============ //
 
-// Acquisition Routes
-Route::prefix('file-maintenance/acquisitions')->name('acquisition.')->controller(AcquisitionController::class)->group(function () {
-    Route::resource('/', AcquisitionController::class);
-});
-
 // Brand Routes
 Route::prefix('file-maintenance/brands')->name('brand.')->controller(BrandController::class)->group(function () {
     Route::resource('/', BrandController::class);
@@ -82,7 +76,12 @@ Route::prefix('file-maintenance/departments')->name('department.')->controller(D
 
 // Designation Routes
 Route::prefix('file-maintenance/designations')->name('designation.')->controller(DesignationController::class)->group(function () {
-    Route::resource('/', DesignationController::class);
+    Route::get('/', 'index')->name('index');
+    Route::post('/', 'store')->name('store');
+    Route::get('/show', 'show')->name('show');
+    Route::get('/edit', 'edit')->name('edit');
+    Route::patch('/update', 'update')->name('update');
+    Route::delete('/delete', 'destroy')->name('delete');
 });
 
 // Subcategory Routes
