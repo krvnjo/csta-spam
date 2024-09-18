@@ -127,6 +127,7 @@ function handleUnsavedChanges(modal, form, saveButton = null) {
   modal.on("show.bs.modal", function () {
     setTimeout(() => {
       initialFormValues = getFormValues();
+      saveButton.prop("disabled", true);
       unsavedChanges = false;
     }, 100);
   });

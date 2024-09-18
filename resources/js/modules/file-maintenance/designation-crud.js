@@ -81,7 +81,7 @@ $(document).ready(function () {
   // ============ Update a Designation ============ //
   const designationEditModal = $("#modalEditDesignation");
   const designationEditForm = $("#frmEditDesignation");
-  const designationSaveButton = $("#btnEditSaveDesignation").prop("disabled", true);
+  const designationSaveButton = $("#btnEditSaveDesignation");
 
   handleUnsavedChanges(designationEditModal, designationEditForm, designationSaveButton);
 
