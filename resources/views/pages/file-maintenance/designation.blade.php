@@ -97,10 +97,12 @@
         <!-- Header -->
         <div class="card-header card-header-content-md-between">
           <div class="mb-2 mb-md-0">
+            <!-- Datatable Search -->
             <div class="input-group input-group-merge input-group-flush">
               <div class="input-group-prepend input-group-text"><i class="bi-search"></i></div>
               <input class="form-control" id="designationsDatatableSearch" type="search" placeholder="Search">
             </div>
+            <!-- End Datatable Search -->
           </div>
 
           <div class="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
@@ -108,7 +110,8 @@
             <div id="designationsDatatableCounterInfo" style="display: none;">
               <div class="d-flex align-items-center">
                 <span class="fs-5 me-3"><span id="designationsDatatableCounter"></span> Selected</span>
-                <button class="btn btn-outline-danger btn-sm" id="btnMultiDeleteDesignation" type="button"><i class="bi-trash"></i> Delete</button>
+                <button class="btn btn-outline-danger btn-sm" id="btnMultiDeleteDesignation" type="button"><i class="bi-trash3-fill"></i>
+                  Delete</button>
               </div>
             </div>
             <!-- End Datatable Counter -->
@@ -185,7 +188,7 @@
                     </div>
                     <!-- End Departments Filter -->
 
-                    <!-- End Active and Inactive Filter -->
+                    <!-- Active and Inactive Filter -->
                     <div class="mb-4">
                       <small class="text-cap text-body">Status</small>
                       <div class="row">
@@ -244,18 +247,18 @@
             }'>
             <thead class="thead-light">
               <tr>
-                <th class="table-column-pe-0">
+                <th class="table-column-pe-0 w-auto">
                   <div class="form-check">
                     <input class="form-check-input" id="designationsDatatableCheckAll" type="checkbox">
                     <label class="form-check-label" for="designationsDatatableCheckAll"></label>
                   </div>
                 </th>
-                <th class="d-none">Designation Id</th>
-                <th>Designation Name</th>
-                <th>Main Department</th>
-                <th>Date Created</th>
-                <th>Status</th>
-                <th>Action</th>
+                <th class="d-none w-auto">Designation Id</th>
+                <th class="w-auto">Designation Name</th>
+                <th class="w-auto">Main Department</th>
+                <th class="w-auto">Date Created</th>
+                <th class="w-auto">Status</th>
+                <th class="w-auto">Action</th>
               </tr>
             </thead>
 
@@ -269,9 +272,11 @@
                     </div>
                   </td>
                   <td class="d-none" data-designation-id="{{ Crypt::encryptString($designation->id) }}"></td>
-                  <td><span class="d-block h5 mb-0">{{ $designation->name }}</span></td>
+                  <td><a class="d-block h5 mb-0 btnViewDesignation">{{ $designation->name }}</a></td>
                   <td>{{ $designation->department->name }}</td>
-                  <td><span><i class="bi-calendar-event me-1"></i> {{ $designation->created_at->format('M d, Y h:i:s') }}</span></td>
+                  <td data-order="{{ $designation->updated_at }}">
+                    <span><i class="bi-calendar-event me-1"></i> Updated {{ $designation->updated_at->diffForHumans() }}</span>
+                  </td>
                   <td>
                     @if ($designation->is_active)
                       <span class="badge bg-soft-success text-success">
@@ -292,7 +297,6 @@
                       <div class="btn-group">
                         <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="designationActionDropdown"
                           data-bs-toggle="dropdown" type="button" aria-expanded="false"></button>
-
                         <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="designationActionDropdown">
                           <button class="dropdown-item btnEditDesignation" type="button">
                             <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
@@ -308,7 +312,7 @@
                           @endif
                           <div class="dropdown-divider"></div>
                           <button class="dropdown-item text-danger btnDeleteDesignation" type="button">
-                            <i class="bi-trash dropdown-item-icon text-danger"></i> Delete
+                            <i class="bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
                           </button>
                         </div>
                       </div>

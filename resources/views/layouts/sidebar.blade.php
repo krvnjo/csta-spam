@@ -116,13 +116,13 @@
               </a>
 
               <div class="nav-collapse collapse" id="navbarVerticalMenuFileMaintenance" data-bs-parent="#navbarVerticalMenu">
-                <a class="nav-link" href="{{ route('brand.index') }}">Brands</a>
-                <a class="nav-link" href="{{ route('category.index') }}">Categories</a>
-                <a class="nav-link" href="{{ route('condition.index') }}">Conditions</a>
-                <a class="nav-link" href="{{ route('department.index') }}">Departments</a>
+                <a class="nav-link" data-route="brand.index" href="{{ route('brand.index') }}">Brands</a>
+                <a class="nav-link" data-route="category.index" href="{{ route('category.index') }}">Categories</a>
+                <a class="nav-link" data-route="condition.index" href="{{ route('condition.index') }}">Conditions</a>
+                <a class="nav-link" data-route="department.index" href="{{ route('department.index') }}">Departments</a>
                 <a class="nav-link" data-route="designation.index" href="{{ route('designation.index') }}">Designations</a>
-                <a class="nav-link" href="{{ route('status.index') }}">Statuses</a>
-                <a class="nav-link" href="{{ route('subcategory.index') }}">Subcategories</a>
+                <a class="nav-link" data-route="status.index" href="{{ route('status.index') }}">Statuses</a>
+                <a class="nav-link" data-route="subcategory.index" href="{{ route('subcategory.index') }}">Subcategories</a>
               </div>
             </div>
           </div>

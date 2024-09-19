@@ -5,7 +5,7 @@ $(document).ready(function () {
   const designationAddModal = $("#modalAddDesignation");
   const designationAddForm = $("#frmAddDesignation");
 
-  handleUnsavedChanges(designationAddModal, designationAddForm);
+  handleUnsavedChanges(designationAddModal, designationAddForm, $("#btnAddSaveDesignation"));
 
   designationAddForm.on("submit", function (e) {
     e.preventDefault();
@@ -59,15 +59,15 @@ $(document).ready(function () {
 
         if (response.status === 1) {
           $("#lblViewStatus").html(`
-              <span class="badge bg-soft-success text-success">
-                  <span class="legend-indicator bg-success"></span>Active
-              </span>
+            <span class="badge bg-soft-success text-success">
+              <span class="legend-indicator bg-success"></span>Active
+            </span>
           `);
         } else {
           $("#lblViewStatus").html(`
-              <span class="badge bg-soft-danger text-danger">
-                  <span class="legend-indicator bg-danger"></span>Inactive
-              </span>
+            <span class="badge bg-soft-danger text-danger">
+              <span class="legend-indicator bg-danger"></span>Inactive
+            </span>
           `);
         }
       },
@@ -81,9 +81,8 @@ $(document).ready(function () {
   // ============ Update a Designation ============ //
   const designationEditModal = $("#modalEditDesignation");
   const designationEditForm = $("#frmEditDesignation");
-  const designationSaveButton = $("#btnEditSaveDesignation");
 
-  handleUnsavedChanges(designationEditModal, designationEditForm, designationSaveButton);
+  handleUnsavedChanges(designationEditModal, designationEditForm, $("#btnEditSaveDesignation"));
 
   designationsDatatable.on("click", ".btnEditDesignation", function () {
     const designationId = $(this).closest("tr").find("td[data-designation-id]").data("designation-id");
