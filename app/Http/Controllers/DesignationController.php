@@ -111,8 +111,8 @@ class DesignationController extends Controller
                 'designation' => $designation->name,
                 'department' => $designation->department->name,
                 'status' => $designation->is_active,
-                'created' => $designation->created_at->format('F d, Y | h:i:s A'),
-                'updated' => $designation->updated_at->format('F d, Y | h:i:s A'),
+                'created' => $designation->created_at->format('D, F d, Y | h:i:s A'),
+                'updated' => $designation->updated_at->format('D, F d, Y | h:i:s A'),
             ]);
         } catch (Throwable) {
             return response()->json([

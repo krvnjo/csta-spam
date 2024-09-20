@@ -17,16 +17,16 @@ class StatusController extends Controller
      */
     public function index()
     {
-        $statuses = Status::query()->whereNull('deleted_at')->get();
-        $colors = Color::query()->get();
+        $statuses = Status::whereNull('deleted_at')->get();
+        $colors = Color::whereNull('deleted_at')->where('is_active', 1)->where('is_color', 1)->get();
 
         $totalStatuses = $statuses->count();
         $deletedStatuses = Status::onlyTrashed()->count();
         $activeStatuses = $statuses->where('is_active', 1)->count();
-        $inactiveStatuses = $statuses->where('is_active', 0)->count();
+        $inactiveStatuses = $totalStatuses - $activeStatuses;
 
-        $activePercentage = $totalStatuses > 0 ? ($activeStatuses / $totalStatuses) * 100 : 0;
-        $inactivePercentage = $totalStatuses > 0 ? ($inactiveStatuses / $totalStatuses) * 100 : 0;
+        $activePercentage = $totalStatuses ? ($activeStatuses / $totalStatuses) * 100 : 0;
+        $inactivePercentage = $totalStatuses ? ($inactiveStatuses / $totalStatuses) * 100 : 0;
 
         return view('pages.file-maintenance.status',
             compact(
@@ -49,65 +49,89 @@ class StatusController extends Controller
     {
         $statusValidationMessages = [
             'status.required' => 'Please enter a status name!',
-            'status.regex' => 'The status name may only contain letters, spaces, and hyphens.',
+            'status.regex' => 'It must not contain special symbols and multiple spaces.',
             'status.min' => 'The status name must be at least :min characters.',
             'status.max' => 'The status name may not be greater than :max characters.',
             'status.unique' => 'This status name already exists.',
 
-            'description.required' => 'Please enter a status description!',
-            'description.regex' => 'The status name may not contain multiple spaces.',
-            'description.min' => 'The description must be at least :min characters.',
-            'description.max' => 'The description may not be greater than :max characters.',
-            'description.unique' => 'This status description already exists.',
+            'description.required' => 'Please enter a description!',
+            'description.regex' => 'It must not contain consecutive spaces or symbols.',
+            'description.min' => 'The description code must be at least :min characters.',
+            'description.unique' => 'This description already exists.',
 
-            'color.required' => 'Please select a status color!',
+            'color.required' => 'Please select a color!'
         ];
 
         try {
             $statusValidator = Validator::make($request->all(), [
                 'status' => [
                     'required',
-                    'regex:/^\s*[a-zA-Z]+(?:[ -][a-zA-Z]+)*\s*$/',
+                    'regex:/^(?!.*([ -])\1)[a-zA-Z0-9]+(?:[ -][a-zA-Z0-9]+)*$/',
                     'min:3',
-                    'max:30',
+                    'max:75',
                     'unique:statuses,name'
                 ],
                 'description' => [
                     'required',
-                    'regex:/^(?!.*\s{2,})[A-Za-z0-9\s\p{P}]+$/u',
+                    'regex:/^(?!.*[ -]{2,}).*$/',
                     'min:10',
-                    'max:100',
                     'unique:statuses,description'
                 ],
                 'color' => [
-                    'required',
+                    'required'
                 ],
             ], $statusValidationMessages);
 
             if ($statusValidator->fails()) {
                 return response()->json([
                     'success' => false,
-                    'errors' => $statusValidator->errors(),
+                    'errors' => $statusValidator->errors()
                 ]);
             } else {
                 Status::query()->create([
-                    'name' => ucwords(strtolower(trim($request->input('status')))),
-                    'description' => rtrim(trim($request->input('description')), '.') . '.',
-                    'color_id' => Crypt::decryptString($request->input('color')),
-                    'is active' => 1,
+                    'name' => $this->formatInput($request->input('status')),
+                    'description' => ucfirst(rtrim($request->input('description'))) . (str_ends_with(rtrim($request->input('description')), '.') ? '' : '.'),
+                    'color_id' => $request->input('color'),
+                    'is_active' => 1
                 ]);
 
                 return response()->json([
                     'success' => true,
                     'title' => 'Saved Successfully!',
-                    'text' => 'The status has been added successfully!',
+                    'text' => 'The status has been added successfully!'
                 ]);
             }
         } catch (Throwable) {
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
-                'text' => 'An error occurred while adding the status. Please try again later.',
+                'text' => 'An error occurred while adding the status. Please try again later.'
+            ], 500);
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Request $request)
+    {
+        try {
+            $status = Status::query()->findOrFail(Crypt::decryptString($request->input('id')));
+
+            return response()->json([
+                'success' => true,
+                'statusname' => $status->name,
+                'description' => $status->description,
+                'color' => $status->color->class,
+                'status' => $status->is_active,
+                'created' => $status->created_at->format('D, F d, Y | h:i:s A'),
+                'updated' => $status->updated_at->format('D, F d, Y | h:i:s A')
+            ]);
+        } catch (Throwable) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Oops! Something went wrong.',
+                'message' => 'An error occurred while fetching the status.'
             ], 500);
         }
     }
@@ -123,9 +147,9 @@ class StatusController extends Controller
             return response()->json([
                 'success' => true,
                 'id' => $request->input('id'),
-                'name' => $status->name,
+                'status' => $status->name,
                 'description' => $status->description,
-                'color_id' => $status->color_id,
+                'color' => $status->color_id
             ]);
         } catch (Throwable) {
             return response()->json([
@@ -144,56 +168,55 @@ class StatusController extends Controller
         try {
             $status = Status::query()->findOrFail(Crypt::decryptString($request->input('id')));
 
-            if ($request->has('status') || $request->has('description') || $request->has('color')) {
+            if ($request->has(['id', 'statusname', 'description', 'color'])) {
                 $statusValidationMessages = [
-                    'status.required' => 'Please enter a status name!',
-                    'status.regex' => 'The status name may only contain letters, spaces, and hyphens.',
-                    'status.min' => 'The status name must be at least :min characters.',
-                    'status.max' => 'The status name may not be greater than :max characters.',
-                    'status.unique' => 'This status name already exists.',
+                    'statusname.required' => 'Please enter a status name!',
+                    'statusname.regex' => 'It must not contain special symbols and multiple spaces.',
+                    'statusname.min' => 'The status name must be at least :min characters.',
+                    'statusname.max' => 'The status name may not be greater than :max characters.',
+                    'statusname.unique' => 'This status name already exists.',
 
-                    'description.required' => 'Please enter a status description!',
-                    'description.regex' => 'The status name may not contain multiple spaces.',
-                    'description.min' => 'The description must be at least :min characters.',
-                    'description.max' => 'The description may not be greater than :max characters.',
-                    'description.unique' => 'This status description already exists.',
+                    'description.required' => 'Please enter a description!',
+                    'description.regex' => 'It must not contain consecutive spaces or symbols.',
+                    'description.min' => 'The description code must be at least :min characters.',
+                    'description.unique' => 'This description already exists.',
 
-                    'color.required' => 'Please select a status color!',
+                    'color.required' => 'Please select a color!'
                 ];
 
                 $statusValidator = Validator::make($request->all(), [
-                    'status' => [
+                    'statusname' => [
                         'required',
-                        'regex:/^\s*[a-zA-Z]+(?:[ -][a-zA-Z]+)*\s*$/',
+                        'regex:/^(?!.*([ -])\1)[a-zA-Z0-9]+(?:[ -][a-zA-Z0-9]+)*$/',
                         'min:3',
-                        'max:30',
+                        'max:75',
                         Rule::unique('statuses', 'name')->ignore($status->id)
                     ],
                     'description' => [
                         'required',
-                        'regex:/^(?!.*\s{2,})[A-Za-z0-9\s\p{P}]+$/u',
+                        'regex:/^(?!.*[ -]{2,}).*$/',
                         'min:10',
-                        'max:100',
                         Rule::unique('statuses', 'description')->ignore($status->id)
                     ],
                     'color' => [
-                        'required',
+                        'required'
                     ],
                 ], $statusValidationMessages);
 
                 if ($statusValidator->fails()) {
                     return response()->json([
                         'success' => false,
-                        'errors' => $statusValidator->errors(),
+                        'errors' => $statusValidator->errors()
                     ]);
                 } else {
-                    $status->name = trim($request->input('status'));
-                    $status->description = strtoupper(trim($request->input('description')));
+                    $status->name = $this->formatInput($request->input('statusname'));
+                    $status->description = ucfirst(rtrim($request->input('description'))) . (str_ends_with(rtrim($request->input('description')), '.') ? '' : '.');
                     $status->color_id = $request->input('color');
                 }
-            } elseif ($request->has('statuses')) {
-                $status->is_active = $request->input('statuses');
+            } elseif ($request->has('status')) {
+                $status->is_active = $request->input('status');
             }
+            $status->updated_at = now();
             $status->save();
 
             return response()->json([
@@ -205,7 +228,7 @@ class StatusController extends Controller
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
-                'message' => 'An error occurred while updating the status.',
+                'text' => 'An error occurred while updating the status.',
             ], 500);
         }
     }
@@ -237,13 +260,13 @@ class StatusController extends Controller
             return response()->json([
                 'success' => true,
                 'title' => 'Deleted Successfully!',
-                'text' => count($statuses) > 1 ? 'The departments have been deleted and can be restored from the bin.' : 'The department has been deleted and can be restored from the bin.',
+                'text' => count($statuses) > 1 ? 'The statuses have been deleted and can be restored from the bin.' : 'The status has been deleted and can be restored from the bin.',
             ]);
         } catch (Throwable) {
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
-                'message' => 'An error occurred while deleting the department.',
+                'message' => 'An error occurred while deleting the status.',
             ], 500);
         }
     }

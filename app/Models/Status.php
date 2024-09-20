@@ -8,13 +8,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-/**
- * @property mixed $id
- * @property mixed|string $name
- * @property mixed|string $description
- * @property int $color_id
- * @property mixed|int $is_active
- */
 class Status extends Model
 {
     use SoftDeletes;

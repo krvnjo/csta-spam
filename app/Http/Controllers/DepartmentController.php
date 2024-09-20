@@ -118,8 +118,8 @@ class DepartmentController extends Controller
                 'deptcode' => $department->dept_code,
                 'designations' => $designations,
                 'status' => $department->is_active,
-                'created' => $department->created_at->format('F d, Y | h:i:s A'),
-                'updated' => $department->updated_at->format('F d, Y | h:i:s A'),
+                'created' => $department->created_at->format('D, F d, Y | h:i:s A'),
+                'updated' => $department->updated_at->format('D, F d, Y | h:i:s A'),
             ]);
         } catch (Throwable) {
             return response()->json([

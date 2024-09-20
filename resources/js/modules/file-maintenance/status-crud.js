@@ -1,48 +1,41 @@
 $(document).ready(function () {
-  const statusDatatable = $("#statusDatatable").DataTable();
+  const statusesDatatable = $("#statusesDatatable").DataTable();
 
-  // Create a Status
-  const statusAddModal = $("#addStatusModal");
+  // ============ Create a Status ============ //
+  const statusAddModal = $("#modalAddStatus");
   const statusAddForm = $("#frmAddStatus");
-  const statusAddText = $("#txtAddStatus");
-  const statusAddValid = $("#valAddStatus");
-  const statusDescAddText = $("#txtAddStatusDesc");
-  const statusDescAddValid = $("#valAddStatusDesc");
-  const statusColorAddSel = $("#selAddStatusColor");
-  const statusColorAddValid = $("#valAddStatusColor");
 
-  handleUnsavedChanges(statusAddModal, statusAddForm);
+  handleUnsavedChanges(statusAddModal, statusAddForm, $("#btnAddSaveStatus"));
 
   statusAddForm.on("submit", function (e) {
     e.preventDefault();
 
+    const addFormData = new FormData(statusAddForm[0]);
+
     $.ajax({
-      url: "/file-maintenance/statuses/create",
+      url: "/file-maintenance/statuses",
       method: "POST",
-      data: {
-        _token: $('meta[name="csrf-token"]').attr("content"),
-        status: statusAddText.val(),
-        description: statusDescAddText.val(),
-        color: statusColorAddSel.val(),
-      },
+      data: addFormData,
+      dataType: "json",
+      processData: false,
+      contentType: false,
       success: function (response) {
         if (response.success) {
-          statusAddModal.modal("hide");
           showSuccessAlert(response, statusAddModal, statusAddForm);
         } else {
           if (response.errors.status) {
-            statusAddText.addClass("is-invalid");
-            statusAddValid.text(response.errors.status[0]);
+            $("#txtAddStatus").addClass("is-invalid");
+            $("#valAddStatus").text(response.errors.status[0]);
           }
 
           if (response.errors.description) {
-            statusDescAddText.addClass("is-invalid");
-            statusDescAddValid.text(response.errors.description[0]);
+            $("#txtAddDescription").addClass("is-invalid");
+            $("#valAddDescription").text(response.errors.description[0]);
           }
 
           if (response.errors.color) {
-            statusColorAddSel.addClass("is-invalid");
-            statusColorAddValid.text(response.errors.color[0]);
+            $("#selAddStatusColor").next(".ts-wrapper").addClass("is-invalid");
+            $("#valAddStatusColor").text(response.errors.color[0]);
           }
         }
       },
@@ -51,92 +44,117 @@ $(document).ready(function () {
       },
     });
   });
-  // End Create a Status
+  // ============ End Create a Status ============ //
 
-  // Edit a Status
-  const statusEditModal = $("#editStatusModal");
+  // ============ View a Status ============ //
+  statusesDatatable.on("click", ".btnViewStatus", function () {
+    const statusId = $(this).closest("tr").find("td[data-status-id]").data("status-id");
+
+    $.ajax({
+      url: "/file-maintenance/statuses/show",
+      method: "GET",
+      data: { id: statusId },
+      success: function (response) {
+        $("#modalViewStatus").modal("toggle");
+
+        $("#lblViewStatusName")
+          .text(response.statusname)
+          .attr("class", response.color + " fs-6");
+        $("#lblViewDescription").text(response.description);
+
+        const statusStatus =
+          response.status === 1
+            ? `<span class="badge bg-soft-success text-success justif"><span class="legend-indicator bg-success"></span>Active</span>`
+            : `<span class="badge bg-soft-danger text-danger"><span class="legend-indicator bg-danger"></span>Inactive</span>`;
+
+        $("#lblViewStatus").html(statusStatus);
+        $("#lblViewDateCreated").text(response.created);
+        $("#lblViewDateUpdated").text(response.updated);
+      },
+      error: function (response) {
+        showErrorAlert(response.responseJSON);
+      },
+    });
+  });
+  // ============ End View a Status ============ //
+
+  // ============ Update a Status ============ //
+  const statusEditModal = $("#modalEditStatus");
   const statusEditForm = $("#frmEditStatus");
-  const statusEditId = $("#txtEditStatusId");
-  const statusEditText = $("#txtEditStatus");
-  const statusEditValid = $("#valEditStatus");
-  const statusDescEditText = $("#txtEditStatusDesc");
-  const statusDescEditValid = $("#valEditStatusDesc");
-  const statusColorEditSel = $("#selEditStatusColor");
-  const statusColorEditValid = $("#valEditStatusColor");
 
-  handleUnsavedChanges(statusEditModal, statusEditForm);
+  handleUnsavedChanges(statusEditModal, statusEditForm, $("#btnEditSaveStatus"));
 
-  statusDatatable.on("click", "#btnEditStatus", function () {
+  statusesDatatable.on("click", ".btnEditStatus", function () {
     const statusId = $(this).closest("tr").find("td[data-status-id]").data("status-id");
 
     $.ajax({
       url: "/file-maintenance/statuses/edit",
       method: "GET",
-      data: {
-        _token: $('meta[name="csrf-token"]').attr("content"),
-        id: statusId,
-      },
+      data: { id: statusId },
       success: function (response) {
         statusEditModal.modal("toggle");
-        statusEditId.val(response.id);
-        statusEditText.val(response.name);
-        statusDescEditText.val(response.description);
-        statusColorEditSel[0].tomselect.setValue(response.color_id);
+
+        $("#txtEditStatusId").val(response.id);
+        $("#txtEditStatus").val(response.status);
+        $("#txtEditDescription").val(response.description);
+        $("#countCharactersStatusDesc").text(response.description.length + " / 80");
+        $("#selEditStatusColor")[0].tomselect.setValue(response.color);
       },
       error: function (response) {
-        showErrorAlert(response.responseJSON, statusAddModal, statusAddForm);
+        showErrorAlert(response.responseJSON, statusEditModal, statusEditForm);
       },
     });
   });
-  // End Edit a Status
 
-  // Update a Status
   statusEditForm.on("submit", function (e) {
     e.preventDefault();
 
+    const editFormData = new FormData(statusEditForm[0]);
+
+    editFormData.append("_method", "PATCH");
+    editFormData.append("id", $("#txtEditStatusId").val());
+    editFormData.append("statusname", $("#txtEditStatus").val());
+    editFormData.append("description", $("#txtEditDescription").val());
+    editFormData.append("color", $("#selEditStatusColor").val());
+
     $.ajax({
       url: "/file-maintenance/statuses/update",
-      method: "PATCH",
-      data: {
-        _token: $('meta[name="csrf-token"]').attr("content"),
-        id: statusEditId.val(),
-        status: statusEditText.val(),
-        description: statusDescEditText.val(),
-        color: statusColorEditSel.val(),
-      },
+      method: "POST",
+      data: editFormData,
+      processData: false,
+      contentType: false,
       success: function (response) {
         if (response.success) {
-          statusEditModal.modal("hide");
           showSuccessAlert(response, statusEditModal, statusEditForm);
         } else {
           if (response.errors.status) {
-            statusEditText.addClass("is-invalid");
-            statusEditValid.text(response.errors.status[0]);
+            $("#txtEditStatus").addClass("is-invalid");
+            $("#valEditStatus").text(response.errors.status[0]);
           }
 
           if (response.errors.description) {
-            statusDescEditText.addClass("is-invalid");
-            statusDescEditValid.text(response.errors.description[0]);
+            $("#txtEditDescription").addClass("is-invalid");
+            $("#valEditDescription").text(response.errors.description[0]);
           }
 
           if (response.errors.color) {
-            statusColorEditSel.addClass("is-invalid");
-            statusColorEditValid.text(response.errors.color[0]);
+            $("#selEditStatusColor").next(".ts-wrapper").addClass("is-invalid");
+            $("#valEditStatusColor").text(response.errors.color[0]);
           }
         }
       },
       error: function (response) {
-        showErrorAlert(response.responseJSON, statusAddModal, statusAddForm);
+        showErrorAlert(response.responseJSON, statusEditModal, statusEditForm);
       },
     });
   });
 
-  $(".btnStatusStatus").on("click", function () {
+  statusesDatatable.on("click", ".btnStatusStatus", function () {
     const statusId = $(this).closest("tr").find("td[data-status-id]").data("status-id");
-    const status = $(this).data("status");
+    const statusSetStatus = $(this).data("status");
     let statusName;
 
-    if (status === 1) {
+    if (statusSetStatus === 1) {
       statusName = "active";
     } else {
       statusName = "inactive";
@@ -159,24 +177,23 @@ $(document).ready(function () {
           url: "/file-maintenance/statuses/update",
           method: "PATCH",
           data: {
-            _token: $('meta[name="csrf-token"]').attr("content"),
             id: statusId,
-            statuses: status,
+            status: statusSetStatus,
           },
           success: function (response) {
             showSuccessAlert(response);
           },
           error: function (response) {
-            showErrorAlert(response.responseJSON, statusAddModal, statusAddForm);
+            showErrorAlert(response.responseJSON);
           },
         });
       }
     });
   });
-  // End Update a Status
+  // ============ End Update a Status ============ //
 
-  // Delete a Status
-  statusDatatable.on("click", "#btnDeleteStatus", function () {
+  // ============ Delete a Status ============ //
+  statusesDatatable.on("click", ".btnDeleteStatus", function () {
     const statusId = $(this).closest("tr").find("td[data-status-id]").data("status-id");
 
     Swal.fire({
@@ -195,15 +212,12 @@ $(document).ready(function () {
         $.ajax({
           url: "/file-maintenance/statuses/delete",
           method: "DELETE",
-          data: {
-            _token: $('meta[name="csrf-token"]').attr("content"),
-            id: statusId,
-          },
+          data: { id: statusId },
           success: function (response) {
             showSuccessAlert(response);
           },
           error: function (response) {
-            showErrorAlert(response.responseJSON, statusAddModal, statusAddForm);
+            showErrorAlert(response.responseJSON);
           },
         });
       }
@@ -211,9 +225,9 @@ $(document).ready(function () {
   });
 
   $("#btnMultiDeleteStatus").on("click", function () {
-    let checkedCheckboxes = statusDatatable.rows().nodes().to$().find("input.form-check-input:checked");
+    let checkedCheckboxes = statusesDatatable.rows().nodes().to$().find("input.form-check-input:checked");
 
-    let ids = checkedCheckboxes
+    let statusIds = checkedCheckboxes
       .map(function () {
         return $(this).closest("tr").find("[data-status-id]").data("status-id");
       })
@@ -235,19 +249,16 @@ $(document).ready(function () {
         $.ajax({
           url: "/file-maintenance/statuses/delete",
           method: "DELETE",
-          data: {
-            _token: $('meta[name="csrf-token"]').attr("content"),
-            id: ids,
-          },
+          data: { id: statusIds },
           success: function (response) {
             showSuccessAlert(response);
           },
           error: function (response) {
-            showErrorAlert(response.responseJSON, statusAddModal, statusAddForm);
+            showErrorAlert(response.responseJSON);
           },
         });
       }
     });
   });
-  // End Delete a Status
+  // ============ End Delete a Status ============ //
 });

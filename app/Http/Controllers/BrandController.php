@@ -12,23 +12,27 @@ class BrandController extends Controller
      */
     public function index()
     {
-        $brands = Brand::query()->get();
+        $brands = Brand::with('subcategories')->whereNull('deleted_at')->get();
+
         $totalBrands = $brands->count();
+        $deletedBrands = Brand::onlyTrashed()->count();
         $activeBrands = $brands->where('is_active', 1)->count();
-        $inactiveBrands = $brands->where('is_active', 0)->count();
+        $inactiveBrands = $totalBrands - $activeBrands;
 
-        $activePercentage = $totalBrands > 0 ? ($activeBrands / $totalBrands) * 100 : 0;
-        $inactivePercentage = $totalBrands > 0 ? ($inactiveBrands / $totalBrands) * 100 : 0;
+        $activePercentage = $totalBrands ? ($activeBrands / $totalBrands) * 100 : 0;
+        $inactivePercentage = $totalBrands ? ($inactiveBrands / $totalBrands) * 100 : 0;
 
-        return view('pages.file-maintenance.brand', compact('brands', 'totalBrands', 'activeBrands', 'inactiveBrands', 'activePercentage', 'inactivePercentage'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return view('pages.file-maintenance.brand',
+            compact(
+                'brands',
+                'totalBrands',
+                'deletedBrands',
+                'activeBrands',
+                'inactiveBrands',
+                'activePercentage',
+                'inactivePercentage'
+            )
+        );
     }
 
     /**
