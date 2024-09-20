@@ -237,7 +237,7 @@
             id="propertyOverviewDatatable"
             data-hs-datatables-options='{
                    "columnDefs": [{
-                      "targets": [0, 5],
+                      "targets": [0, 6],
                       "orderable": false
                     }],
                    "order": [],
@@ -253,17 +253,18 @@
                  }'>
             <thead class="thead-light">
               <tr>
-                <th class="table-column-pe-0">
+                <th class="table-column-pe-0" style="width: 5%">
                   <div class="form-check">
                     <input class="form-check-input" id="propertyDatatableCheckAll" type="checkbox" value="">
                     <label class="form-check-label" for="propertyDatatableCheckAll"></label>
                   </div>
                 </th>
-                <th class="table-column-ps-0">Item Name</th>
-                <th>Category</th>
-                <th>Brand</th>
-                <th>Total Quantity</th>
-                <th>Action</th>
+                <th class="table-column-ps-0" style="width: 20%">Item Name</th>
+                <th style="width: 20%">Description</th>
+                <th style="width: 15%">Category</th>
+                <th style="width: 15%">Brand</th>
+                <th style="width: 5%">Total Quantity</th>
+                <th style="width: 20%">Action</th>
               </tr>
             </thead>
 
@@ -290,19 +291,24 @@
                       </div>
                       <div class="ms-3">
                         <span class="d-block h5 mb-0 text-inherit">{{ $propertyParent->name }}</span>
-                        <span data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="{{ $propertyParent->description }}"
-                          style="color:gray">
-                          {{ Str::limit($propertyParent->description, 15) }}
-                        </span>
                       </div>
                     </a>
+                  </td>
+                  <td>
+                    <span style="color:gray"
+                      @if (!empty($propertyParent->description)) data-bs-toggle="tooltip"
+                        data-bs-html="true"
+                        data-bs-placement="bottom"
+                        title="{{ $propertyParent->description }}" @endif>
+                      {{ Str::limit(!empty($propertyParent->description) ? $propertyParent->description : 'No description provided', 30) }}
+                    </span>
                   </td>
                   <td>
                     <span class="d-block h5 mb-0">{{ $propertyParent->subcategory->category->name }}</span>
                     <span class="d-block fs-5">{{ $propertyParent->subcategory->name }}</span>
                   </td>
                   <td>{{ $propertyParent->brand->name }}</td>
-                  <td>{{ $propertyParent->quantity }}</td>
+                  <td style="text-align: center;">{{ $propertyParent->quantity }}</td>
                   <td>
                     <div class="btn-group" role="group">
                       <a class="btn btn-white btn-sm" href="">
@@ -316,12 +322,11 @@
 
                         <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="productsEditDropdown1">
                           <button class="dropdown-item" id="btnEditPropParent" data-prop-parent-id="{{ $propertyParent->id }}" type="button">
-                            <i class="bi-pencil-fill dropdown-item-icon"></i> Edit
+                            <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Item
                           </button>
                         </div>
                       </div>
                       <!-- End Button Group -->
-
                     </div>
                   </td>
                 </tr>

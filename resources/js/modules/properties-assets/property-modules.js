@@ -5,7 +5,6 @@ $(document).ready(function () {
   const propertyAddModal = $("#addPropertyModal");
   const propertyAddForm = $("#frmAddProperty");
 
-  // Required fields
   const requiredFields = {
     propertyName: $("#txtPropertyName"),
     category: $("#cbxCategory"),
@@ -16,17 +15,14 @@ $(document).ready(function () {
     condition: $("#cbxCondition")
   };
 
-  // Non-required fields
   const nonRequiredFields = {
     description: $("#txtDescription"),
     warranty: $("#dtpWarranty"),
     remarks: $("#txtRemarks")
   };
 
-  // Dropzone instance
   const propertyDropzone = Dropzone.forElement("#propertyDropzone");
 
-  // Validation message elements
   const validationMessages = {
     propertyName: $("#valAddName"),
     category: $("#valAddCategory"),
@@ -35,57 +31,11 @@ $(document).ready(function () {
     description: $("#valAddDesc"),
     acquiredType: $("#valAddAcquired"),
     acquiredDate: $("#valAddDtpAcq"),
-    condition: $("#valAddCondition")
+    condition: $("#valAddCondition"),
+    warranty: $("#valAddWarranty")
   };
 
-  // Function to clear validation errors
-  function clearValidationErrors() {
-    propertyAddForm.find(".is-invalid").removeClass("is-invalid");
-    propertyAddForm.find(".tom-select-invalid").removeClass("tom-select-invalid");
-    Object.values(validationMessages).forEach(el => el.text(""));
-  }
-
-  // Function to check if a field has been modified
-  function isFieldModified(field) {
-    return field.data('modified') === true;
-  }
-
-  // Mark fields as modified when they change
-  propertyAddForm.find("input, select, textarea").on("input change", function() {
-    $(this).data('modified', true);
-    $(this).removeClass("is-invalid");
-    const fieldName = $(this).attr('name');
-    if (validationMessages[fieldName]) {
-      validationMessages[fieldName].text("");
-    }
-  });
-
-  // Special handling for tom-select dropdowns
-  [requiredFields.category, requiredFields.brand, requiredFields.acquiredType, requiredFields.condition].forEach(function(select) {
-    if (select[0].tomselect) {
-      select[0].tomselect.on('change', function() {
-        select.data('modified', true);
-        select.removeClass("is-invalid");
-        select[0].tomselect.wrapper.classList.remove("tom-select-invalid");
-        const fieldName = select.attr('name');
-        if (validationMessages[fieldName]) {
-          validationMessages[fieldName].text("");
-        }
-      });
-    }
-  });
-
-  // Special handling for date inputs
-  [requiredFields.acquiredDate, nonRequiredFields.warranty].forEach(function(dateInput) {
-    dateInput.on('changeDate', function() {
-      dateInput.data('modified', true);
-      dateInput.removeClass("is-invalid");
-      const fieldName = dateInput.attr('name');
-      if (validationMessages[fieldName]) {
-        validationMessages[fieldName].text("");
-      }
-    });
-  });
+  handleUnsavedChanges(propertyAddModal, propertyAddForm);
 
   propertyAddForm.on("submit", function (e) {
     e.preventDefault();
@@ -96,23 +46,18 @@ $(document).ready(function () {
 
     // Append form fields to FormData
     Object.entries(requiredFields).forEach(([key, field]) => {
-      // Check if the field is a tom-select dropdown
       if (field[0].tomselect) {
-        // Use tom-select's getValue() method to get the selected value
         formData.append(key, field[0].tomselect.getValue());
       } else {
-        // Otherwise, use the usual .val() method for other input types
         formData.append(key, field.val());
       }
     });
 
     Object.entries(nonRequiredFields).forEach(([key, field]) => formData.append(key, field.val()));
 
-    // Append the file if it exists in Dropzone
     if (propertyDropzone.files.length > 0) {
       formData.append("propertyImage", propertyDropzone.files[0]);
     }
-
 
     $.ajax({
       url: "/properties-assets/stocks/create",
@@ -122,7 +67,6 @@ $(document).ready(function () {
       contentType: false,
       success: function (response) {
         if (response.success) {
-          clearValidationErrors();
           showSuccessAlert(response, propertyAddModal, propertyAddForm);
           propertyDropzone.removeAllFiles();
         } else {
@@ -131,28 +75,19 @@ $(document).ready(function () {
             const validationMessage = validationMessages[fieldName];
 
             if (field && validationMessage) {
-              // Always show error for required fields, regardless of modification status
-              if (requiredFields[fieldName] || isFieldModified(field)) {
-                field.addClass("is-invalid");
-                // Special handling for tom-select dropdowns
-                if (field[0].tomselect) {
-                  field[0].tomselect.wrapper.classList.add("tom-select-invalid");
-                }
-                validationMessage.text(response.errors[fieldName][0]);
+              field.addClass("is-invalid");
+
+              if (field[0].tomselect) {
+                $(field[0].tomselect.wrapper).addClass("is-invalid");
               }
+
+              validationMessage.text(response.errors[fieldName][0]);
             }
           });
         }
       },
-      error: function (jqXHR, textStatus, errorThrown) {
-        showErrorAlert(
-          "An unexpected error occurred when adding the record. Please try again later.",
-          jqXHR,
-          textStatus,
-          errorThrown,
-          propertyAddModal,
-          propertyAddForm,
-        );
+      error: function (response) {
+        showErrorAlert(response.responseJSON, propertyAddModal, propertyAddForm);
       },
     });
   });
