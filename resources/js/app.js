@@ -50,21 +50,6 @@ $(document).ready(function () {
     $(this).next(".ts-wrapper").removeClass("is-invalid");
   });
   // ============ End Remove invalid validation on keydown JS ============ //
-
-  // ============ Dropdown Menu Show Outside ============ //
-  const dropdownToggle = $(".dropdown-toggle");
-
-  dropdownToggle.on("shown.bs.dropdown", function () {
-    $(this).next(".dropdown-menu").appendTo("body").css({
-      position: "absolute",
-      zIndex: 1050,
-    });
-  });
-
-  dropdownToggle.on("hidden.bs.dropdown", function () {
-    $(this).next(".dropdown-menu").appendTo($(this).parent());
-  });
-  // ============ End Dropdown Menu Show Outside ============ //
 });
 
 // ============ Show Alerts Function ============ //

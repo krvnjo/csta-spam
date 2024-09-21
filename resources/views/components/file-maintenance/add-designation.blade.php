@@ -24,7 +24,7 @@
             <div class="tom-select-custom">
               <select class="js-select form-select" id="selAddDepartment" name="department"
                 data-hs-tom-select-options='{
-                  "placeholder": "Select a department",
+                  "placeholder": "Select a Department",
                   "hideSearch": "true"
                 }'>
                 <option value=""></option>

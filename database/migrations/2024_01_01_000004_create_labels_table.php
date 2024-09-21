@@ -15,7 +15,7 @@ return new class extends Migration {
     {
         Schema::create('acquisitions', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 50)->unique();
+            $table->string('name', 100)->unique();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
             $table->softDeletes();
@@ -52,13 +52,6 @@ return new class extends Migration {
             $table->foreignIdFor(Subcategory::class, 'subcateg_id')->constrained('subcategories')->cascadeOnDelete();
             $table->timestamps();
         });
-
-        Schema::create('category_subcategory', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(Category::class, 'categ_id')->constrained('categories')->cascadeOnDelete();
-            $table->foreignIdFor(Subcategory::class, 'subcateg_id')->constrained('subcategories')->cascadeOnDelete();
-            $table->timestamps();
-        });
     }
 
     /**
@@ -66,7 +59,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('category_subcategory');
         Schema::dropIfExists('brand_category');
         Schema::dropIfExists('subcategories');
         Schema::dropIfExists('categories');
