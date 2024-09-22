@@ -21,14 +21,27 @@ class PropertyParentController extends Controller
      */
     public function index()
     {
-        $propertyParents = PropertyParent::with(['subcategory.category', 'brand'])->where('is_active', 1)->where('deleted_at', null)->get();
+        $propertyParents = PropertyParent::with(['subcategory', 'brand'])
+            ->where('is_active', 1)
+            ->whereNull('deleted_at')
+            ->get();
 
-        $subcategories = Subcategory::query()->select('id','name')->where('is_active', 1)->get();
-        $brands = Brand::query()->select('id','name')->where('is_active', 1)->get();
-        $conditions = Condition::query()->select('id','name')->where('is_active', 1)->get();
-        $acquisitions = Acquisition::query()->select('id','name')->where('is_active', 1)->get();
+        $subcategories = Subcategory::where('is_active', 1)->get();
+        $brands = Brand::where('is_active', 1)->get();
+        $conditions = Condition::where('is_active', 1)->get();
+        $acquisitions = Acquisition::where('is_active', 1)->get();
 
-        return view('pages.property-asset.overview', compact('brands','subcategories','conditions','acquisitions','propertyParents'));
+        return view('pages.property-asset.overview', compact('brands', 'subcategories', 'conditions', 'acquisitions', 'propertyParents'));
+    }
+
+    public function getSubcategoryBrands(Request $request)
+    {
+        $subcategoryId = $request->input('subcategory_id');
+        $brands = Brand::whereHas('subcategories', function ($query) use ($subcategoryId) {
+            $query->where('subcateg_id', $subcategoryId);
+        })->where('is_active', 1)->get();
+
+        return response()->json($brands);
     }
 
     /**

@@ -14,7 +14,7 @@
           </span>
         </div>
         <div class="modal-close" style="position: absolute; top: 1rem; right: 1rem;">
-          <button class="btn-close btn-close-light" data-bs-dismiss="modal" type="button"></button>
+          <button class="btn-close btn-close-light" type="button"></button>
         </div>
       </div>
 
@@ -160,7 +160,7 @@
         </div>
 
         <div class="modal-footer">
-          <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Close</button>
+          <button class="btn btn-secondary" type="button">Close</button>
           <button class="btn btn-primary" form="frmAddProperty" type="submit">Save</button>
         </div>
       </form>
@@ -170,14 +170,43 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Initialize TomSelect for each select input
-    new TomSelect('#cbxCategory', {
+    var categorySelect = new TomSelect('#cbxCategory', {
+      controlInput: false,
+      hideSearch: true,
+      allowEmptyOption: true,
+      onChange: function(value) {
+        if (value) {
+          $.ajax({
+            url: '{{ route("prop-asset.getSubcategoryBrands") }}',
+            type: 'GET',
+            data: { subcategory_id: value },
+            success: function(data) {
+              brandSelect.clear();
+              brandSelect.clearOptions();
+              brandSelect.addOption({value: '', text: 'Select Brand...'});
+              data.forEach(function(item) {
+                brandSelect.addOption({value: item.id, text: item.name});
+              });
+              brandSelect.refreshOptions();
+            }
+          });
+        } else {
+          brandSelect.clear();
+          brandSelect.clearOptions();
+          brandSelect.addOption({value: '', text: 'Select Brand...'});
+          brandSelect.refreshOptions();
+        }
+      }
+    });
+
+    var brandSelect = new TomSelect('#cbxBrand', {
       controlInput: false,
       hideSearch: true,
       allowEmptyOption: true
     });
 
-    new TomSelect('#cbxBrand', {
+
+    new TomSelect('#cbxCondition', {
       controlInput: false,
       hideSearch: true,
       allowEmptyOption: true
@@ -189,13 +218,6 @@
       allowEmptyOption: true
     });
 
-    new TomSelect('#cbxCondition', {
-      controlInput: false,
-      hideSearch: true,
-      allowEmptyOption: true
-    });
-
-    // Disable text input for all TomSelect inputs
     document.querySelectorAll('.tom-select input[type="text"]').forEach(function(input) {
       input.addEventListener('keydown', function(event) {
         event.preventDefault();
@@ -204,105 +226,107 @@
   });
 </script>
 
-{{--<script>--}}
-{{--  document.addEventListener('DOMContentLoaded', function () {--}}
-{{--    const form = document.getElementById('frmAddProperty');--}}
-{{--    let isDirty = false;--}}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('frmAddProperty');
+    let isDirty = false;
 
-{{--    const inputs = form.querySelectorAll('input, select, textarea');--}}
+    const inputs = form.querySelectorAll('input, select, textarea');
 
-{{--    // Function to check if form is dirty--}}
-{{--    function checkFormDirty() {--}}
-{{--      let formIsDirty = false;--}}
-{{--      inputs.forEach(input => {--}}
-{{--        if (input.value !== "" && input.value !== input.defaultValue) {--}}
-{{--          formIsDirty = true;--}}
-{{--        }--}}
-{{--      });--}}
-{{--      return formIsDirty || dropzone.files.length > 0;--}}
-{{--    }--}}
+    // Function to check if form is dirty
+    function checkFormDirty() {
+      let formIsDirty = false;
+      inputs.forEach(input => {
+        if (input.value !== "" && input.value !== input.defaultValue) {
+          formIsDirty = true;
+        }
+      });
+      return formIsDirty || dropzone.files.length > 0;
+    }
 
-{{--    // Function to clear validation error classes and messages--}}
-{{--    function clearValidationErrors() {--}}
-{{--      form.querySelectorAll('input, select, textarea').forEach((input) => {--}}
-{{--        input.classList.remove('is-invalid');--}}
-{{--        const feedback = input.nextElementSibling;--}}
-{{--        if (feedback && feedback.classList.contains('invalid-feedback')) {--}}
-{{--          feedback.textContent = '';--}}
-{{--        }--}}
-{{--      });--}}
-{{--    }--}}
+    // Function to clear validation error classes and messages
+    function clearValidationErrors() {
+      form.querySelectorAll('input, select, textarea').forEach((input) => {
+        input.classList.remove('is-invalid');
+        const feedback = input.nextElementSibling;
+        if (feedback && feedback.classList.contains('invalid-feedback')) {
+          feedback.textContent = '';
+        }
+      });
+    }
 
-{{--    // Check input changes--}}
-{{--    inputs.forEach(input => {--}}
-{{--      input.addEventListener('change', () => {--}}
-{{--        isDirty = checkFormDirty();--}}
-{{--      });--}}
-{{--    });--}}
+    // Check input changes
+    inputs.forEach(input => {
+      input.addEventListener('change', () => {
+        isDirty = checkFormDirty();
+      });
+    });
 
-{{--    const dropzone = Dropzone.forElement("#propertyDropzone");--}}
+    const dropzone = Dropzone.forElement("#propertyDropzone");
 
-{{--    dropzone.on("addedfile", function() {--}}
-{{--      isDirty = true;--}}
-{{--    });--}}
+    dropzone.on("addedfile", function() {
+      isDirty = true;
+    });
 
-{{--    dropzone.on("removedfile", function() {--}}
-{{--      isDirty = checkFormDirty(); // Reset isDirty if no files are left--}}
-{{--    });--}}
+    dropzone.on("removedfile", function() {
+      isDirty = checkFormDirty();
+    });
 
-{{--    const closeButtons = document.querySelectorAll('.btn-close, .btn-secondary');--}}
-{{--    closeButtons.forEach(button => {--}}
-{{--      button.addEventListener('click', function (e) {--}}
-{{--        if (isDirty) {--}}
-{{--          e.preventDefault();--}}
-{{--          Swal.fire({--}}
-{{--            title: 'You have unsaved changes!',--}}
-{{--            text: "Are you sure you want to close without saving?",--}}
-{{--            icon: 'warning',--}}
-{{--            showCancelButton: true,--}}
-{{--            confirmButtonColor: '#3085d6',--}}
-{{--            cancelButtonColor: '#d33',--}}
-{{--            confirmButtonText: 'Yes, close it!',--}}
-{{--            cancelButtonText: 'No, stay',--}}
-{{--            backdrop: true,--}}
-{{--            allowOutsideClick: false,--}}
-{{--            allowEscapeKey: false,--}}
-{{--            allowEnterKey: false--}}
-{{--          }).then((result) => {--}}
-{{--            if (result.isConfirmed) {--}}
-{{--              clearValidationErrors(); // Clear validation errors before resetting the form--}}
+    const closeButtons = document.querySelectorAll('.btn-close, .btn-secondary');
+    closeButtons.forEach(button => {
+      button.addEventListener('click', function (e) {
+        if (isDirty) {
+          e.preventDefault();
+          Swal.fire({
+            title: "Unsaved Changes!",
+            text: "You have unsaved changes. Are you sure you want to close the modal?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, close it!",
+            cancelButtonText: "No, keep editing",
+            customClass: {
+              confirmButton: "btn btn-danger",
+              cancelButton: "btn btn-secondary",
+            },
+            backdrop: true,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            allowEnterKey: false
+          }).then((result) => {
+            if (result.isConfirmed) {
+              clearValidationErrors();
 
-{{--              form.reset();--}}
+              form.reset();
 
-{{--              // Reset select inputs--}}
-{{--              const categorySelect = document.querySelector('#cbxCategory').tomselect;--}}
-{{--              const brandSelect = document.querySelector('#cbxBrand').tomselect;--}}
-{{--              const acquiredSelect = document.querySelector('#cbxAcquiredType').tomselect;--}}
-{{--              const conditionSelect = document.querySelector('#cbxCondition').tomselect;--}}
+              // Reset select inputs
+              const categorySelect = document.querySelector('#cbxCategory').tomselect;
+              const brandSelect = document.querySelector('#cbxBrand').tomselect;
+              const acquiredSelect = document.querySelector('#cbxAcquiredType').tomselect;
+              const conditionSelect = document.querySelector('#cbxCondition').tomselect;
 
-{{--              categorySelect.clear();--}}
-{{--              categorySelect.setValue('');--}}
-{{--              brandSelect.clear();--}}
-{{--              brandSelect.setValue('');--}}
-{{--              acquiredSelect.clear();--}}
-{{--              acquiredSelect.setValue('');--}}
-{{--              conditionSelect.clear();--}}
-{{--              conditionSelect.setValue('');--}}
+              categorySelect.clear();
+              categorySelect.setValue('');
+              brandSelect.clear();
+              brandSelect.setValue('');
+              acquiredSelect.clear();
+              acquiredSelect.setValue('');
+              conditionSelect.clear();
+              conditionSelect.setValue('');
 
-{{--              dropzone.removeAllFiles(true);--}}
+              dropzone.removeAllFiles(true);
 
-{{--              isDirty = false;--}}
+              isDirty = false;
 
-{{--              $('#addPropertyModal').modal('hide');--}}
-{{--            } else {--}}
-{{--              Swal.close();--}}
-{{--            }--}}
-{{--          });--}}
-{{--        } else {--}}
-{{--          clearValidationErrors(); // Clear validation errors when no warning is needed--}}
-{{--          $('#addPropertyModal').modal('hide');--}}
-{{--        }--}}
-{{--      });--}}
-{{--    });--}}
-{{--  });--}}
-{{--</script>--}}
+              $('#addPropertyModal').modal('hide');
+            } else {
+              Swal.close();
+            }
+          });
+        } else {
+          clearValidationErrors();
+          $('#addPropertyModal').modal('hide');
+        }
+      });
+    });
+  });
+</script>
