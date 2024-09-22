@@ -58,7 +58,14 @@ class PropertyParentController extends Controller
 
             'acquiredType.required' => 'Please choose a acquisition type!',
 
+            'acquiredDate.required' => 'Please choose date acquired!',
+            'acquiredDate.before_or_equal' => 'The acquired date cannot be later than today.',
+            'acquiredDate.after_or_equal' => 'The acquired date must be on or after January 1, 2007.',
+
             'condition.required' => 'Please choose a condition!',
+
+            'warranty.after_or_equal' => 'The warranty date must be today or a future date.',
+            'warranty.before_or_equal' => 'The warranty date cannot be later than December 31, 2100.'
         ];
         try {
             $propertyValidator = Validator::make($request->all(), [
@@ -91,7 +98,16 @@ class PropertyParentController extends Controller
                     'required'
                 ],
                 'acquiredDate' => [
-                    'required'
+                    'required',
+                    'date',
+                    'after_or_equal:2007-01-01',
+                    'before_or_equal:today'
+                ],
+                'warranty' => [
+                    'nullable',
+                    'date',
+                    'after_or_equal:today',
+                    'before_or_equal:2100-12-31'
                 ],
                 'condition' => [
                     'required'
@@ -156,7 +172,7 @@ class PropertyParentController extends Controller
                             'desig_id' => 1,
                             'condi_id' => 1,
                         ]);
-                    } catch (\Exception $e) {
+                    } catch (\Exception) {
                         return response()->json([
                             'success' => false,
                             'title' => 'Oops! Something went wrong.',
