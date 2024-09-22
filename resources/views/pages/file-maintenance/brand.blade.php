@@ -153,7 +153,7 @@
                 <i class="bi-filter me-1"></i> Filter<span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="brandFilterCount"></span>
               </button>
 
-              <div class="dropdown-menu dropdown-menu-sm-end dropdown-card card-dropdown-filter-centered" aria-labelledby="brandFilterDropdown"
+              <div class="dropdown-menu dropdown-menu-sm-end dropdown-card card-dropdown-filter-centered w-100" aria-labelledby="brandFilterDropdown"
                 style="min-width: 22rem;">
                 <div class="card">
                   <div class="card-header card-header-content-between">
@@ -162,6 +162,34 @@
                   </div>
 
                   <div class="card-body">
+                    <!-- Subcategories Filter -->
+                    <div class="mb-4">
+                      <small class="text-cap text-body">Subcategories</small>
+                      <div class="row">
+                        <div class="col">
+                          <div class="tom-select-custom">
+                            <select class="js-select js-datatable-filter form-select form-select-sm" data-target-column-index="3"
+                              data-hs-tom-select-options='{
+                                "allowEmptyOption": true,
+                                "placeholder": "All Subcategories",
+                                "hideSearch": true,
+                                "dropdownWidth": "100%"
+                              }'>
+                              <option value="">All Subcategories</option>
+                              @foreach ($categories as $category)
+                                <optgroup label="{{ $category->name }}">
+                                  @foreach ($category->subcategories as $subcategory)
+                                    <option value="{{ $subcategory->name }}">{{ $subcategory->name }}</option>
+                                  @endforeach
+                                </optgroup>
+                              @endforeach
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- End Subcategories Filter -->
+
                     <!-- Active and Inactive Filter -->
                     <div class="mb-4">
                       <small class="text-cap text-body">Status</small>
@@ -229,7 +257,7 @@
                 </th>
                 <th class="d-none w-auto">Brand Id</th>
                 <th class="w-auto">Brand Name</th>
-                <th class="w-auto">Description</th>
+                <th class="w-auto">Brand Subcategories</th>
                 <th class="w-auto">Date Updated</th>
                 <th class="w-auto">Status</th>
                 <th class="w-auto">Action</th>
@@ -248,9 +276,11 @@
                   <td class="d-none" data-brand-id="{{ Crypt::encryptString($brand->id) }}"></td>
                   <td><a class="d-block h5 mb-0 btnViewBrand">{{ $brand->name }}</a></td>
                   <td>
-                    @foreach ($brand->subcategories as $subcategory)
-                      {{ $subcategory->name }}{{ !$loop->last ? ', ' : '' }}
-                    @endforeach
+                    @php
+                      $subcategoryNames = $brand->subcategories->sortBy('name')->pluck('name')->implode(', ');
+                      $truncatedSubcategories = Str::limit($subcategoryNames, 50, '...');
+                    @endphp
+                    {{ $truncatedSubcategories }}
                   </td>
                   <td data-order="{{ $brand->updated_at }}">
                     <span><i class="bi-calendar-event me-1"></i> Updated {{ $brand->updated_at->diffForHumans() }}</span>
@@ -350,9 +380,9 @@
 @endsection
 
 @section('sub-content')
-  <x-file-maintenance.add-brand />
+  <x-file-maintenance.add-brand :categories="$categories" />
   <x-file-maintenance.view-brand />
-  <x-file-maintenance.edit-brand />
+  <x-file-maintenance.edit-brand :categories="$categories" />
 @endsection
 
 @section('scripts')

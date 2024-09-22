@@ -84,7 +84,6 @@ class DepartmentController extends Controller
             } else {
                 Department::query()->create([
                     'name' => $this->formatInput($request->input('department')),
-                    'dept_code' => strtoupper(trim($request->input('deptcode'))),
                     'is_active' => 1,
                 ]);
 

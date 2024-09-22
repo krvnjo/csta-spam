@@ -21,7 +21,7 @@ class Brand extends Model
 
     public function subcategories(): BelongsToMany
     {
-        return $this->belongsToMany(Subcategory::class, 'brand_category', 'brand_id', 'subcateg_id');
+        return $this->belongsToMany(Subcategory::class, 'brand_subcategory', 'brand_id', 'subcateg_id');
     }
 
     public function property_parents(): HasMany

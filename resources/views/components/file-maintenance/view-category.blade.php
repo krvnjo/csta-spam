@@ -1,10 +1,10 @@
-<!-- View Brand Modal -->
-<div class="modal fade" id="modalViewBrand" role="dialog" tabindex="-1">
+<!-- View Category Modal -->
+<div class="modal fade" id="modalViewCategory" role="dialog" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <!-- Header -->
       <div class="modal-header">
-        <h4 class="modal-title">View Brand</h4>
+        <h4 class="modal-title">View Category</h4>
         <button class="btn-close" data-bs-dismiss="modal" type="button"></button>
       </div>
       <!-- End Header -->
@@ -14,10 +14,10 @@
         <div class="col">
           <div class="row mb-4">
             <div class="col-5 d-flex align-items-center">
-              <p class="form-label fw-semibold mb-0">Brand Name:</p>
+              <p class="form-label fw-semibold mb-0">Category Name:</p>
             </div>
             <div class="col-7 d-flex align-items-center">
-              <p class="mb-0" id="lblViewBrand"></p>
+              <p class="mb-0" id="lblViewCategory"></p>
             </div>
           </div>
 
@@ -79,4 +79,4 @@
     </div>
   </div>
 </div>
-<!-- End View Brand Modal -->
+<!-- End View Category Modal -->

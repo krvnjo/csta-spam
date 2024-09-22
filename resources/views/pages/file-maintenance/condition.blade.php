@@ -154,8 +154,8 @@
                 <i class="bi-filter me-1"></i> Filter<span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="conditionFilterCount"></span>
               </button>
 
-              <div class="dropdown-menu dropdown-menu-sm-end dropdown-card card-dropdown-filter-centered" aria-labelledby="conditionFilterDropdown"
-                style="min-width: 22rem;">
+              <div class="dropdown-menu dropdown-menu-sm-end dropdown-card card-dropdown-filter-centered w-100"
+                aria-labelledby="conditionFilterDropdown" style="min-width: 22rem;">
                 <div class="card">
                   <div class="card-header card-header-content-between">
                     <h5 class="card-header-title">Condition Filters</h5>

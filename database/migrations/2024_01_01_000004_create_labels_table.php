@@ -46,11 +46,10 @@ return new class extends Migration {
             $table->softDeletes();
         });
 
-        Schema::create('brand_category', function (Blueprint $table) {
+        Schema::create('brand_subcategory', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Brand::class, 'brand_id')->constrained('brands')->cascadeOnDelete();
             $table->foreignIdFor(Subcategory::class, 'subcateg_id')->constrained('subcategories')->cascadeOnDelete();
-            $table->timestamps();
         });
     }
 

@@ -27896,7 +27896,10 @@ a:hover .text-inherit {
 }
 .tom-select-custom .ts-dropdown .optgroup-header {
   font-weight: 700;
-  color: #000;
+  color: #fff;
+}
+.ts-dropdown .optgroup-header {
+  background: #25282a;
 }
 .tom-select-custom .ts-dropdown .optgroup:before {
   display: none;

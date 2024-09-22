@@ -27908,6 +27908,9 @@ a:hover .text-inherit {
   font-weight: 700;
   color: #000;
 }
+.ts-dropdown .optgroup-header {
+  background: #fff;
+}
 .tom-select-custom .ts-dropdown .optgroup:before {
   display: none;
 }

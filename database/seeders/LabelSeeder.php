@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Acquisition;
 use App\Models\Brand;
+use App\Models\BrandSubcategory;
 use App\Models\Category;
 use App\Models\Subcategory;
 use Illuminate\Database\Seeder;
@@ -46,7 +47,7 @@ class LabelSeeder extends Seeder
         $categories = [
             'Electronics',
             'Furniture',
-            'Tools & Equipment',
+            'Tools and Equipment',
             'Materials',
             'Supplies'
         ];
@@ -63,11 +64,12 @@ class LabelSeeder extends Seeder
             'Keyboard' => '1',
             'Mouse' => '1',
             'TV' => '1',
+            'Air Conditioner' => '1',
+            'Cables' => '1',
             'Table' => '2',
             'Chair' => '2',
             'Desks' => '2',
-            'Bench' => '2',
-            'Air Conditioner' => '2'
+            'Bench' => '2'
         ];
 
         foreach ($subcategories as $subcategory => $categId) {
@@ -76,6 +78,22 @@ class LabelSeeder extends Seeder
                 'categ_id' => $categId,
                 'is_active' => 1
             ]);
+        }
+
+        $brandSubcategories = [
+            ['brand_id' => 6, 'subcateg_id' => 1],
+            ['brand_id' => 6, 'subcateg_id' => 4],
+            ['brand_id' => 6, 'subcateg_id' => 9],
+            ['brand_id' => 2, 'subcateg_id' => 2],
+            ['brand_id' => 2, 'subcateg_id' => 3],
+            ['brand_id' => 1, 'subcateg_id' => 10],
+            ['brand_id' => 3, 'subcateg_id' => 9],
+            ['brand_id' => 4, 'subcateg_id' => 1],
+            ['brand_id' => 5, 'subcateg_id' => 4],
+        ];
+
+        foreach ($brandSubcategories as $brandSubcategory) {
+            BrandSubcategory::query()->insert($brandSubcategory);
         }
     }
 }
