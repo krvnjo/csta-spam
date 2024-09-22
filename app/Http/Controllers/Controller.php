@@ -11,8 +11,8 @@ abstract class Controller
     {
         $words = explode(' ', $input);
 
-        $formattedWords = array_map(function($word) {
-            $preserveWords = ['CSTA', 'STSN', 'IT', 'HM', 'TM', 'EDUC', 'HMTM', 'GYM', 'of', 'is', 'from', 'as'];
+        $formattedWords = array_map(function ($word) {
+            $preserveWords = ['CSTA', 'STSN', 'IT', 'HM', 'TM', 'EDUC', 'HMTM', 'GYM', 'of', 'is', 'from', 'as', 'with', 'and', 'or'];
             if (in_array(strtoupper($word), array_map('strtoupper', $preserveWords))) {
                 foreach ($preserveWords as $preserveWord) {
                     if (strcasecmp($word, $preserveWord) == 0) {

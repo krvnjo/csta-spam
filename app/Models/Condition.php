@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -10,19 +9,23 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Condition extends Model
 {
-    use HasFactory, SoftDeletes;
+    use SoftDeletes;
 
     protected $table = 'conditions';
 
     protected $fillable = [
-        'name'
+        'name',
+        'description',
+        'is_active',
     ];
 
-    public function property(): BelongsTo {
+    public function property(): BelongsTo
+    {
         return $this->belongsTo(PropertyParent::class);
     }
 
-    public function propertyChildren(): HasMany {
-        return $this->hasMany(PropertyChild::class,'condi_id');
+    public function propertyChildren(): HasMany
+    {
+        return $this->hasMany(PropertyChild::class, 'condi_id');
     }
 }

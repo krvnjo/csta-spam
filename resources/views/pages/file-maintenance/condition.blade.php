@@ -26,32 +26,27 @@
           <div class="col-sm mb-2 mb-sm-0">
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb breadcrumb-no-gutter">
-                <li class="breadcrumb-item"><a class="breadcrumb-link" href="/">Home</a></li>
+                <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ route('dashboard.index') }}">Home</a></li>
                 <li class="breadcrumb-item"><a class="breadcrumb-link">File Maintenance</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Conditions</li>
+                <li class="breadcrumb-item active">Conditions</li>
               </ol>
             </nav>
-
             <h1 class="page-header-title mt-2">Conditions</h1>
           </div>
-          <!-- End Col -->
 
           <div class="col-sm-auto mt-sm-0 mt-3">
             <div class="d-grid gap-2 d-sm-flex justify-content-sm-end">
-              <button class="btn btn-primary w-100 w-sm-auto" data-bs-toggle="modal" data-bs-target="#addConditionModal">
-                <i class="bi-plus me-1"></i> Add a Condition
+              <button class="btn btn-primary w-100 w-sm-auto" data-bs-toggle="modal" data-bs-target="#modalAddCondition">
+                <i class="bi-plus me-1"></i> Add Condition
               </button>
             </div>
           </div>
-          <!-- End Col -->
         </div>
-        <!-- End Row -->
       </div>
       <!-- End Page Header -->
 
-      <!-- Card -->
+      <!-- Active and Inactive Conditions Card -->
       <div class="card mb-3 mb-lg-5">
-        <!-- Body -->
         <div class="card-body">
           <div class="d-flex flex-column flex-md-row align-items-md-center text-md-start text-center">
             <div class="flex-shrink-0">
@@ -63,16 +58,15 @@
                 <div class="col-12 col-md">
                   <span class="d-block">Total Conditions</span>
                   <span class="badge bg-soft-primary text-primary rounded-pill p-1">
-                    @if ($inactiveConditions == 0)
-                      <i class="bi-hand-thumbs-up-fill"></i> All good!
-                    @elseif($inactiveConditions == 1)
-                      <i class="bi-arrow-clockwise"></i> 1 record can be restored
+                    @if ($deletedConditions == 0)
+                      <i class="bi-hand-thumbs-up-fill"></i> Everything looks great!
+                    @elseif ($deletedConditions == 1)
+                      <i class="bi-arrow-counterclockwise"></i>{{ $deletedConditions }} record can be restored from bin.
                     @else
-                      <i class="bi-arrow-clockwise"></i> {{ $inactiveConditions }} records can be restored
+                      <i class="bi-arrow-counterclockwise"></i>{{ $deletedConditions }} records can be restored from bin.
                     @endif
                   </span>
                 </div>
-                <!-- End Col -->
 
                 <div class="col-12 col-md-9 mt-3 mt-md-0">
                   <div class="d-flex justify-content-center justify-content-md-start mb-2">
@@ -80,231 +74,222 @@
                       <span class="legend-indicator bg-success"></span>
                       Active ({{ $activeConditions }})
                     </div>
-
                     <div>
                       <span class="legend-indicator bg-danger"></span>
                       Inactive ({{ $inactiveConditions }})
                     </div>
                   </div>
 
-                  <!-- Progress -->
                   <div class="progress rounded-pill">
-                    <div class="progress-bar bg-success" role="progressbar" aria-valuemax="100" aria-valuemin="0"
-                      aria-valuenow="{{ $activePercentage }}" style="width: {{ $activePercentage }}%"></div>
-                    <div class="progress-bar bg-danger" role="progressbar" aria-valuemax="100" aria-valuemin="0"
-                      aria-valuenow="{{ $inactivePercentage }}" style="width: {{ $inactivePercentage }}%"></div>
+                    <div class="progress-bar bg-success" style="width: {{ $activePercentage }}%"></div>
+                    <div class="progress-bar bg-danger" style="width: {{ $inactivePercentage }}%"></div>
                   </div>
-                  <!-- End Progress -->
                 </div>
-                <!-- End Col -->
               </div>
-              <!-- End Row -->
             </div>
           </div>
         </div>
-        <!-- End Body -->
       </div>
-      <!-- End Card -->
+      <!-- End Active and Inactive Conditions Card -->
 
-      <!-- Card -->
+      <!-- Datatable Card -->
       <div class="card">
         <!-- Header -->
         <div class="card-header card-header-content-md-between">
           <div class="mb-2 mb-md-0">
+            <!-- Datatable Search -->
             <div class="input-group input-group-merge input-group-flush">
-              <div class="input-group-prepend input-group-text">
-                <i class="bi-search"></i>
-              </div>
-              <input class="form-control" id="conditionDatatableSearch" type="search" aria-label="Search" placeholder="Search">
+              <div class="input-group-prepend input-group-text"><i class="bi-search"></i></div>
+              <input class="form-control" id="conditionsDatatableSearch" type="search" placeholder="Search">
             </div>
+            <!-- End Datatable Search -->
           </div>
 
           <div class="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
-            <!-- Datatable Info -->
-            <div id="conditionDatatableCounterInfo" style="display: none;">
+            <!-- Datatable Counter -->
+            <div id="conditionsDatatableCounterInfo" style="display: none;">
               <div class="d-flex align-items-center">
-                <span class="fs-5 me-3">
-                  <span id="conditionDatatableCounter">0</span>
-                  Selected
-                </span>
-                <a class="btn btn-outline-danger btn-sm" href="#">
-                  <i class="bi-trash"></i> Delete
-                </a>
+                <span class="fs-5 me-3"><span id="conditionsDatatableCounter"></span> Selected</span>
+                <button class="btn btn-outline-danger btn-sm" id="btnMultiDeleteCondition" type="button"><i class="bi-trash3-fill"></i>
+                  Delete</button>
               </div>
             </div>
-            <!-- End Datatable Info -->
+            <!-- End Datatable Counter -->
 
-            <!-- Dropdown -->
+            <!-- Export Options Dropdown -->
             <div class="dropdown">
               <button class="btn btn-white btn-sm dropdown-toggle w-100" id="conditionExportDropdown" data-bs-toggle="dropdown" type="button"
-                aria-expanded="false">
-                <i class="bi-download me-2"></i> Export
+                aria-expanded="false"><i class="bi-download me-2"></i> Export
               </button>
 
               <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="conditionExportDropdown">
                 <span class="dropdown-header">Options</span>
-                <a class="dropdown-item" id="export-copy" href="#">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/copy-icon.svg') }}"
-                    alt="Image Description">
+                <button class="dropdown-item" id="export-copy" type="button">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/copy-icon.svg') }}" alt="Copy Icon">
                   Copy
-                </a>
-                <a class="dropdown-item" id="export-print" href="#">
+                </button>
+                <button class="dropdown-item" id="export-print" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/print-icon.svg') }}"
-                    alt="Image Description">
-                  Print
-                </a>
+                    alt="Print Icon"> Print
+                </button>
+
                 <div class="dropdown-divider"></div>
+
                 <span class="dropdown-header">Download options</span>
-                <a class="dropdown-item" id="export-excel" href="#">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/excel-icon.svg') }}"
-                    alt="Image Description">
+                <button class="dropdown-item" id="export-excel" type="button">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/excel-icon.svg') }}" alt="Excel Icon">
                   Excel
-                </a>
-                <a class="dropdown-item" id="export-csv" href="#">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/components/placeholder-csv-format.svg') }}"
-                    alt="Image Description">
-                  .CSV
-                </a>
-                <a class="dropdown-item" id="export-pdf" href="#">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/pdf-icon.svg') }}"
-                    alt="Image Description">
-                  PDF
-                </a>
+                </button>
+                <button class="dropdown-item" id="export-pdf" type="button">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/pdf-icon.svg') }}" alt="PDF Icon"> PDF
+                </button>
               </div>
             </div>
-            <!-- End Dropdown -->
+            <!-- End Export Options Dropdown -->
 
-            <!-- Dropdown -->
+            <!-- Datatable Filter Dropdown -->
             <div class="dropdown">
               <button class="btn btn-white btn-sm w-100" id="conditionFilterDropdown" data-bs-toggle="dropdown" type="button"
                 aria-expanded="false">
-                <i class="bi-filter me-1"></i> Filter <span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="filterCountBadge"></span>
+                <i class="bi-filter me-1"></i> Filter<span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="conditionFilterCount"></span>
               </button>
 
-              <div class="dropdown-menu dropdown-menu-sm-end dropdown-card card-dropdown-filter-centered" aria-labelledby="conditionFilterDropdown"
-                style="min-width: 22rem;">
-                <!-- Card -->
+              <div class="dropdown-menu dropdown-menu-sm-end dropdown-card card-dropdown-filter-centered w-100"
+                aria-labelledby="conditionFilterDropdown" style="min-width: 22rem;">
                 <div class="card">
                   <div class="card-header card-header-content-between">
                     <h5 class="card-header-title">Condition Filters</h5>
-
-                    <button class="btn btn-ghost-secondary btn-icon btn-sm ms-2" type="button">
-                      <i class="bi-x-lg"></i>
-                    </button>
+                    <button class="btn btn-ghost-secondary btn-icon btn-sm ms-2" type="button"><i class="bi-x-lg"></i></button>
                   </div>
 
                   <div class="card-body">
+                    <!-- Active and Inactive Filter -->
                     <div class="mb-4">
                       <small class="text-cap text-body">Status</small>
-
                       <div class="row">
                         <div class="col">
-                          <!-- Select -->
                           <div class="tom-select-custom">
-                            <select class="js-select js-datatable-filter form-select form-select-sm" data-target-column-index="3"
+                            <select class="js-select js-datatable-filter form-select form-select-sm" data-target-column-index="5"
                               data-hs-tom-select-options='{
+                                "allowEmptyOption": true,
                                 "placeholder": "All Status",
                                 "hideSearch": true,
                                 "dropdownWidth": "100%"
                               }'>
-                              <option value=""></option>
+                              <option value="">All Status</option>
                               <option
                                 data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-success"></span>Active</span>'
                                 value="Active">
-                                Active
                               </option>
                               <option
                                 data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-danger"></span>Inactive</span>'
                                 value="Inactive">
-                                Inactive
                               </option>
                             </select>
-                            <!-- End Select -->
                           </div>
                         </div>
                       </div>
                     </div>
+                    <!-- End Active and Inactive Filter -->
                   </div>
                 </div>
-                <!-- End Card -->
               </div>
             </div>
-            <!-- End Dropdown -->
+            <!-- End Datatable Filter Dropdown -->
           </div>
         </div>
         <!-- End Header -->
 
-        <!-- Table -->
+        <!-- Conditions Datatable -->
         <div class="table-responsive datatable-custom">
-          <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table"
-            id="conditionDatatable"
+          <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100"
+            id="conditionsDatatable"
             data-hs-datatables-options='{
               "columnDefs": [{
-                 "targets": [0, 5],
+                 "targets": [0, 6],
                  "orderable": false
                }],
-              "order": [1, "asc"],
+              "order": [4, "desc"],
               "info": {
-                "totalQty": "#conditionDatatableWithPagination"
+                "totalQty": "#conditionsDatatableWithPagination"
               },
-              "search": "#conditionDatatableSearch",
-              "entries": "#conditionDatatableEntries",
+              "search": "#conditionsDatatableSearch",
+              "entries": "#conditionsDatatableEntries",
               "pageLength": 5,
               "isResponsive": false,
               "isShowPaging": false,
-              "pagination": "conditionDatatablePagination"
+              "pagination": "conditionsDatatablePagination"
             }'>
             <thead class="thead-light">
               <tr>
-                <th class="table-column-pe-0">
+                <th class="table-column-pe-0 w-auto">
                   <div class="form-check">
-                    <input class="form-check-input" id="conditionDatatableCheckAll" type="checkbox" value="">
-                    <label class="form-check-label" for="conditionDatatableCheckAll"></label>
+                    <input class="form-check-input" id="conditionsDatatableCheckAll" type="checkbox">
+                    <label class="form-check-label" for="conditionsDatatableCheckAll"></label>
                   </div>
                 </th>
-                <th>Condition Name</th>
-                <th>Description</th>
-                <th style="width: 15%">Date Created</th>
-                <th style="width: 12%">Status</th>
-                <th style="width: 15%">Action</th>
+                <th class="d-none w-auto">Condition Id</th>
+                <th class="w-auto">Condition Name</th>
+                <th class="w-auto">Description</th>
+                <th class="w-auto">Date Updated</th>
+                <th class="w-auto">Status</th>
+                <th class="w-auto">Action</th>
               </tr>
             </thead>
 
             <tbody>
-              @foreach ($conditions as $condition)
+              @foreach ($conditions as $index => $condition)
                 <tr>
                   <td class="table-column-pe-0">
                     <div class="form-check">
-                      <input class="form-check-input" id="conditionCheck" type="checkbox" value="">
-                      <label class="form-check-label" for="conditionCheck"></label>
+                      <input class="form-check-input" id="conditionCheck{{ $index + 1 }}" type="checkbox">
+                      <label class="form-check-label" for="conditionCheck{{ $index + 1 }}"></label>
                     </div>
                   </td>
-                  <td><span class="d-block h5 mb-0">{{ $condition->name }}</span></td>
-                  <td>{{ $condition->description }}</td>
-                  <td><i class="bi-calendar-event me-1"></i> {{ $condition->created_at->format('M d, Y') }}</td>
+                  <td class="d-none" data-condition-id="{{ Crypt::encryptString($condition->id) }}"></td>
+                  <td><a class="d-block h5 mb-0 btnViewCondition">{{ $condition->name }}</a></td>
+                  <td>{{ \Illuminate\Support\Str::limit($condition->description, 50, '...') }}</td>
+                  <td data-order="{{ $condition->updated_at }}">
+                    <span><i class="bi-calendar-event me-1"></i> Updated {{ $condition->updated_at->diffForHumans() }}</span>
+                  </td>
                   <td>
                     @if ($condition->is_active)
-                      <span class="legend-indicator bg-success"></span> Active
+                      <span class="badge bg-soft-success text-success">
+                        <span class="legend-indicator bg-success"></span>Active
+                      </span>
                     @else
-                      <span class="legend-indicator bg-danger"></span> Inactive
+                      <span class="badge bg-soft-danger text-danger">
+                        <span class="legend-indicator bg-danger"></span>Inactive
+                      </span>
                     @endif
                   </td>
                   <td>
-                    <div class="dropdown position-static">
-                      <button class="btn btn-white btn-sm" id="conditionDropdownActions" data-bs-toggle="dropdown" type="button"
-                        aria-expanded="false">
-                        More <i class="bi-chevron-down ms-1"></i>
+                    <div class="btn-group" role="group">
+                      <button class="btn btn-white btn-sm btnViewCondition" type="button">
+                        <i class="bi-eye"></i> View
                       </button>
 
-                      <div class="dropdown-menu dropdown-menu-sm dropdown-menu-end" aria-labelledby="conditionDropdownActions">
-                        <button class="dropdown-item" type="button" href="#"><i class="bi-pencil-square me-2"></i> Edit Record</button>
-                        @if ($condition->is_active)
-                          <button class="dropdown-item" type="button" href="#"><i class="bi-x-circle me-2"></i> Set to Inactive</button>
-                        @else
-                          <button class="dropdown-item" type="button" href="#"><i class="bi-check-circle me-2"></i> Set to Active</button>
-                        @endif
-                        <div class="dropdown-divider"></div>
-                        <button class="dropdown-item text-danger" type="button" href="#"><i class="bi-trash me-2"></i> Delete</button>
+                      <div class="btn-group">
+                        <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="conditionActionDropdown"
+                          data-bs-toggle="dropdown" type="button" aria-expanded="false"></button>
+                        <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="conditionActionDropdown">
+                          <button class="dropdown-item btnEditCondition" type="button">
+                            <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
+                          </button>
+                          @if ($condition->is_active)
+                            <button class="dropdown-item btnStatusCondition" data-status="0" type="button">
+                              <i class="bi-x-circle-fill dropdown-item-icon text-danger fs-7"></i> Set to Inactive
+                            </button>
+                          @else
+                            <button class="dropdown-item btnStatusCondition" data-status="1" type="button">
+                              <i class="bi-check-circle-fill dropdown-item-icon text-success"></i> Set to Active
+                            </button>
+                          @endif
+                          <div class="dropdown-divider"></div>
+                          <button class="dropdown-item text-danger btnDeleteCondition" type="button">
+                            <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </td>
@@ -313,7 +298,7 @@
             </tbody>
           </table>
         </div>
-        <!-- End Table -->
+        <!-- End Condition Table -->
 
         <!-- Footer -->
         <div class="card-footer">
@@ -322,9 +307,8 @@
               <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
                 <span class="me-2">Showing:</span>
 
-                <!-- Select -->
                 <div class="tom-select-custom tom-page-w">
-                  <select class="js-select form-select form-select-borderless" id="conditionDatatableEntries"
+                  <select class="js-select form-select form-select-borderless" id="conditionsDatatableEntries"
                     data-hs-tom-select-options='{
                       "searchInDropdown": false,
                       "hideSearch": true
@@ -332,33 +316,27 @@
                     autocomplete="off">
                     <option value="5" selected>5</option>
                     <option value="10">10</option>
-                    <option value="15">15</option>
                     <option value="20">20</option>
+                    <option value="{{ $totalConditions }}">All</option>
                   </select>
                 </div>
-                <!-- End Select -->
 
                 <span class="text-secondary me-2">of</span>
-
-                <!-- Pagination Quantity -->
-                <span id="conditionDatatableWithPagination"></span>
+                <span id="conditionsDatatableWithPagination"></span>
+                <span class="text-secondary ms-2">records</span>
               </div>
             </div>
-            <!-- End Col -->
 
             <div class="col-sm-auto">
               <div class="d-flex justify-content-center justify-content-sm-end">
-                <!-- Pagination -->
-                <nav id="conditionDatatablePagination" aria-label="Activity pagination"></nav>
+                <nav id="conditionsDatatablePagination" aria-label="Activity pagination"></nav>
               </div>
             </div>
-            <!-- End Col -->
           </div>
-          <!-- End Row -->
         </div>
         <!-- End Footer -->
       </div>
-      <!-- End Card -->
+      <!-- End Datatable Card -->
     </div>
     <!-- End Content -->
   </main>
@@ -369,12 +347,15 @@
 @endsection
 
 @section('sub-content')
-  {{-- No Secondary Content --}}
+  <x-file-maintenance.add-condition />
+  <x-file-maintenance.view-condition />
+  <x-file-maintenance.edit-condition />
 @endsection
 
 @section('scripts')
   <!-- JS Other Plugins -->
   <script src="{{ Vite::asset('resources/vendor/tom-select/dist/js/tom-select.complete.min.js') }}"></script>
+  <script src="{{ Vite::asset('resources/vendor/hs-count-characters/dist/js/hs-count-characters.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables/media/js/jquery.dataTables.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables.net.extensions/select/select.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
@@ -386,105 +367,81 @@
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
 
+  <!-- JS Modules -->
+  <script src="{{ Vite::asset('resources/js/modules/file-maintenance/condition-crud.js') }}"></script>
+
   <!-- JS Themes -->
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>
 
   <!-- JS Plugins Init. -->
   <script>
     // Initialization of Datatables
-    $(document).on('ready', function() {
-      HSCore.components.HSDatatables.init($('#conditionDatatable'), {
-        dom: 'Bfrtip',
+    $(document).on("ready", function() {
+      HSCore.components.HSDatatables.init($("#conditionsDatatable"), {
+        dom: "Bfrtip",
         buttons: [{
-            extend: 'copy',
-            className: 'd-none'
+            extend: "copy",
+            className: "d-none"
           },
           {
-            extend: 'excel',
-            className: 'd-none'
+            extend: "excel",
+            className: "d-none"
           },
           {
-            extend: 'csv',
-            className: 'd-none'
+            extend: "pdf",
+            className: "d-none"
           },
           {
-            extend: 'pdf',
-            className: 'd-none'
-          },
-          {
-            extend: 'print',
-            className: 'd-none'
-          },
+            extend: "print",
+            className: "d-none"
+          }
         ],
         select: {
-          style: 'multi',
-          selector: 'td:first-child input[type="checkbox"]',
+          style: "multi",
+          selector: "td:first-child input[type=\"checkbox\"]",
           classMap: {
-            checkAll: '#conditionDatatableCheckAll',
-            counter: '#conditionDatatableCounter',
-            counterInfo: '#conditionDatatableCounterInfo'
+            checkAll: "#conditionsDatatableCheckAll",
+            counter: "#conditionsDatatableCounter",
+            counterInfo: "#conditionsDatatableCounterInfo"
           }
         },
         language: {
           zeroRecords: `<div class="text-center p-4">
-              <img class="mb-3" src="{{ Vite::asset('resources/svg/illustrations/oc-error.svg') }}" alt="No Record to Show" style="width: 10rem;" data-hs-theme-appearance="default">
-              <img class="mb-3" src="{{ Vite::asset('resources/svg/illustrations-light/oc-error.svg') }}" alt="No Record to Show" style="width: 10rem;" data-hs-theme-appearance="dark">
-            <p class="mb-0">No data to show</p>
+              <img class="mb-3" src="{{ Vite::asset('resources/svg/illustrations/oc-error.svg') }}" alt="No records to display." style="width: 10rem;" data-hs-theme-appearance="default">
+              <img class="mb-3" src="{{ Vite::asset('resources/svg/illustrations-light/oc-error.svg') }}" alt="No records to display." style="width: 10rem;" data-hs-theme-appearance="dark">
+            <p class="mb-0">No records to display.</p>
             </div>`
         }
       });
 
-      const datatable = HSCore.components.HSDatatables.getItem(0)
+      const datatable = HSCore.components.HSDatatables.getItem(0);
 
-      $('#export-copy').click(function() {
-        datatable.button('.buttons-copy').trigger()
+      $("#export-copy").click(function() {
+        datatable.button(".buttons-copy").trigger();
       });
 
-      $('#export-excel').click(function() {
-        datatable.button('.buttons-excel').trigger()
+      $("#export-excel").click(function() {
+        datatable.button(".buttons-excel").trigger();
       });
 
-      $('#export-csv').click(function() {
-        datatable.button('.buttons-csv').trigger()
+      $("#export-pdf").click(function() {
+        datatable.button(".buttons-pdf").trigger();
       });
 
-      $('#export-pdf').click(function() {
-        datatable.button('.buttons-pdf').trigger()
+      $("#export-print").click(function() {
+        datatable.button(".buttons-print").trigger();
       });
 
-      $('#export-print').click(function() {
-        datatable.button('.buttons-print').trigger()
-      });
+      $(".js-datatable-filter").on("change", function() {
+        let $this = $(this);
+        let elVal = $this.val() === "null" ? "" : $this.val();
+        let targetColumnIndex = $this.data("target-column-index");
 
-      $('.js-datatable-filter').on('change', function() {
-        const $this = $(this),
-          elVal = $this.val(),
-          targetColumnIndex = $this.data("target-column-index");
+        elVal = elVal.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-          const cellContent = $(datatable.cell(dataIndex, targetColumnIndex).node()).text().trim();
-          return elVal === '' || cellContent === elVal;
-        });
+        datatable.column(targetColumnIndex).search(elVal, true, false, false).draw();
 
-        datatable.draw();
-        $.fn.dataTable.ext.search.pop();
-
-        // Update the filter count badge
-        let selectedFilterCount = 0;
-
-        // Loop through all filter selects
-        $('.js-datatable-filter').each(function() {
-          if ($(this).val() !== "") {
-            selectedFilterCount++;
-          }
-        });
-
-        const $badge = $('#filterCountBadge');
-        if (selectedFilterCount > 0) {
-          $badge.text(selectedFilterCount).show();
-        } else {
-          $badge.hide();
-        }
+        updateFilterCountBadge($("#conditionFilterCount"));
       });
     });
 
@@ -493,30 +450,23 @@
       window.onload = function() {
         // INITIALIZATION OF NAVBAR VERTICAL ASIDE
         // =======================================================
-        new HSSideNav('.js-navbar-vertical-aside').init()
-
-
-        // INITIALIZATION OF NAV SCROLLER
-        // =======================================================
-        new HsNavScroller('.js-nav-scroller', {
-          delay: 400
-        })
+        new HSSideNav(".js-navbar-vertical-aside").init();
 
 
         // INITIALIZATION OF FORM SEARCH
         // =======================================================
-        new HSFormSearch('.js-form-search')
-
-
-        // INITIALIZATION OF BOOTSTRAP DROPDOWN
-        // =======================================================
-        HSBsDropdown.init()
+        new HSFormSearch(".js-form-search");
 
 
         // INITIALIZATION OF SELECT
         // =======================================================
-        HSCore.components.HSTomSelect.init('.js-select')
-      }
-    })()
+        HSCore.components.HSTomSelect.init(".js-select");
+
+
+        // INITIALIZATION OF COUNT CHARACTERS
+        // =======================================================
+        new HSCountCharacters('.js-count-characters')
+      };
+    })();
   </script>
 @endsection

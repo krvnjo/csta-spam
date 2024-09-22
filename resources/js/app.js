@@ -103,10 +103,24 @@ function handleUnsavedChanges(modal, form, saveButton) {
   function getFormValues() {
     let values = {};
     form.find(":input").each(function () {
+      const name = $(this).attr("name");
+
+      // Skip elements that are search bars or shouldn't be considered
+      if ($(this).hasClass("dropdown-input") || !name) {
+        return; // continue to next iteration
+      }
+
+      // For checkbox
       if ($(this).attr("type") === "checkbox") {
-        values[$(this).attr("name")] = $(this).is(":checked");
-      } else {
-        values[$(this).attr("name")] = $(this).val();
+        values[name] = $(this).is(":checked");
+      }
+      // For multiple select
+      else if ($(this).is("select[multiple]")) {
+        values[name] = $(this).val() || []; // If no values are selected, return an empty array
+      }
+      // For other inputs
+      else {
+        values[name] = $(this).val();
       }
     });
     return values;
@@ -114,14 +128,37 @@ function handleUnsavedChanges(modal, form, saveButton) {
 
   function hasChanges() {
     const currentFormValues = getFormValues();
+
     for (let key in initialFormValues) {
-      if (initialFormValues[key] !== currentFormValues[key]) {
+      const initialValue = initialFormValues[key];
+      const currentValue = currentFormValues[key];
+
+      // Handle array comparison for multiple selects
+      if (Array.isArray(initialValue) && Array.isArray(currentValue)) {
+        if (!arraysEqual(initialValue, currentValue)) {
+          saveButton.prop("disabled", false);
+          return true;
+        }
+      }
+      // Handle other input comparisons
+      else if (initialValue !== currentValue) {
         saveButton.prop("disabled", false);
         return true;
       }
     }
     saveButton.prop("disabled", true);
     return false;
+  }
+
+  // Function to compare two arrays for equality, ignoring order
+  function arraysEqual(arr1, arr2) {
+    if (arr1.length !== arr2.length) return false;
+    arr1 = arr1.sort(); // Sorting to ensure order doesn't affect comparison
+    arr2 = arr2.sort();
+    for (let i = 0; i < arr1.length; i++) {
+      if (arr1[i] !== arr2[i]) return false;
+    }
+    return true;
   }
 
   modal.on("show.bs.modal", function () {

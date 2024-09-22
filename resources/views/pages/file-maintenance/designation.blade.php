@@ -155,8 +155,8 @@
                   id="designationFilterCount"></span>
               </button>
 
-              <div class="dropdown-menu dropdown-menu-sm-end dropdown-card card-dropdown-filter-centered" aria-labelledby="designationFilterDropdown"
-                style="min-width: 22rem;">
+              <div class="dropdown-menu dropdown-menu-sm-end dropdown-card card-dropdown-filter-centered w-100"
+                aria-labelledby="designationFilterDropdown" style="min-width: 22rem;">
                 <div class="card">
                   <div class="card-header card-header-content-between">
                     <h5 class="card-header-title">Designation Filters</h5>

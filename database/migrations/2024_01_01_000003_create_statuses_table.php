@@ -13,24 +13,27 @@ return new class extends Migration {
     {
         Schema::create('colors', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 50)->unique();
-            $table->string('color_class', 100)->unique();
+            $table->string('name', 100)->unique();
+            $table->string('class', 100)->unique();
+            $table->unsignedTinyInteger('is_color')->default(1);
+            $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('conditions', function (Blueprint $table) {
             $table->id();
             $table->string('name', 100)->unique();
-            $table->text('description');
-            $table->unsignedTinyInteger('is_active')->default(1)->index();
+            $table->string('description', 100)->unique();
+            $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
             $table->softDeletes();
         });
 
         Schema::create('statuses', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 50)->unique();
-            $table->text('description');
+            $table->string('name', 100)->unique();
+            $table->string('description', 100)->unique();
             $table->foreignIdFor(Color::class, 'color_id')->constrained('colors')->cascadeOnDelete();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
@@ -40,6 +43,8 @@ return new class extends Migration {
         Schema::create('priorities', function (Blueprint $table) {
             $table->id();
             $table->string('name', 100)->unique();
+            $table->string('description', 100)->unique();
+            $table->foreignIdFor(Color::class, 'color_id')->constrained('colors')->cascadeOnDelete();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
             $table->softDeletes();
