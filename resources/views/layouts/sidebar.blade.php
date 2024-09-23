@@ -2,7 +2,7 @@
   <div class="navbar-vertical-container">
     <div class="navbar-vertical-footer-offset">
       <!-- Logo -->
-      <a class="navbar-brand" href="{{ route('dashboard.index') }}" aria-label="CSTA - SPAM Logo">
+      <a class="navbar-brand" data-route="dashboard.index" href="{{ route('dashboard.index') }}" aria-label="CSTA - SPAM Logo">
         <img class="navbar-brand-logo" data-hs-theme-appearance="default" src="{{ Vite::asset('resources/svg/logos/logo.svg') }}" alt="CSTA - SPAM Logo">
         <img class="navbar-brand-logo" data-hs-theme-appearance="dark" src="{{ Vite::asset('resources/svg/logos-light/logo.svg') }}"
           alt="CSTA - SPAM Logo">
@@ -29,7 +29,7 @@
         <div class="nav nav-pills nav-vertical card-navbar-nav" id="navbarVerticalMenu">
           <!-- Dashboard -->
           <div class="nav-item">
-            <a class="nav-link" data-placement="left" href="/">
+            <a class="nav-link" data-placement="left" data-route="dashboard.index" href="{{ route('dashboard.index') }}">
               <i class="bi-house-door nav-icon"></i>
               <span class="nav-link-title">Dashboard</span>
             </a>
@@ -100,8 +100,8 @@
             </a>
 
             <div class="nav-collapse collapse" id="navbarVerticalMenuUserManagement" data-bs-parent="#navbarVerticalMenu">
-              <a class="nav-link" href="{{ route('user.index') }}">Users</a>
-              <a class="nav-link" href="{{ route('role.index') }}">Roles</a>
+              <a class="nav-link" data-route="user.index" href="{{ route('user.index') }}">Users</a>
+              <a class="nav-link" data-route="role.index" href="{{ route('role.index') }}">Roles</a>
             </div>
           </div>
           <!-- End User Management -->

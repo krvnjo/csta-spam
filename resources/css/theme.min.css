@@ -28147,3 +28147,7 @@ a:hover .text-inherit {
 .modal .nav-segment {
   background-color: #f8fafd;
 }
+.shape > svg,
+.shape > svg > * {
+  fill: #fff;
+}

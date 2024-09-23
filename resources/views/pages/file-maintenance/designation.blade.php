@@ -26,7 +26,7 @@
           <div class="col-sm mb-2 mb-sm-0">
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb breadcrumb-no-gutter">
-                <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ route('dashboard.index') }}">Home</a></li>
+                <li class="breadcrumb-item"><a class="breadcrumb-link" data-route="dashboard.index" href="{{ route('dashboard.index') }}">Home</a></li>
                 <li class="breadcrumb-item"><a class="breadcrumb-link">File Maintenance</a></li>
                 <li class="breadcrumb-item active">Designations</li>
               </ol>
@@ -256,7 +256,7 @@
                 <th class="d-none w-auto">Designation Id</th>
                 <th class="w-auto">Designation Name</th>
                 <th class="w-auto">Main Department</th>
-                <th class="w-auto">Date Created</th>
+                <th class="w-auto">Date Updated</th>
                 <th class="w-auto">Status</th>
                 <th class="w-auto">Action</th>
               </tr>

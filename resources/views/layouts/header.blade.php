@@ -1,7 +1,7 @@
 <header class="navbar navbar-expand-lg navbar-fixed navbar-height navbar-container navbar-bordered bg-white" id="header">
   <div class="navbar-nav-wrap">
     <!-- Logo -->
-    <a class="navbar-brand" href="{{ route('dashboard.index') }}" aria-label="CSTA - SPAM">
+    <a class="navbar-brand" data-route="dashboard.index" href="{{ route('dashboard.index') }}" aria-label="CSTA - SPAM">
       <img class="navbar-brand-logo-mini d-block" data-hs-theme-appearance="default" src="{{ Vite::asset('resources/svg/logos/logo-short.svg') }}"
         alt="CSTA - SPAM Logo">
       <img class="navbar-brand-logo-mini d-block" data-hs-theme-appearance="dark" src="{{ Vite::asset('resources/svg/logos-light/logo-short.svg') }}"
@@ -348,7 +348,7 @@
               <div class="dropdown-divider"></div>
 
               <!-- Sign out -->
-              <a class="dropdown-item" href="#">Sign out</a>
+              <a class="dropdown-item" href="{{ route('auth.logout') }}">Sign out</a>
               <!-- End Sign out -->
             </div>
           </div>
