@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
@@ -23,7 +24,7 @@ Route::middleware('guest')->name('auth.')->controller(AuthController::class)->gr
 });
 
 // Logout Routes
-Route::middleware('auth')->name('auth.')->controller(AuthController::class)->group(function () {
+Route::middleware(['auth', 'nocache'])->name('auth.')->controller(AuthController::class)->group(function () {
     Route::post('/logout', 'logout')->name('logout');
 });
 
@@ -34,18 +35,28 @@ Route::middleware('auth')->name('auth.')->controller(AuthController::class)->gro
 // ============ Dashboard Routes ============ //
 
 // Admin Dashboard Routes
-Route::middleware('auth')->name('dashboard.')->controller(DashboardController::class)->group(function () {
+Route::middleware(['auth', 'nocache'])->name('dashboard.')->controller(DashboardController::class)->group(function () {
     Route::get('/', 'index')->name('index');
 });
 
 // ============ End Dashboard Routes ============ //
+
+// ============ Header Routes ============ //
+
+// Account Routes
+Route::middleware(['auth', 'nocache'])->prefix('account-settings')->name('account.')->controller(AccountController::class)->group(function () {
+    Route::get('/{username}', 'index')->name('index');
+    Route::patch('/update', 'update')->name('update')->middleware('expectsJson');
+});
+
+// ============ End Header Routes ============ //
 
 // ============ End Auth Routes ============ //
 
 // ============ Property & Assets Routes ============ //
 
 // Property Parent Routes
-Route::prefix('properties-assets/stocks')->name('prop-asset.')->controller(PropertyParentController::class)->group(function () {
+Route::middleware(['auth', 'nocache'])->prefix('properties-assets/stocks')->name('prop-asset.')->controller(PropertyParentController::class)->group(function () {
     Route::get('/', 'index')->name('index');
     Route::post('/create', 'store')->name('store');
     Route::get('/edit/{id}', 'edit')->name('edit');
@@ -58,7 +69,7 @@ Route::prefix('properties-assets/stocks')->name('prop-asset.')->controller(Prope
 // ============ User Management Routes ============ //
 
 // User Routes
-Route::prefix('user-management/users')->name('user.')->controller(UserController::class)->group(function () {
+Route::middleware(['auth', 'nocache'])->prefix('user-management/users')->name('user.')->controller(UserController::class)->group(function () {
     Route::get('/', 'index')->name('index');
     Route::post('/', 'store')->name('store')->middleware('expectsJson');
     Route::get('/show', 'show')->name('show')->middleware('expectsJson');
@@ -68,7 +79,7 @@ Route::prefix('user-management/users')->name('user.')->controller(UserController
 });
 
 // Roles Routes
-Route::prefix('user-management/roles')->name('role.')->controller(RoleController::class)->group(function () {
+Route::middleware(['auth', 'nocache'])->prefix('user-management/roles')->name('role.')->controller(RoleController::class)->group(function () {
     Route::get('/', 'index')->name('index');
     Route::post('/', 'store')->name('store')->middleware('expectsJson');
     Route::get('/show', 'show')->name('show')->middleware('expectsJson');
@@ -82,7 +93,7 @@ Route::prefix('user-management/roles')->name('role.')->controller(RoleController
 // ============ File Maintenance Routes ============ //
 
 // Brand Routes
-Route::prefix('file-maintenance/brands')->name('brand.')->controller(BrandController::class)->group(function () {
+Route::middleware(['auth', 'nocache'])->prefix('file-maintenance/brands')->name('brand.')->controller(BrandController::class)->group(function () {
     Route::get('/', 'index')->name('index');
     Route::post('/', 'store')->name('store')->middleware('expectsJson');
     Route::get('/show', 'show')->name('show')->middleware('expectsJson');
@@ -92,7 +103,7 @@ Route::prefix('file-maintenance/brands')->name('brand.')->controller(BrandContro
 });
 
 // Category Routes
-Route::prefix('file-maintenance/categories')->name('category.')->controller(CategoryController::class)->group(function () {
+Route::middleware(['auth', 'nocache'])->prefix('file-maintenance/categories')->name('category.')->controller(CategoryController::class)->group(function () {
     Route::get('/', 'index')->name('index');
     Route::post('/', 'store')->name('store')->middleware('expectsJson');
     Route::get('/show', 'show')->name('show')->middleware('expectsJson');
@@ -102,7 +113,7 @@ Route::prefix('file-maintenance/categories')->name('category.')->controller(Cate
 });
 
 // Condition Routes
-Route::prefix('file-maintenance/conditions')->name('condition.')->controller(ConditionController::class)->group(function () {
+Route::middleware(['auth', 'nocache'])->prefix('file-maintenance/conditions')->name('condition.')->controller(ConditionController::class)->group(function () {
     Route::get('/', 'index')->name('index');
     Route::post('/', 'store')->name('store')->middleware('expectsJson');
     Route::get('/show', 'show')->name('show')->middleware('expectsJson');
@@ -112,7 +123,7 @@ Route::prefix('file-maintenance/conditions')->name('condition.')->controller(Con
 });
 
 // Department Routes
-Route::prefix('file-maintenance/departments')->name('department.')->controller(DepartmentController::class)->group(function () {
+Route::middleware(['auth', 'nocache'])->prefix('file-maintenance/departments')->name('department.')->controller(DepartmentController::class)->group(function () {
     Route::get('/', 'index')->name('index');
     Route::post('/', 'store')->name('store')->middleware('expectsJson');
     Route::get('/show', 'show')->name('show')->middleware('expectsJson');
@@ -122,7 +133,7 @@ Route::prefix('file-maintenance/departments')->name('department.')->controller(D
 });
 
 // Designation Routes
-Route::prefix('file-maintenance/designations')->name('designation.')->controller(DesignationController::class)->group(function () {
+Route::middleware(['auth', 'nocache'])->prefix('file-maintenance/designations')->name('designation.')->controller(DesignationController::class)->group(function () {
     Route::get('/', 'index')->name('index');
     Route::post('/', 'store')->name('store')->middleware('expectsJson');
     Route::get('/show', 'show')->name('show')->middleware('expectsJson');
@@ -132,7 +143,7 @@ Route::prefix('file-maintenance/designations')->name('designation.')->controller
 });
 
 // Status Routes
-Route::prefix('file-maintenance/statuses')->name('status.')->controller(StatusController::class)->group(function () {
+Route::middleware(['auth', 'nocache'])->prefix('file-maintenance/statuses')->name('status.')->controller(StatusController::class)->group(function () {
     Route::get('/', 'index')->name('index');
     Route::post('/', 'store')->name('store')->middleware('expectsJson');
     Route::get('/show', 'show')->name('show')->middleware('expectsJson');
@@ -142,7 +153,7 @@ Route::prefix('file-maintenance/statuses')->name('status.')->controller(StatusCo
 });
 
 // Subcategory Routes
-Route::prefix('file-maintenance/subcategories')->name('subcategory.')->controller(SubcategoryController::class)->group(function () {
+Route::middleware(['auth', 'nocache'])->prefix('file-maintenance/subcategories')->name('subcategory.')->controller(SubcategoryController::class)->group(function () {
     Route::get('/', 'index')->name('index');
     Route::post('/', 'store')->name('store')->middleware('expectsJson');
     Route::get('/show', 'show')->name('show')->middleware('expectsJson');

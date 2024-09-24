@@ -490,6 +490,11 @@
         new HSFormSearch(".js-form-search");
 
 
+        // INITIALIZATION OF BOOTSTRAP DROPDOWN
+        // =======================================================
+        HSBsDropdown.init()
+
+
         // INITIALIZATION OF SELECT
         // =======================================================
         HSCore.components.HSTomSelect.init(".js-select");

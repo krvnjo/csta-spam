@@ -30,10 +30,10 @@ return new class extends Migration
             $table->string('mname', 100)->nullable();
             $table->foreignIdFor(Role::class, 'role_id')->constrained('roles')->cascadeOnDelete();
             $table->foreignIdFor(Department::class, 'dept_id')->constrained('departments')->cascadeOnDelete();
-            $table->string('email', 255)->unique();
+            $table->string('email')->unique();
             $table->string('phone_num', 20)->unique()->nullable();
             $table->string('user_image')->default('default.jpg');
-            $table->timestamp('last_login')->nullable();
+            $table->dateTime('last_login')->nullable();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
             $table->softDeletes();

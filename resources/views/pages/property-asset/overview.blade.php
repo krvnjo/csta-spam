@@ -668,14 +668,13 @@
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/dropzone/dist/min/dropzone.min.js') }}"></script>
 
-  <!-- JS Themes -->
-  <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>
-
   <!-- JS Modules -->
   <script src="{{ Vite::asset('resources/js/modules/properties-assets/property-modules.js') }}"></script>
 
-  <!-- JS Plugins Init. -->
+  <!-- JS Themes -->
+  <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>
 
+  <!-- JS Plugins Init. -->
   <script>
     (function() {
       // INITIALIZATION OF DROPZONE
@@ -801,17 +800,14 @@
         new HSSideNav('.js-navbar-vertical-aside').init()
 
 
-        // INITIALIZATION OF NAV SCROLLER
-        // =======================================================
-        new HsNavScroller('.js-nav-scroller', {
-          delay: 400
-        })
-
-
         // INITIALIZATION OF FORM SEARCH
         // =======================================================
         new HSFormSearch('.js-form-search')
 
+
+        // INITIALIZATION OF BOOTSTRAP DROPDOWN
+        // =======================================================
+        HSBsDropdown.init()
       }
     })()
   </script>

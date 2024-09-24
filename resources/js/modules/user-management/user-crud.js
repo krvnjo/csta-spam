@@ -90,6 +90,7 @@ $(document).ready(function () {
         $("#lblViewUserDept").text(response.dept);
         $("#lblViewUserEmail").text(response.email);
         $("#lblViewUserPhone").text(response.phone);
+        $("#lblViewLastLogin").text(response.login);
         $("#imgViewUserImage").attr("src", "/img/uploads/user-images/" + response.image);
         $("#lblViewDateCreated").text(response.created);
         $("#lblViewDateUpdated").text(response.updated);

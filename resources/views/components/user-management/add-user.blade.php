@@ -49,6 +49,19 @@
           </label>
           <!-- End User Image -->
 
+          <!-- Username -->
+          <div class="row mb-4">
+            <label class="col-sm-3 col-form-label form-label" for="txtAddUsername">Username</label>
+            <div class="col-sm-9">
+              <input class="js-input-mask form-control" id="txtAddUsername" name="user"
+                data-hs-mask-options='{
+                    "mask": "00-00000"
+                  }' type="text" placeholder="##-#####">
+              <span class="invalid-feedback" id="valAddUsername"></span>
+            </div>
+          </div>
+          <!-- End Username -->
+
           <!-- First Name -->
           <div class="row mb-4">
             <label class="col-sm-3 col-form-label form-label" for="txtAddUserFname">First Name</label>
@@ -133,7 +146,7 @@
           <!-- End Email -->
 
           <!-- Phone -->
-          <div class="row mb-4">
+          <div class="row">
             <label class="col-sm-3 col-form-label form-label" for="txtAddUserPhone">Phone <span
                 class="form-label-secondary">(Optional)</span></label>
             <div class="col-sm-9">
@@ -148,19 +161,6 @@
             </div>
           </div>
           <!-- End Phone -->
-
-          <!-- Username -->
-          <div class="row">
-            <label class="col-sm-3 col-form-label form-label" for="txtAddUsername">Username</label>
-            <div class="col-sm-9">
-              <input class="js-input-mask form-control" id="txtAddUsername" name="user"
-                data-hs-mask-options='{
-                    "mask": "00-00000"
-                  }' type="text" placeholder="##-#####">
-              <span class="invalid-feedback" id="valAddUsername"></span>
-            </div>
-          </div>
-          <!-- End Username -->
 
           {{--          <!-- Password --> --}}
           {{--          <div class="row mb-4"> --}}

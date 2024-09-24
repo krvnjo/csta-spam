@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -76,6 +77,11 @@ class AuthController extends Controller
             Auth::login($user);
             $request->session()->regenerate();
 
+            $user->timestamps = false;
+            $user->last_login = now();
+            $user->save();
+            $user->timestamps = true;
+
             return response()->json([
                 'success' => true,
                 'redirect' => route('dashboard.index'),
@@ -92,13 +98,13 @@ class AuthController extends Controller
     /**
      * Authenticate the user to log the user out.
      */
-    public function logout(Request $request)
+    public function logout(Request $request): RedirectResponse
     {
         Auth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('auth.login');
+        return redirect('/login');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Department;
 use App\Models\Role;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
@@ -164,12 +165,13 @@ class UserController extends Controller
                 'dept' => $user->department->name,
                 'email' => $user->email,
                 'phone' => $user->phone_num,
+                'login' => $user->last_login ? Carbon::parse($user->last_login)->format('D, F d, Y | h:i:s A') : 'Never',
                 'image' => $user->user_image,
                 'status' => $user->is_active,
                 'created' => $user->created_at->format('D, F d, Y | h:i:s A'),
                 'updated' => $user->updated_at->format('D, F d, Y | h:i:s A'),
             ]);
-        } catch (Throwable) {
+        } catch (Throwable $e) {
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',

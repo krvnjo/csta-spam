@@ -16,11 +16,9 @@
       <!-- Sidebar Toggle -->
       <button class="js-navbar-vertical-aside-toggle-invoker navbar-aside-toggler" type="button">
         <i class="bi-arrow-bar-left navbar-toggler-short-align"
-          data-bs-template='<div class="tooltip d-none d-md-block" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
-          data-bs-toggle="tooltip" data-bs-placement="right" title="Collapse"></i>
+          data-bs-template='<div class="tooltip d-none d-md-block" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'></i>
         <i class="bi-arrow-bar-right navbar-toggler-full-align"
-          data-bs-template='<div class="tooltip d-none d-md-block" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
-          data-bs-toggle="tooltip" data-bs-placement="right" title="Expand"></i>
+          data-bs-template='<div class="tooltip d-none d-md-block" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'></i>
       </button>
       <!-- End Sidebar Toggle -->
 
@@ -43,16 +41,13 @@
           <div id="navbarVerticalMenuPagesMenu">
             <!-- Property and Assets -->
             <div class="nav-item">
-              <a class="nav-link dropdown-toggle " data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesEcommerceMenu"
-                href="#navbarVerticalMenuPagesEcommerceMenu" role="button" aria-expanded="false"
-                aria-controls="navbarVerticalMenuPagesEcommerceMenu">
+              <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesPropertyAssets">
                 <i class="bi-box-seam nav-icon"></i>
                 <span class="nav-link-title">P&A Management</span>
               </a>
 
-              <div class="nav-collapse collapse " id="navbarVerticalMenuPagesEcommerceMenu" data-bs-parent="#navbarVerticalMenuPagesMenu">
+              <div class="nav-collapse collapse" id="navbarVerticalMenuPagesPropertyAssets" data-bs-parent="#navbarVerticalMenuPagesMenu">
                 <a class="nav-link" href="/properties-assets/stocks">Stock Masterlist</a>
-
                 <a class="nav-link" href="/properties-inventory/overview">Inventory Masterlist</a>
               </div>
             </div>
@@ -60,7 +55,7 @@
 
             <!-- Borrowing and Reservation -->
             <div class="nav-item">
-              <a class="nav-link " data-placement="left" href="#">
+              <a class="nav-link" data-placement="left" href="#">
                 <i class="bi-calendar2-week nav-icon"></i>
                 <span class="nav-link-title">Borrow & Reservation</span>
               </a>
@@ -69,7 +64,7 @@
 
             <!-- Item Maintenance -->
             <div class="nav-item">
-              <a class="nav-link " data-placement="left" href="#">
+              <a class="nav-link" data-placement="left" href="#">
                 <i class="bi-tools nav-icon"></i>
                 <span class="nav-link-title">Item Maintenance</span>
               </a>
@@ -78,7 +73,7 @@
 
             <!-- Reports & Analytics -->
             <div class="nav-item">
-              <a class="nav-link " data-placement="left" href="#">
+              <a class="nav-link" data-placement="left" href="#">
                 <i class="bi-clipboard-data nav-icon"></i>
                 <span class="nav-link-title">Reports & Analytics</span>
               </a>
@@ -93,8 +88,7 @@
 
           <!-- User Management -->
           <div class="nav-item">
-            <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuUserManagement"
-              href="#navbarVerticalMenuUserManagement" role="button" aria-expanded="false" aria-controls="navbarVerticalMenuUserManagement">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuUserManagement">
               <i class="bi-people nav-icon"></i>
               <span class="nav-link-title">User Management</span>
             </a>
@@ -109,8 +103,7 @@
           <!-- File Maintenance -->
           <div class="nav-item">
             <div class="nav-item">
-              <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuFileMaintenance"
-                href="#navbarVerticalMenuFileMaintenance" role="button" aria-expanded="false" aria-controls="navbarVerticalMenuFileMaintenance">
+              <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuFileMaintenance">
                 <i class="bi-folder2-open nav-icon"></i>
                 <span class="nav-link-title">File Maintenance</span>
               </a>

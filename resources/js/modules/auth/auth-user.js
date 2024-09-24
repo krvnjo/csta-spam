@@ -15,6 +15,7 @@ $(document).ready(function () {
       contentType: false,
       success: function (response) {
         if (response.success) {
+          userLoginForm[0].reset();
           window.location.href = response.redirect;
         } else {
           if (response.errors.user) {
