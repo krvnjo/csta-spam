@@ -46,6 +46,11 @@
         // INITIALIZATION OF FORM SEARCH
         // =======================================================
         new HSFormSearch('.js-form-search');
+
+
+        // INITIALIZATION OF BOOTSTRAP DROPDOWN
+        // =======================================================
+        HSBsDropdown.init()
       }
     })()
   </script>

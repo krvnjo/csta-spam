@@ -309,7 +309,7 @@
               <div class="dropdown-divider"></div>
 
               <!-- Account Settings -->
-              <a class="dropdown-item" href="#">Account Settings</a>
+              <a class="dropdown-item" href="{{ route('account.index', ['username' => Auth::user()->user_name]) }}">Account Settings</a>
               <!-- End Account Settings -->
 
               <!-- System Appearance -->
@@ -339,7 +339,6 @@
 
                 <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu"
                   aria-labelledby="navSubmenuPagesAccountDropdown2">
-                  <a class="dropdown-item" href="#"><i class="bi-question-circle me-2"></i>Need a Help?</a>
                   <a class="dropdown-item" href="#"><i class="bi-info-circle me-2"></i>FAQ List</a>
                   <a class="dropdown-item" href="#"><i class="bi-flag me-2"></i>Report a Problem</a>
                 </div>

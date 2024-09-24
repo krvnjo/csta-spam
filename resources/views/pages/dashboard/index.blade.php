@@ -24,7 +24,11 @@
       <div class="page-header page-header-light">
         <div class="row align-items-center">
           <div class="col">
-            <h1 class="page-header-title">Good morning, {{ Auth::user()->fname }}.</h1>
+            @php
+              $hour = date('g');
+              $greeting = date('a') == 'am' ? 'Good morning' : ($hour < 5 ? 'Good afternoon' : ($hour < 11 ? 'Good evening' : 'Greetings'));
+            @endphp
+            <h1 class="page-header-title">{{ $greeting }}, {{ Auth::user()->fname }}.</h1>
             <p class="page-header-text">Here's what's happening in CSTA - SPAM.</p>
           </div>
           <!-- End Col -->
@@ -717,6 +721,11 @@
         // INITIALIZATION OF FORM SEARCH
         // =======================================================
         new HSFormSearch('.js-form-search')
+
+
+        // INITIALIZATION OF BOOTSTRAP DROPDOWN
+        // =======================================================
+        HSBsDropdown.init()
 
 
         // INITIALIZATION OF CHARTJS
