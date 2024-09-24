@@ -1,7 +1,7 @@
 <header class="navbar navbar-expand-lg navbar-fixed navbar-height navbar-container navbar-bordered bg-white" id="header">
   <div class="navbar-nav-wrap">
     <!-- Logo -->
-    <a class="navbar-brand" href="{{ route('dashboard.index') }}" aria-label="CSTA - SPAM">
+    <a class="navbar-brand" data-route="dashboard.index" href="{{ route('dashboard.index') }}" aria-label="CSTA - SPAM">
       <img class="navbar-brand-logo-mini d-block" data-hs-theme-appearance="default" src="{{ Vite::asset('resources/svg/logos/logo-short.svg') }}"
         alt="CSTA - SPAM Logo">
       <img class="navbar-brand-logo-mini d-block" data-hs-theme-appearance="dark" src="{{ Vite::asset('resources/svg/logos-light/logo-short.svg') }}"
@@ -285,7 +285,7 @@
             <button class="btn navbar-dropdown-account-wrapper" id="accountNavbarDropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside"
               data-bs-dropdown-animation type="button" aria-expanded="false">
               <div class="avatar avatar-sm avatar-circle">
-                <img class="avatar-img" src="{{ Vite::asset('resources/img/uploads/user-images/default.jpg') }}" alt="User Image">
+                <img class="avatar-img" src="{{ Vite::asset('resources/img/uploads/user-images/' . Auth::user()->user_image) }}" alt="User Image">
               </div>
             </button>
 
@@ -295,11 +295,12 @@
               <div class="dropdown-item-text">
                 <div class="d-flex align-items-center">
                   <div class="avatar avatar-sm avatar-circle">
-                    <img class="avatar-img" src="{{ Vite::asset('resources/img/uploads/user-images/default.jpg') }}" alt="User Image">
+                    <img class="avatar-img" src="{{ Vite::asset('resources/img/uploads/user-images/' . Auth::user()->user_image) }}"
+                      alt="User Image">
                   </div>
                   <div class="flex-grow-1 ms-3">
-                    <h5 class="mb-0">Sample User</h5>
-                    <p class="card-text text-body">sample@gmail.com</p>
+                    <h5 class="mb-0">{{ Auth::user()->fname . ' ' . Auth::user()->lname }}</h5>
+                    <p class="card-text text-body">{{ Auth::user()->role->name }}</p>
                   </div>
                 </div>
               </div>
@@ -348,7 +349,10 @@
               <div class="dropdown-divider"></div>
 
               <!-- Sign out -->
-              <a class="dropdown-item" href="#">Sign out</a>
+              <form method="POST" action="{{ route('auth.logout') }}">
+                @csrf
+                <button class="dropdown-item" type="submit">Sign out</button>
+              </form>
               <!-- End Sign out -->
             </div>
           </div>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ConditionController;
@@ -13,14 +14,33 @@ use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
+// ============ Guest Routes ============ //
+
+// Login Routes
+Route::middleware('guest')->name('auth.')->controller(AuthController::class)->group(function () {
+    Route::get('/login', 'index')->name('index');
+    Route::post('/login', 'login')->name('login');
+});
+
+// Logout Routes
+Route::middleware('auth')->name('auth.')->controller(AuthController::class)->group(function () {
+    Route::post('/logout', 'logout')->name('logout');
+});
+
+// ============ End Guest Routes ============ //
+
+// ============ Auth Routes ============ //
+
 // ============ Dashboard Routes ============ //
 
 // Admin Dashboard Routes
-Route::name('dashboard.')->controller(DashboardController::class)->group(function () {
-    Route::resource('/', DashboardController::class);
+Route::middleware('auth')->name('dashboard.')->controller(DashboardController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
 });
 
 // ============ End Dashboard Routes ============ //
+
+// ============ End Auth Routes ============ //
 
 // ============ Property & Assets Routes ============ //
 
@@ -56,9 +76,6 @@ Route::prefix('user-management/roles')->name('role.')->controller(RoleController
     Route::patch('/update', 'update')->name('update')->middleware('expectsJson');
     Route::delete('/delete', 'destroy')->name('delete')->middleware('expectsJson');
 });
-
-// Permissions Routes
-
 
 // ============ End User Management Routes ============ //
 

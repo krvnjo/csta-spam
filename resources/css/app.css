@@ -53,3 +53,7 @@
   word-break: break-word;
   white-space: pre-wrap;
 }
+.login-bg {
+  height: 32rem;
+  background-image: url("../img/others/csta-dashboard.png");
+}

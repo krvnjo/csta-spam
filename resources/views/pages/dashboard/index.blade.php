@@ -24,7 +24,7 @@
       <div class="page-header page-header-light">
         <div class="row align-items-center">
           <div class="col">
-            <h1 class="page-header-title">Good morning, User.</h1>
+            <h1 class="page-header-title">Good morning, {{ Auth::user()->fname }}.</h1>
             <p class="page-header-text">Here's what's happening in CSTA - SPAM.</p>
           </div>
           <!-- End Col -->
