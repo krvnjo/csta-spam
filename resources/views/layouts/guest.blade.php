@@ -3,7 +3,6 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="current-route" content="{{ Route::currentRouteName() }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title') | {{ config('app.name') }} </title>
 
@@ -32,7 +31,11 @@
     <script src="{{ Vite::asset('resources/vendor/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ Vite::asset('resources/vendor/jquery-migrate/dist/jquery-migrate.min.js') }}"></script>
     <script src="{{ Vite::asset('resources/vendor/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ Vite::asset('resources/vendor/imask/dist/imask.min.js') }}"></script>
     <script src="{{ Vite::asset('resources/vendor/hs-toggle-password/dist/js/hs-toggle-password.js') }}"></script>
+
+    <!-- JS Modules -->
+    <script src="{{ Vite::asset('resources/js/modules/auth/auth-user.js') }}"></script>
 
     <!-- JS Themes -->
     <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>
@@ -42,6 +45,11 @@
       // Initialization of Other Plugins
       (function() {
         window.onload = function() {
+          // INITIALIZATION OF INPUT MASK
+          // =======================================================
+          HSCore.components.HSMask.init('.js-input-mask');
+
+
           // INITIALIZATION OF TOGGLE PASSWORD
           // =======================================================
           new HSTogglePassword('.js-toggle-password')

@@ -15,8 +15,8 @@
     </div>
 
     <!-- Content -->
-    <div class="container-fluid vh-100 d-flex justify-content-center align-items-center">
-      <div class="mx-auto" style="max-width: 30rem;">
+    <div class="container d-flex justify-content-center align-items-center" style="height: 90vh;">
+      <div class="row justify-content-center w-100 mx-2" style="max-width: 30rem;">
         <!-- Logo -->
         <div class="d-flex justify-content-center mb-5">
           <img class="zi-2" src="{{ Vite::asset('resources/svg/logos-light/logo.svg') }}" alt="CSTA - SPAM Logo" style="width: 18rem;">
@@ -35,7 +35,10 @@
 
               <div class="mb-4">
                 <label class="form-label" for="txtLoginUsername">Username</label>
-                <input class="form-control form-control-lg" id="txtLoginUsername" name="user" type="text" tabindex="1"
+                <input class="js-input-mask form-control" id="txtLoginUsername" name="user"
+                  data-hs-mask-options='{
+                    "mask": "00-00000"
+                  }' type="text" tabindex="1"
                   placeholder="Enter your username">
                 <span class="invalid-feedback" id="valLoginUsername"></span>
               </div>
