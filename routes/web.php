@@ -46,6 +46,7 @@ Route::middleware(['auth', 'nocache'])->name('dashboard.')->controller(Dashboard
 // Account Routes
 Route::middleware(['auth', 'nocache'])->prefix('account-settings')->name('account.')->controller(AccountController::class)->group(function () {
     Route::get('/{username}', 'index')->name('index');
+    Route::patch('/update', 'update')->name('update')->middleware('expectsJson');
 });
 
 // ============ End Header Routes ============ //

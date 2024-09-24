@@ -25,8 +25,17 @@
         <div class="row align-items-center">
           <div class="col">
             @php
-              $hour = date('g');
-              $greeting = date('a') == 'am' ? 'Good morning' : ($hour < 5 ? 'Good afternoon' : ($hour < 11 ? 'Good evening' : 'Greetings'));
+              $hour = date('G');
+              $greeting =
+                  $hour >= 6 && $hour < 11
+                      ? 'Good morning'
+                      : ($hour >= 11 && $hour < 15
+                          ? 'Good afternoon'
+                          : ($hour >= 15 && $hour < 18
+                              ? 'Greetings'
+                              : ($hour >= 18 && $hour < 24
+                                  ? 'Good evening'
+                                  : 'Hello there')));
             @endphp
             <h1 class="page-header-title">{{ $greeting }}, {{ Auth::user()->fname }}.</h1>
             <p class="page-header-text">Here's what's happening in CSTA - SPAM.</p>

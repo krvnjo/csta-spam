@@ -12,12 +12,10 @@
     <div class="navbar-nav-wrap-content-start">
       <!-- Sidebar Toggle -->
       <button class="js-navbar-vertical-aside-toggle-invoker navbar-aside-toggler" type="button">
-        <i class="bi-arrow-bar-left navbar-toggler-short-align" data-bs-placement="right"
-          data-bs-template='<div class="tooltip d-none d-md-block" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
-          data-bs-toggle="tooltip" title="Collapse"></i>
-        <i class="bi-arrow-bar-right navbar-toggler-full-align" data-bs-placement="right"
-          data-bs-template='<div class="tooltip d-none d-md-block" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
-          data-bs-toggle="tooltip" title="Expand"></i>
+        <i class="bi-arrow-bar-left navbar-toggler-short-align"
+          data-bs-template='<div class="tooltip d-none d-md-block" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'></i>
+        <i class="bi-arrow-bar-right navbar-toggler-full-align"
+          data-bs-template='<div class="tooltip d-none d-md-block" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'></i>
       </button>
       <!-- End Sidebar Toggle -->
 
@@ -136,7 +134,6 @@
                 </div>
               </a>
             </div>
-
             <a class="card-footer text-center" href="#">See all results <i class="bi-chevron-right small"></i></a>
           </div>
         </div>
@@ -286,6 +283,7 @@
               data-bs-dropdown-animation type="button" aria-expanded="false">
               <div class="avatar avatar-sm avatar-circle">
                 <img class="avatar-img" src="{{ Vite::asset('resources/img/uploads/user-images/' . Auth::user()->user_image) }}" alt="User Image">
+                <span class="avatar-status avatar-sm-status avatar-status-success"></span>
               </div>
             </button>
 
@@ -348,7 +346,7 @@
               <div class="dropdown-divider"></div>
 
               <!-- Sign out -->
-              <form method="POST" action="{{ route('auth.logout') }}">
+              <form method="post" action="{{ route('auth.logout') }}">
                 @csrf
                 <button class="dropdown-item" type="submit">Sign out</button>
               </form>
