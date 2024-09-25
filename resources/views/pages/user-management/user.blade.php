@@ -57,16 +57,15 @@
         <div class="card-body pt-3">
           <div class="row">
             <div class="col-1">
-              <div class="position-absolute" style="top: 7.5rem; left: 1.5rem;">
+              <div class="position-absolute" style="top: 8rem; left: 1.5rem;">
                 <label class="avatar avatar-xl avatar-circle avatar-uploader profile-cover-avatar" for="editAvatarUploaderModal">
-                  <img class="avatar-img" id="editAvatarImgModal" src="{{ Vite::asset('resources/img/uploads/user-images/default.jpg') }}"
-                    alt="Image Description">
+                  <img class="avatar-img" id="editAvatarImgModal"
+                    src="{{ Vite::asset('resources/img/uploads/user-images/' . Auth::user()->user_image) }}" alt="Image Description">
                 </label>
               </div>
             </div>
-            <div class="col">
-              <h3 class="mb-0">Khervin John Quimora</h3>
-              <p class="text-muted">Current logged in user</p>
+            <div class="col pt-1">
+              <h3 class="mb-0">{{ Auth::user()->fname . ' ' . Auth::user()->lname }}</h3>
             </div>
           </div>
         </div>
