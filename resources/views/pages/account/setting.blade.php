@@ -97,7 +97,7 @@
                   <img class="profile-cover-img" id="profileCoverImg" src="{{ Vite::asset('resources/img/1920x400/img1.jpg') }}" alt="Image Description"
                     style="height: 6.5rem;">
                   <div class="profile-cover-content profile-cover-uploader p-3">
-                    <button class="js-file-attach-reset-img btn btn-sm btn-danger" id="btnRemoveUserImage" type="button">
+                    <button class="js-file-attach-reset-img btn btn-sm btn-danger" id="btnRemoveAccountImage" type="button">
                       <i class="bi-trash-fill"></i> Remove Avatar
                     </button>
                   </div>
@@ -109,16 +109,18 @@
               <form id="frmAccountBasicInfo" method="post" enctype="multipart/form-data" novalidate>
                 @csrf
                 @method('PATCH')
+                <input id="txtAccountId" name="id" type="hidden" value="{{ Crypt::encryptString(Auth::user()->id) }}">
+
                 <!-- User Image -->
-                <label class="avatar avatar-xxl avatar-circle avatar-uploader profile-cover-avatar mb-5" for="imgAddImage">
-                  <img class="avatar-img" id="imgDisplayUserImage"
-                    src="{{ Vite::asset('resources/img/uploads/user-images/' . Auth::user()->user_image) }}" alt="Image Description">
-                  <input class="js-file-attach avatar-uploader-input" id="imgAddImage" name="image"
+                <label class="avatar avatar-xxl avatar-circle avatar-uploader profile-cover-avatar mb-5" for="imgAccountImage">
+                  <img class="avatar-img" id="imgDisplayAccountImage"
+                    src="{{ Vite::asset('resources/img/uploads/user-images/' . Auth::user()->user_image) }}" alt="User Image">
+                  <input class="js-file-attach avatar-uploader-input" id="imgAccountImage" name="image"
                     data-hs-file-attach-options='{
-                       "textTarget": "#imgDisplayUserImage",
+                       "textTarget": "#imgDisplayAccountImage",
                        "mode": "image",
                        "targetAttr": "src",
-                       "resetTarget": "#btnRemoveUserImage",
+                       "resetTarget": "#btnRemoveAccountImage",
                        "resetImg": "{{ Vite::asset('resources/img/uploads/user-images/default.jpg') }}",
                        "allowTypes": [".png", ".jpeg", ".jpg"]
                     }'
@@ -176,7 +178,7 @@
                     <label class="col-sm-3 col-form-label form-label" for="txtAccountEmail">Email</label>
                     <div class="col-sm-9">
                       <input class="form-control" id="txtAccountEmail" name="email" type="email" value="{{ Auth::user()->email }}"
-                        placeholder="sample@site.com">
+                        placeholder="Enter your email address">
                       <span class="invalid-feedback" id="valAccountEmail"></span>
                     </div>
                   </div>
@@ -184,20 +186,20 @@
 
                   <!-- Phone -->
                   <div class="row mb-4">
-                    <label class="col-sm-3 col-form-label form-label" for="txtAccountPhone">Phone</label>
+                    <label class="col-sm-3 col-form-label form-label" for="txtAccountPhone">Phone </label>
                     <div class="col-sm-9">
                       <input class="js-input-mask form-control" id="txtAccountPhone" name="phone"
                         data-hs-mask-options='{
                           "mask": "0900-000-0000"
                         }' type="text"
-                        value="{{ Auth::user()->phone_num }}" placeholder="####-###-####">
+                        value="{{ Auth::user()->phone_num }}" placeholder="Enter your phone number">
                       <span class="invalid-feedback" id="valAccountPhone"></span>
                     </div>
                   </div>
                   <!-- End Phone -->
 
                   <div class="d-flex justify-content-end">
-                    <button class="btn btn-primary" type="submit">Save changes</button>
+                    <button class="btn btn-primary" id="btnAccountSave" type="submit">Save changes</button>
                   </div>
                 </div>
                 <!-- End Body -->
@@ -218,12 +220,14 @@
                 <form id="frmAccountChangePass" method="post" novalidate>
                   @csrf
                   @method('PATCH')
+                  <input id="txtAccountPasswordId" name="id" type="hidden" value="{{ Crypt::encryptString(Auth::user()->id) }}">
+
                   <!-- Current Password -->
                   <div class="row mb-4">
                     <label class="col-sm-3 col-form-label form-label" for="txtAccountCurrentPass">Current password</label>
                     <div class="col-sm-9">
                       <div class="input-group">
-                        <input class="js-toggle-password form-control" id="txtAccountCurrentPass" name="current"
+                        <input class="js-toggle-password form-control" id="txtAccountCurrentPass" name="currentpass"
                           data-hs-toggle-password-options='{
                              "target": "#toggleCurrentPassTarget",
                              "defaultClass": "bi-eye-slash",
@@ -243,7 +247,7 @@
                     <label class="col-sm-3 col-form-label form-label" for="txtAccountNewPass">New password</label>
                     <div class="col-sm-9">
                       <div class="input-group">
-                        <input class="js-toggle-password form-control" id="txtAccountNewPass" name="new"
+                        <input class="js-toggle-password form-control" id="txtAccountNewPass" name="newpass"
                           data-hs-toggle-password-options='{
                              "target": [".toggleNewPassTarget", ".toggleConfirmPassTarget"],
                              "defaultClass": "bi-eye-slash",
@@ -264,7 +268,7 @@
                     <div class="col-sm-9">
                       <div class="mb-4">
                         <div class="input-group">
-                          <input class="js-toggle-password form-control" id="txtAccountConfirmPass" name="confirm"
+                          <input class="js-toggle-password form-control" id="txtAccountConfirmPass" name="confirmpass"
                             data-hs-toggle-password-options='{
                               "target": [".toggleNewPassTarget", ".toggleConfirmPassTarget"],
                               "defaultClass": "bi-eye-slash",
@@ -341,58 +345,58 @@
       window.onload = function() {
         // INITIALIZATION OF NAVBAR VERTICAL ASIDE
         // =======================================================
-        new HSSideNav('.js-navbar-vertical-aside').init();
+        new HSSideNav(".js-navbar-vertical-aside").init();
 
 
         // INITIALIZATION OF FORM SEARCH
         // =======================================================
-        new HSFormSearch('.js-form-search');
+        new HSFormSearch(".js-form-search");
 
 
         // INITIALIZATION OF BOOTSTRAP DROPDOWN
         // =======================================================
-        HSBsDropdown.init()
+        HSBsDropdown.init();
 
 
         // INITIALIZATION OF SELECT
         // =======================================================
-        HSCore.components.HSTomSelect.init('.js-select')
+        HSCore.components.HSTomSelect.init(".js-select");
 
 
         // INITIALIZATION OF INPUT MASK
         // =======================================================
-        HSCore.components.HSMask.init('.js-input-mask')
+        HSCore.components.HSMask.init(".js-input-mask");
 
 
         // INITIALIZATION OF FILE ATTACHMENT
         // =======================================================
-        new HSFileAttach('.js-file-attach')
+        new HSFileAttach(".js-file-attach");
 
 
         // INITIALIZATION OF TOGGLE PASSWORD
         // =======================================================
-        new HSTogglePassword('.js-toggle-password');
+        new HSTogglePassword(".js-toggle-password");
 
 
         // INITIALIZATION OF STICKY BLOCKS
         // =======================================================
-        new HSStickyBlock('.js-sticky-block', {
-          targetSelector: document.getElementById('header').classList.contains('navbar-fixed') ? '#header' : null
-        })
+        new HSStickyBlock(".js-sticky-block", {
+          targetSelector: document.getElementById("header").classList.contains("navbar-fixed") ? "#header" : null
+        });
 
 
         // SCROLLSPY
         // =======================================================
         new bootstrap.ScrollSpy(document.body, {
-          target: '#navbarSettings',
+          target: "#navbarSettings",
           offset: 100
-        })
+        });
 
-        new HSScrollspy('#navbarVerticalNavMenu', {
-          breakpoint: 'lg',
+        new HSScrollspy("#navbarVerticalNavMenu", {
+          breakpoint: "lg",
           scrollOffset: -20
-        })
-      }
-    })()
+        });
+      };
+    })();
   </script>
 @endsection

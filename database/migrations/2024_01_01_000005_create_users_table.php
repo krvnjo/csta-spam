@@ -33,7 +33,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('phone_num', 20)->unique()->nullable();
             $table->string('user_image')->default('default.jpg');
-            $table->dateTime('last_login')->nullable();
+            $table->timestamp('last_login')->nullable();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
             $table->softDeletes();

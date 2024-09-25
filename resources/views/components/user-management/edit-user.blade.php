@@ -32,8 +32,7 @@
 
           <!-- User Image -->
           <label class="avatar avatar-xxl avatar-circle avatar-uploader profile-cover-avatar mb-5" for="imgEditImage">
-            <img class="avatar-img" id="imgEditDisplayUserImage" src="{{ Vite::asset('resources/img/uploads/user-images/kj.jpg') }}"
-              alt="Profile Image">
+            <img class="avatar-img" id="imgEditDisplayUserImage" src="" alt="Profile Image">
 
             <input class="js-file-attach avatar-uploader-input" id="imgEditImage" name="image"
               data-hs-file-attach-options='{
@@ -51,6 +50,19 @@
             </span>
           </label>
           <!-- End User Image -->
+
+          <!-- Username -->
+          <div class="row mb-4">
+            <label class="col-sm-3 col-form-label form-label" for="txtEditUsername">Username</label>
+            <div class="col-sm-9">
+              <input class="js-input-mask form-control" id="txtEditUsername" name="user"
+                data-hs-mask-options='{
+                    "mask": "00-00000"
+                  }' type="text" placeholder="##-#####">
+              <span class="invalid-feedback" id="valEditUsername"></span>
+            </div>
+          </div>
+          <!-- End Username -->
 
           <!-- First Name -->
           <div class="row mb-4">
@@ -136,7 +148,7 @@
           <!-- End Email -->
 
           <!-- Phone -->
-          <div class="row mb-4">
+          <div class="row">
             <label class="col-sm-3 col-form-label form-label" for="txtEditUserPhone">Phone <span
                 class="form-label-secondary">(Optional)</span></label>
             <div class="col-sm-9">
@@ -152,38 +164,25 @@
           </div>
           <!-- End Phone -->
 
-          <!-- Username -->
-          <div class="row mb-4">
-            <label class="col-sm-3 col-form-label form-label" for="txtEditUsername">Username</label>
-            <div class="col-sm-9">
-              <input class="js-input-mask form-control" id="txtEditUsername" name="user"
-                data-hs-mask-options='{
-                    "mask": "00-00000"
-                  }' type="text" placeholder="##-#####">
-              <span class="invalid-feedback" id="valEditUsername"></span>
-            </div>
-          </div>
-          <!-- End Username -->
-
-          <!-- Password -->
-          <div class="row">
-            <label class="col-sm-3 col-form-label form-label" for="txtEditUserPass">Password</label>
-            <div class="col-sm-9">
-              <div class="input-group">
-                <input class="js-toggle-password form-control" id="txtEditUserPass" name="pass"
-                  data-hs-toggle-password-options='{
-                    "target": "#togglePassTarget",
-                    "defaultClass": "bi-eye-slash",
-                    "showClass": "bi-eye",
-                    "classChangeTarget": "#togglePassIcon"
-                  }'
-                  type="password" placeholder="Enter Password" />
-                <a class="input-group-text" id="togglePassTarget"><i class="bi-eye" id="togglePassIcon"></i></a>
-                <span class="invalid-feedback" id="valEditUserPass"></span>
-              </div>
-            </div>
-          </div>
-          <!-- End Password -->
+          {{--          <!-- Password --> --}}
+          {{--          <div class="row"> --}}
+          {{--            <label class="col-sm-3 col-form-label form-label" for="txtEditUserPass">Password</label> --}}
+          {{--            <div class="col-sm-9"> --}}
+          {{--              <div class="input-group"> --}}
+          {{--                <input class="js-toggle-password form-control" id="txtEditUserPass" name="pass" --}}
+          {{--                  data-hs-toggle-password-options='{ --}}
+          {{--                    "target": "#togglePassTarget", --}}
+          {{--                    "defaultClass": "bi-eye-slash", --}}
+          {{--                    "showClass": "bi-eye", --}}
+          {{--                    "classChangeTarget": "#togglePassIcon" --}}
+          {{--                  }' --}}
+          {{--                  type="password" placeholder="Enter Password" /> --}}
+          {{--                <a class="input-group-text" id="togglePassTarget"><i class="bi-eye" id="togglePassIcon"></i></a> --}}
+          {{--                <span class="invalid-feedback" id="valEditUserPass"></span> --}}
+          {{--              </div> --}}
+          {{--            </div> --}}
+          {{--          </div> --}}
+          {{--          <!-- End Password --> --}}
 
           {{--          <!-- Confirm Password --> --}}
           {{--          <div class="row mb-4"> --}}
