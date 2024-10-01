@@ -159,7 +159,7 @@
                   <div class="row mb-4">
                     <label class="col-sm-3 col-form-label form-label" for="txtAccountRole">Role</label>
                     <div class="col-sm-9">
-                      <input class="form-control" id="txtAccountRole" type="text" value="{{ Auth::user()->role->name }}" readonly>
+                      <input class="form-control" id="txtAccountRole" type="text" value="{{ Auth::user()->getRoleNames()->first() }}" readonly>
                     </div>
                   </div>
                   <!-- End Role -->

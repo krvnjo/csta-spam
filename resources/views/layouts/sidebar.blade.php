@@ -16,9 +16,9 @@
       <!-- Sidebar Toggle -->
       <button class="js-navbar-vertical-aside-toggle-invoker navbar-aside-toggler" type="button">
         <i class="bi-arrow-bar-left navbar-toggler-short-align"
-          data-bs-template='<div class="tooltip d-none d-md-block" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'></i>
+          data-bs-template='<div class="tooltip d-none d-md-block"><div class="arrow"></div><div class="tooltip-inner"></div></div>'></i>
         <i class="bi-arrow-bar-right navbar-toggler-full-align"
-          data-bs-template='<div class="tooltip d-none d-md-block" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'></i>
+          data-bs-template='<div class="tooltip d-none d-md-block"><div class="arrow"></div><div class="tooltip-inner"></div></div>'></i>
       </button>
       <!-- End Sidebar Toggle -->
 

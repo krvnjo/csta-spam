@@ -93,7 +93,7 @@ class AccountController extends Controller
                     $image->move($folderPath, $filename);
                     $user->user_image = $filename;
                 } else {
-                    if ($user->user_image !== 'default.jpg') {
+                    if ($request->input('avatar') === 'default.jpg' && $user->user_image !== 'default.jpg') {
                         $oldImagePath = resource_path('img/uploads/user-images/' . $user->user_image);
                         if (File::exists($oldImagePath)) {
                             File::delete($oldImagePath);
