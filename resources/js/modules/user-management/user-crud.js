@@ -154,6 +154,7 @@ $(document).ready(function () {
 
     const editFormData = new FormData(userEditForm[0]);
     editFormData.append("_method", "PATCH");
+    editFormData.append("avatar", $("#imgEditDisplayUserImage").attr("src").split("/").pop());
 
     $.ajax({
       url: "/user-management/users/update",

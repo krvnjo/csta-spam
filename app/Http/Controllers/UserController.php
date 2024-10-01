@@ -21,7 +21,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::with('role', 'department')->whereNull('deleted_at')->get();
+        $users = User::with('roles', 'department')->whereNull('deleted_at')->get();
         $roles = Role::whereNull('deleted_at')->where('is_active', 1)->orderBy('name')->pluck('name', 'id');
         $depts = Department::whereNull('deleted_at')->where('is_active', 1)->orderBy('name')->pluck('name', 'id');
 
@@ -125,7 +125,6 @@ class UserController extends Controller
                     'fname' => ucwords(trim($request->input('fname'))),
                     'mname' => ucwords(trim($request->input('mname'))),
                     'lname' => ucwords(trim($request->input('lname'))),
-                    'role_id' => $request->input('role'),
                     'dept_id' => $request->input('dept'),
                     'email' => trim($request->input('email')),
                     'phone_num' => trim($request->input('phone')),
@@ -134,6 +133,7 @@ class UserController extends Controller
                     'user_image' => 'default.jpg',
                     'is_active' => 1,
                 ]);
+                $user->assignRole(Role::query()->find($request->input('role')));
 
                 if ($request->hasFile('image')) {
                     $image = $request->file('image');
@@ -178,7 +178,7 @@ class UserController extends Controller
                 'fname' => $user->fname,
                 'mname' => $user->mname ? $user->mname : 'N/A',
                 'lname' => $user->lname,
-                'role' => $user->role->name,
+                'role' => $user->roles()->first()->name,
                 'dept' => $user->department->name,
                 'email' => $user->email,
                 'phone' => $user->phone_num ? $user->phone_num : 'N/A',
@@ -212,7 +212,7 @@ class UserController extends Controller
                 'fname' => $user->fname,
                 'mname' => $user->mname,
                 'lname' => $user->lname,
-                'role' => $user->role_id,
+                'role' => $user->roles()->first()->id,
                 'dept' => $user->dept_id,
                 'email' => $user->email,
                 'phone' => $user->phone_num,
@@ -319,10 +319,10 @@ class UserController extends Controller
                 $user->fname = ucwords(trim($request->input('fname')));
                 $user->mname = ucwords(trim($request->input('mname')));
                 $user->lname = ucwords(trim($request->input('lname')));
-                $user->role_id = $request->input('role');
                 $user->dept_id = $request->input('dept');
                 $user->email = trim($request->input('email'));
                 $user->phone_num = trim($request->input('phone'));
+                $user->syncRoles(Role::query()->find($request->input('role')));
 
                 if ($request->hasFile('image')) {
                     if ($user->user_image && $user->user_image !== 'default.jpg') {
@@ -343,7 +343,7 @@ class UserController extends Controller
                     $image->move($folderPath, $filename);
                     $user->user_image = $filename;
                 } else {
-                    if ($user->user_image !== 'default.jpg') {
+                    if ($request->input('avatar') === 'default.jpg' && $user->user_image !== 'default.jpg') {
                         $oldImagePath = resource_path('img/uploads/user-images/' . $user->user_image);
                         if (File::exists($oldImagePath)) {
                             File::delete($oldImagePath);

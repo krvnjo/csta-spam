@@ -289,7 +289,7 @@
                   </td>
                   <td>{{ $user->user_name }}</td>
                   <td>
-                    <span class="d-block h5 mb-0">{{ $user->role->name }}</span>
+                    <span class="d-block h5 mb-0">{{ $user->roles()->first()->name }}</span>
                     <span class="d-block fs-5">{{ $user->department->name }}</span>
                   </td>
                   <td>{{ $user->phone_num }}</td>

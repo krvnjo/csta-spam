@@ -7,6 +7,7 @@ $(document).ready(function () {
 
     const accountBasicInfoFormData = new FormData(accountBasicInfoForm[0]);
     accountBasicInfoFormData.append("_method", "PATCH");
+    accountBasicInfoFormData.append("avatar", $("#imgDisplayAccountImage").attr("src").split("/").pop());
 
     $.ajax({
       url: "/account-settings/update",
