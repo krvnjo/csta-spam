@@ -16,6 +16,15 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $permissions = [
+            'view dashboard',
+            'view property-asset',
+            'create property-asset',
+            'edit property-asset',
+            'delete property-asset',
+            'view user-management',
+            'create user-management',
+            'edit user-management',
+            'delete user-management',
             'view file-maintenance',
             'create file-maintenance',
             'edit file-maintenance',
@@ -27,16 +36,36 @@ class UserSeeder extends Seeder
         }
 
         $roles = [
-            'Administrator',
-            'Property Custodian',
-            'Student Assistant',
+            'Administrator' => 'Responsible for overseeing the entire system, with full access to all settings and controls.',
+            'Property Custodian' => 'In charge of managing, tracking, and maintaining all property and equipment within the system.',
+            'Student Assistant' => 'Supports the Property Custodian in handling the day-to-day tasks of managing assets and equipment.',
         ];
 
-        foreach ($roles as $role) {
-            $roleInstance = Role::create(['name' => $role]);
+        foreach ($roles as $role => $description) {
+            $roleInstance = Role::create([
+                'name' => $role,
+                'description' => $description,
+            ]);
 
             if ($role === 'Administrator') {
                 $roleInstance->givePermissionTo($permissions);
+            } elseif ($role === 'Property Custodian') {
+                $roleInstance->givePermissionTo([
+                    'view property-asset',
+                    'create property-asset',
+                    'edit property-asset',
+                    'delete property-asset',
+                    'view file-maintenance',
+                    'create file-maintenance',
+                    'edit file-maintenance',
+                    'delete file-maintenance',
+                ]);
+            } elseif ($role === 'Student Assistant') {
+                $roleInstance->givePermissionTo([
+                    'view property-asset',
+                    'create property-asset',
+                    'edit property-asset',
+                ]);
             }
         }
 

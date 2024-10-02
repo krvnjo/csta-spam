@@ -12,7 +12,13 @@ class RoleController extends Controller
      */
     public function index()
     {
-        //
+        $roles = Role::whereNull('deleted_at')->get();
+
+        return view('pages.user-management.role',
+            compact(
+                'roles',
+            )
+        );
     }
 
     /**
