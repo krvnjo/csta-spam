@@ -4,17 +4,9 @@
   Dashboard
 @endsection
 
-@section('styles')
+@push('styles')
   <link href="{{ Vite::asset('resources/vendor/daterangepicker/daterangepicker.css') }}" rel="stylesheet">
-@endsection
-
-@section('header')
-  @include('layouts.header')
-@endsection
-
-@section('sidebar')
-  @include('layouts.sidebar')
-@endsection
+@endpush
 
 @section('main-content')
   <main class="main" id="content" role="main">
@@ -663,16 +655,11 @@
   </main>
 @endsection
 
-@section('footer')
-  @include('layouts.footer')
-@endsection
-
 @section('sub-content')
-  {{-- No Secondary Content --}}
+  {{-- Sub Content --}}
 @endsection
 
-@section('scripts')
-  <!-- JS Other Plugins -->
+@push('scripts')
   <script src="{{ Vite::asset('resources/vendor/chart.js/dist/Chart.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/daterangepicker/moment.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/daterangepicker/daterangepicker.js') }}"></script>
@@ -799,4 +786,4 @@
       }
     })()
   </script>
-@endsection
+@endpush

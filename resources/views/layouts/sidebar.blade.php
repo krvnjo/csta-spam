@@ -2,7 +2,7 @@
   <div class="navbar-vertical-container">
     <div class="navbar-vertical-footer-offset">
       <!-- Logo -->
-      <a class="navbar-brand" data-route="dashboard.index" href="{{ route('dashboard.index') }}" aria-label="CSTA - SPAM Logo">
+      <a class="navbar-brand" data-route="dashboard.index" href="{{ route('dashboard.index') }}">
         <img class="navbar-brand-logo" data-hs-theme-appearance="default" src="{{ Vite::asset('resources/svg/logos/logo.svg') }}" alt="CSTA - SPAM Logo">
         <img class="navbar-brand-logo" data-hs-theme-appearance="dark" src="{{ Vite::asset('resources/svg/logos-light/logo.svg') }}"
           alt="CSTA - SPAM Logo">

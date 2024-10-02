@@ -4,19 +4,11 @@
   P & A Masterlist | CSTA - SPAM
 @endsection
 
-@section('styles')
+@push('styles')
   <link href="{{ Vite::asset('resources/vendor/daterangepicker/daterangepicker.css') }}" rel="stylesheet">
   <link href="{{ Vite::asset('resources/vendor/jsvectormap/dist/css/jsvectormap.min.css') }}" rel="stylesheet">
   <link href="{{ Vite::asset('resources/vendor/tom-select/dist/css/tom-select.bootstrap5.css') }}" rel="stylesheet">
-@endsection
-
-@section('header')
-  @include('layouts.header')
-@endsection
-
-@section('sidebar')
-  @include('layouts.sidebar')
-@endsection
+@endpush
 
 @section('main-content')
   <main class="main" id="content" role="main">
@@ -385,10 +377,6 @@
   </main>
 @endsection
 
-@section('footer')
-  @include('layouts.footer')
-@endsection
-
 @section('sub-content')
   <x-property-asset.add-property :brands="$brands" :subcategories="$subcategories" :conditions="$conditions" :acquisitions="$acquisitions" />
 
@@ -646,7 +634,7 @@
   <!-- End Product Filter Modal -->
 @endsection
 
-@section('scripts')
+@push('scripts')
   <!-- JS Other Plugins -->
   <script src="{{ Vite::asset('resources/vendor/hs-toggle-password/dist/js/hs-toggle-password.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/hs-file-attach/dist/hs-file-attach.min.js') }}"></script>
@@ -811,4 +799,4 @@
       }
     })()
   </script>
-@endsection
+@endpush

@@ -1,18 +1,21 @@
 $(document).ready(function () {
   // ============ Update a User Account Information ============ //
+  const accountImageForm = $("#frmAccountImage");
   const accountBasicInfoForm = $("#frmAccountBasicInfo");
 
-  accountBasicInfoForm.on("submit", function (e) {
+  $("#btnAccountSave").on("click", function (e) {
     e.preventDefault();
 
-    const accountBasicInfoFormData = new FormData(accountBasicInfoForm[0]);
-    accountBasicInfoFormData.append("_method", "PATCH");
-    accountBasicInfoFormData.append("avatar", $("#imgDisplayAccountImage").attr("src").split("/").pop());
+    const accountImageFormData = new FormData(accountImageForm[0]);
+    accountImageFormData.append("_method", "PATCH");
+    accountImageFormData.append("avatar", $("#imgDisplayAccountImage").attr("src").split("/").pop());
+    accountImageFormData.append("email", accountBasicInfoForm.find('input[name="email"]').val());
+    accountImageFormData.append("phone", accountBasicInfoForm.find('input[name="phone"]').val());
 
     $.ajax({
-      url: "/account-settings/update",
+      url: "/account/update",
       method: "POST",
-      data: accountBasicInfoFormData,
+      data: accountImageFormData,
       dataType: "json",
       processData: false,
       contentType: false,
@@ -48,7 +51,7 @@ $(document).ready(function () {
     accountPasswordFormData.append("_method", "PATCH");
 
     $.ajax({
-      url: "/account-settings/update",
+      url: "/account/update",
       method: "POST",
       data: accountPasswordFormData,
       dataType: "json",

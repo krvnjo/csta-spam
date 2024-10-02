@@ -4,17 +4,9 @@
   Categories
 @endsection
 
-@section('styles')
+@push('styles')
   <link href="{{ Vite::asset('resources/vendor/tom-select/dist/css/tom-select.bootstrap5.css') }}" rel="stylesheet">
-@endsection
-
-@section('header')
-  @include('layouts.header')
-@endsection
-
-@section('sidebar')
-  @include('layouts.sidebar')
-@endsection
+@endpush
 
 @section('main-content')
   <main class="main" id="content" role="main">
@@ -340,18 +332,13 @@
   </main>
 @endsection
 
-@section('footer')
-  @include('layouts.footer')
-@endsection
-
 @section('sub-content')
   <x-file-maintenance.add-category />
   <x-file-maintenance.view-category />
   <x-file-maintenance.edit-category />
 @endsection
 
-@section('scripts')
-  <!-- JS Other Plugins -->
+@push('scripts')
   <script src="{{ Vite::asset('resources/vendor/tom-select/dist/js/tom-select.complete.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables/media/js/jquery.dataTables.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables.net.extensions/select/select.min.js') }}"></script>
@@ -466,4 +453,4 @@
       };
     })();
   </script>
-@endsection
+@endpush

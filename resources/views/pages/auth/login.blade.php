@@ -1,8 +1,12 @@
 @extends('layouts.guest')
 
 @section('title')
-  Sign in
+  Sign In
 @endsection
+
+@push('styles')
+  {{-- Styles --}}
+@endpush
 
 @section('main-content')
   <main class="main" id="content" role="main">
@@ -65,7 +69,7 @@
               </div>
 
               <div class="d-grid">
-                <button class="btn btn-primary btn-lg" type="submit" tabindex="3">Sign in</button>
+                <button class="btn btn-primary btn-lg" type="submit" tabindex="3">Sign In</button>
               </div>
             </form>
           </div>
@@ -82,3 +86,35 @@
     <!-- End Content -->
   </main>
 @endsection
+
+@section('sub-content')
+  {{-- Sub Content --}}
+@endsection
+
+@push('scripts')
+  <script src="{{ Vite::asset('resources/vendor/imask/dist/imask.min.js') }}"></script>
+  <script src="{{ Vite::asset('resources/vendor/hs-toggle-password/dist/js/hs-toggle-password.js') }}"></script>
+
+  <!-- JS Modules -->
+  <script src="{{ Vite::asset('resources/js/modules/auth/auth-user.js') }}"></script>
+
+  <!-- JS Themes -->
+  <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>
+
+  <!-- JS Plugins Init. -->
+  <script>
+    // Initialization of Other Plugins
+    (function() {
+      window.onload = function() {
+        // INITIALIZATION OF INPUT MASK
+        // =======================================================
+        HSCore.components.HSMask.init('.js-input-mask');
+
+
+        // INITIALIZATION OF TOGGLE PASSWORD
+        // =======================================================
+        new HSTogglePassword('.js-toggle-password')
+      }
+    })()
+  </script>
+@endpush

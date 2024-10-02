@@ -4,17 +4,9 @@
   Designations
 @endsection
 
-@section('styles')
+@push('styles')
   <link href="{{ Vite::asset('resources/vendor/tom-select/dist/css/tom-select.bootstrap5.css') }}" rel="stylesheet">
-@endsection
-
-@section('header')
-  @include('layouts.header')
-@endsection
-
-@section('sidebar')
-  @include('layouts.sidebar')
-@endsection
+@endpush
 
 @section('main-content')
   <main class="main" id="content" role="main">
@@ -367,17 +359,13 @@
   </main>
 @endsection
 
-@section('footer')
-  @include('layouts.footer')
-@endsection
-
 @section('sub-content')
   <x-file-maintenance.add-designation :departments="$departments" />
   <x-file-maintenance.view-designation />
   <x-file-maintenance.edit-designation :departments="$departments" />
 @endsection
 
-@section('scripts')
+@push('scripts')
   <!-- JS Other Plugins -->
   <script src="{{ Vite::asset('resources/vendor/tom-select/dist/js/tom-select.complete.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables/media/js/jquery.dataTables.min.js') }}"></script>
@@ -493,4 +481,4 @@
       };
     })();
   </script>
-@endsection
+@endpush

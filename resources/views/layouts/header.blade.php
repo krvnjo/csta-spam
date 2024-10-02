@@ -298,7 +298,7 @@
                   </div>
                   <div class="flex-grow-1 ms-3">
                     <h5 class="mb-0">{{ Auth::user()->fname . ' ' . Auth::user()->lname }}</h5>
-                    <p class="card-text text-body">{{ Auth::user()->getRoleNames()->first() }}</p>
+                    <p class="card-text text-body">{{ Auth::user()->roles()->first()->name }}</p>
                   </div>
                 </div>
               </div>
@@ -307,7 +307,7 @@
               <div class="dropdown-divider"></div>
 
               <!-- Account Settings -->
-              <a class="dropdown-item" href="{{ route('account.index', ['username' => Auth::user()->user_name]) }}">Account Settings</a>
+              <a class="dropdown-item" href="{{ route('account.index', ['username' => Auth::user()->user_name]) }}">Profile & Account</a>
               <!-- End Account Settings -->
 
               <!-- System Appearance -->
