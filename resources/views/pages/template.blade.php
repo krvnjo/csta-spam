@@ -4,31 +4,20 @@
   Starting Template
 @endsection
 
-@section('styles')
-@endsection
-
-@section('header')
-  @include('layouts.header')
-@endsection
-
-@section('sidebar')
-  @include('layouts.sidebar')
-@endsection
+@push('styles')
+  {{-- Styles --}}
+@endpush
 
 @section('main-content')
   {{-- Main Content --}}
-@endsection
-
-@section('footer')
-  @include('layouts.footer')
 @endsection
 
 @section('sub-content')
   {{-- Sub Content --}}
 @endsection
 
-@section('scripts')
-  <!-- JS Other Plugins -->
+@push('scripts')
+  {{-- Scripts --}}
 
   <!-- JS Themes -->
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>
@@ -54,4 +43,4 @@
       }
     })()
   </script>
-@endsection
+@endpush

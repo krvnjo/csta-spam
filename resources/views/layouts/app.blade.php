@@ -5,20 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="current-route" content="{{ Route::currentRouteName() }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title') | {{ config('app.name') }} </title>
 
-    <!-- Vite Asset Bundling -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- Title -->
+    <title>@yield('title') | {{ config('app.name') }} </title>
 
     <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
     <!-- CSS Plugins -->
-    @yield('styles')
+    @stack('styles')
 
-    <!-- CSS Theme -->
+    <!-- CSS Themes -->
     <link data-hs-appearance="default" href="{{ Vite::asset('resources/css/theme.min.css') }}" rel="stylesheet">
     <link data-hs-appearance="dark" href="{{ Vite::asset('resources/css/theme-dark.min.css') }}" rel="stylesheet">
+
+    <!-- Vite Asset Bundling -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- JS Window Config -->
     <script src="{{ Vite::asset('resources/js/hs-window-config') }}"></script>
@@ -29,11 +31,11 @@
     <script src="{{ Vite::asset('resources/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js') }}"></script>
 
     <!-- ========== Header ========== -->
-    @yield('header')
+    @include('layouts.header')
     <!-- ========== End Header ========== -->
 
     <!-- ========== Sidebar ========== -->
-    @yield('sidebar')
+    @include('layouts.sidebar')
     <!-- ========== End Sidebar ========== -->
 
     <!-- ========== Main Content ========== -->
@@ -41,7 +43,7 @@
     <!-- ========== End Main Content ========== -->
 
     <!-- ========== Footer ========== -->
-    @yield('footer')
+    @include('layouts.footer')
     <!-- ========== End Footer ========== -->
 
     <!-- ========== Secondary Content ========== -->
@@ -56,7 +58,7 @@
     <script src="{{ Vite::asset('resources/vendor/hs-form-search/dist/hs-form-search.min.js') }}"></script>
 
     <!-- JS Plugins -->
-    @yield('scripts')
+    @stack('scripts')
 
     <!-- JS Style Switcher -->
     <script src="{{ Vite::asset('resources/js/hs-style-switcher.js') }}"></script>

@@ -25,7 +25,7 @@ class AccountController extends Controller
             abort(403, 'Unauthorized access.');
         }
 
-        return view('pages.account.setting');
+        return view('pages.account.account');
     }
 
     /**
