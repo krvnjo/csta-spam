@@ -17,11 +17,9 @@
           <button class="btn-close btn-close-light" type="button"></button>
         </div>
       </div>
-
       <!-- End Header -->
       <form id="frmAddProperty" method="post" novalidate enctype="multipart/form-data">
         @csrf
-
         <div class="modal-body custom-modal-body">
           <div class="row">
             <div class="col-lg-6">
@@ -32,7 +30,6 @@
                 <span class="invalid-feedback" id="valAddName"></span>
               </div>
             </div>
-
             <div class="col-lg-6">
               <div class="tom-select-custom mb-3">
                 <label class="form-label" for="cbxCondition">
@@ -48,7 +45,6 @@
               </div>
             </div>
           </div>
-
           <div class="row">
             <div class="col-lg-4">
               <div class="tom-select-custom mb-3">
@@ -65,7 +61,6 @@
                 <span class="invalid-feedback" id="valAddCategory"></span>
               </div>
             </div>
-
             <div class="col-lg-4">
               <div class="tom-select-custom mb-3">
                 <label class="form-label" for="cbxBrand">
@@ -80,7 +75,6 @@
                 <span class="invalid-feedback" id="valAddBrand"></span>
               </div>
             </div>
-
             <div class="col-lg-4">
               <div class="mb-3">
                 <label class="form-label" for="txtQuantity">Quantity: <span class="text-danger">*</span></label>
@@ -89,7 +83,6 @@
               </div>
             </div>
           </div>
-
           <div class="row">
             <div class="col-lg">
               <div class="mb-3">
@@ -99,7 +92,6 @@
               </div>
             </div>
           </div>
-
           <div class="row">
             <div class="col-lg-4">
               <div class="tom-select-custom mb-3">
@@ -115,7 +107,6 @@
                 <span class="invalid-feedback" id="valAddAcquired"></span>
               </div>
             </div>
-
             <div class="col-lg-4">
               <div class="mb-3">
                 <label class="form-label" for="dtpAcquired">
@@ -125,7 +116,6 @@
                 <span class="invalid-feedback" id="valAddDtpAcq"></span>
               </div>
             </div>
-
             <div class="col-lg-4">
               <div class="mb-3">
                 <label class="form-label" for="dtpWarranty"> Warranty Date: </label>
@@ -134,14 +124,13 @@
               </div>
             </div>
           </div>
-
           <div class="row">
             <div class="col-lg">
               <div class="mb-3">
-                <label class="form-label" for="propertyDropzone">Image:</label>
+                <label class="form-label" for="addPropertyDropzone">Image:</label>
                 <div style="padding-left: 1.4rem">
                   <!-- Dropzone -->
-                  <div class="js-dropzone row dz-dropzone dz-dropzone-card" id="propertyDropzone">
+                  <div class="js-dropzone row dz-dropzone dz-dropzone-card" id="addPropertyDropzone">
                     <div class="dz-message">
                       <img class="avatar avatar-xl avatar-4x3 mb-3" src="{{ Vite::asset('resources/svg/illustrations/oc-browse.svg') }}"
                         alt="Image Description">
@@ -152,13 +141,10 @@
                   </div>
                   <!-- End Dropzone -->
                 </div>
-
               </div>
             </div>
           </div>
-
         </div>
-
         <div class="modal-footer">
           <button class="btn btn-secondary" type="button">Close</button>
           <button class="btn btn-primary" form="frmAddProperty" type="submit">Save</button>
@@ -170,22 +156,30 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    var categorySelect = new TomSelect('#cbxCategory', {
+    let categorySelect = new TomSelect('#cbxCategory', {
       controlInput: false,
       hideSearch: true,
       allowEmptyOption: true,
       onChange: function(value) {
         if (value) {
           $.ajax({
-            url: '{{ route("prop-asset.getSubcategoryBrands") }}',
+            url: '{{ route('prop-asset.getSubcategoryBrands') }}',
             type: 'GET',
-            data: { subcategory_id: value },
+            data: {
+              subcategory_id: value
+            },
             success: function(data) {
               brandSelect.clear();
               brandSelect.clearOptions();
-              brandSelect.addOption({value: '', text: 'Select Brand...'});
+              brandSelect.addOption({
+                value: '',
+                text: 'Select Brand...'
+              });
               data.forEach(function(item) {
-                brandSelect.addOption({value: item.id, text: item.name});
+                brandSelect.addOption({
+                  value: item.id,
+                  text: item.name
+                });
               });
               brandSelect.refreshOptions();
             }
@@ -193,13 +187,19 @@
         } else {
           brandSelect.clear();
           brandSelect.clearOptions();
-          brandSelect.addOption({value: '', text: 'Select Brand...'});
+          brandSelect.addOption({
+            value: '',
+            text: 'Select Brand...'
+          });
           brandSelect.refreshOptions();
         }
       }
     });
 
-    var brandSelect = new TomSelect('#cbxBrand', {
+    let selectedCategory = categorySelect.getValue();
+    console.log(selectedCategory);
+
+    let brandSelect = new TomSelect('#cbxBrand', {
       controlInput: false,
       hideSearch: true,
       allowEmptyOption: true
@@ -227,7 +227,7 @@
 </script>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
+  document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('frmAddProperty');
     let isDirty = false;
 
@@ -262,7 +262,7 @@
       });
     });
 
-    const dropzone = Dropzone.forElement("#propertyDropzone");
+    const dropzone = Dropzone.forElement("#addPropertyDropzone");
 
     dropzone.on("addedfile", function() {
       isDirty = true;
@@ -274,7 +274,7 @@
 
     const closeButtons = document.querySelectorAll('.btn-close, .btn-secondary');
     closeButtons.forEach(button => {
-      button.addEventListener('click', function (e) {
+      button.addEventListener('click', function(e) {
         if (isDirty) {
           e.preventDefault();
           Swal.fire({
@@ -290,8 +290,7 @@
             },
             backdrop: true,
             allowOutsideClick: false,
-            allowEscapeKey: false,
-            allowEnterKey: false
+            allowEscapeKey: false
           }).then((result) => {
             if (result.isConfirmed) {
               clearValidationErrors();

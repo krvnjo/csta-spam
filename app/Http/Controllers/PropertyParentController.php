@@ -10,6 +10,7 @@ use App\Models\PropertyParent;
 use App\Models\Subcategory;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
@@ -136,7 +137,8 @@ class PropertyParentController extends Controller
                     $file = $request->file('propertyImage');
                     if ($file !== null && $file->isValid()) {
                         $filename = time() . '_' . $file->getClientOriginalName();
-                        $file->move(resource_path('img/uploads/prop-asset/'), $filename);
+                        $file->move(storage_path('app/public/img-uploads/prop-asset/'), $filename);
+//                        $file->move(resource_path('img/uploads/prop-asset/'), $filename);
                         $imageFileName = $filename;
                     } else {
                         $imageFileName = 'default.jpg';
@@ -225,9 +227,27 @@ class PropertyParentController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(PropertyParent $propertyParent)
+    public function edit(Request $request)
     {
-        //
+        try {
+            $propertyParent = PropertyParent::query()->findOrFail(Crypt::decryptString($request->input('id')));
+
+            return response()->json([
+                'success' => true,
+                'id' => $request->input('id'),
+                'image' => $propertyParent->image,
+                'name' => $propertyParent->name,
+                'brand_id' => $propertyParent->brand_id,
+                'subcateg_id' => $propertyParent->subcateg_id,
+                'description' => $propertyParent->description,
+            ]);
+        } catch (Throwable) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Oops! Something went wrong.',
+                'message' => 'An error occurred while fetching the property item.',
+            ], 500);
+        }
     }
 
     /**

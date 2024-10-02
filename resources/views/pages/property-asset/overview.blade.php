@@ -233,11 +233,11 @@
 
         <!-- Table -->
         <div class="table-responsive datatable-custom position-relative">
-          <table class="table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table table table-hover"
+          <table class="table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table table table-hover w-100"
             id="propertyOverviewDatatable"
             data-hs-datatables-options='{
                    "columnDefs": [{
-                      "targets": [0, 6],
+                      "targets": [0, 7],
                       "orderable": false
                     }],
                    "order": [],
@@ -259,7 +259,8 @@
                     <label class="form-check-label" for="propertyDatatableCheckAll"></label>
                   </div>
                 </th>
-                <th class="table-column-ps-0" style="width: 20%">Item Name</th>
+                <th class="d-none w-auto">Property Id</th>
+                <th style="width: 20%">Item Name</th>
                 <th style="width: 20%">Description</th>
                 <th style="width: 15%">Category</th>
                 <th style="width: 15%">Brand</th>
@@ -277,15 +278,16 @@
                       <label class="form-check-label" for="propertyCheckAll1"></label>
                     </div>
                   </td>
-                  <td class="table-column-ps-0">
+                  <td class="d-none" data-property-id="{{ Crypt::encryptString($propertyParent->id) }}"></td>
+                  <td>
                     <a class="d-flex align-items-center" href="">
                       <div class="avatar avatar-lg">
                         @php
-                          $imagePath = resource_path('img/uploads/prop-asset/' . $propertyParent->image);
-                          $defaultImagePath = resource_path('img/default.jpg');
+                          $imagePath = storage_path('app/public/img-uploads/prop-asset/' . $propertyParent->image);
+                          $defaultImagePath = storage_path('app/public/img-uploads/prop-asset/default.jpg');
                           $imageUrl = file_exists($imagePath)
-                              ? Vite::asset('resources/img/uploads/prop-asset/' . $propertyParent->image)
-                              : Vite::asset('resources/img/uploads/prop-asset/default.jpg');
+                              ? asset('storage/img-uploads/prop-asset/' . $propertyParent->image)
+                              : asset('storage/img-uploads/prop-asset/default.jpg');
                         @endphp
                         <img class="avatar-img" src="{{ $imageUrl }}" alt="Image Description">
                       </div>
@@ -321,7 +323,7 @@
                           data-bs-toggle="dropdown" type="button" aria-expanded="false"></button>
 
                         <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="productsEditDropdown1">
-                          <button class="dropdown-item" id="btnEditPropParent" data-prop-parent-id="{{ $propertyParent->id }}" type="button">
+                          <button class="dropdown-item btnEditPropParent" type="button">
                             <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Item
                           </button>
                         </div>
@@ -391,6 +393,8 @@
 
 @section('sub-content')
   <x-property-asset.add-property :brands="$brands" :subcategories="$subcategories" :conditions="$conditions" :acquisitions="$acquisitions" />
+
+  <x-property-asset.edit-property :brands="$brands" :subcategories="$subcategories" />
 
   <!-- Product Filter Modal -->
   <div class="offcanvas offcanvas-end" id="offcanvasPropertyFilter" aria-labelledby="offcanvasPropertyFilterLabel" tabindex="-1">
@@ -672,7 +676,7 @@
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>
 
   <!-- JS Modules -->
-  <script src="{{ Vite::asset('resources/js/modules/properties-assets/property-modules.js') }}"></script>
+  <script src="{{ Vite::asset('resources/js/modules/properties-assets/property-stock-crud.js') }}"></script>
 
   <!-- JS Plugins Init. -->
 
@@ -680,6 +684,8 @@
     (function() {
       // INITIALIZATION OF DROPZONE
       // =======================================================
+      var addDropzone, editDropzone;
+
       HSCore.components.HSDropzone.init('.js-dropzone', {
         maxFiles: 1,
         maxFilesize: 1,
@@ -688,6 +694,12 @@
 
         init: function() {
           var dropzoneInstance = this;
+
+          if (this.element.id === 'addPropertyDropzone') {
+            addDropzone = this;
+          } else if (this.element.id === 'editPropertyDropzone') {
+            editDropzone = this;
+          }
 
           this.on("addedfile", function(file) {
             dropzoneInstance.element.querySelector(".dz-message").style.display = "none";
@@ -711,7 +723,6 @@
       });
     })();
   </script>
-
   <script>
     $(document).on('ready', function() {
       // INITIALIZATION OF DATATABLES

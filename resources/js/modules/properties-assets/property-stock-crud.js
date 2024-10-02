@@ -21,7 +21,7 @@ $(document).ready(function () {
     remarks: $("#txtRemarks")
   };
 
-  const propertyDropzone = Dropzone.forElement("#propertyDropzone");
+  const propertyDropzone = Dropzone.forElement("#addPropertyDropzone");
 
   const validationMessages = {
     propertyName: $("#valAddName"),
@@ -35,7 +35,7 @@ $(document).ready(function () {
     warranty: $("#valAddWarranty")
   };
 
-  handleUnsavedChanges(propertyAddModal, propertyAddForm);
+  // handleUnsavedChanges(propertyAddModal, propertyAddForm);
 
   propertyAddForm.on("submit", function (e) {
     e.preventDefault();
@@ -92,4 +92,44 @@ $(document).ready(function () {
     });
   });
   // End Create a Property
+
+  // ============ Update a Stock Item ============ //
+  const propertyEditModal = $("#editPropertyModal");
+  const propertyEditForm = $("#frmEditProperty");
+  const editDropzone = $("editPropertyDropzone");
+
+  // handleUnsavedChanges(propertyEditModal, propertyEditForm, $("#btnEditSaveDesignation"));
+
+  propertyDatatable.on("click", ".btnEditPropParent", function () {
+    const propertyId = $(this).closest("tr").find("td[data-property-id]").data("property-id");
+
+    $.ajax({
+      url: "/properties-assets/stocks/edit",
+      method: "GET",
+      data: { id: propertyId },
+      success: function (response) {
+        // Replace this entire success function with the following code:
+        propertyEditModal.modal("toggle");
+        $("#txtEditPropertyId").val(response.id);
+        $("#txtEditPropertyName").val(response.name);
+        $("#cbxEditCategory")[0].tomselect.setValue(response.subcateg_id);
+        $("#cbxEditBrand")[0].tomselect.setValue(response.brand_id);
+        $("#txtEditDescription").val(response.description);
+
+        // // Clear existing files in dropzone
+        // editDropzone.removeAllFiles();
+        //
+        // // If there's an image, add it to dropzone
+        // if (response.image) {
+        //   let mockFile = { name: "Existing Image", size: 12345 };
+        //   let imageUrl = '/storage/img-uploads/prop-asset/' + response.image;// Adjust this path if needed
+        //   editDropzone.displayExistingFile(mockFile, imageUrl);
+        // }
+      },
+      error: function (response) {
+        showErrorAlert(response.responseJSON, propertyEditModal, propertyEditForm);
+      },
+    });
+  });
+
 });
