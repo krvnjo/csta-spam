@@ -94,7 +94,7 @@
                       $remainingPermissionsCount = $role->permissions->count() - 5;
                     @endphp
 
-                    <ul class="list-pointer list-pointer-primary">
+                    <ul class="list-pointer list-pointer">
                       @foreach ($permissionsToShow as $permission)
                         <li class="list-pointer-item">{{ $permission->name }}</li>
                       @endforeach
