@@ -35,7 +35,7 @@ $(document).ready(function () {
     warranty: $("#valAddWarranty")
   };
 
-  // handleUnsavedChanges(propertyAddModal, propertyAddForm);
+  handleUnsavedChanges(propertyAddModal, propertyAddForm, $('#btnAddSaveProperty'));
 
   propertyAddForm.on("submit", function (e) {
     e.preventDefault();
@@ -108,7 +108,6 @@ $(document).ready(function () {
       method: "GET",
       data: { id: propertyId },
       success: function (response) {
-        // Replace this entire success function with the following code:
         propertyEditModal.modal("toggle");
         $("#txtEditPropertyId").val(response.id);
         $("#txtEditPropertyName").val(response.name);

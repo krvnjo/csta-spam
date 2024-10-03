@@ -14,7 +14,7 @@
           </span>
         </div>
         <div class="modal-close" style="position: absolute; top: 1rem; right: 1rem;">
-          <button class="btn-close btn-close-light" type="button"></button>
+          <button class="btn-close btn-close-light" data-bs-dismiss="modal" type="button"></button>
         </div>
       </div>
       <!-- End Header -->
@@ -146,8 +146,8 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" type="button">Close</button>
-          <button class="btn btn-primary" form="frmAddProperty" type="submit">Save</button>
+          <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Close</button>
+          <button class="btn btn-primary" id="btnAddSaveProperty" form="frmAddProperty" type="submit">Save</button>
         </div>
       </form>
     </div>
@@ -226,106 +226,106 @@
   });
 </script>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('frmAddProperty');
-    let isDirty = false;
+{{-- <script> --}}
+{{--  document.addEventListener('DOMContentLoaded', function() { --}}
+{{--    const form = document.getElementById('frmAddProperty'); --}}
+{{--    let isDirty = false; --}}
 
-    const inputs = form.querySelectorAll('input, select, textarea');
+{{--    const inputs = form.querySelectorAll('input, select, textarea'); --}}
 
-    // Function to check if form is dirty
-    function checkFormDirty() {
-      let formIsDirty = false;
-      inputs.forEach(input => {
-        if (input.value !== "" && input.value !== input.defaultValue) {
-          formIsDirty = true;
-        }
-      });
-      return formIsDirty || dropzone.files.length > 0;
-    }
+{{--    // Function to check if form is dirty --}}
+{{--    function checkFormDirty() { --}}
+{{--      let formIsDirty = false; --}}
+{{--      inputs.forEach(input => { --}}
+{{--        if (input.value !== "" && input.value !== input.defaultValue) { --}}
+{{--          formIsDirty = true; --}}
+{{--        } --}}
+{{--      }); --}}
+{{--      return formIsDirty || dropzone.files.length > 0; --}}
+{{--    } --}}
 
-    // Function to clear validation error classes and messages
-    function clearValidationErrors() {
-      form.querySelectorAll('input, select, textarea').forEach((input) => {
-        input.classList.remove('is-invalid');
-        const feedback = input.nextElementSibling;
-        if (feedback && feedback.classList.contains('invalid-feedback')) {
-          feedback.textContent = '';
-        }
-      });
-    }
+{{--    // Function to clear validation error classes and messages --}}
+{{--    function clearValidationErrors() { --}}
+{{--      form.querySelectorAll('input, select, textarea').forEach((input) => { --}}
+{{--        input.classList.remove('is-invalid'); --}}
+{{--        const feedback = input.nextElementSibling; --}}
+{{--        if (feedback && feedback.classList.contains('invalid-feedback')) { --}}
+{{--          feedback.textContent = ''; --}}
+{{--        } --}}
+{{--      }); --}}
+{{--    } --}}
 
-    // Check input changes
-    inputs.forEach(input => {
-      input.addEventListener('change', () => {
-        isDirty = checkFormDirty();
-      });
-    });
+{{--    // Check input changes --}}
+{{--    inputs.forEach(input => { --}}
+{{--      input.addEventListener('change', () => { --}}
+{{--        isDirty = checkFormDirty(); --}}
+{{--      }); --}}
+{{--    }); --}}
 
-    const dropzone = Dropzone.forElement("#addPropertyDropzone");
+{{--    const dropzone = Dropzone.forElement("#addPropertyDropzone"); --}}
 
-    dropzone.on("addedfile", function() {
-      isDirty = true;
-    });
+{{--    dropzone.on("addedfile", function() { --}}
+{{--      isDirty = true; --}}
+{{--    }); --}}
 
-    dropzone.on("removedfile", function() {
-      isDirty = checkFormDirty();
-    });
+{{--    dropzone.on("removedfile", function() { --}}
+{{--      isDirty = checkFormDirty(); --}}
+{{--    }); --}}
 
-    const closeButtons = document.querySelectorAll('.btn-close, .btn-secondary');
-    closeButtons.forEach(button => {
-      button.addEventListener('click', function(e) {
-        if (isDirty) {
-          e.preventDefault();
-          Swal.fire({
-            title: "Unsaved Changes!",
-            text: "You have unsaved changes. Are you sure you want to close the modal?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Yes, close it!",
-            cancelButtonText: "No, keep editing",
-            customClass: {
-              confirmButton: "btn btn-danger",
-              cancelButton: "btn btn-secondary",
-            },
-            backdrop: true,
-            allowOutsideClick: false,
-            allowEscapeKey: false
-          }).then((result) => {
-            if (result.isConfirmed) {
-              clearValidationErrors();
+{{--    const closeButtons = document.querySelectorAll('.btn-close, .btn-secondary'); --}}
+{{--    closeButtons.forEach(button => { --}}
+{{--      button.addEventListener('click', function(e) { --}}
+{{--        if (isDirty) { --}}
+{{--          e.preventDefault(); --}}
+{{--          Swal.fire({ --}}
+{{--            title: "Unsaved Changes!", --}}
+{{--            text: "You have unsaved changes. Are you sure you want to close the modal?", --}}
+{{--            icon: "warning", --}}
+{{--            showCancelButton: true, --}}
+{{--            confirmButtonText: "Yes, close it!", --}}
+{{--            cancelButtonText: "No, keep editing", --}}
+{{--            customClass: { --}}
+{{--              confirmButton: "btn btn-danger", --}}
+{{--              cancelButton: "btn btn-secondary", --}}
+{{--            }, --}}
+{{--            backdrop: true, --}}
+{{--            allowOutsideClick: false, --}}
+{{--            allowEscapeKey: false --}}
+{{--          }).then((result) => { --}}
+{{--            if (result.isConfirmed) { --}}
+{{--              clearValidationErrors(); --}}
 
-              form.reset();
+{{--              form.reset(); --}}
 
-              // Reset select inputs
-              const categorySelect = document.querySelector('#cbxCategory').tomselect;
-              const brandSelect = document.querySelector('#cbxBrand').tomselect;
-              const acquiredSelect = document.querySelector('#cbxAcquiredType').tomselect;
-              const conditionSelect = document.querySelector('#cbxCondition').tomselect;
+{{--              // Reset select inputs --}}
+{{--              const categorySelect = document.querySelector('#cbxCategory').tomselect; --}}
+{{--              const brandSelect = document.querySelector('#cbxBrand').tomselect; --}}
+{{--              const acquiredSelect = document.querySelector('#cbxAcquiredType').tomselect; --}}
+{{--              const conditionSelect = document.querySelector('#cbxCondition').tomselect; --}}
 
-              categorySelect.clear();
-              categorySelect.setValue('');
-              brandSelect.clear();
-              brandSelect.setValue('');
-              acquiredSelect.clear();
-              acquiredSelect.setValue('');
-              conditionSelect.clear();
-              conditionSelect.setValue('');
+{{--              categorySelect.clear(); --}}
+{{--              categorySelect.setValue(''); --}}
+{{--              brandSelect.clear(); --}}
+{{--              brandSelect.setValue(''); --}}
+{{--              acquiredSelect.clear(); --}}
+{{--              acquiredSelect.setValue(''); --}}
+{{--              conditionSelect.clear(); --}}
+{{--              conditionSelect.setValue(''); --}}
 
-              dropzone.removeAllFiles(true);
+{{--              dropzone.removeAllFiles(true); --}}
 
-              isDirty = false;
+{{--              isDirty = false; --}}
 
-              $('#addPropertyModal').modal('hide');
-            } else {
-              Swal.close();
-            }
-          });
-        } else {
-          clearValidationErrors();
-          $('#addPropertyModal').modal('hide');
-        }
-      });
-    });
-  });
-</script>
+{{--              $('#addPropertyModal').modal('hide'); --}}
+{{--            } else { --}}
+{{--              Swal.close(); --}}
+{{--            } --}}
+{{--          }); --}}
+{{--        } else { --}}
+{{--          clearValidationErrors(); --}}
+{{--          $('#addPropertyModal').modal('hide'); --}}
+{{--        } --}}
+{{--      }); --}}
+{{--    }); --}}
+{{--  }); --}}
+{{-- </script> --}}
