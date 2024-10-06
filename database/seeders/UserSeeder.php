@@ -16,19 +16,11 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $permissions = [
-            'view dashboard',
-            'view property-asset',
-            'create property-asset',
-            'edit property-asset',
-            'delete property-asset',
-            'view user-management',
-            'create user-management',
-            'edit user-management',
-            'delete user-management',
-            'view file-maintenance',
-            'create file-maintenance',
-            'edit file-maintenance',
-            'delete file-maintenance',
+            'Dashboard',
+            'Inventory Management',
+            'User Management',
+            'File Maintenance',
+            'Audit Logs',
         ];
 
         foreach ($permissions as $permission) {
@@ -41,31 +33,41 @@ class UserSeeder extends Seeder
             'Student Assistant' => 'Supports the Property Custodian in handling the day-to-day tasks of managing assets and equipment.',
         ];
 
-        foreach ($roles as $role => $description) {
-            $roleInstance = Role::create([
-                'name' => $role,
+        foreach ($roles as $roleName => $description) {
+            $role = Role::create([
+                'name' => $roleName,
                 'description' => $description,
             ]);
 
-            if ($role === 'Administrator') {
-                $roleInstance->givePermissionTo($permissions);
-            } elseif ($role === 'Property Custodian') {
-                $roleInstance->givePermissionTo([
-                    'view property-asset',
-                    'create property-asset',
-                    'edit property-asset',
-                    'delete property-asset',
-                    'view file-maintenance',
-                    'create file-maintenance',
-                    'edit file-maintenance',
-                    'delete file-maintenance',
-                ]);
-            } elseif ($role === 'Student Assistant') {
-                $roleInstance->givePermissionTo([
-                    'view property-asset',
-                    'create property-asset',
-                    'edit property-asset',
-                ]);
+            foreach (Permission::all() as $permission) {
+                switch ($roleName) {
+                    case 'Administrator':
+                        $role->permissions()->attach($permission->id, [
+                            'can_view' => 1,
+                            'can_create' => 1,
+                            'can_edit' => 1,
+                            'can_delete' => 1,
+                        ]);
+                        break;
+
+                    case 'Property Custodian':
+                        $role->permissions()->attach($permission->id, [
+                            'can_view' => 1,
+                            'can_create' => 1,
+                            'can_edit' => 0,
+                            'can_delete' => 0,
+                        ]);
+                        break;
+
+                    case 'Student Assistant':
+                        $role->permissions()->attach($permission->id, [
+                            'can_view' => 1,
+                            'can_create' => 0,
+                            'can_edit' => 0,
+                            'can_delete' => 0,
+                        ]);
+                        break;
+                }
             }
         }
 

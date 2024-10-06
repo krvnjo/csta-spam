@@ -195,7 +195,8 @@ window.handleUnsavedChanges = handleUnsavedChanges;
 
 // Clean Modal Form
 function cleanModalForm(modal, form, flag = "add") {
-  form.find(":input").removeClass("is-invalid").siblings(".invalid-feedback").empty();
+  form.find(":input").removeClass("is-invalid");
+  form.find(".invalid-feedback").empty();
 
   form.find("select").each(function () {
     const tsWrapper = $(this).next(".ts-wrapper");
