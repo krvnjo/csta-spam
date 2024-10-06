@@ -38,7 +38,7 @@
           <span class="dropdown-header mt-4">Main Menu</span>
           <small class="bi-three-dots nav-subtitle-replacer"></small>
 
-          <div id="navbarVerticalMenuPagesMenu">
+          <div id="navbarVerticalMenuMainMenu">
             <!-- Property and Assets -->
             <div class="nav-item">
               <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesPropertyAssets">
@@ -46,7 +46,7 @@
                 <span class="nav-link-title">P&A Management</span>
               </a>
 
-              <div class="nav-collapse collapse" id="navbarVerticalMenuPagesPropertyAssets" data-bs-parent="#navbarVerticalMenuPagesMenu">
+              <div class="nav-collapse collapse" id="navbarVerticalMenuPagesPropertyAssets" data-bs-parent="#navbarVerticalMenuMainMenu">
                 <a class="nav-link" href="/properties-assets/stocks">Stock Masterlist</a>
                 <a class="nav-link" href="/properties-inventory/overview">Inventory Masterlist</a>
               </div>
@@ -86,58 +86,60 @@
           <span class="dropdown-header mt-4">Others</span>
           <small class="bi-three-dots nav-subtitle-replacer"></small>
 
-          <!-- User Management -->
-          <div class="nav-item">
-            <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuUserManagement">
-              <i class="bi-people nav-icon"></i>
-              <span class="nav-link-title">User Management</span>
-            </a>
-
-            <div class="nav-collapse collapse" id="navbarVerticalMenuUserManagement" data-bs-parent="#navbarVerticalMenu">
-              <a class="nav-link" data-route="user.index" href="{{ route('user.index') }}">Users</a>
-              <a class="nav-link" data-route="role.index" href="{{ route('role.index') }}">Roles</a>
-            </div>
-          </div>
-          <!-- End User Management -->
-
-          <!-- File Maintenance -->
-          <div class="nav-item">
+          <div id="navbarVerticalMenuOthersMenu">
+            <!-- User Management -->
             <div class="nav-item">
-              <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuFileMaintenance">
-                <i class="bi-folder2-open nav-icon"></i>
-                <span class="nav-link-title">File Maintenance</span>
+              <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuUserManagement">
+                <i class="bi-people nav-icon"></i>
+                <span class="nav-link-title">User Management</span>
               </a>
 
-              <div class="nav-collapse collapse" id="navbarVerticalMenuFileMaintenance" data-bs-parent="#navbarVerticalMenu">
-                <a class="nav-link" data-route="brand.index" href="{{ route('brand.index') }}">Brands</a>
-                <a class="nav-link" data-route="category.index" href="{{ route('category.index') }}">Categories</a>
-                <a class="nav-link" data-route="condition.index" href="{{ route('condition.index') }}">Conditions</a>
-                <a class="nav-link" data-route="department.index" href="{{ route('department.index') }}">Departments</a>
-                <a class="nav-link" data-route="designation.index" href="{{ route('designation.index') }}">Designations</a>
-                <a class="nav-link" data-route="status.index" href="{{ route('status.index') }}">Statuses</a>
-                <a class="nav-link" data-route="subcategory.index" href="{{ route('subcategory.index') }}">Subcategories</a>
+              <div class="nav-collapse collapse" id="navbarVerticalMenuUserManagement" data-bs-parent="#navbarVerticalMenuOthersMenu">
+                <a class="nav-link" data-route="user.index" href="{{ route('user.index') }}">Users</a>
+                <a class="nav-link" data-route="role.index" href="{{ route('role.index') }}">Roles</a>
               </div>
             </div>
-          </div>
-          <!-- End File Maintenance -->
+            <!-- End User Management -->
 
-          <!-- Activity History -->
-          <div class="nav-item">
-            <a class="nav-link" data-placement="left" href="#">
-              <i class="bi-clock-history nav-icon"></i>
-              <span class="nav-link-title">Activity History</span>
-            </a>
-          </div>
-          <!-- End Activity History -->
+            <!-- File Maintenance -->
+            <div class="nav-item">
+              <div class="nav-item">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuFileMaintenance">
+                  <i class="bi-folder2-open nav-icon"></i>
+                  <span class="nav-link-title">File Maintenance</span>
+                </a>
 
-          <!-- System Settings -->
-          <div class="nav-item">
-            <a class="nav-link" data-placement="left" href="#">
-              <i class="bi-gear nav-icon"></i>
-              <span class="nav-link-title">System Settings</span>
-            </a>
+                <div class="nav-collapse collapse" id="navbarVerticalMenuFileMaintenance" data-bs-parent="#navbarVerticalMenuOthersMenu">
+                  <a class="nav-link" data-route="brand.index" href="{{ route('brand.index') }}">Brands</a>
+                  <a class="nav-link" data-route="category.index" href="{{ route('category.index') }}">Categories</a>
+                  <a class="nav-link" data-route="condition.index" href="{{ route('condition.index') }}">Conditions</a>
+                  <a class="nav-link" data-route="department.index" href="{{ route('department.index') }}">Departments</a>
+                  <a class="nav-link" data-route="designation.index" href="{{ route('designation.index') }}">Designations</a>
+                  <a class="nav-link" data-route="status.index" href="{{ route('status.index') }}">Statuses</a>
+                  <a class="nav-link" data-route="subcategory.index" href="{{ route('subcategory.index') }}">Subcategories</a>
+                </div>
+              </div>
+            </div>
+            <!-- End File Maintenance -->
+
+            <!-- Audit History -->
+            <div class="nav-item">
+              <a class="nav-link" data-placement="left" data-route="audit.index" href="{{ route('audit.index') }}">
+                <i class="bi-clock-history nav-icon"></i>
+                <span class="nav-link-title">Audit History</span>
+              </a>
+            </div>
+            <!-- End Audit History -->
+
+            <!-- System Settings -->
+            <div class="nav-item">
+              <a class="nav-link" data-placement="left" data-route="system.index" href="{{ route('system.index') }}">
+                <i class="bi-gear nav-icon"></i>
+                <span class="nav-link-title">System Settings</span>
+              </a>
+            </div>
+            <!-- End System Settings -->
           </div>
-          <!-- End System Settings -->
           <!-- End Others -->
         </div>
       </div>

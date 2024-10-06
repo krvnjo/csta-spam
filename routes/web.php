@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\AuditHistoryController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
@@ -12,13 +13,14 @@ use App\Http\Controllers\PropertyParentController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\SubcategoryController;
+use App\Http\Controllers\SystemSettingsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 // ============ Guest Routes ============ //
 
 // Login Routes
-Route::middleware('guest')->name('auth.')->controller(AuthController::class)->group(function () {
+Route::middleware(['guest', 'nocache'])->name('auth.')->controller(AuthController::class)->group(function () {
     Route::get('/login', 'index')->name('index');
     Route::post('/login', 'login')->name('login');
 });
@@ -163,3 +165,21 @@ Route::middleware(['auth', 'nocache'])->prefix('file-maintenance/subcategories')
 });
 
 // ============ End File Maintenance Routes ============ //
+
+// ============ Audit History Routes ============ //
+
+// Audit History Routes
+Route::middleware(['auth', 'nocache'])->prefix('audit-history')->name('audit.')->controller(AuditHistoryController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+});
+
+// ============ End Audit History Routes ============ //
+
+// ============ System Settings Routes ============ //
+
+// System Settings Routes
+Route::middleware(['auth', 'nocache'])->prefix('system-settings')->name('system.')->controller(SystemSettingsController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+});
+
+// ============ End System Settings Routes ============ //

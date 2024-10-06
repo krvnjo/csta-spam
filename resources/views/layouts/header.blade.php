@@ -1,7 +1,7 @@
 <header class="navbar navbar-expand-lg navbar-fixed navbar-height navbar-container navbar-bordered bg-white" id="header">
   <div class="navbar-nav-wrap">
     <!-- Logo -->
-    <a class="navbar-brand" data-route="dashboard.index" href="{{ route('dashboard.index') }}" aria-label="CSTA - SPAM">
+    <a class="navbar-brand" data-route="dashboard.index" href="{{ route('dashboard.index') }}">
       <img class="navbar-brand-logo-mini d-block" data-hs-theme-appearance="default" src="{{ Vite::asset('resources/svg/logos/logo-short.svg') }}"
         alt="CSTA - SPAM Logo">
       <img class="navbar-brand-logo-mini d-block" data-hs-theme-appearance="dark" src="{{ Vite::asset('resources/svg/logos-light/logo-short.svg') }}"
@@ -148,11 +148,10 @@
         <li class="nav-item d-sm-inline-block">
           <div class="dropdown">
             <button class="btn btn-ghost-secondary btn-icon rounded-circle" id="navbarNotificationsDropdown" data-bs-toggle="dropdown"
-              data-bs-auto-close="outside" data-bs-dropdown-animation type="button" aria-expanded="false"><i class="bi-bell"></i>
+              data-bs-auto-close="outside" data-bs-dropdown-animation type="button"><i class="bi-bell"></i>
             </button>
 
-            <div class="dropdown-menu dropdown-menu-end dropdown-card navbar-dropdown-menu navbar-dropdown-menu-borderless"
-              aria-labelledby="navbarNotificationsDropdown" style="width: 25rem;">
+            <div class="dropdown-menu dropdown-menu-end dropdown-card navbar-dropdown-menu navbar-dropdown-menu-borderless" style="width: 25rem;">
               <div class="card">
                 <!-- Header -->
                 <div class="card-header card-header-content-between">
@@ -163,7 +162,7 @@
                 <!-- Body -->
                 <div class="card-body-height">
                   <div class="tab-content" id="notificationTabContent">
-                    <div class="tab-pane fade show active" id="notificationNavOne" role="tabpanel" aria-labelledby="notificationNavOne-tab">
+                    <div class="tab-pane fade show active" id="notificationNavOne">
                       <ul class="list-group list-group-flush navbar-card-list-group">
                         <!-- Item -->
                         <li class="list-group-item form-check-select">
@@ -280,7 +279,7 @@
         <li class="nav-item">
           <div class="dropdown">
             <button class="btn navbar-dropdown-account-wrapper" id="accountNavbarDropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside"
-              data-bs-dropdown-animation type="button" aria-expanded="false">
+              data-bs-dropdown-animation type="button">
               <div class="avatar avatar-sm avatar-circle">
                 <img class="avatar-img" src="{{ Vite::asset('resources/img/uploads/user-images/' . Auth::user()->user_image) }}" alt="User Image">
                 <span class="avatar-status avatar-sm-status avatar-status-success"></span>
@@ -288,7 +287,7 @@
             </button>
 
             <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-account"
-              aria-labelledby="accountNavbarDropdown" style="width: 16rem;">
+              style="width: 16rem;">
               <!-- Profile Header -->
               <div class="dropdown-item-text">
                 <div class="d-flex align-items-center">
@@ -313,7 +312,7 @@
               <!-- System Appearance -->
               <div class="dropdown">
                 <button class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" id="selectThemeDropdown" data-bs-toggle="dropdown"
-                  type="button" aria-expanded="false">System Appearance</button>
+                  type="button">System Appearance</button>
 
                 <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu"
                   aria-labelledby="selectThemeDropdown">
@@ -333,10 +332,9 @@
               <!-- Help & Support -->
               <div class="dropdown">
                 <button class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" id="navSubmenuPagesAccountDropdown2"
-                  data-bs-toggle="dropdown" type="button" aria-expanded="false">Help & Support</button>
+                  data-bs-toggle="dropdown" type="button">Help & Support</button>
 
-                <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu"
-                  aria-labelledby="navSubmenuPagesAccountDropdown2">
+                <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu">
                   <a class="dropdown-item" href="#"><i class="bi-info-circle me-2"></i>FAQ List</a>
                   <a class="dropdown-item" href="#"><i class="bi-flag me-2"></i>Report a Problem</a>
                 </div>
