@@ -69,7 +69,7 @@ Route::middleware(['auth', 'nocache'])->prefix('properties-assets/stocks')->name
 // ============ User Management Routes ============ //
 
 // User Routes
-Route::middleware(['auth', 'nocache'])->prefix('user-management/users')->name('user.')->controller(UserController::class)->group(function () {
+Route::middleware(['auth', 'nocache', 'check.permission:User Management,view'])->prefix('user-management/users')->name('user.')->controller(UserController::class)->group(function () {
     Route::get('/', 'index')->name('index');
     Route::post('/', 'store')->name('store')->middleware('expectsJson');
     Route::get('/show', 'show')->name('show')->middleware('expectsJson');
@@ -79,7 +79,7 @@ Route::middleware(['auth', 'nocache'])->prefix('user-management/users')->name('u
 });
 
 // Roles Routes
-Route::middleware(['auth', 'nocache'])->prefix('user-management/roles')->name('role.')->controller(RoleController::class)->group(function () {
+Route::middleware(['auth', 'nocache', 'check.permission:User Management,view'])->prefix('user-management/roles')->name('role.')->controller(RoleController::class)->group(function () {
     Route::get('/', 'index')->name('index');
     Route::post('/', 'store')->name('store')->middleware('expectsJson');
     Route::get('/show', 'show')->name('show')->middleware('expectsJson');

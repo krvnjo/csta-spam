@@ -30,4 +30,21 @@ class User extends Authenticatable
     {
         return $this->hasOne(Department::class, 'id', 'dept_id');
     }
+
+    public function hasPermission($permissionName, $actions): bool
+    {
+        $role = $this->roles()->first();
+
+        if (!$this->hasPermissionTo($permissionName) || !$role) {
+            return false;
+        }
+
+        foreach ($actions as $action) {
+            if ($role->permissions()->where('name', $permissionName)->where('can_' . $action, 1)->exists()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\CheckPermission;
 use App\Http\Middleware\ExpectsJson;
 use App\Http\Middleware\NoCache;
 use Illuminate\Foundation\Application;
@@ -23,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => RoleMiddleware::class,
             'permission' => PermissionMiddleware::class,
             'role_or_permission' => RoleOrPermissionMiddleware::class,
+            'check.permission' => CheckPermission::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

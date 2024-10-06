@@ -1,5 +1,5 @@
 <!-- Add User Modal -->
-<div class="modal fade" id="modalAddUser" data-bs-backdrop="static" role="dialog" aria-labelledby="modalAddUserLabel" aria-hidden="true" tabindex="-1">
+<div class="modal fade" id="modalAddUser" data-bs-backdrop="static" role="dialog" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
     <div class="modal-content">
       <!-- Header -->
