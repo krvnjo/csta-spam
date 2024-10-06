@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use SoftDeletes;
+    use HasRoles, SoftDeletes;
 
     protected $table = 'users';
 
@@ -18,7 +19,6 @@ class User extends Authenticatable
         'lname',
         'fname',
         'mname',
-        'role_id',
         'dept_id',
         'email',
         'phone_num',
@@ -31,8 +31,20 @@ class User extends Authenticatable
         return $this->hasOne(Department::class, 'id', 'dept_id');
     }
 
-    public function role(): HasOne
+    public function hasPermission($permissionName, $actions): bool
     {
-        return $this->hasOne(Role::class, 'id', 'role_id');
+        $role = $this->roles()->first();
+
+        if (!$this->hasPermissionTo($permissionName) || !$role) {
+            return false;
+        }
+
+        foreach ($actions as $action) {
+            if ($role->permissions()->where('name', $permissionName)->where('can_' . $action, 1)->exists()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

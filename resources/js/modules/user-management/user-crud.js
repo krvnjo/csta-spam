@@ -91,7 +91,7 @@ $(document).ready(function () {
         $("#lblViewUserEmail").text(response.email);
         $("#lblViewUserPhone").text(response.phone);
         $("#lblViewLastLogin").text(response.login);
-        $("#imgViewUserImage").attr("src", "/img/uploads/user-images/" + response.image);
+        $("#imgViewUserImage").attr("src", response.image);
         $("#lblViewDateCreated").text(response.created);
         $("#lblViewDateUpdated").text(response.updated);
 
@@ -141,6 +141,7 @@ $(document).ready(function () {
         $("#selEditUserDept")[0].tomselect.setValue(response.dept);
         $("#txtEditUserEmail").val(response.email);
         $("#txtEditUserPhone").val(response.phone);
+        $("#imgEditDisplayUserImage").attr("src", response.image);
       },
       error: function (response) {
         showErrorAlert(response.responseJSON, userEditModal, userEditForm);
@@ -152,11 +153,8 @@ $(document).ready(function () {
     e.preventDefault();
 
     const editFormData = new FormData(userEditForm[0]);
-
     editFormData.append("_method", "PATCH");
-    editFormData.append("id", $("#txtEditUserId").val());
-    editFormData.append("user", $("#txtEditUser").val());
-    editFormData.append("department", $("#selEditDepartment").val());
+    editFormData.append("avatar", $("#imgEditDisplayUserImage").attr("src").split("/").pop());
 
     $.ajax({
       url: "/user-management/users/update",
@@ -169,13 +167,43 @@ $(document).ready(function () {
           showSuccessAlert(response, userEditModal, userEditForm);
         } else {
           if (response.errors.user) {
-            $("#txtEditUser").addClass("is-invalid");
-            $("#valEditUser").text(response.errors.user[0]);
+            $("#txtEditUsername").addClass("is-invalid");
+            $("#valEditUsername").text(response.errors.user[0]);
           }
 
-          if (response.errors.department) {
-            $("#selEditDepartment").next(".ts-wrapper").addClass("is-invalid");
-            $("#valEditDepartment").text(response.errors.department[0]);
+          if (response.errors.fname) {
+            $("#txtEditUserFname").addClass("is-invalid");
+            $("#valEditUserFname").text(response.errors.fname[0]);
+          }
+
+          if (response.errors.mname) {
+            $("#txtEditUserMname").addClass("is-invalid");
+            $("#valEditUserMname").text(response.errors.mname[0]);
+          }
+
+          if (response.errors.lname) {
+            $("#txtEditUserLname").addClass("is-invalid");
+            $("#valEditUserLname").text(response.errors.lname[0]);
+          }
+
+          if (response.errors.role) {
+            $("#selEditUserRole").next(".ts-wrapper").addClass("is-invalid");
+            $("#valEditUserRole").text(response.errors.role[0]);
+          }
+
+          if (response.errors.dept) {
+            $("#selEditUserDept").next(".ts-wrapper").addClass("is-invalid");
+            $("#valEditUserDept").text(response.errors.dept[0]);
+          }
+
+          if (response.errors.email) {
+            $("#txtEditUserEmail").addClass("is-invalid");
+            $("#valEditUserEmail").text(response.errors.email[0]);
+          }
+
+          if (response.errors.phone) {
+            $("#txtEditUserPhone").addClass("is-invalid");
+            $("#valEditUserPhone").text(response.errors.phone[0]);
           }
         }
       },

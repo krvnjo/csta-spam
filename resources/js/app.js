@@ -105,21 +105,15 @@ function handleUnsavedChanges(modal, form, saveButton) {
     form.find(":input").each(function () {
       const name = $(this).attr("name");
 
-      // Skip elements that are search bars or shouldn't be considered
       if ($(this).hasClass("dropdown-input") || !name) {
-        return; // continue to next iteration
+        return;
       }
 
-      // For checkbox
       if ($(this).attr("type") === "checkbox") {
         values[name] = $(this).is(":checked");
-      }
-      // For multiple select
-      else if ($(this).is("select[multiple]")) {
-        values[name] = $(this).val() || []; // If no values are selected, return an empty array
-      }
-      // For other inputs
-      else {
+      } else if ($(this).is("select[multiple]")) {
+        values[name] = $(this).val() || [];
+      } else {
         values[name] = $(this).val();
       }
     });
@@ -133,15 +127,12 @@ function handleUnsavedChanges(modal, form, saveButton) {
       const initialValue = initialFormValues[key];
       const currentValue = currentFormValues[key];
 
-      // Handle array comparison for multiple selects
       if (Array.isArray(initialValue) && Array.isArray(currentValue)) {
         if (!arraysEqual(initialValue, currentValue)) {
           saveButton.prop("disabled", false);
           return true;
         }
-      }
-      // Handle other input comparisons
-      else if (initialValue !== currentValue) {
+      } else if (initialValue !== currentValue) {
         saveButton.prop("disabled", false);
         return true;
       }
@@ -150,10 +141,9 @@ function handleUnsavedChanges(modal, form, saveButton) {
     return false;
   }
 
-  // Function to compare two arrays for equality, ignoring order
   function arraysEqual(arr1, arr2) {
     if (arr1.length !== arr2.length) return false;
-    arr1 = arr1.sort(); // Sorting to ensure order doesn't affect comparison
+    arr1 = arr1.sort();
     arr2 = arr2.sort();
     for (let i = 0; i < arr1.length; i++) {
       if (arr1[i] !== arr2[i]) return false;
@@ -205,7 +195,8 @@ window.handleUnsavedChanges = handleUnsavedChanges;
 
 // Clean Modal Form
 function cleanModalForm(modal, form, flag = "add") {
-  form.find(":input").removeClass("is-invalid").siblings(".invalid-feedback").empty();
+  form.find(":input").removeClass("is-invalid");
+  form.find(".invalid-feedback").empty();
 
   form.find("select").each(function () {
     const tsWrapper = $(this).next(".ts-wrapper");

@@ -1,5 +1,5 @@
 <!-- Add User Modal -->
-<div class="modal fade" id="modalAddUser" data-bs-backdrop="static" role="dialog" aria-labelledby="modalAddUserLabel" aria-hidden="true" tabindex="-1">
+<div class="modal fade" id="modalAddUser" data-bs-backdrop="static" role="dialog" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
     <div class="modal-content">
       <!-- Header -->
@@ -48,6 +48,19 @@
             </span>
           </label>
           <!-- End User Image -->
+
+          <!-- Username -->
+          <div class="row mb-4">
+            <label class="col-sm-3 col-form-label form-label" for="txtAddUsername">Username</label>
+            <div class="col-sm-9">
+              <input class="js-input-mask form-control" id="txtAddUsername" name="user"
+                data-hs-mask-options='{
+                    "mask": "00-00000"
+                  }' type="text" placeholder="##-#####">
+              <span class="invalid-feedback" id="valAddUsername"></span>
+            </div>
+          </div>
+          <!-- End Username -->
 
           <!-- First Name -->
           <div class="row mb-4">
@@ -133,7 +146,7 @@
           <!-- End Email -->
 
           <!-- Phone -->
-          <div class="row mb-4">
+          <div class="row">
             <label class="col-sm-3 col-form-label form-label" for="txtAddUserPhone">Phone <span
                 class="form-label-secondary">(Optional)</span></label>
             <div class="col-sm-9">
@@ -148,19 +161,6 @@
             </div>
           </div>
           <!-- End Phone -->
-
-          <!-- Username -->
-          <div class="row">
-            <label class="col-sm-3 col-form-label form-label" for="txtAddUsername">Username</label>
-            <div class="col-sm-9">
-              <input class="js-input-mask form-control" id="txtAddUsername" name="user"
-                data-hs-mask-options='{
-                    "mask": "00-00000"
-                  }' type="text" placeholder="##-#####">
-              <span class="invalid-feedback" id="valAddUsername"></span>
-            </div>
-          </div>
-          <!-- End Username -->
 
           {{--          <!-- Password --> --}}
           {{--          <div class="row mb-4"> --}}
@@ -212,7 +212,7 @@
           <div class="col-sm-auto">
             <div class="d-flex gap-2">
               <button class="btn btn-white" data-bs-dismiss="modal" type="button">Cancel</button>
-              <button class="btn btn-primary" form="frmAddUser" type="submit">Save</button>
+              <button class="btn btn-primary" id="btnAddSaveUser" form="frmAddUser" type="submit">Save</button>
             </div>
           </div>
         </div>

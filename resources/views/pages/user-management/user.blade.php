@@ -4,17 +4,9 @@
   Users
 @endsection
 
-@section('styles')
+@push('styles')
   <link href="{{ Vite::asset('resources/vendor/tom-select/dist/css/tom-select.bootstrap5.css') }}" rel="stylesheet">
-@endsection
-
-@section('header')
-  @include('layouts.header')
-@endsection
-
-@section('sidebar')
-  @include('layouts.sidebar')
-@endsection
+@endpush
 
 @section('main-content')
   <main class="main" id="content" role="main">
@@ -34,13 +26,15 @@
             <h1 class="page-header-title mt-2">Users</h1>
           </div>
 
-          <div class="col-sm-auto mt-sm-0 mt-3">
-            <div class="d-grid gap-2 d-sm-flex justify-content-sm-end">
-              <button class="btn btn-primary w-100 w-sm-auto" data-bs-toggle="modal" data-bs-target="#modalAddUser">
-                <i class="bi-plus me-1"></i> Add User
-              </button>
+          @if (auth()->user()->hasPermission('User Management', ['create']))
+            <div class="col-sm-auto mt-sm-0 mt-3">
+              <div class="d-grid gap-2 d-sm-flex justify-content-sm-end">
+                <button class="btn btn-primary w-100 w-sm-auto" data-bs-toggle="modal" data-bs-target="#modalAddUser">
+                  <i class="bi-plus me-1"></i> Add User
+                </button>
+              </div>
             </div>
-          </div>
+          @endif
         </div>
       </div>
       <!-- End Page Header -->
@@ -57,16 +51,15 @@
         <div class="card-body pt-3">
           <div class="row">
             <div class="col-1">
-              <div class="position-absolute" style="top: 7.5rem; left: 1.5rem;">
+              <div class="position-absolute" style="top: 8rem; left: 1.5rem;">
                 <label class="avatar avatar-xl avatar-circle avatar-uploader profile-cover-avatar" for="editAvatarUploaderModal">
-                  <img class="avatar-img" id="editAvatarImgModal" src="{{ Vite::asset('resources/img/uploads/user-images/default.jpg') }}"
-                    alt="Image Description">
+                  <img class="avatar-img" id="editAvatarImgModal"
+                    src="{{ Vite::asset('resources/img/uploads/user-images/' . Auth::user()->user_image) }}" alt="Image Description">
                 </label>
               </div>
             </div>
-            <div class="col">
-              <h3 class="mb-0">Khervin John Quimora</h3>
-              <p class="text-muted">Current logged in user</p>
+            <div class="col pt-1">
+              <h3 class="mb-0">{{ Auth::user()->fname . ' ' . Auth::user()->lname }}</h3>
             </div>
           </div>
         </div>
@@ -250,7 +243,7 @@
             }'>
             <thead class="thead-light">
               <tr>
-                <th class="table-column-pe-0 w-auto">
+                <th class="table-column-pe-0 w-auto {{ auth()->user()->hasPermission('User Management', ['delete'])? '': 'd-none' }}">
                   <div class="form-check">
                     <input class="form-check-input" id="usersDatatableCheckAll" type="checkbox">
                     <label class="form-check-label" for="usersDatatableCheckAll"></label>
@@ -270,7 +263,7 @@
             <tbody>
               @foreach ($users as $index => $user)
                 <tr>
-                  <td class="table-column-pe-0">
+                  <td class="table-column-pe-0 {{ auth()->user()->hasPermission('User Management', ['delete'])? '': 'd-none' }}">
                     <div class="form-check">
                       <input class="form-check-input" id="userCheck{{ $index + 1 }}" type="checkbox">
                       <label class="form-check-label" for="userCheck{{ $index + 1 }}"></label>
@@ -290,7 +283,7 @@
                   </td>
                   <td>{{ $user->user_name }}</td>
                   <td>
-                    <span class="d-block h5 mb-0">{{ $user->role->name }}</span>
+                    <span class="d-block h5 mb-0">{{ $user->roles()->first()->name }}</span>
                     <span class="d-block fs-5">{{ $user->department->name }}</span>
                   </td>
                   <td>{{ $user->phone_num }}</td>
@@ -314,28 +307,39 @@
                         <i class="bi-eye"></i> View
                       </button>
 
-                      <div class="btn-group">
-                        <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="userActionDropdown"
-                          data-bs-toggle="dropdown" type="button" aria-expanded="false"></button>
-                        <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="userActionDropdown">
-                          <button class="dropdown-item btnEditUser" type="button">
-                            <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
-                          </button>
-                          @if ($user->is_active)
-                            <button class="dropdown-item btnStatusUser" data-status="0" type="button">
-                              <i class="bi-x-circle-fill dropdown-item-icon text-danger fs-7"></i> Set to Inactive
-                            </button>
-                          @else
-                            <button class="dropdown-item btnStatusUser" data-status="1" type="button">
-                              <i class="bi-check-circle-fill dropdown-item-icon text-success"></i> Set to Active
-                            </button>
-                          @endif
-                          <div class="dropdown-divider"></div>
-                          <button class="dropdown-item text-danger btnDeleteUser" type="button">
-                            <i class="bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
-                          </button>
+                      @if (auth()->user()->hasPermission('User Management', ['edit', 'delete']))
+                        <div class="btn-group">
+                          <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="userActionDropdown"
+                            data-bs-toggle="dropdown" type="button" aria-expanded="false"></button>
+                          <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="userActionDropdown">
+                            @if (auth()->user()->hasPermission('User Management', ['edit']))
+                              <button class="dropdown-item btnEditUser" type="button">
+                                <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
+                              </button>
+
+                              @if ($user->is_active)
+                                <button class="dropdown-item btnStatusUser" data-status="0" type="button">
+                                  <i class="bi-x-circle-fill dropdown-item-icon text-danger fs-7"></i> Set to Inactive
+                                </button>
+                              @else
+                                <button class="dropdown-item btnStatusUser" data-status="1" type="button">
+                                  <i class="bi-check-circle-fill dropdown-item-icon text-success"></i> Set to Active
+                                </button>
+                              @endif
+
+                              @if (auth()->user()->hasPermission('User Management', ['delete']))
+                                <div class="dropdown-divider"></div>
+                              @endif
+                            @endif
+
+                            @if (auth()->user()->hasPermission('User Management', ['delete']))
+                              <button class="dropdown-item text-danger btnDeleteUser" type="button">
+                                <i class="bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
+                              </button>
+                            @endif
+                          </div>
                         </div>
-                      </div>
+                      @endif
                     </div>
                   </td>
                 </tr>
@@ -387,17 +391,13 @@
   </main>
 @endsection
 
-@section('footer')
-  @include('layouts.footer')
-@endsection
-
 @section('sub-content')
   <x-user-management.add-user :roles="$roles" :depts="$depts" />
   <x-user-management.view-user />
   <x-user-management.edit-user :roles="$roles" :depts="$depts" />
 @endsection
 
-@section('scripts')
+@push('scripts')
   <!-- JS Other Plugins -->
   <script src="{{ Vite::asset('resources/vendor/tom-select/dist/js/tom-select.complete.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/hs-file-attach/dist/hs-file-attach.min.js') }}"></script>
@@ -531,4 +531,4 @@
       };
     })();
   </script>
-@endsection
+@endpush

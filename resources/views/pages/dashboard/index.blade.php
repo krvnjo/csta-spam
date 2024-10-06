@@ -4,17 +4,9 @@
   Dashboard
 @endsection
 
-@section('styles')
+@push('styles')
   <link href="{{ Vite::asset('resources/vendor/daterangepicker/daterangepicker.css') }}" rel="stylesheet">
-@endsection
-
-@section('header')
-  @include('layouts.header')
-@endsection
-
-@section('sidebar')
-  @include('layouts.sidebar')
-@endsection
+@endpush
 
 @section('main-content')
   <main class="main" id="content" role="main">
@@ -25,8 +17,17 @@
         <div class="row align-items-center">
           <div class="col">
             @php
-              $hour = date('g');
-              $greeting = date('a') == 'am' ? 'Good morning' : ($hour < 5 ? 'Good afternoon' : ($hour < 11 ? 'Good evening' : 'Greetings'));
+              $hour = date('G');
+              $greeting =
+                  $hour >= 6 && $hour < 11
+                      ? 'Good morning'
+                      : ($hour >= 11 && $hour < 15
+                          ? 'Good afternoon'
+                          : ($hour >= 15 && $hour < 18
+                              ? 'Greetings'
+                              : ($hour >= 18 && $hour < 24
+                                  ? 'Good evening'
+                                  : 'Hello there')));
             @endphp
             <h1 class="page-header-title">{{ $greeting }}, {{ Auth::user()->fname }}.</h1>
             <p class="page-header-text">Here's what's happening in CSTA - SPAM.</p>
@@ -654,16 +655,11 @@
   </main>
 @endsection
 
-@section('footer')
-  @include('layouts.footer')
-@endsection
-
 @section('sub-content')
-  {{-- No Secondary Content --}}
+  {{-- Sub Content --}}
 @endsection
 
-@section('scripts')
-  <!-- JS Other Plugins -->
+@push('scripts')
   <script src="{{ Vite::asset('resources/vendor/chart.js/dist/Chart.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/daterangepicker/moment.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/daterangepicker/daterangepicker.js') }}"></script>
@@ -790,4 +786,4 @@
       }
     })()
   </script>
-@endsection
+@endpush

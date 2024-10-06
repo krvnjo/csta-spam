@@ -3,17 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\Permission\Models\Role as SpatieRole;
+use Spatie\Permission\Models\Permission as SpatiePermission;
 
-class Role extends SpatieRole
+class Permission extends SpatiePermission
 {
     use SoftDeletes;
 
-    protected $table = 'roles';
+    protected $table = 'permissions';
 
     protected $fillable = [
         'name',
-        'description',
         'guard_name',
         'is_active'
     ];
