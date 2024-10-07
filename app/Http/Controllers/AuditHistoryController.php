@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AuditHistory;
+use App\Models\Department;
 use Illuminate\Http\Request;
 
 class AuditHistoryController extends Controller
@@ -11,7 +13,18 @@ class AuditHistoryController extends Controller
      */
     public function index()
     {
-        //
+        $audits = AuditHistory::whereNull('deleted_at')->get();
+
+        $departments = Department::with(['users' => function ($query) {
+            $query->whereNull('deleted_at')->where('is_active', 1)->orderBy('lname', 'asc');
+        }])->whereNull('deleted_at')->where('is_active', 1)->orderBy('name')->get();
+
+        return view('pages.other.audit-history',
+            compact(
+                'audits',
+                'departments'
+            )
+        );
     }
 
     /**
