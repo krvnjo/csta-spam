@@ -273,7 +273,7 @@
                   <td>
                     <a class="d-flex align-items-center btnViewUser">
                       <div class="avatar avatar-circle">
-                        <img class="avatar-img" src="{{ Vite::asset('resources/img/uploads/user-images/' . $user->user_image) }}" alt="User Avatar">
+                        <img class="avatar-img" src="{{ asset('storage/img/user-images/' . $user->user_image) }}" alt="User Avatar">
                       </div>
                       <div class="ms-3">
                         <span class="d-block h5 text-inherit mb-0">{{ $user->fname . ' ' . $user->lname }}</span>

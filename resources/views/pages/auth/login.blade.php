@@ -23,14 +23,14 @@
       <div class="row justify-content-center w-100 mx-2" style="max-width: 30rem;">
         <!-- Logo -->
         <div class="d-flex justify-content-center mb-5">
-          <img class="zi-2" src="{{ Vite::asset('resources/svg/logos-light/logo.svg') }}" alt="CSTA - SPAM Logo" style="width: 18rem;">
+          <img class="zi-2" src="{{ Vite::asset('resources/svg/logos-light/logo-login.svg') }}" alt="CSTA - SPAM Logo" style="width: 18rem;">
         </div>
         <!-- Logo -->
 
         <!-- Card -->
         <div class="card card-lg mb-5">
           <div class="card-body">
-            <form id="frmLoginUser" method="post" novalidate>
+            <form id="frmLoginUser" novalidate>
               @csrf
               <div class="pb-5 text-center">
                 <h1 class="display-5">Welcome!</h1>
@@ -51,7 +51,7 @@
                 <label class="form-label w-100" for="txtLoginPassword">
                   <span class="d-flex justify-content-between align-items-center">
                     <span>Password</span>
-                    <a class="form-label-link mb-0" href="#">Forgot Password?</a>
+                    <a class="form-label-link mb-0" href="{{ route('auth.forgot-password') }}">Forgot Password?</a>
                   </span>
                 </label>
                 <div class="input-group">

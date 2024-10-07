@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['guest', 'nocache'])->name('auth.')->controller(AuthController::class)->group(function () {
     Route::get('/login', 'index')->name('index');
     Route::post('/login', 'login')->name('login');
+    Route::get('/forgot-password', 'forgot')->name('forgot-password');
 });
 
 // Logout Routes
@@ -34,16 +35,12 @@ Route::middleware(['auth', 'nocache'])->name('auth.')->controller(AuthController
 
 // ============ Auth Routes ============ //
 
-// ============ Dashboard Routes ============ //
+// ============ Header Routes ============ //
 
-// Admin Dashboard Routes
+// Dashboard Routes
 Route::middleware(['auth', 'nocache'])->name('dashboard.')->controller(DashboardController::class)->group(function () {
     Route::get('/', 'index')->name('index');
 });
-
-// ============ End Dashboard Routes ============ //
-
-// ============ Header Routes ============ //
 
 // Account Routes
 Route::middleware(['auth', 'nocache'])->prefix('account')->name('account.')->controller(AccountController::class)->group(function () {
@@ -52,8 +49,6 @@ Route::middleware(['auth', 'nocache'])->prefix('account')->name('account.')->con
 });
 
 // ============ End Header Routes ============ //
-
-// ============ End Auth Routes ============ //
 
 // ============ Property & Assets Routes ============ //
 
@@ -166,20 +161,18 @@ Route::middleware(['auth', 'nocache'])->prefix('file-maintenance/subcategories')
 
 // ============ End File Maintenance Routes ============ //
 
-// ============ Audit History Routes ============ //
+// ============ Other Routes ============ //
 
 // Audit History Routes
 Route::middleware(['auth', 'nocache'])->prefix('audit-history')->name('audit.')->controller(AuditHistoryController::class)->group(function () {
     Route::get('/', 'index')->name('index');
 });
 
-// ============ End Audit History Routes ============ //
-
-// ============ System Settings Routes ============ //
-
 // System Settings Routes
 Route::middleware(['auth', 'nocache'])->prefix('system-settings')->name('system.')->controller(SystemSettingsController::class)->group(function () {
     Route::get('/', 'index')->name('index');
 });
 
-// ============ End System Settings Routes ============ //
+// ============ End Other Routes ============ //
+
+// ============ End Auth Routes ============ //

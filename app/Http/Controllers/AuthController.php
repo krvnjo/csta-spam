@@ -34,7 +34,6 @@ class AuthController extends Controller
             'pass.required' => 'Please enter a password!',
             'pass.min' => 'The password must be at least :min characters long.',
             'pass.max' => 'The password must not exceed :max characters.',
-            'pass.regex' => 'The password format is invalid.',
             'pass.incorrect' => 'Incorrect password!',
         ];
 
@@ -55,7 +54,6 @@ class AuthController extends Controller
                     'required',
                     'min:8',
                     'max:20',
-                    'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
                     function ($attribute, $value, $fail) use ($request) {
                         $user = User::where('user_name', $request->input('user'))->first();
                         if ($user && !Hash::check($value, $user->pass_hash)) {
@@ -96,6 +94,14 @@ class AuthController extends Controller
     }
 
     /**
+     * Display the form for forgot password.
+     */
+    public function forgot()
+    {
+        return view('pages.auth.forgot-password');
+    }
+
+    /**
      * Authenticate the user to log the user out.
      */
     public function logout(Request $request): RedirectResponse
@@ -105,6 +111,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        return redirect()->route('auth.login');
     }
 }

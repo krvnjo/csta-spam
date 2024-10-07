@@ -5,8 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Carbon;
 use Spatie\Permission\Traits\HasRoles;
 
+/**
+ * @property mixed $pass_hash
+ * @property Carbon|mixed $last_login
+ * @property mixed $is_active
+ */
 class User extends Authenticatable
 {
     use HasRoles, SoftDeletes;

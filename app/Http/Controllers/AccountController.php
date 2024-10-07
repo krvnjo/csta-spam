@@ -19,12 +19,9 @@ class AccountController extends Controller
      */
     public function index($username)
     {
-        $user = Auth::user();
-
-        if ($user->user_name !== $username) {
-            abort(403, 'Unauthorized access.');
+        if (Auth::user()->user_name !== $username) {
+            abort(404);
         }
-
         return view('pages.account.account');
     }
 

@@ -162,8 +162,7 @@
 
                             @foreach ($role->users->take($maxDisplay) as $user)
                               <span class="avatar" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ $user->fname . ' ' . $user->lname }}">
-                                <img class="avatar-img" src="{{ Vite::asset('resources/img/uploads/user-images/' . $user->user_image) }}"
-                                  alt="User Image">
+                                <img class="avatar-img" src="{{ asset('storage/img/user-images/' . $user->user_image) }}" alt="User Image">
                               </span>
                             @endforeach
 

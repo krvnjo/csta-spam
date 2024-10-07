@@ -30,15 +30,15 @@
           <!-- Profile Header -->
           <div class="text-center mb-5">
             <!-- Form -->
-            <form id="frmAccountImage" method="post" enctype="multipart/form-data" novalidate>
+            <form id="frmAccountImage" enctype="multipart/form-data" novalidate>
               @csrf
               @method('PATCH')
               <input id="txtAccountId" name="id" type="hidden" value="{{ Crypt::encryptString(Auth::user()->id) }}">
 
               <!-- User Image -->
               <label class="avatar avatar-xxl avatar-circle avatar-uploader profile-cover-avatar" for="imgAccountImage">
-                <img class="avatar-img" id="imgDisplayAccountImage"
-                  src="{{ Vite::asset('resources/img/uploads/user-images/' . Auth::user()->user_image) }}" alt="User Image">
+                <img class="avatar-img" id="imgDisplayAccountImage" src="{{ asset('storage/img/user-images/' . Auth::user()->user_image) }}"
+                  alt="User Image">
 
                 <input class="js-file-attach avatar-uploader-input" id="imgAccountImage" name="image"
                   data-hs-file-attach-options='{

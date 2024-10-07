@@ -281,7 +281,7 @@
             <button class="btn navbar-dropdown-account-wrapper" id="accountNavbarDropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside"
               data-bs-dropdown-animation type="button">
               <div class="avatar avatar-sm avatar-circle">
-                <img class="avatar-img" src="{{ Vite::asset('resources/img/uploads/user-images/' . Auth::user()->user_image) }}" alt="User Image">
+                <img class="avatar-img" src="{{ asset('storage/img/user-images/' . Auth::user()->user_image) }}" alt="User Image">
                 <span class="avatar-status avatar-sm-status avatar-status-success"></span>
               </div>
             </button>
@@ -292,8 +292,7 @@
               <div class="dropdown-item-text">
                 <div class="d-flex align-items-center">
                   <div class="avatar avatar-sm avatar-circle">
-                    <img class="avatar-img" src="{{ Vite::asset('resources/img/uploads/user-images/' . Auth::user()->user_image) }}"
-                      alt="User Image">
+                    <img class="avatar-img" src="{{ asset('storage/img/user-images/' . Auth::user()->user_image) }}" alt="User Image">
                   </div>
                   <div class="flex-grow-1 ms-3">
                     <h5 class="mb-0">{{ Auth::user()->fname . ' ' . Auth::user()->lname }}</h5>
