@@ -1,6 +1,9 @@
 {
   "printWidth": 150,
   "tabWidth": 2,
+  "singleQuote": true,
+  "semi": true,
+  "trailingComma": "es5",
   "embeddedLanguageFormatting": "auto",
   "plugins": ["@shufo/prettier-plugin-blade"],
   "overrides": [
@@ -13,6 +16,12 @@
         "printWidth": 150,
         "sortHtmlAttributes": "code-guide",
         "tabWidth": 2
+      }
+    },
+    {
+      "files": ["*.css", "*.scss"],
+      "options": {
+        "singleQuote": false
       }
     }
   ]
