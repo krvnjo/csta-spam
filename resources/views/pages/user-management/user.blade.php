@@ -398,7 +398,6 @@
 @endsection
 
 @push('scripts')
-  <!-- JS Other Plugins -->
   <script src="{{ Vite::asset('resources/vendor/tom-select/dist/js/tom-select.complete.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/hs-file-attach/dist/hs-file-attach.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/imask/dist/imask.min.js') }}"></script>
