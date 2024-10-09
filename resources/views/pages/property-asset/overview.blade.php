@@ -283,8 +283,8 @@
                     <a class="d-flex align-items-center" href="">
                       <div class="avatar avatar-lg">
                         @php
-                          $imagePath = storage_path('app/public/img-uploads/prop-asset/' . $propertyParent->image);
-                          $defaultImagePath = storage_path('app/public/img-uploads/prop-asset/default.jpg');
+                          $imagePath = public_path('storage/img-uploads/prop-asset/' . $propertyParent->image);
+                          $defaultImagePath = public_path('storage/img-uploads/prop-asset/default.jpg');
                           $imageUrl = file_exists($imagePath)
                               ? asset('storage/img-uploads/prop-asset/' . $propertyParent->image)
                               : asset('storage/img-uploads/prop-asset/default.jpg');

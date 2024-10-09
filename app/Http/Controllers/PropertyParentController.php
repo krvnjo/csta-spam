@@ -137,7 +137,7 @@ class PropertyParentController extends Controller
                     $file = $request->file('propertyImage');
                     if ($file !== null && $file->isValid()) {
                         $filename = time() . '_' . $file->getClientOriginalName();
-                        $file->move(storage_path('app/public/img-uploads/prop-asset/'), $filename);
+                        $file->move(public_path('storage/img-uploads/prop-asset/'), $filename);
 //                        $file->move(resource_path('img/uploads/prop-asset/'), $filename);
                         $imageFileName = $filename;
                     } else {
