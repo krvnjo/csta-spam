@@ -62,14 +62,14 @@
             </div>
             <!-- End Borrowing and Reservation -->
 
-            <!-- Item Maintenance -->
+            <!-- Item Repair -->
             <div class="nav-item">
               <a class="nav-link" data-placement="left" href="#">
                 <i class="bi-tools nav-icon"></i>
-                <span class="nav-link-title">Item Maintenance</span>
+                <span class="nav-link-title">Item Repair</span>
               </a>
             </div>
-            <!-- End Item Maintenance -->
+            <!-- End Item Repair -->
 
             <!-- Reports & Analytics -->
             <div class="nav-item">

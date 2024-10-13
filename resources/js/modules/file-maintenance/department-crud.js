@@ -1,22 +1,22 @@
 $(document).ready(function () {
-  const departmentsDatatable = $("#departmentsDatatable").DataTable();
+  const departmentsDatatable = $('#departmentsDatatable').DataTable();
 
   // ============ Create a Department ============ //
-  const departmentAddModal = $("#modalAddDepartment");
-  const departmentAddForm = $("#frmAddDepartment");
+  const departmentAddModal = $('#modalAddDepartment');
+  const departmentAddForm = $('#frmAddDepartment');
 
-  handleUnsavedChanges(departmentAddModal, departmentAddForm, $("#btnAddSaveDepartment"));
+  handleUnsavedChanges(departmentAddModal, departmentAddForm, $('#btnAddSaveDepartment'));
 
-  departmentAddForm.on("submit", function (e) {
+  departmentAddForm.on('submit', function (e) {
     e.preventDefault();
 
     const addFormData = new FormData(departmentAddForm[0]);
 
     $.ajax({
-      url: "/file-maintenance/departments",
-      method: "POST",
+      url: '/file-maintenance/departments',
+      method: 'POST',
       data: addFormData,
-      dataType: "json",
+      dataType: 'json',
       processData: false,
       contentType: false,
       success: function (response) {
@@ -24,13 +24,13 @@ $(document).ready(function () {
           showSuccessAlert(response, departmentAddModal, departmentAddForm);
         } else {
           if (response.errors.department) {
-            $("#txtAddDepartment").addClass("is-invalid");
-            $("#valAddDepartment").text(response.errors.department[0]);
+            $('#txtAddDepartment').addClass('is-invalid');
+            $('#valAddDepartment').text(response.errors.department[0]);
           }
 
           if (response.errors.deptcode) {
-            $("#txtAddDeptCode").addClass("is-invalid");
-            $("#valAddDeptCode").text(response.errors.deptcode[0]);
+            $('#txtAddDeptCode').addClass('is-invalid');
+            $('#valAddDeptCode').text(response.errors.deptcode[0]);
           }
         }
       },
@@ -42,27 +42,27 @@ $(document).ready(function () {
   // ============ End Create a Department ============ //
 
   // ============ View a Department ============ //
-  departmentsDatatable.on("click", ".btnViewDepartment", function () {
-    const departmentId = $(this).closest("tr").find("td[data-department-id]").data("department-id");
+  departmentsDatatable.on('click', '.btnViewDepartment', function () {
+    const departmentId = $(this).closest('tr').find('td[data-department-id]').data('department-id');
 
     $.ajax({
-      url: "/file-maintenance/departments/show",
-      method: "GET",
+      url: '/file-maintenance/departments/show',
+      method: 'GET',
       data: { id: departmentId },
       success: function (response) {
-        $("#modalViewDepartment").modal("toggle");
+        $('#modalViewDepartment').modal('toggle');
 
-        $("#lblViewDepartment").text(response.department);
-        $("#lblViewDeptCode").text(response.deptcode);
+        $('#lblViewDepartment').text(response.department);
+        $('#lblViewDeptCode').text(response.deptcode);
 
         const designations = response.designations;
-        const dropdownDesignation = $("#designationsDropdownMenu").empty();
+        const dropdownDesignation = $('#designationsDropdownMenu').empty();
 
-        $("#lblViewTotalDesignations").text(`${designations.length} designations in this department`);
+        $('#lblViewTotalDesignations').text(`${designations.length} designations in this department`);
 
         if (designations.length) {
           designations.forEach((designation) => {
-            dropdownDesignation.append($("<span>").addClass("dropdown-item").text(designation));
+            dropdownDesignation.append($('<span>').addClass('dropdown-item').text(designation));
           });
         } else {
           dropdownDesignation.append('<span class="dropdown-item text-muted">No designations available.</span>');
@@ -73,9 +73,9 @@ $(document).ready(function () {
             ? `<span class="badge bg-soft-success text-success"><span class="legend-indicator bg-success"></span>Active</span>`
             : `<span class="badge bg-soft-danger text-danger"><span class="legend-indicator bg-danger"></span>Inactive</span>`;
 
-        $("#lblViewStatus").html(departmentStatus);
-        $("#lblViewDateCreated").text(response.created);
-        $("#lblViewDateUpdated").text(response.updated);
+        $('#lblViewStatus').html(departmentStatus);
+        $('#lblViewDateCreated').text(response.created);
+        $('#lblViewDateUpdated').text(response.updated);
       },
       error: function (response) {
         showErrorAlert(response.responseJSON);
@@ -85,24 +85,24 @@ $(document).ready(function () {
   // ============ End View a Department ============ //
 
   // ============ Update a Department ============ //
-  const departmentEditModal = $("#modalEditDepartment");
-  const departmentEditForm = $("#frmEditDepartment");
+  const departmentEditModal = $('#modalEditDepartment');
+  const departmentEditForm = $('#frmEditDepartment');
 
-  handleUnsavedChanges(departmentEditModal, departmentEditForm, $("#btnEditSaveDepartment"));
+  handleUnsavedChanges(departmentEditModal, departmentEditForm, $('#btnEditSaveDepartment'));
 
-  departmentsDatatable.on("click", ".btnEditDepartment", function () {
-    const departmentId = $(this).closest("tr").find("td[data-department-id]").data("department-id");
+  departmentsDatatable.on('click', '.btnEditDepartment', function () {
+    const departmentId = $(this).closest('tr').find('td[data-department-id]').data('department-id');
 
     $.ajax({
-      url: "/file-maintenance/departments/edit",
-      method: "GET",
+      url: '/file-maintenance/departments/edit',
+      method: 'GET',
       data: { id: departmentId },
       success: function (response) {
-        departmentEditModal.modal("toggle");
+        departmentEditModal.modal('toggle');
 
-        $("#txtEditDepartmentId").val(response.id);
-        $("#txtEditDepartment").val(response.department);
-        $("#txtEditDeptCode").val(response.deptcode);
+        $('#txtEditDepartmentId').val(response.id);
+        $('#txtEditDepartment').val(response.department);
+        $('#txtEditDeptCode').val(response.deptcode);
       },
       error: function (response) {
         showErrorAlert(response.responseJSON, departmentEditModal, departmentEditForm);
@@ -110,19 +110,19 @@ $(document).ready(function () {
     });
   });
 
-  departmentEditForm.on("submit", function (e) {
+  departmentEditForm.on('submit', function (e) {
     e.preventDefault();
 
     const editFormData = new FormData(departmentEditForm[0]);
 
-    editFormData.append("_method", "PATCH");
-    editFormData.append("id", $("#txtEditDepartmentId").val());
-    editFormData.append("department", $("#txtEditDepartment").val());
-    editFormData.append("deptcode", $("#txtEditDeptCode").val());
+    editFormData.append('_method', 'PATCH');
+    editFormData.append('id', $('#txtEditDepartmentId').val());
+    editFormData.append('department', $('#txtEditDepartment').val());
+    editFormData.append('deptcode', $('#txtEditDeptCode').val());
 
     $.ajax({
-      url: "/file-maintenance/departments/update",
-      method: "POST",
+      url: '/file-maintenance/departments',
+      method: 'POST',
       data: editFormData,
       processData: false,
       contentType: false,
@@ -131,13 +131,13 @@ $(document).ready(function () {
           showSuccessAlert(response, departmentEditModal, departmentEditForm);
         } else {
           if (response.errors.department) {
-            $("#txtEditDepartment").addClass("is-invalid");
-            $("#valEditDepartment").text(response.errors.department[0]);
+            $('#txtEditDepartment').addClass('is-invalid');
+            $('#valEditDepartment').text(response.errors.department[0]);
           }
 
           if (response.errors.deptcode) {
-            $("#txtEditDeptCode").addClass("is-invalid");
-            $("#valEditDeptCode").text(response.errors.deptcode[0]);
+            $('#txtEditDeptCode').addClass('is-invalid');
+            $('#valEditDeptCode').text(response.errors.deptcode[0]);
           }
         }
       },
@@ -147,33 +147,33 @@ $(document).ready(function () {
     });
   });
 
-  departmentsDatatable.on("click", ".btnStatusDepartment", function () {
-    const departmentId = $(this).closest("tr").find("td[data-department-id]").data("department-id");
-    const departmentSetStatus = $(this).data("status");
+  departmentsDatatable.on('click', '.btnStatusDepartment', function () {
+    const departmentId = $(this).closest('tr').find('td[data-department-id]').data('department-id');
+    const departmentSetStatus = $(this).data('status');
     let statusName;
 
     if (departmentSetStatus === 1) {
-      statusName = "active";
+      statusName = 'active';
     } else {
-      statusName = "inactive";
+      statusName = 'inactive';
     }
 
     Swal.fire({
-      title: "Change status?",
-      text: "Are you sure you want to set it to " + statusName + "?",
-      icon: "warning",
+      title: 'Change status?',
+      text: 'Are you sure you want to set it to ' + statusName + '?',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: "Yes, set it to " + statusName + "!",
-      cancelButtonText: "No, cancel!",
+      confirmButtonText: 'Yes, set it to ' + statusName + '!',
+      cancelButtonText: 'No, cancel!',
       customClass: {
-        confirmButton: "btn btn-primary",
-        cancelButton: "btn btn-secondary",
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-secondary',
       },
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: "/file-maintenance/departments/update",
-          method: "PATCH",
+          url: '/file-maintenance/departments',
+          method: 'PATCH',
           data: {
             id: departmentId,
             status: departmentSetStatus,
@@ -191,25 +191,25 @@ $(document).ready(function () {
   // ============ End Update a Department ============ //
 
   // ============ Delete a Department ============ //
-  departmentsDatatable.on("click", ".btnDeleteDepartment", function () {
-    const departmentId = $(this).closest("tr").find("td[data-department-id]").data("department-id");
+  departmentsDatatable.on('click', '.btnDeleteDepartment', function () {
+    const departmentId = $(this).closest('tr').find('td[data-department-id]').data('department-id');
 
     Swal.fire({
-      title: "Delete Record?",
-      text: "Are you sure you want to delete the department?",
-      icon: "warning",
+      title: 'Delete Record?',
+      text: 'Are you sure you want to delete the department?',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "No, cancel!",
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
       customClass: {
-        confirmButton: "btn btn-danger",
-        cancelButton: "btn btn-secondary",
+        confirmButton: 'btn btn-danger',
+        cancelButton: 'btn btn-secondary',
       },
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: "/file-maintenance/departments/delete",
-          method: "DELETE",
+          url: '/file-maintenance/departments',
+          method: 'DELETE',
           data: { id: departmentId },
           success: function (response) {
             showSuccessAlert(response);
@@ -222,31 +222,31 @@ $(document).ready(function () {
     });
   });
 
-  $("#btnMultiDeleteDepartment").on("click", function () {
-    let checkedCheckboxes = departmentsDatatable.rows().nodes().to$().find("input.form-check-input:checked");
+  $('#btnMultiDeleteDepartment').on('click', function () {
+    let checkedCheckboxes = departmentsDatatable.rows().nodes().to$().find('input.form-check-input:checked');
 
     let departmentIds = checkedCheckboxes
       .map(function () {
-        return $(this).closest("tr").find("[data-department-id]").data("department-id");
+        return $(this).closest('tr').find('[data-department-id]').data('department-id');
       })
       .get();
 
     Swal.fire({
-      title: "Delete Records?",
-      text: "Are you sure you want to delete all the selected departments?",
-      icon: "warning",
+      title: 'Delete Records?',
+      text: 'Are you sure you want to delete all the selected departments?',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "No, cancel!",
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
       customClass: {
-        confirmButton: "btn btn-danger",
-        cancelButton: "btn btn-secondary",
+        confirmButton: 'btn btn-danger',
+        cancelButton: 'btn btn-secondary',
       },
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: "/file-maintenance/departments/delete",
-          method: "DELETE",
+          url: '/file-maintenance/departments',
+          method: 'DELETE',
           data: { id: departmentIds },
           success: function (response) {
             showSuccessAlert(response);

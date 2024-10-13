@@ -1,20 +1,20 @@
 $(document).ready(function () {
   // ============ Create a Role ============ //
-  const roleAddModal = $("#modalAddRole");
-  const roleAddForm = $("#frmAddRole");
+  const roleAddModal = $('#modalAddRole');
+  const roleAddForm = $('#frmAddRole');
 
-  handleUnsavedChanges(roleAddModal, roleAddForm, $("#btnAddSaveRole"));
+  handleUnsavedChanges(roleAddModal, roleAddForm, $('#btnAddSaveRole'));
 
-  roleAddForm.on("submit", function (e) {
+  roleAddForm.on('submit', function (e) {
     e.preventDefault();
 
     const addFormData = new FormData(roleAddForm[0]);
 
     $.ajax({
-      url: "/user-management/roles",
-      method: "POST",
+      url: '/user-management/roles',
+      method: 'POST',
       data: addFormData,
-      dataType: "json",
+      dataType: 'json',
       processData: false,
       contentType: false,
       success: function (response) {
@@ -22,17 +22,17 @@ $(document).ready(function () {
           showSuccessAlert(response, roleAddModal, roleAddForm);
         } else {
           if (response.errors.role) {
-            $("#txtAddRole").addClass("is-invalid");
-            $("#valAddRole").text(response.errors.role[0]);
+            $('#txtAddRole').addClass('is-invalid');
+            $('#valAddRole').text(response.errors.role[0]);
           }
 
           if (response.errors.description) {
-            $("#txtAddDescription").addClass("is-invalid");
-            $("#valAddDescription").text(response.errors.description[0]);
+            $('#txtAddDescription').addClass('is-invalid');
+            $('#valAddDescription').text(response.errors.description[0]);
           }
 
           if (response.errors.can_view) {
-            const valPerm = $("#valAddPermission");
+            const valPerm = $('#valAddPermission');
             valPerm.text(response.errors.can_view[0]);
             valPerm.show();
           }
@@ -46,43 +46,43 @@ $(document).ready(function () {
   // ============ End Create a Role ============ //
 
   // ============ View a Role ============ //
-  $(".btnViewRole").on("click", function () {
-    const roleId = $(this).closest(".row").find("span[data-role-id]").data("role-id");
+  $('.btnViewRole').on('click', function () {
+    const roleId = $(this).closest('.row').find('span[data-role-id]').data('role-id');
 
     $.ajax({
-      url: "/user-management/roles/show",
-      method: "GET",
+      url: '/user-management/roles/show',
+      method: 'GET',
       data: { id: roleId },
       success: function (response) {
-        $("#modalViewRole").modal("toggle");
+        $('#modalViewRole').modal('toggle');
 
-        $("#lblViewRole").text(response.role);
-        $("#lblViewDescription").text(response.description);
+        $('#lblViewRole').text(response.role);
+        $('#lblViewDescription').text(response.description);
 
         console.log(response.permissions);
 
-        let permissionsHtml = "";
+        let permissionsHtml = '';
         response.permissions.forEach(function (permission) {
           const actions = [];
 
-          if (permission.can_view) actions.push("View");
-          if (permission.can_create) actions.push("Create");
-          if (permission.can_edit) actions.push("Edit");
-          if (permission.can_delete) actions.push("Delete");
+          if (permission.can_view) actions.push('View');
+          if (permission.can_create) actions.push('Create');
+          if (permission.can_edit) actions.push('Edit');
+          if (permission.can_delete) actions.push('Delete');
 
-          permissionsHtml += `<li class="list-pointer-item">${permission.name}: ${actions.join(", ")}</li>`;
+          permissionsHtml += `<li class="list-pointer-item">${permission.name}: ${actions.join(', ')}</li>`;
         });
 
-        $("#lblViewPermission").html(`<ul class="list-pointer list-pointer-primary">${permissionsHtml}</ul>`);
+        $('#lblViewPermission').html(`<ul class="list-pointer list-pointer-primary">${permissionsHtml}</ul>`);
 
         const roleStatus =
           response.status === 1
             ? `<span class="badge bg-soft-success text-success"><span class="legend-indicator bg-success"></span>Active</span>`
             : `<span class="badge bg-soft-danger text-danger"><span class="legend-indicator bg-danger"></span>Inactive</span>`;
 
-        $("#lblViewStatus").html(roleStatus);
-        $("#lblViewDateCreated").text(response.created);
-        $("#lblViewDateUpdated").text(response.updated);
+        $('#lblViewStatus').html(roleStatus);
+        $('#lblViewDateCreated').text(response.created);
+        $('#lblViewDateUpdated').text(response.updated);
       },
       error: function (response) {
         showErrorAlert(response.responseJSON);
@@ -92,40 +92,40 @@ $(document).ready(function () {
   // ============ End View a Role ============ //
 
   // ============ Update a Role ============ //
-  const roleEditModal = $("#modalEditRole");
-  const roleEditForm = $("#frmEditRole");
+  const roleEditModal = $('#modalEditRole');
+  const roleEditForm = $('#frmEditRole');
 
-  handleUnsavedChanges(roleEditModal, roleEditForm, $("#btnEditSaveRole"));
+  handleUnsavedChanges(roleEditModal, roleEditForm, $('#btnEditSaveRole'));
 
-  $(".btnEditRole").on("click", function () {
-    const roleId = $(this).closest(".row").find("span[data-role-id]").data("role-id");
+  $('.btnEditRole').on('click', function () {
+    const roleId = $(this).closest('.row').find('span[data-role-id]').data('role-id');
 
     $.ajax({
-      url: "/user-management/roles/edit",
-      method: "GET",
+      url: '/user-management/roles/edit',
+      method: 'GET',
       data: { id: roleId },
       success: function (response) {
-        roleEditModal.modal("toggle");
+        roleEditModal.modal('toggle');
 
-        $("#txtEditRoleId").val(response.id);
-        $("#txtEditRole").val(response.role);
-        $("#txtEditDescription").val(response.description);
-        $("#countCharactersRoleDesc").text(response.description.length + " / 120");
+        $('#txtEditRoleId').val(response.id);
+        $('#txtEditRole').val(response.role);
+        $('#txtEditDescription').val(response.description);
+        $('#countCharactersRoleDesc').text(response.description.length + ' / 120');
 
-        $(".form-check-input").prop("checked", false);
+        $('.form-check-input').prop('checked', false);
         response.permissions.forEach(function (permission) {
           let permissionIndex = permission.id;
           if (permission.can_view) {
-            $("#cbxEditViewRole" + permissionIndex).prop("checked", true);
+            $('#cbxEditViewRole' + permissionIndex).prop('checked', true);
           }
           if (permission.can_create) {
-            $("#cbxEditCreateRole" + permissionIndex).prop("checked", true);
+            $('#cbxEditCreateRole' + permissionIndex).prop('checked', true);
           }
           if (permission.can_edit) {
-            $("#cbxEditEditRole" + permissionIndex).prop("checked", true);
+            $('#cbxEditEditRole' + permissionIndex).prop('checked', true);
           }
           if (permission.can_delete) {
-            $("#cbxEditDeleteRole" + permissionIndex).prop("checked", true);
+            $('#cbxEditDeleteRole' + permissionIndex).prop('checked', true);
           }
         });
       },
@@ -135,19 +135,19 @@ $(document).ready(function () {
     });
   });
 
-  roleEditForm.on("submit", function (e) {
+  roleEditForm.on('submit', function (e) {
     e.preventDefault();
 
     const editFormData = new FormData(roleEditForm[0]);
 
-    editFormData.append("_method", "PATCH");
-    editFormData.append("id", $("#txtEditRoleId").val());
-    editFormData.append("role", $("#txtEditRole").val());
-    editFormData.append("description", $("#txtEditDescription").val());
+    editFormData.append('_method', 'PATCH');
+    editFormData.append('id', $('#txtEditRoleId').val());
+    editFormData.append('role', $('#txtEditRole').val());
+    editFormData.append('description', $('#txtEditDescription').val());
 
     $.ajax({
-      url: "/user-management/roles/update",
-      method: "POST",
+      url: '/user-management/roles',
+      method: 'POST',
       data: editFormData,
       processData: false,
       contentType: false,
@@ -156,17 +156,17 @@ $(document).ready(function () {
           showSuccessAlert(response, roleEditModal, roleEditForm);
         } else {
           if (response.errors.role) {
-            $("#txtEditRole").addClass("is-invalid");
-            $("#valEditRole").text(response.errors.role[0]);
+            $('#txtEditRole').addClass('is-invalid');
+            $('#valEditRole').text(response.errors.role[0]);
           }
 
           if (response.errors.description) {
-            $("#txtEditDescription").addClass("is-invalid");
-            $("#valEditDescription").text(response.errors.description[0]);
+            $('#txtEditDescription').addClass('is-invalid');
+            $('#valEditDescription').text(response.errors.description[0]);
           }
 
           if (response.errors.can_view) {
-            const valPerm = $("#valEditPermission");
+            const valPerm = $('#valEditPermission');
             valPerm.text(response.errors.can_view[0]);
             valPerm.show();
           }
@@ -178,33 +178,33 @@ $(document).ready(function () {
     });
   });
 
-  $(".btnStatusRole").on("click", function () {
-    const roleId = $(this).closest(".row").find("span[data-role-id]").data("role-id");
-    const roleSetStatus = $(this).data("status");
+  $('.btnStatusRole').on('click', function () {
+    const roleId = $(this).closest('.row').find('span[data-role-id]').data('role-id');
+    const roleSetStatus = $(this).data('status');
     let statusName;
 
     if (roleSetStatus === 1) {
-      statusName = "active";
+      statusName = 'active';
     } else {
-      statusName = "inactive";
+      statusName = 'inactive';
     }
 
     Swal.fire({
-      title: "Change status?",
-      text: "Are you sure you want to set it to " + statusName + "?",
-      icon: "warning",
+      title: 'Change status?',
+      text: 'Are you sure you want to set it to ' + statusName + '?',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: "Yes, set it to " + statusName + "!",
-      cancelButtonText: "No, cancel!",
+      confirmButtonText: 'Yes, set it to ' + statusName + '!',
+      cancelButtonText: 'No, cancel!',
       customClass: {
-        confirmButton: "btn btn-primary",
-        cancelButton: "btn btn-secondary",
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-secondary',
       },
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: "/user-management/roles/update",
-          method: "PATCH",
+          url: '/user-management/roles',
+          method: 'PATCH',
           data: {
             id: roleId,
             status: roleSetStatus,
@@ -222,25 +222,25 @@ $(document).ready(function () {
   // ============ End Update a Role ============ //
 
   // ============ Delete a Role ============ //
-  $(".btnDeleteRole").on("click", function () {
-    const roleId = $(this).closest(".row").find("span[data-role-id]").data("role-id");
+  $('.btnDeleteRole').on('click', function () {
+    const roleId = $(this).closest('.row').find('span[data-role-id]').data('role-id');
 
     Swal.fire({
-      title: "Delete Record?",
-      text: "Are you sure you want to delete the role?",
-      icon: "warning",
+      title: 'Delete Record?',
+      text: 'Are you sure you want to delete the role?',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "No, cancel!",
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
       customClass: {
-        confirmButton: "btn btn-danger",
-        cancelButton: "btn btn-secondary",
+        confirmButton: 'btn btn-danger',
+        cancelButton: 'btn btn-secondary',
       },
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: "/user-management/roles/delete",
-          method: "DELETE",
+          url: '/user-management/roles',
+          method: 'DELETE',
           data: { id: roleId },
           success: function (response) {
             showSuccessAlert(response);
@@ -254,29 +254,29 @@ $(document).ready(function () {
   });
   // ============ End Delete a Role ============ //
 
-  $(".cbx-action").on("change", function () {
-    const row = $(this).closest("tr");
-    const viewCheckbox = row.find(".cbx-view");
+  $('.cbx-action').on('change', function () {
+    const row = $(this).closest('tr');
+    const viewCheckbox = row.find('.cbx-view');
 
-    if ($(this).is(":checked")) {
-      viewCheckbox.prop("checked", true);
+    if ($(this).is(':checked')) {
+      viewCheckbox.prop('checked', true);
     } else {
-      const allUnchecked = row.find(".cbx-action:checked").length === 0;
+      const allUnchecked = row.find('.cbx-action:checked').length === 0;
       if (allUnchecked) {
-        viewCheckbox.prop("checked", false);
+        viewCheckbox.prop('checked', false);
       }
     }
-    $("#valAddPermission").html("");
+    $('#valAddPermission').html('');
   });
 
-  $(".cbx-view").on("change", function () {
-    const row = $(this).closest("tr");
-    const actionCheckboxes = row.find(".cbx-action");
+  $('.cbx-view').on('change', function () {
+    const row = $(this).closest('tr');
+    const actionCheckboxes = row.find('.cbx-action');
 
-    if (!$(this).is(":checked")) {
-      actionCheckboxes.prop("checked", false);
+    if (!$(this).is(':checked')) {
+      actionCheckboxes.prop('checked', false);
     }
 
-    $("#valAddPermission").html("");
+    $('#valAddPermission').html('');
   });
 });

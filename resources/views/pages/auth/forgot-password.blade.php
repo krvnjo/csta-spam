@@ -34,20 +34,10 @@
               @csrf
               <div class="pb-5 text-center">
                 <h1 class="display-5">Request Password Reset</h1>
-                <p>Enter your username and the email address associated with it and we'll send you instructions to reset your password.</p>
+                <p>Enter your email address associated with your account and we'll send you instructions to reset your password.</p>
               </div>
 
               <div class="mb-4">
-                <label class="form-label" for="txtForgotUsername">Username</label>
-                <input class="js-input-mask form-control" id="txtForgotUsername" name="user"
-                  data-hs-mask-options='{
-                    "mask": "00-00000"
-                  }' type="text" tabindex="1"
-                  placeholder="Enter your username">
-                <span class="invalid-feedback" id="valForgotUsername"></span>
-              </div>
-
-              <div class="mb-6">
                 <label class="form-label" for="txtForgotEmail">Email Address</label>
                 <input class="form-control" id="txtForgotEmail" name="email" placeholder="Enter your email address">
                 <span class="invalid-feedback" id="valForgotEmail"></span>

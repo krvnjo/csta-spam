@@ -308,11 +308,14 @@
               <a class="dropdown-item" href="{{ route('account.index', ['username' => Auth::user()->user_name]) }}">Profile & Account</a>
               <!-- End Account Settings -->
 
+              {{--              <!-- Notifications --> --}}
+              {{--              <a class="dropdown-item" href="#">Notifications</a> --}}
+              {{--              <!-- End Notifications --> --}}
+
               <!-- System Appearance -->
               <div class="dropdown">
                 <button class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" id="selectThemeDropdown" data-bs-toggle="dropdown"
                   type="button">System Appearance</button>
-
                 <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu"
                   aria-labelledby="selectThemeDropdown">
                   <button class="dropdown-item" data-icon="bi-moon-stars" data-value="auto" type="button">
@@ -332,10 +335,9 @@
               <div class="dropdown">
                 <button class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" id="navSubmenuPagesAccountDropdown2"
                   data-bs-toggle="dropdown" type="button">Help & Support</button>
-
                 <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu">
-                  <a class="dropdown-item" href="#"><i class="bi-info-circle me-2"></i>FAQ List</a>
-                  <a class="dropdown-item" href="#"><i class="bi-flag me-2"></i>Report a Problem</a>
+                  <a class="dropdown-item" href="{{ route('help.about') }}"><i class="bi-question-circle me-2"></i>About CSTA-SPAM</a>
+                  <a class="dropdown-item" href="{{ route('help.guide') }}"><i class="bi-journal-text me-2"></i>User Guide</a>
                 </div>
               </div>
               <!-- End Help & Support -->

@@ -34,6 +34,7 @@
               @csrf
               @method('PATCH')
               <input id="txtAccountId" name="id" type="hidden" value="{{ Crypt::encryptString(Auth::user()->id) }}">
+              <input id="txtAccountUsername" name="user" type="hidden" value="{{ Auth::user()->user_name }}">
 
               <!-- User Image -->
               <label class="avatar avatar-xxl avatar-circle avatar-uploader profile-cover-avatar" for="imgAccountImage">
@@ -49,7 +50,7 @@
                      "resetImg": "{{ Vite::asset('resources/img/uploads/user-images/default.jpg') }}",
                      "allowTypes": [".png", ".jpeg", ".jpg"]
                   }'
-                  type="file">
+                  type="file" accept=".jpg, .png, .jpeg">
 
                 <span class="avatar-uploader-trigger">
                   <i class="bi-pencil-fill avatar-uploader-icon shadow-sm"></i>

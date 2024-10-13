@@ -13,6 +13,7 @@ This capstone project is titled "SPAM: Systematized Property and Assets Manageme
 - Repair Management
 - Dashboard w/ Prescriptive Analytics
 - Reports Generation
+- User Management
 - File Settings & Maintenance
 - Audit Trailing
 

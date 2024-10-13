@@ -7,7 +7,6 @@ use App\Models\BrandSubcategory;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Throwable;
@@ -51,23 +50,23 @@ class BrandController extends Controller
      */
     public function store(Request $request)
     {
-        $brandValidationMessages = [
-            'brand.required' => 'Please enter a brand name!',
-            'brand.regex' => 'It must not contain special symbols and multiple spaces.',
-            'brand.min' => 'The brand name must be at least :min characters.',
-            'brand.max' => 'The brand name may not be greater than :max characters.',
-            'brand.unique' => 'This brand name already exists.',
-
-            'subcategories.required' => 'Please select a brand subcategory!',
-        ];
-
         try {
+            $brandValidationMessages = [
+                'brand.required' => 'Please enter a brand name!',
+                'brand.regex' => 'No special symbols, consecutive spaces or hyphens allowed.',
+                'brand.min' => 'The brand name must be at least :min characters.',
+                'brand.max' => 'The brand name may not be greater than :max characters.',
+                'brand.unique' => 'This brand name already exists.',
+
+                'subcategories.required' => 'Please select a brand subcategory!'
+            ];
+
             $brandValidator = Validator::make($request->all(), [
                 'brand' => [
                     'required',
-                    'regex:/^(?!.*([ -])\1)[a-zA-Z0-9]+(?:[ -][a-zA-Z0-9]+)*$/',
+                    'regex:/^(?!.*([ -])\1)[a-zA-Z0-9&.\'-]+(?:[ -][a-zA-Z0-9&.\'-]+)*$/',
                     'min:3',
-                    'max:80',
+                    'max:50',
                     'unique:brands,name'
                 ],
                 'subcategories' => [
@@ -80,27 +79,26 @@ class BrandController extends Controller
                     'success' => false,
                     'errors' => $brandValidator->errors(),
                 ]);
-            } else {
-                $brand = Brand::query()->create([
-                    'name' => ucwords(trim($request->input('brand'))),
-                    'is_active' => 1,
-                ]);
+            }
 
-                foreach ($request->input('subcategories') as $subcategory) {
-                    BrandSubcategory::query()->insert([
-                        'brand_id' => $brand->id,
-                        'subcateg_id' => $subcategory,
-                    ]);
-                }
+            $brand = Brand::query()->create([
+                'name' => ucwords(trim($request->input('brand'))),
+                'is_active' => 1,
+            ]);
 
-                return response()->json([
-                    'success' => true,
-                    'title' => 'Saved Successfully!',
-                    'text' => 'The brand has been added successfully!',
+            foreach ($request->input('subcategories') as $subcategory) {
+                BrandSubcategory::query()->insert([
+                    'brand_id' => $brand->id,
+                    'subcateg_id' => $subcategory,
                 ]);
             }
-        } catch (Throwable $e) {
-            Log::error('Error adding brand: ' . $e->getMessage(), ['exception' => $e]);
+
+            return response()->json([
+                'success' => true,
+                'title' => 'Saved Successfully!',
+                'text' => 'The brand has been added successfully!',
+            ]);
+        } catch (Throwable) {
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
@@ -116,7 +114,6 @@ class BrandController extends Controller
     {
         try {
             $brand = Brand::query()->findOrFail(Crypt::decryptString($request->input('id')));
-
             $subcategories = $brand->subcategories()->with('category')->whereNull('deleted_at')->orderBy('name')->get()->groupBy('category.name');
 
             $formattedSubcategories = [];
@@ -155,7 +152,7 @@ class BrandController extends Controller
 
             return response()->json([
                 'success' => true,
-                'id' => $request->input('id'),
+                'id' => Crypt::encryptString($brand->id),
                 'brand' => $brand->name,
                 'subcategories' => $subcategories,
             ]);
@@ -176,10 +173,10 @@ class BrandController extends Controller
         try {
             $brand = Brand::query()->findOrFail(Crypt::decryptString($request->input('id')));
 
-            if ($request->has(['id', 'brand', 'subcategories'])) {
+            if ($request->has(['brand', 'subcategories'])) {
                 $brandValidationMessages = [
                     'brand.required' => 'Please enter a brand name!',
-                    'brand.regex' => 'It must not contain special symbols and multiple spaces.',
+                    'brand.regex' => 'No special symbols, consecutive spaces or hyphens allowed.',
                     'brand.min' => 'The brand name must be at least :min characters.',
                     'brand.max' => 'The brand name may not be greater than :max characters.',
                     'brand.unique' => 'This brand name already exists.',
@@ -190,9 +187,9 @@ class BrandController extends Controller
                 $brandValidator = Validator::make($request->all(), [
                     'brand' => [
                         'required',
-                        'regex:/^(?!.*([ -])\1)[a-zA-Z0-9]+(?:[ -][a-zA-Z0-9]+)*$/',
+                        'regex:/^(?!.*([ -])\1)[a-zA-Z0-9&.\'-]+(?:[ -][a-zA-Z0-9&.\'-]+)*$/',
                         'min:3',
-                        'max:80',
+                        'max:50',
                         Rule::unique('brands', 'name')->ignore($brand->id)
                     ],
                     'subcategories' => [
@@ -205,14 +202,12 @@ class BrandController extends Controller
                         'success' => false,
                         'errors' => $brandValidator->errors(),
                     ]);
-                } else {
-                    $brand->name = ucwords(trim($request->input('brand')));
-                    $brand->subcategories()->sync(explode(',', $request->input('subcategories')));
                 }
-            } elseif ($request->has('status')) {
+                $brand->name = ucwords(trim($request->input('brand')));
+                $brand->subcategories()->sync(explode(',', $request->input('subcategories')));
+            } else {
                 $brand->is_active = $request->input('status');
             }
-            $brand->updated_at = now();
             $brand->save();
 
             return response()->json([
@@ -235,28 +230,15 @@ class BrandController extends Controller
     public function destroy(Request $request)
     {
         try {
-            $ids = $request->input('id');
+            $ids = array_map(fn($id) => Crypt::decryptString($id), (array)$request->input('id'));
 
-            if (!is_array($ids)) {
-                $ids = [$ids];
-            }
-
-            $ids = array_map(function ($id) {
-                return Crypt::decryptString($id);
-            }, $ids);
-
-            $brands = Brand::query()->whereIn('id', $ids)->get();
-
-            foreach ($brands as $brand) {
-                $brand->is_active = 0;
-                $brand->save();
-                $brand->delete();
-            }
+            Brand::query()->whereIn('id', $ids)->update(['is_active' => 0]);
+            Brand::destroy($ids);
 
             return response()->json([
                 'success' => true,
                 'title' => 'Deleted Successfully!',
-                'text' => count($brands) > 1 ? 'The brands have been deleted and can be restored from the bin.' : 'The brand has been deleted and can be restored from the bin.',
+                'text' => 'The brand has been deleted and can be restored from the bin.',
             ]);
         } catch (Throwable) {
             return response()->json([

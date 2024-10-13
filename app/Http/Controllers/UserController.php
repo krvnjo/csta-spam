@@ -22,8 +22,8 @@ class UserController extends Controller
     public function index()
     {
         $users = User::with('roles', 'department')->whereNull('deleted_at')->get();
-        $roles = Role::whereNull('deleted_at')->where('is_active', 1)->orderBy('name')->pluck('name', 'id');
-        $depts = Department::whereNull('deleted_at')->where('is_active', 1)->orderBy('name')->pluck('name', 'id');
+        $roles = Role::query()->whereNull('deleted_at')->where('is_active', 1)->orderBy('name')->pluck('name', 'id');
+        $depts = Department::query()->whereNull('deleted_at')->where('is_active', 1)->orderBy('name')->pluck('name', 'id');
 
         $totalUsers = $users->count();
 

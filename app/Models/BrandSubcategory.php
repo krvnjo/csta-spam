@@ -11,7 +11,7 @@ class BrandSubcategory extends Model
 
     protected $fillable = [
         'brand_id',
-        'subcategory_id'
+        'subcateg_id'
     ];
 
     public function brand(): BelongsTo

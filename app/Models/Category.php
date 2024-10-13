@@ -22,11 +22,6 @@ class Category extends Model
         return $this->hasMany(Subcategory::class, 'categ_id');
     }
 
-    public function property_parents(): HasMany
-    {
-        return $this->hasMany(PropertyParent::class, 'categ_id');
-    }
-
     public function property(): HasMany
     {
         return $this->hasMany(PropertyParent::class, 'subcateg_id');

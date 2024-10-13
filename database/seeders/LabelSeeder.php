@@ -47,7 +47,8 @@ class LabelSeeder extends Seeder
         $categories = [
             'Electronics',
             'Furniture',
-            'Tools and Equipment',
+            'Tools',
+            'Equipment',
             'Materials',
             'Supplies'
         ];

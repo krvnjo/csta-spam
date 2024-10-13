@@ -1,6 +1,6 @@
 <!-- Add Brand Modal -->
-<div class="modal fade" id="modalAddBrand" data-bs-backdrop="static" role="dialog" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal fade" id="modalAddBrand" data-bs-backdrop="static" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <!-- Header -->
       <div class="modal-header">
@@ -13,12 +13,15 @@
       <div class="modal-body">
         <form id="frmAddBrand" method="post" novalidate>
           @csrf
+          <!-- Brand Name -->
           <div class="form-group">
             <label class="col col-form-label form-label" for="txtAddBrand">Brand Name</label>
-            <input class="form-control" id="txtAddBrand" name="brand" type="text" placeholder="Enter a Brand">
+            <input class="form-control" id="txtAddBrand" name="brand" type="text" placeholder="Enter a brand">
             <span class="invalid-feedback" id="valAddBrand"></span>
           </div>
+          <!-- End Brand Name -->
 
+          <!-- Brand Subcategories -->
           <div class="form-group">
             <label class="col col-form-label form-label mt-2" for="selAddSubcategories">Brand Subcategories</label>
             <div class="tom-select-custom">
@@ -26,7 +29,7 @@
                 data-hs-tom-select-options='{
                   "singleMultiple": true,
                   "hideSelected": false,
-                  "placeholder": "Select Subcategories"
+                  "placeholder": "Select subcategories"
                 }'
                 autocomplete="off" multiple>
                 <option value=""></option>
@@ -41,6 +44,7 @@
               <span class="invalid-feedback" id="valAddSubcategories"></span>
             </div>
           </div>
+          <!-- End Brand Subcategories -->
         </form>
       </div>
       <!-- End Body -->
