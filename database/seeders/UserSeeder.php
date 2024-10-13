@@ -18,11 +18,18 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $permissions = [
-            'Dashboard',
             'Inventory Management',
             'User Management',
-            'File Maintenance',
-            'Audit Logs',
+            'Role Management',
+            'Brand Maintenance',
+            'Category Maintenance',
+            'Condition Maintenance',
+            'Department Maintenance',
+            'Designation Maintenance',
+            'Status Maintenance',
+            'Subcategories Maintenance',
+            'Audit History',
+            'System Settings',
         ];
 
         foreach ($permissions as $permission) {

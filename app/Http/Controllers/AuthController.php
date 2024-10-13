@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -17,7 +16,10 @@ class AuthController extends Controller
      */
     public function index()
     {
-        return view('pages.auth.login');
+        if (!Auth::check()) {
+            return view('pages.auth.login');
+        }
+        return redirect()->route('dashboard.index');
     }
 
     /**
@@ -104,7 +106,7 @@ class AuthController extends Controller
     /**
      * Authenticate the user to log the user out.
      */
-    public function logout(Request $request): RedirectResponse
+    public function logout(Request $request)
     {
         Auth::logout();
 

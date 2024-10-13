@@ -1,22 +1,21 @@
 $(document).ready(function () {
-  const brandsDatatable = $("#brandsDatatable").DataTable();
+  const brandsDatatable = $('#brandsDatatable').DataTable();
 
   // ============ Create a Brand ============ //
-  const brandAddModal = $("#modalAddBrand");
-  const brandAddForm = $("#frmAddBrand");
+  const brandAddModal = $('#modalAddBrand');
+  const brandAddForm = $('#frmAddBrand');
 
-  handleUnsavedChanges(brandAddModal, brandAddForm, $("#btnAddSaveBrand"));
+  handleUnsavedChanges(brandAddModal, brandAddForm, $('#btnAddSaveBrand'));
 
-  brandAddForm.on("submit", function (e) {
+  brandAddForm.on('submit', function (e) {
     e.preventDefault();
 
     const addFormData = new FormData(brandAddForm[0]);
 
     $.ajax({
-      url: "/file-maintenance/brands",
-      method: "POST",
+      url: '/file-maintenance/brands',
+      method: 'POST',
       data: addFormData,
-      dataType: "json",
       processData: false,
       contentType: false,
       success: function (response) {
@@ -24,13 +23,12 @@ $(document).ready(function () {
           showSuccessAlert(response, brandAddModal, brandAddForm);
         } else {
           if (response.errors.brand) {
-            $("#txtAddBrand").addClass("is-invalid");
-            $("#valAddBrand").text(response.errors.brand[0]);
+            $('#txtAddBrand').addClass('is-invalid');
+            $('#valAddBrand').text(response.errors.brand[0]);
           }
-
           if (response.errors.subcategories) {
-            $("#selAddSubcategories").next(".ts-wrapper").addClass("is-invalid");
-            $("#valAddSubcategories").text(response.errors.subcategories[0]);
+            $('#selAddSubcategories').next('.ts-wrapper').addClass('is-invalid');
+            $('#valAddSubcategories').text(response.errors.subcategories[0]);
           }
         }
       },
@@ -42,32 +40,32 @@ $(document).ready(function () {
   // ============ End Create a Brand ============ //
 
   // ============ View a Brand ============ //
-  brandsDatatable.on("click", ".btnViewBrand", function () {
-    const brandId = $(this).closest("tr").find("td[data-brand-id]").data("brand-id");
+  brandsDatatable.on('click', '.btnViewBrand', function () {
+    const brandId = $(this).closest('tr').find('td[data-brand-id]').data('brand-id');
 
     $.ajax({
-      url: "/file-maintenance/brands/show",
-      method: "GET",
+      url: '/file-maintenance/brands/show',
+      method: 'GET',
       data: { id: brandId },
       success: function (response) {
-        $("#modalViewBrand").modal("toggle");
+        $('#modalViewBrand').modal('toggle');
 
-        $("#lblViewBrand").text(response.brand);
+        $('#lblViewBrand').text(response.brand);
 
         const subcategories = response.subcategories;
-        const dropdownSubcategory = $("#subcategoriesDropdownMenu").empty();
+        const dropdownSubcategory = $('#subcategoriesDropdownMenu').empty();
 
         let totalSubcategories = 0;
         subcategories.forEach((category) => (totalSubcategories += category.subcategories.length));
 
-        $("#lblViewTotalSubcategories").text(`${totalSubcategories} subcategories in this brand`);
+        $('#lblViewTotalSubcategories').text(`${totalSubcategories} subcategories in this brand`);
 
         if (totalSubcategories) {
           subcategories.forEach((category) => {
-            dropdownSubcategory.append($("<h5>").addClass("dropdown-header").text(category.category));
+            dropdownSubcategory.append($('<h5>').addClass('dropdown-header').text(category.category));
 
             category.subcategories.forEach((subcategory) => {
-              dropdownSubcategory.append($("<span>").addClass("dropdown-item").text(subcategory));
+              dropdownSubcategory.append($('<span>').addClass('dropdown-item').text(subcategory));
             });
           });
         } else {
@@ -79,9 +77,9 @@ $(document).ready(function () {
             ? `<span class="badge bg-soft-success text-success"><span class="legend-indicator bg-success"></span>Active</span>`
             : `<span class="badge bg-soft-danger text-danger"><span class="legend-indicator bg-danger"></span>Inactive</span>`;
 
-        $("#lblViewStatus").html(brandStatus);
-        $("#lblViewDateCreated").text(response.created);
-        $("#lblViewDateUpdated").text(response.updated);
+        $('#lblViewStatus').html(brandStatus);
+        $('#lblViewDateCreated').text(response.created);
+        $('#lblViewDateUpdated').text(response.updated);
       },
       error: function (response) {
         showErrorAlert(response.responseJSON);
@@ -91,24 +89,24 @@ $(document).ready(function () {
   // ============ End View a Brand ============ //
 
   // ============ Update a Brand ============ //
-  const brandEditModal = $("#modalEditBrand");
-  const brandEditForm = $("#frmEditBrand");
+  const brandEditModal = $('#modalEditBrand');
+  const brandEditForm = $('#frmEditBrand');
 
-  handleUnsavedChanges(brandEditModal, brandEditForm, $("#btnEditSaveBrand"));
+  handleUnsavedChanges(brandEditModal, brandEditForm, $('#btnEditSaveBrand'));
 
-  brandsDatatable.on("click", ".btnEditBrand", function () {
-    const brandId = $(this).closest("tr").find("td[data-brand-id]").data("brand-id");
+  brandsDatatable.on('click', '.btnEditBrand', function () {
+    const brandId = $(this).closest('tr').find('td[data-brand-id]').data('brand-id');
 
     $.ajax({
-      url: "/file-maintenance/brands/edit",
-      method: "GET",
+      url: '/file-maintenance/brands/edit',
+      method: 'GET',
       data: { id: brandId },
       success: function (response) {
-        brandEditModal.modal("toggle");
+        brandEditModal.modal('toggle');
 
-        $("#txtEditBrandId").val(response.id);
-        $("#txtEditBrand").val(response.brand);
-        $("#selEditSubcategories")[0].tomselect.setValue(response.subcategories);
+        $('#txtEditBrandId').val(response.id);
+        $('#txtEditBrand').val(response.brand);
+        $('#selEditSubcategories')[0].tomselect.setValue(response.subcategories);
       },
       error: function (response) {
         showErrorAlert(response.responseJSON, brandEditModal, brandEditForm);
@@ -116,19 +114,19 @@ $(document).ready(function () {
     });
   });
 
-  brandEditForm.on("submit", function (e) {
+  brandEditForm.on('submit', function (e) {
     e.preventDefault();
 
     const editFormData = new FormData(brandEditForm[0]);
 
-    editFormData.append("_method", "PATCH");
-    editFormData.append("id", $("#txtEditBrandId").val());
-    editFormData.append("brand", $("#txtEditBrand").val());
-    editFormData.append("subcategories", $("#selEditSubcategories").val());
+    editFormData.append('_method', 'PATCH');
+    editFormData.append('id', $('#txtEditBrandId').val());
+    editFormData.append('brand', $('#txtEditBrand').val());
+    editFormData.append('subcategories', $('#selEditSubcategories').val());
 
     $.ajax({
-      url: "/file-maintenance/brands/update",
-      method: "POST",
+      url: '/file-maintenance/brands',
+      method: 'POST',
       data: editFormData,
       processData: false,
       contentType: false,
@@ -137,13 +135,13 @@ $(document).ready(function () {
           showSuccessAlert(response, brandEditModal, brandEditForm);
         } else {
           if (response.errors.brand) {
-            $("#txtEditBrand").addClass("is-invalid");
-            $("#valEditBrand").text(response.errors.brand[0]);
+            $('#txtEditBrand').addClass('is-invalid');
+            $('#valEditBrand').text(response.errors.brand[0]);
           }
 
           if (response.errors.subcategories) {
-            $("#selEditSubcategories").next(".ts-wrapper").addClass("is-invalid");
-            $("#valEditSubcategories").text(response.errors.subcategories[0]);
+            $('#selEditSubcategories').next('.ts-wrapper').addClass('is-invalid');
+            $('#valEditSubcategories').text(response.errors.subcategories[0]);
           }
         }
       },
@@ -153,33 +151,33 @@ $(document).ready(function () {
     });
   });
 
-  brandsDatatable.on("click", ".btnStatusBrand", function () {
-    const brandId = $(this).closest("tr").find("td[data-brand-id]").data("brand-id");
-    const brandSetStatus = $(this).data("status");
+  brandsDatatable.on('click', '.btnStatusBrand', function () {
+    const brandId = $(this).closest('tr').find('td[data-brand-id]').data('brand-id');
+    const brandSetStatus = $(this).data('status');
     let statusName;
 
     if (brandSetStatus === 1) {
-      statusName = "active";
+      statusName = 'active';
     } else {
-      statusName = "inactive";
+      statusName = 'inactive';
     }
 
     Swal.fire({
-      title: "Change status?",
-      text: "Are you sure you want to set it to " + statusName + "?",
-      icon: "warning",
+      title: 'Change status?',
+      text: 'Are you sure you want to set it to ' + statusName + '?',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: "Yes, set it to " + statusName + "!",
-      cancelButtonText: "No, cancel!",
+      confirmButtonText: 'Yes, set it to ' + statusName + '!',
+      cancelButtonText: 'No, cancel!',
       customClass: {
-        confirmButton: "btn btn-primary",
-        cancelButton: "btn btn-secondary",
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-secondary',
       },
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: "/file-maintenance/brands/update",
-          method: "PATCH",
+          url: '/file-maintenance/brands',
+          method: 'PATCH',
           data: {
             id: brandId,
             status: brandSetStatus,
@@ -197,25 +195,25 @@ $(document).ready(function () {
   // ============ End Update a Brand ============ //
 
   // ============ Delete a Brand ============ //
-  brandsDatatable.on("click", ".btnDeleteBrand", function () {
-    const brandId = $(this).closest("tr").find("td[data-brand-id]").data("brand-id");
+  brandsDatatable.on('click', '.btnDeleteBrand', function () {
+    const brandId = $(this).closest('tr').find('td[data-brand-id]').data('brand-id');
 
     Swal.fire({
-      title: "Delete Record?",
-      text: "Are you sure you want to delete the brand?",
-      icon: "warning",
+      title: 'Delete Record?',
+      text: 'Are you sure you want to delete the brand?',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "No, cancel!",
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
       customClass: {
-        confirmButton: "btn btn-danger",
-        cancelButton: "btn btn-secondary",
+        confirmButton: 'btn btn-danger',
+        cancelButton: 'btn btn-secondary',
       },
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: "/file-maintenance/brands/delete",
-          method: "DELETE",
+          url: '/file-maintenance/brands',
+          method: 'DELETE',
           data: { id: brandId },
           success: function (response) {
             showSuccessAlert(response);
@@ -228,31 +226,31 @@ $(document).ready(function () {
     });
   });
 
-  $("#btnMultiDeleteBrand").on("click", function () {
-    let checkedCheckboxes = brandsDatatable.rows().nodes().to$().find("input.form-check-input:checked");
+  $('#btnMultiDeleteBrand').on('click', function () {
+    let checkedCheckboxes = brandsDatatable.rows().nodes().to$().find('input.form-check-input:checked');
 
     let brandIds = checkedCheckboxes
       .map(function () {
-        return $(this).closest("tr").find("[data-brand-id]").data("brand-id");
+        return $(this).closest('tr').find('[data-brand-id]').data('brand-id');
       })
       .get();
 
     Swal.fire({
-      title: "Delete Records?",
-      text: "Are you sure you want to delete all the selected brands?",
-      icon: "warning",
+      title: 'Delete Records?',
+      text: 'Are you sure you want to delete all the selected brands?',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "No, cancel!",
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
       customClass: {
-        confirmButton: "btn btn-danger",
-        cancelButton: "btn btn-secondary",
+        confirmButton: 'btn btn-danger',
+        cancelButton: 'btn btn-secondary',
       },
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: "/file-maintenance/brands/delete",
-          method: "DELETE",
+          url: '/file-maintenance/brands',
+          method: 'DELETE',
           data: { id: brandIds },
           success: function (response) {
             showSuccessAlert(response);

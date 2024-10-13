@@ -6,8 +6,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Throwable;
@@ -73,28 +73,22 @@ class AccountController extends Controller
 
                 if ($request->hasFile('image')) {
                     if ($user->user_image && $user->user_image !== 'default.jpg') {
-                        $oldImagePath = resource_path('img/uploads/user-images/' . $user->user_image);
-                        if (File::exists($oldImagePath)) {
-                            File::delete($oldImagePath);
-                        }
+                        Storage::delete('public/img/user-images/' . $user->user_image);
                     }
 
                     $image = $request->file('image');
                     $filename = time() . "-" . $user->id . '.' . $image->getClientOriginalExtension();
-                    $folderPath = resource_path('img/uploads/user-images/');
 
-                    if (!File::isDirectory($folderPath)) {
-                        File::makeDirectory($folderPath, 0755, true, true);
-                    }
+                    $image->storeAs('public/img/user-images', $filename);
 
-                    $image->move($folderPath, $filename);
                     $user->user_image = $filename;
                 } else {
+                    // Handle default image condition
                     if ($request->input('avatar') === 'default.jpg' && $user->user_image !== 'default.jpg') {
-                        $oldImagePath = resource_path('img/uploads/user-images/' . $user->user_image);
-                        if (File::exists($oldImagePath)) {
-                            File::delete($oldImagePath);
-                        }
+                        // Delete the old image if it exists
+                        Storage::delete('public/img/user-images/' . $user->user_image);
+
+                        // Set the image to 'default.jpg'
                         $user->user_image = 'default.jpg';
                     }
                 }

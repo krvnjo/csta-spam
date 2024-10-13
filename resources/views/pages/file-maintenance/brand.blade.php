@@ -10,6 +10,18 @@
 
 @section('main-content')
   <main class="main" id="content" role="main">
+    @php
+      $canCreate = auth()
+          ->user()
+          ->hasPermission('Brand Maintenance', ['create']);
+      $canEdit = auth()
+          ->user()
+          ->hasPermission('Brand Maintenance', ['edit']);
+      $canDelete = auth()
+          ->user()
+          ->hasPermission('Brand Maintenance', ['delete']);
+    @endphp
+
     <!-- Content -->
     <div class="content container-fluid">
       <!-- Page Header -->
@@ -26,13 +38,15 @@
             <h1 class="page-header-title mt-2">Brands</h1>
           </div>
 
-          <div class="col-sm-auto mt-sm-0 mt-3">
-            <div class="d-grid gap-2 d-sm-flex justify-content-sm-end">
-              <button class="btn btn-primary w-100 w-sm-auto" data-bs-toggle="modal" data-bs-target="#modalAddBrand">
-                <i class="bi-plus me-1"></i> Add Brand
-              </button>
+          @if ($canCreate)
+            <div class="col-sm-auto mt-sm-0 mt-3">
+              <div class="d-grid gap-2 d-sm-flex justify-content-sm-end">
+                <button class="btn btn-primary w-100 w-sm-auto" data-bs-toggle="modal" data-bs-target="#modalAddBrand">
+                  <i class="bi-plus me-1"></i> Add Brand
+                </button>
+              </div>
             </div>
-          </div>
+          @endif
         </div>
       </div>
       <!-- End Page Header -->
@@ -98,15 +112,17 @@
           </div>
 
           <div class="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
-            <!-- Datatable Counter -->
-            <div id="brandsDatatableCounterInfo" style="display: none;">
-              <div class="d-flex align-items-center">
-                <span class="fs-5 me-3"><span id="brandsDatatableCounter"></span> Selected</span>
-                <button class="btn btn-outline-danger btn-sm" id="btnMultiDeleteBrand" type="button"><i class="bi-trash3-fill"></i>
-                  Delete</button>
+            @if ($canDelete)
+              <!-- Datatable Counter -->
+              <div id="brandsDatatableCounterInfo" style="display: none;">
+                <div class="d-flex align-items-center">
+                  <span class="fs-5 me-3"><span id="brandsDatatableCounter"></span> Selected</span>
+                  <button class="btn btn-outline-danger btn-sm" id="btnMultiDeleteBrand" type="button"><i class="bi-trash3-fill"></i>
+                    Delete</button>
+                </div>
               </div>
-            </div>
-            <!-- End Datatable Counter -->
+              <!-- End Datatable Counter -->
+            @endif
 
             <!-- Export Options Dropdown -->
             <div class="dropdown">
@@ -241,12 +257,16 @@
             }'>
             <thead class="thead-light">
               <tr>
-                <th class="table-column-pe-0 w-auto">
-                  <div class="form-check">
-                    <input class="form-check-input" id="brandsDatatableCheckAll" type="checkbox">
-                    <label class="form-check-label" for="brandsDatatableCheckAll"></label>
-                  </div>
-                </th>
+                @if ($canDelete)
+                  <th class="table-column-pe-0 w-auto">
+                    <div class="form-check">
+                      <input class="form-check-input" id="brandsDatatableCheckAll" type="checkbox">
+                      <label class="form-check-label" for="brandsDatatableCheckAll"></label>
+                    </div>
+                  </th>
+                @else
+                  <th class="table-column-pe-0 w-auto">#</th>
+                @endif
                 <th class="d-none w-auto">Brand Id</th>
                 <th class="w-auto">Brand Name</th>
                 <th class="w-auto">Brand Subcategories</th>
@@ -259,12 +279,16 @@
             <tbody>
               @foreach ($brands as $index => $brand)
                 <tr>
-                  <td class="table-column-pe-0">
-                    <div class="form-check">
-                      <input class="form-check-input" id="brandCheck{{ $index + 1 }}" type="checkbox">
-                      <label class="form-check-label" for="brandCheck{{ $index + 1 }}"></label>
-                    </div>
-                  </td>
+                  @if ($canDelete)
+                    <td class="table-column-pe-0">
+                      <div class="form-check">
+                        <input class="form-check-input" id="brandCheck{{ $index + 1 }}" type="checkbox">
+                        <label class="form-check-label" for="brandCheck{{ $index + 1 }}"></label>
+                      </div>
+                    </td>
+                  @else
+                    <td>{{ $index + 1 }}</td>
+                  @endif
                   <td class="d-none" data-brand-id="{{ Crypt::encryptString($brand->id) }}"></td>
                   <td><a class="d-block h5 mb-0 btnViewBrand">{{ $brand->name }}</a></td>
                   <td>
@@ -278,15 +302,10 @@
                     <span><i class="bi-calendar-event me-1"></i> Updated {{ $brand->updated_at->diffForHumans() }}</span>
                   </td>
                   <td>
-                    @if ($brand->is_active)
-                      <span class="badge bg-soft-success text-success">
-                        <span class="legend-indicator bg-success"></span>Active
-                      </span>
-                    @else
-                      <span class="badge bg-soft-danger text-danger">
-                        <span class="legend-indicator bg-danger"></span>Inactive
-                      </span>
-                    @endif
+                    <span class="badge bg-soft-{{ $brand->is_active ? 'success' : 'danger' }} text-{{ $brand->is_active ? 'success' : 'danger' }}">
+                      <span
+                        class="legend-indicator bg-{{ $brand->is_active ? 'success' : 'danger' }}"></span>{{ $brand->is_active ? 'Active' : 'Inactive' }}
+                    </span>
                   </td>
                   <td>
                     <div class="btn-group" role="group">
@@ -294,28 +313,34 @@
                         <i class="bi-eye"></i> View
                       </button>
 
-                      <div class="btn-group">
-                        <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="brandActionDropdown"
-                          data-bs-toggle="dropdown" type="button" aria-expanded="false"></button>
-                        <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="brandActionDropdown">
-                          <button class="dropdown-item btnEditBrand" type="button">
-                            <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
-                          </button>
-                          @if ($brand->is_active)
-                            <button class="dropdown-item btnStatusBrand" data-status="0" type="button">
-                              <i class="bi-x-circle-fill dropdown-item-icon text-danger fs-7"></i> Set to Inactive
-                            </button>
-                          @else
-                            <button class="dropdown-item btnStatusBrand" data-status="1" type="button">
-                              <i class="bi-check-circle-fill dropdown-item-icon text-success"></i> Set to Active
-                            </button>
-                          @endif
-                          <div class="dropdown-divider"></div>
-                          <button class="dropdown-item text-danger btnDeleteBrand" type="button">
-                            <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
-                          </button>
+                      @if ($canEdit || $canDelete)
+                        <div class="btn-group">
+                          <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="brandActionDropdown"
+                            data-bs-toggle="dropdown" type="button" aria-expanded="false"></button>
+                          <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="brandActionDropdown">
+                            @if ($canEdit)
+                              <button class="dropdown-item btnEditBrand" type="button">
+                                <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
+                              </button>
+                              <button class="dropdown-item btnStatusBrand" data-status="{{ $brand->is_active ? 0 : 1 }}" type="button">
+                                <i
+                                  class="bi {{ $brand->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
+                                {{ $brand->is_active ? 'Set to Inactive' : 'Set to Active' }}
+                              </button>
+
+                              @if ($canDelete)
+                                <div class="dropdown-divider"></div>
+                              @endif
+                            @endif
+
+                            @if ($canDelete)
+                              <button class="dropdown-item text-danger btnDeleteBrand" type="button">
+                                <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
+                              </button>
+                            @endif
+                          </div>
                         </div>
-                      </div>
+                      @endif
                     </div>
                   </td>
                 </tr>

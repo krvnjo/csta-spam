@@ -1,6 +1,6 @@
 <!-- Edit Brand Modal -->
-<div class="modal fade" id="modalEditBrand" data-bs-backdrop="static" role="dialog" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal fade" id="modalEditBrand" data-bs-backdrop="static" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <!-- Header -->
       <div class="modal-header">
@@ -16,12 +16,15 @@
           @method('PATCH')
           <input id="txtEditBrandId" name="id" type="hidden">
 
+          <!-- Brand Name -->
           <div class="form-group">
             <label class="col col-form-label form-label" for="txtEditBrand">Brand Name</label>
             <input class="form-control" id="txtEditBrand" name="brand" type="text" placeholder="Enter a Brand">
             <span class="invalid-feedback" id="valEditBrand"></span>
           </div>
+          <!-- End Brand Name -->
 
+          <!-- Brand Subcategories -->
           <div class="form-group">
             <label class="col col-form-label form-label mt-2" for="selEditSubcategories">Brand Subcategories</label>
             <div class="tom-select-custom">
@@ -43,6 +46,7 @@
               <span class="invalid-feedback" id="valEditSubcategories"></span>
             </div>
           </div>
+          <!-- End Brand Subcategories -->
         </form>
       </div>
       <!-- End Body -->

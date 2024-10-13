@@ -16,7 +16,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::whereNull('deleted_at')->get();
+        $categories = Category::with('subcategories')->whereNull('deleted_at')->get();
 
         $totalCategories = $categories->count();
         $deletedCategories = Category::onlyTrashed()->count();
@@ -44,19 +44,19 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $categoryValidationMessages = [
-            'category.required' => 'Please enter a category name!',
-            'category.regex' => 'It must not contain special symbols and multiple spaces.',
-            'category.min' => 'The category name must be at least :min characters.',
-            'category.max' => 'The category name may not be greater than :max characters.',
-            'category.unique' => 'This category name already exists.',
-        ];
-
         try {
+            $categoryValidationMessages = [
+                'category.required' => 'Please enter a category name!',
+                'category.regex' => 'No special symbols, consecutive spaces or hyphens allowed.',
+                'category.min' => 'The category name must be at least :min characters.',
+                'category.max' => 'The category name may not be greater than :max characters.',
+                'category.unique' => 'This category name already exists.',
+            ];
+
             $categoryValidator = Validator::make($request->all(), [
                 'category' => [
                     'required',
-                    'regex:/^(?!.*([ -])\1)[a-zA-Z0-9]+(?:[ -][a-zA-Z0-9]+)*$/',
+                    'regex:/^(?!.*([ -])\1)[a-zA-Z0-9&.\'-]+(?:[ -][a-zA-Z0-9&.\'-]+)*$/',
                     'min:3',
                     'max:50',
                     'unique:categories,name'
@@ -68,18 +68,18 @@ class CategoryController extends Controller
                     'success' => false,
                     'errors' => $categoryValidator->errors(),
                 ]);
-            } else {
-                Category::query()->create([
-                    'name' => $this->formatInput($request->input('category')),
-                    'is_active' => 1,
-                ]);
-
-                return response()->json([
-                    'success' => true,
-                    'title' => 'Saved Successfully!',
-                    'text' => 'The category has been added successfully!',
-                ]);
             }
+
+            Category::query()->create([
+                'name' => ucwords(trim($request->input('category'))),
+                'is_active' => 1,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'title' => 'Saved Successfully!',
+                'text' => 'The category has been added successfully!',
+            ]);
         } catch (Throwable) {
             return response()->json([
                 'success' => false,
@@ -125,7 +125,7 @@ class CategoryController extends Controller
 
             return response()->json([
                 'success' => true,
-                'id' => $request->input('id'),
+                'id' => Crypt::encryptString($category->id),
                 'category' => $category->name,
             ]);
         } catch (Throwable) {

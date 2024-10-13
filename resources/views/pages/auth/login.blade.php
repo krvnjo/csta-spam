@@ -51,7 +51,7 @@
                 <label class="form-label w-100" for="txtLoginPassword">
                   <span class="d-flex justify-content-between align-items-center">
                     <span>Password</span>
-                    <a class="form-label-link mb-0" href="{{ route('auth.forgot-password') }}">Forgot Password?</a>
+                    <a class="form-label-link mb-0" href="{{ route('auth.forgot') }}">Forgot Password?</a>
                   </span>
                 </label>
                 <div class="input-group">

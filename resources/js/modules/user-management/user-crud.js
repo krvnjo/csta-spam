@@ -1,22 +1,22 @@
 $(document).ready(function () {
-  const usersDatatable = $("#usersDatatable").DataTable();
+  const usersDatatable = $('#usersDatatable').DataTable();
 
   // ============ Create a User ============ //
-  const userAddModal = $("#modalAddUser");
-  const userAddForm = $("#frmAddUser");
+  const userAddModal = $('#modalAddUser');
+  const userAddForm = $('#frmAddUser');
 
-  handleUnsavedChanges(userAddModal, userAddForm, $("#btnAddSaveUser"));
+  handleUnsavedChanges(userAddModal, userAddForm, $('#btnAddSaveUser'));
 
-  userAddForm.on("submit", function (e) {
+  userAddForm.on('submit', function (e) {
     e.preventDefault();
 
     const addFormData = new FormData(userAddForm[0]);
 
     $.ajax({
-      url: "/user-management/users",
-      method: "POST",
+      url: '/user-management/users',
+      method: 'POST',
       data: addFormData,
-      dataType: "json",
+      dataType: 'json',
       processData: false,
       contentType: false,
       success: function (response) {
@@ -24,43 +24,43 @@ $(document).ready(function () {
           showSuccessAlert(response, userAddModal, userAddForm);
         } else {
           if (response.errors.fname) {
-            $("#txtAddUserFname").addClass("is-invalid");
-            $("#valAddUserFname").text(response.errors.fname[0]);
+            $('#txtAddUserFname').addClass('is-invalid');
+            $('#valAddUserFname').text(response.errors.fname[0]);
           }
 
           if (response.errors.mname) {
-            $("#txtAddUserMname").addClass("is-invalid");
-            $("#valAddUserMname").text(response.errors.mname[0]);
+            $('#txtAddUserMname').addClass('is-invalid');
+            $('#valAddUserMname').text(response.errors.mname[0]);
           }
 
           if (response.errors.lname) {
-            $("#txtAddUserLname").addClass("is-invalid");
-            $("#valAddUserLname").text(response.errors.lname[0]);
+            $('#txtAddUserLname').addClass('is-invalid');
+            $('#valAddUserLname').text(response.errors.lname[0]);
           }
 
           if (response.errors.role) {
-            $("#selAddUserRole").next(".ts-wrapper").addClass("is-invalid");
-            $("#valAddUserRole").text(response.errors.role[0]);
+            $('#selAddUserRole').next('.ts-wrapper').addClass('is-invalid');
+            $('#valAddUserRole').text(response.errors.role[0]);
           }
 
           if (response.errors.dept) {
-            $("#selAddUserDept").next(".ts-wrapper").addClass("is-invalid");
-            $("#valAddUserDept").text(response.errors.dept[0]);
+            $('#selAddUserDept').next('.ts-wrapper').addClass('is-invalid');
+            $('#valAddUserDept').text(response.errors.dept[0]);
           }
 
           if (response.errors.email) {
-            $("#txtAddUserEmail").addClass("is-invalid");
-            $("#valAddUserEmail").text(response.errors.email[0]);
+            $('#txtAddUserEmail').addClass('is-invalid');
+            $('#valAddUserEmail').text(response.errors.email[0]);
           }
 
           if (response.errors.phone) {
-            $("#txtAddUserPhone").addClass("is-invalid");
-            $("#valAddUserPhone").text(response.errors.phone[0]);
+            $('#txtAddUserPhone').addClass('is-invalid');
+            $('#valAddUserPhone').text(response.errors.phone[0]);
           }
 
           if (response.errors.user) {
-            $("#txtAddUsername").addClass("is-invalid");
-            $("#valAddUsername").text(response.errors.user[0]);
+            $('#txtAddUsername').addClass('is-invalid');
+            $('#valAddUsername').text(response.errors.user[0]);
           }
         }
       },
@@ -72,37 +72,37 @@ $(document).ready(function () {
   // ============ End Create a User ============ //
 
   // ============ View a User ============ //
-  usersDatatable.on("click", ".btnViewUser", function () {
-    const userId = $(this).closest("tr").find("td[data-user-id]").data("user-id");
+  usersDatatable.on('click', '.btnViewUser', function () {
+    const userId = $(this).closest('tr').find('td[data-user-id]').data('user-id');
 
     $.ajax({
-      url: "/user-management/users/show",
-      method: "GET",
+      url: '/user-management/users/show',
+      method: 'GET',
       data: { id: userId },
       success: function (response) {
-        $("#modalViewUser").modal("toggle");
+        $('#modalViewUser').modal('toggle');
 
-        $("#lblViewUsername").text(response.user);
-        $("#lblViewUserFname").text(response.fname);
-        $("#lblViewUserMname").text(response.mname);
-        $("#lblViewUserLname").text(response.lname);
-        $("#lblViewUserRole").text(response.role);
-        $("#lblViewUserDept").text(response.dept);
-        $("#lblViewUserEmail").text(response.email);
-        $("#lblViewUserPhone").text(response.phone);
-        $("#lblViewLastLogin").text(response.login);
-        $("#imgViewUserImage").attr("src", response.image);
-        $("#lblViewDateCreated").text(response.created);
-        $("#lblViewDateUpdated").text(response.updated);
+        $('#lblViewUsername').text(response.user);
+        $('#lblViewUserFname').text(response.fname);
+        $('#lblViewUserMname').text(response.mname);
+        $('#lblViewUserLname').text(response.lname);
+        $('#lblViewUserRole').text(response.role);
+        $('#lblViewUserDept').text(response.dept);
+        $('#lblViewUserEmail').text(response.email);
+        $('#lblViewUserPhone').text(response.phone);
+        $('#lblViewLastLogin').text(response.login);
+        $('#imgViewUserImage').attr('src', response.image);
+        $('#lblViewDateCreated').text(response.created);
+        $('#lblViewDateUpdated').text(response.updated);
 
         if (response.status === 1) {
-          $("#lblViewStatus").html(`
+          $('#lblViewStatus').html(`
             <span class="badge bg-soft-success text-success">
               <span class="legend-indicator bg-success"></span>Active
             </span>
           `);
         } else {
-          $("#lblViewStatus").html(`
+          $('#lblViewStatus').html(`
             <span class="badge bg-soft-danger text-danger">
               <span class="legend-indicator bg-danger"></span>Inactive
             </span>
@@ -117,31 +117,31 @@ $(document).ready(function () {
   // ============ End View a User ============ //
 
   // ============ Update a User ============ //
-  const userEditModal = $("#modalEditUser");
-  const userEditForm = $("#frmEditUser");
+  const userEditModal = $('#modalEditUser');
+  const userEditForm = $('#frmEditUser');
 
-  handleUnsavedChanges(userEditModal, userEditForm, $("#btnEditSaveUser"));
+  handleUnsavedChanges(userEditModal, userEditForm, $('#btnEditSaveUser'));
 
-  usersDatatable.on("click", ".btnEditUser", function () {
-    const userId = $(this).closest("tr").find("td[data-user-id]").data("user-id");
+  usersDatatable.on('click', '.btnEditUser', function () {
+    const userId = $(this).closest('tr').find('td[data-user-id]').data('user-id');
 
     $.ajax({
-      url: "/user-management/users/edit",
-      method: "GET",
+      url: '/user-management/users/edit',
+      method: 'GET',
       data: { id: userId },
       success: function (response) {
-        userEditModal.modal("toggle");
+        userEditModal.modal('toggle');
 
-        $("#txtEditUserId").val(response.id);
-        $("#txtEditUsername").val(response.user);
-        $("#txtEditUserFname").val(response.fname);
-        $("#txtEditUserMname").val(response.mname);
-        $("#txtEditUserLname").val(response.lname);
-        $("#selEditUserRole")[0].tomselect.setValue(response.role);
-        $("#selEditUserDept")[0].tomselect.setValue(response.dept);
-        $("#txtEditUserEmail").val(response.email);
-        $("#txtEditUserPhone").val(response.phone);
-        $("#imgEditDisplayUserImage").attr("src", response.image);
+        $('#txtEditUserId').val(response.id);
+        $('#txtEditUsername').val(response.user);
+        $('#txtEditUserFname').val(response.fname);
+        $('#txtEditUserMname').val(response.mname);
+        $('#txtEditUserLname').val(response.lname);
+        $('#selEditUserRole')[0].tomselect.setValue(response.role);
+        $('#selEditUserDept')[0].tomselect.setValue(response.dept);
+        $('#txtEditUserEmail').val(response.email);
+        $('#txtEditUserPhone').val(response.phone);
+        $('#imgEditDisplayUserImage').attr('src', response.image);
       },
       error: function (response) {
         showErrorAlert(response.responseJSON, userEditModal, userEditForm);
@@ -149,16 +149,16 @@ $(document).ready(function () {
     });
   });
 
-  userEditForm.on("submit", function (e) {
+  userEditForm.on('submit', function (e) {
     e.preventDefault();
 
     const editFormData = new FormData(userEditForm[0]);
-    editFormData.append("_method", "PATCH");
-    editFormData.append("avatar", $("#imgEditDisplayUserImage").attr("src").split("/").pop());
+    editFormData.append('_method', 'PATCH');
+    editFormData.append('avatar', $('#imgEditDisplayUserImage').attr('src').split('/').pop());
 
     $.ajax({
-      url: "/user-management/users/update",
-      method: "POST",
+      url: '/user-management/users',
+      method: 'POST',
       data: editFormData,
       processData: false,
       contentType: false,
@@ -167,43 +167,43 @@ $(document).ready(function () {
           showSuccessAlert(response, userEditModal, userEditForm);
         } else {
           if (response.errors.user) {
-            $("#txtEditUsername").addClass("is-invalid");
-            $("#valEditUsername").text(response.errors.user[0]);
+            $('#txtEditUsername').addClass('is-invalid');
+            $('#valEditUsername').text(response.errors.user[0]);
           }
 
           if (response.errors.fname) {
-            $("#txtEditUserFname").addClass("is-invalid");
-            $("#valEditUserFname").text(response.errors.fname[0]);
+            $('#txtEditUserFname').addClass('is-invalid');
+            $('#valEditUserFname').text(response.errors.fname[0]);
           }
 
           if (response.errors.mname) {
-            $("#txtEditUserMname").addClass("is-invalid");
-            $("#valEditUserMname").text(response.errors.mname[0]);
+            $('#txtEditUserMname').addClass('is-invalid');
+            $('#valEditUserMname').text(response.errors.mname[0]);
           }
 
           if (response.errors.lname) {
-            $("#txtEditUserLname").addClass("is-invalid");
-            $("#valEditUserLname").text(response.errors.lname[0]);
+            $('#txtEditUserLname').addClass('is-invalid');
+            $('#valEditUserLname').text(response.errors.lname[0]);
           }
 
           if (response.errors.role) {
-            $("#selEditUserRole").next(".ts-wrapper").addClass("is-invalid");
-            $("#valEditUserRole").text(response.errors.role[0]);
+            $('#selEditUserRole').next('.ts-wrapper').addClass('is-invalid');
+            $('#valEditUserRole').text(response.errors.role[0]);
           }
 
           if (response.errors.dept) {
-            $("#selEditUserDept").next(".ts-wrapper").addClass("is-invalid");
-            $("#valEditUserDept").text(response.errors.dept[0]);
+            $('#selEditUserDept').next('.ts-wrapper').addClass('is-invalid');
+            $('#valEditUserDept').text(response.errors.dept[0]);
           }
 
           if (response.errors.email) {
-            $("#txtEditUserEmail").addClass("is-invalid");
-            $("#valEditUserEmail").text(response.errors.email[0]);
+            $('#txtEditUserEmail').addClass('is-invalid');
+            $('#valEditUserEmail').text(response.errors.email[0]);
           }
 
           if (response.errors.phone) {
-            $("#txtEditUserPhone").addClass("is-invalid");
-            $("#valEditUserPhone").text(response.errors.phone[0]);
+            $('#txtEditUserPhone').addClass('is-invalid');
+            $('#valEditUserPhone').text(response.errors.phone[0]);
           }
         }
       },
@@ -213,33 +213,33 @@ $(document).ready(function () {
     });
   });
 
-  usersDatatable.on("click", ".btnStatusUser", function () {
-    const userId = $(this).closest("tr").find("td[data-user-id]").data("user-id");
-    const userSetStatus = $(this).data("status");
+  usersDatatable.on('click', '.btnStatusUser', function () {
+    const userId = $(this).closest('tr').find('td[data-user-id]').data('user-id');
+    const userSetStatus = $(this).data('status');
     let statusName;
 
     if (userSetStatus === 1) {
-      statusName = "active";
+      statusName = 'active';
     } else {
-      statusName = "inactive";
+      statusName = 'inactive';
     }
 
     Swal.fire({
-      title: "Change status?",
-      text: "Are you sure you want to set it to " + statusName + "?",
-      icon: "warning",
+      title: 'Change status?',
+      text: 'Are you sure you want to set it to ' + statusName + '?',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: "Yes, set it to " + statusName + "!",
-      cancelButtonText: "No, cancel!",
+      confirmButtonText: 'Yes, set it to ' + statusName + '!',
+      cancelButtonText: 'No, cancel!',
       customClass: {
-        confirmButton: "btn btn-primary",
-        cancelButton: "btn btn-secondary",
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-secondary',
       },
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: "/user-management/users/update",
-          method: "PATCH",
+          url: '/user-management/users',
+          method: 'PATCH',
           data: {
             id: userId,
             status: userSetStatus,
@@ -257,25 +257,25 @@ $(document).ready(function () {
   // ============ End Update a User ============ //
 
   // ============ Delete a User ============ //
-  usersDatatable.on("click", ".btnDeleteUser", function () {
-    const userId = $(this).closest("tr").find("td[data-user-id]").data("user-id");
+  usersDatatable.on('click', '.btnDeleteUser', function () {
+    const userId = $(this).closest('tr').find('td[data-user-id]').data('user-id');
 
     Swal.fire({
-      title: "Delete Record?",
-      text: "Are you sure you want to delete the user?",
-      icon: "warning",
+      title: 'Delete Record?',
+      text: 'Are you sure you want to delete the user?',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "No, cancel!",
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
       customClass: {
-        confirmButton: "btn btn-danger",
-        cancelButton: "btn btn-secondary",
+        confirmButton: 'btn btn-danger',
+        cancelButton: 'btn btn-secondary',
       },
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: "/user-management/users/delete",
-          method: "DELETE",
+          url: '/user-management/users',
+          method: 'DELETE',
           data: { id: userId },
           success: function (response) {
             showSuccessAlert(response);
@@ -288,31 +288,31 @@ $(document).ready(function () {
     });
   });
 
-  $("#btnMultiDeleteUser").on("click", function () {
-    let checkedCheckboxes = usersDatatable.rows().nodes().to$().find("input.form-check-input:checked");
+  $('#btnMultiDeleteUser').on('click', function () {
+    let checkedCheckboxes = usersDatatable.rows().nodes().to$().find('input.form-check-input:checked');
 
     let userIds = checkedCheckboxes
       .map(function () {
-        return $(this).closest("tr").find("[data-user-id]").data("user-id");
+        return $(this).closest('tr').find('[data-user-id]').data('user-id');
       })
       .get();
 
     Swal.fire({
-      title: "Delete Records?",
-      text: "Are you sure you want to delete all the selected users?",
-      icon: "warning",
+      title: 'Delete Records?',
+      text: 'Are you sure you want to delete all the selected users?',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "No, cancel!",
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
       customClass: {
-        confirmButton: "btn btn-danger",
-        cancelButton: "btn btn-secondary",
+        confirmButton: 'btn btn-danger',
+        cancelButton: 'btn btn-secondary',
       },
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: "/user-management/users/delete",
-          method: "DELETE",
+          url: '/user-management/users',
+          method: 'DELETE',
           data: { id: userIds },
           success: function (response) {
             showSuccessAlert(response);
