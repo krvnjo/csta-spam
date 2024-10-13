@@ -29,8 +29,8 @@ Route::prefix('properties-assets/stocks')->name('prop-asset.')->controller(Prope
     Route::get('/', 'index')->name('index');
     Route::post('/create', 'store')->name('store');
     Route::get('/edit', 'edit')->name('edit');
-    Route::patch('/update/{id}', 'update')->name('update');
-    Route::delete('/delete/{id}', 'destroy')->name('delete');
+    Route::patch('/update', 'update')->name('update');
+    Route::delete('/delete', 'destroy')->name('delete');
     Route::get('/get-subcategory-brands', 'getSubcategoryBrands')->name('getSubcategoryBrands');
 });
 

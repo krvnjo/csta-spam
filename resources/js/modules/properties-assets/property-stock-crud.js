@@ -96,9 +96,9 @@ $(document).ready(function () {
   // ============ Update a Stock Item ============ //
   const propertyEditModal = $("#editPropertyModal");
   const propertyEditForm = $("#frmEditProperty");
-  const editDropzone = $("editPropertyDropzone");
+  const propertyDropzoneEdit = Dropzone.forElement("#editPropertyDropzone");
 
-  // handleUnsavedChanges(propertyEditModal, propertyEditForm, $("#btnEditSaveDesignation"));
+  handleUnsavedChanges(propertyEditModal, propertyEditForm, $("#btnEditSaveProperty"));
 
   propertyDatatable.on("click", ".btnEditPropParent", function () {
     const propertyId = $(this).closest("tr").find("td[data-property-id]").data("property-id");
@@ -114,16 +114,58 @@ $(document).ready(function () {
         $("#cbxEditCategory")[0].tomselect.setValue(response.subcateg_id);
         $("#cbxEditBrand")[0].tomselect.setValue(response.brand_id);
         $("#txtEditDescription").val(response.description);
+      },
+      error: function (response) {
+        showErrorAlert(response.responseJSON, propertyEditModal, propertyEditForm);
+      },
+    });
+  });
 
-        // // Clear existing files in dropzone
-        // editDropzone.removeAllFiles();
-        //
-        // // If there's an image, add it to dropzone
-        // if (response.image) {
-        //   let mockFile = { name: "Existing Image", size: 12345 };
-        //   let imageUrl = '/storage/img-uploads/prop-asset/' + response.image;// Adjust this path if needed
-        //   editDropzone.displayExistingFile(mockFile, imageUrl);
-        // }
+  propertyEditForm.on("submit", function (e) {
+    e.preventDefault();
+
+    const editFormData = new FormData(propertyEditForm[0]);
+
+    // Append additional data
+    editFormData.append("_method", "PATCH");
+    editFormData.append("id", $("#txtEditPropertyId").val());
+    editFormData.append("propertyName", $("#txtEditPropertyName").val());
+    editFormData.append("category", $("#cbxEditCategory").val());
+    editFormData.append("brand", $("#cbxEditBrand").val());
+    editFormData.append("description", $("#txtEditDescription").val());
+
+    if (propertyDropzoneEdit.files.length > 0) {
+      editFormData.append("image", propertyDropzoneEdit.files[0]);
+    }
+
+    $.ajax({
+      url: "/properties-assets/stocks/update",
+      method: "POST",
+      data: editFormData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        if (response.success) {
+          showSuccessAlert(response, propertyEditModal, propertyEditForm);
+        } else {
+          // Show validation errors
+          if (response.errors.propertyName) {
+            $("#txtEditPropertyName").addClass("is-invalid");
+            $("#valEditPropertyName").text(response.errors.propertyName[0]);
+          }
+          if (response.errors.category) {
+            $("#cbxEditCategory").next(".ts-wrapper").addClass("is-invalid");
+            $("#valEditCategoryName").text(response.errors.category[0]);
+          }
+          if (response.errors.brand) {
+            $("#cbxEditBrand").next(".ts-wrapper").addClass("is-invalid");
+            $("#valEditBrandName").text(response.errors.brand[0]);
+          }
+          if (response.errors.description) {
+            $("#txtEditDescription").addClass("is-invalid");
+            $("#valEditDescription").text(response.errors.description[0]);
+          }
+        }
       },
       error: function (response) {
         showErrorAlert(response.responseJSON, propertyEditModal, propertyEditForm);

@@ -12,7 +12,9 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Throwable;
 
 class PropertyParentController extends Controller
@@ -253,9 +255,88 @@ class PropertyParentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, PropertyParent $propertyParent)
+    public function update(Request $request)
     {
-        //
+        try {
+            $property = PropertyParent::query()->findOrFail(Crypt::decryptString($request->input('id')));
+
+            $propertyValidationMessages = [
+                'propertyName.required' => 'Please enter an item name!',
+                'propertyName.regex' => 'The item name may only contain letters, numbers, spaces, and hyphens.',
+                'propertyName.min' => 'The item name must be at least :min characters.',
+                'propertyName.max' => 'The item name may not be greater than :max characters.',
+                'propertyName.unique' => 'This item name already exists.',
+                'category.required' => 'Please choose a category!',
+                'brand.required' => 'Please choose a brand!',
+                'description.regex' => 'The description may only contain letters, numbers, spaces, and some special characters.',
+                'description.min' => 'The description must be at least :min characters.',
+                'description.max' => 'The description may not be greater than :max characters.',
+            ];
+
+            $propertyValidator = Validator::make($request->all(), [
+                'propertyName' => [
+                    'required',
+                    'regex:/^[A-Za-z0-9\- ]+$/',
+                    'min:3',
+                    'max:50',
+                    'unique:property_parents,name,' . $property->id,
+                ],
+                'category' => ['required'],
+                'brand' => ['required'],
+                'description' => [
+                    'nullable',
+                    'regex:/^[A-Za-z0-9%,\- ×"]+$/',
+                    'min:3',
+                    'max:100',
+                ],
+            ], $propertyValidationMessages);
+
+            if ($propertyValidator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $propertyValidator->errors(),
+                ]);
+            } else {
+                $property->name = $this->formatInput($request->input('propertyName'));
+                $property->subcateg_id = $request->input('category');
+                $property->brand_id = $request->input('brand');
+                $property->description = $request->input('description');
+            }
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                if ($file !== null && $file->isValid()) {
+                    if ($property->image && $property->image !== 'default.jpg') {
+                        $oldImagePath = public_path('storage/img-uploads/prop-asset/' . $property->image);
+                        if (file_exists($oldImagePath)) {
+                            unlink($oldImagePath);
+                        }
+                    }
+                    $filename = time() . '_' . $file->getClientOriginalName();
+                    $file->move(public_path('storage/img-uploads/prop-asset/'), $filename);
+                    $property->image = $filename;
+                }
+            } else {
+                if (!$property->image || $property->image === 'default.jpg') {
+                    $property->image = 'default.jpg';
+                }
+            }
+
+
+            $property->updated_at = now();
+            $property->save();
+
+            return response()->json([
+                'success' => true,
+                'title' => 'Updated Successfully!',
+                'text' => 'The property has been updated successfully!',
+            ]);
+        } catch (Throwable) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Oops! Something went wrong.',
+                'text' => 'An error occurred while updating the property.',
+            ], 500);
+        }
     }
 
     /**

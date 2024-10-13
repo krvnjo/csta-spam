@@ -7,7 +7,7 @@
            style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1rem;">
         <div>
           <h4 class="modal-title" id="" style="color: whitesmoke; margin-bottom: 0.5rem;">
-            Item Information
+           Edit Item Information
           </h4>
           <span class="font-13 text-muted" style="opacity: 80%; padding-left: 0.5rem;">
             All required fields are marked with (*)
@@ -19,8 +19,10 @@
       </div>
 
       <!-- End Header -->
-      <form id="frmAddProperty" method="post" novalidate enctype="multipart/form-data">
+      <form id="frmEditProperty" method="post" novalidate enctype="multipart/form-data">
         @csrf
+        @method('PATCH')
+        <input id="txtEditPropertyId" name="id" type="hidden">
 
         <div class="modal-body custom-modal-body">
           <input id="txtEditPropertyId" name="id" type="hidden">
@@ -30,7 +32,7 @@
                 <label class="form-label" for="txtPropertyName">Item Name:
                   <span class="text-danger">*</span></label>
                 <input class="form-control" id="txtEditPropertyName" name="propertyName" type="text" placeholder="Stock Name" autocomplete="off" />
-                <span class="invalid-feedback" id="valAddName"></span>
+                <span class="invalid-feedback" id="valEditPropertyName"></span>
               </div>
             </div>
           </div>
@@ -48,7 +50,7 @@
                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                   @endforeach
                 </select>
-                <span class="invalid-feedback" id="valAddCategory"></span>
+                <span class="invalid-feedback" id="valEditCategoryName"></span>
               </div>
             </div>
 
@@ -63,7 +65,7 @@
                     <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                   @endforeach
                 </select>
-                <span class="invalid-feedback" id="valAddBrand"></span>
+                <span class="invalid-feedback" id="valEditBrandName"></span>
               </div>
             </div>
           </div>
@@ -73,7 +75,7 @@
               <div class="mb-3">
                 <label class="form-label" for="txtDescription">Description:</label>
                 <textarea class="form-control" id="txtEditDescription" name="description" style="resize: none" placeholder="Description"></textarea>
-                <span class="invalid-feedback" id="valAddDesc"></span>
+                <span class="invalid-feedback" id="valEditDescription"></span>
               </div>
             </div>
           </div>
@@ -103,8 +105,8 @@
         </div>
 
         <div class="modal-footer">
-          <button class="btn btn-secondary" type="button">Close</button>
-          <button class="btn btn-primary" form="frmAddProperty" type="submit">Save</button>
+          <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Close</button>
+          <button class="btn btn-primary" id="btnEditSaveProperty" form="frmEditProperty" type="submit">Save</button>
         </div>
       </form>
     </div>
