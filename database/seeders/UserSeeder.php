@@ -100,7 +100,7 @@ class UserSeeder extends Seeder
                 'fname' => 'Rob Meynard',
                 'mname' => 'Pumento',
                 'lname' => 'Bunag',
-                'role' => 'Property Custodian',
+                'role' => 'Administrator',
                 'dept_id' => 2,
                 'email' => 'rm.bunag2202@gmail.com',
                 'phone_num' => '0916-437-4284',

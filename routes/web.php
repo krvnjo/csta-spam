@@ -11,6 +11,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\HelpController;
 use App\Http\Controllers\PropertyParentController;
+use App\Http\Controllers\RecycleController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\SubcategoryController;
@@ -185,6 +186,11 @@ Route::middleware(['auth', 'nocache'])->group(function () {
     Route::middleware('check.permission:System Settings,view')->prefix('system-settings')->name('system.')->controller(SystemSettingsController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::patch('/', 'update')->name('update')->middleware('check.permission:System Settings,edit');
+    });
+
+    // Recycle Bin Routes
+    Route::middleware('check.permission:Recycle Bin,view')->prefix('bin')->name('recycle.')->controller(RecycleController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
     });
 
     // ============ End Other Routes ============ //

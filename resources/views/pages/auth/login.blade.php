@@ -69,7 +69,7 @@
               </div>
 
               <div class="d-grid">
-                <button class="btn btn-primary btn-lg" type="submit" tabindex="3">Sign In</button>
+                <button class="btn btn-primary btn-lg" type="submit" tabindex="3">Log In</button>
               </div>
             </form>
           </div>
@@ -85,10 +85,6 @@
     </div>
     <!-- End Content -->
   </main>
-@endsection
-
-@section('sub-content')
-  {{-- Sub Content --}}
 @endsection
 
 @push('scripts')

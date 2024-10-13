@@ -67,10 +67,6 @@
   </main>
 @endsection
 
-@section('sub-content')
-  {{-- Sub Content --}}
-@endsection
-
 @push('scripts')
   <script src="{{ Vite::asset('resources/vendor/imask/dist/imask.min.js') }}"></script>
 

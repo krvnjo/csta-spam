@@ -308,10 +308,6 @@
               <a class="dropdown-item" href="{{ route('account.index', ['username' => Auth::user()->user_name]) }}">Profile & Account</a>
               <!-- End Account Settings -->
 
-              {{--              <!-- Notifications --> --}}
-              {{--              <a class="dropdown-item" href="#">Notifications</a> --}}
-              {{--              <!-- End Notifications --> --}}
-
               <!-- System Appearance -->
               <div class="dropdown">
                 <button class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" id="selectThemeDropdown" data-bs-toggle="dropdown"
@@ -345,9 +341,9 @@
               <div class="dropdown-divider"></div>
 
               <!-- Sign out -->
-              <form method="post" action="{{ route('auth.logout') }}">
+              <form id="frmLogoutUser" method="post" action="{{ route('auth.logout') }}">
                 @csrf
-                <button class="dropdown-item" type="submit">Sign out</button>
+                <button class="dropdown-item" type="submit">Log Out</button>
               </form>
               <!-- End Sign out -->
             </div>

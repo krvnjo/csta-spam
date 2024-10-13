@@ -32,10 +32,6 @@
     @yield('main-content')
     <!-- ========== End Main Content ========== -->
 
-    <!-- ========== Secondary Content ========== -->
-    @yield('sub-content')
-    <!-- ========== End Secondary Content ========== -->
-
     <!-- JS Global Compulsory -->
     <script src="{{ Vite::asset('resources/vendor/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ Vite::asset('resources/vendor/jquery-migrate/dist/jquery-migrate.min.js') }}"></script>

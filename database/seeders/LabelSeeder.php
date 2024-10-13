@@ -6,6 +6,7 @@ use App\Models\Acquisition;
 use App\Models\Brand;
 use App\Models\BrandSubcategory;
 use App\Models\Category;
+use App\Models\CategorySubcategory;
 use App\Models\Subcategory;
 use Illuminate\Database\Seeder;
 
@@ -61,22 +62,21 @@ class LabelSeeder extends Seeder
         }
 
         $subcategories = [
-            'Monitor' => '1',
-            'Keyboard' => '1',
-            'Mouse' => '1',
-            'TV' => '1',
-            'Air Conditioner' => '1',
-            'Cables' => '1',
-            'Table' => '2',
-            'Chair' => '2',
-            'Desks' => '2',
-            'Bench' => '2'
+            'Monitor',
+            'Keyboard',
+            'Mouse',
+            'TV',
+            'Air Conditioner',
+            'Cables',
+            'Table',
+            'Chair',
+            'Desks',
+            'Bench'
         ];
 
-        foreach ($subcategories as $subcategory => $categId) {
+        foreach ($subcategories as $subcategory) {
             Subcategory::query()->create([
                 'name' => $subcategory,
-                'categ_id' => $categId,
                 'is_active' => 1
             ]);
         }
@@ -95,6 +95,24 @@ class LabelSeeder extends Seeder
 
         foreach ($brandSubcategories as $brandSubcategory) {
             BrandSubcategory::query()->insert($brandSubcategory);
+        }
+
+        $categorySubcategories = [
+            ['categ_id' => 1, 'subcateg_id' => 1],
+            ['categ_id' => 1, 'subcateg_id' => 2],
+            ['categ_id' => 1, 'subcateg_id' => 3],
+            ['categ_id' => 1, 'subcateg_id' => 4],
+            ['categ_id' => 1, 'subcateg_id' => 6],
+            ['categ_id' => 2, 'subcateg_id' => 7],
+            ['categ_id' => 2, 'subcateg_id' => 8],
+            ['categ_id' => 2, 'subcateg_id' => 9],
+            ['categ_id' => 3, 'subcateg_id' => 10],
+            ['categ_id' => 4, 'subcateg_id' => 5],
+            ['categ_id' => 5, 'subcateg_id' => 6],
+        ];
+
+        foreach ($categorySubcategories as $categorySubcategory) {
+            CategorySubcategory::query()->insert($categorySubcategory);
         }
     }
 }

@@ -53,14 +53,14 @@
             </div>
             <!-- End Property and Assets -->
 
-            <!-- Borrowing and Reservation -->
+            <!-- Borrow and Reservation -->
             <div class="nav-item">
               <a class="nav-link" data-placement="left" href="#">
                 <i class="bi-calendar2-week nav-icon"></i>
                 <span class="nav-link-title">Borrow & Reservation</span>
               </a>
             </div>
-            <!-- End Borrowing and Reservation -->
+            <!-- End Borrow and Reservation -->
 
             <!-- Item Repair -->
             <div class="nav-item">
@@ -148,7 +148,7 @@
       <!-- Footer -->
       <div class="navbar-vertical-footer d-flex justify-content-center py-3">
         <div class="nav-item">
-          <a class="nav-link" data-placement="left" href="#">
+          <a class="nav-link" data-placement="left" data-route="recycle.index" href="{{ route('recycle.index') }}">
             <i class="bi-trash nav-icon"></i>
             <span class="nav-link-title">Recycle Bin</span>
           </a>

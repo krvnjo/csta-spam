@@ -40,15 +40,20 @@ return new class extends Migration {
         Schema::create('subcategories', function (Blueprint $table) {
             $table->id();
             $table->string('name', 75)->unique();
-            $table->foreignIdFor(Category::class, 'categ_id')->constrained('categories')->cascadeOnDelete();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
             $table->softDeletes();
         });
 
-        Schema::create('brand_subcategory', function (Blueprint $table) {
+        Schema::create('brand_subcategories', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Brand::class, 'brand_id')->constrained('brands')->cascadeOnDelete();
+            $table->foreignIdFor(Subcategory::class, 'subcateg_id')->constrained('subcategories')->cascadeOnDelete();
+        });
+
+        Schema::create('category_subcategories', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(Category::class, 'categ_id')->constrained('categories')->cascadeOnDelete();
             $table->foreignIdFor(Subcategory::class, 'subcateg_id')->constrained('subcategories')->cascadeOnDelete();
         });
     }
@@ -58,7 +63,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('brand_category');
+        Schema::dropIfExists('category_subcategories');
+        Schema::dropIfExists('brand_categories');
         Schema::dropIfExists('subcategories');
         Schema::dropIfExists('categories');
         Schema::dropIfExists('brands');

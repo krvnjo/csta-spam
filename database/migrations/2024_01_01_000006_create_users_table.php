@@ -15,9 +15,9 @@ return new class extends Migration {
             $table->id();
             $table->string('user_name', 20)->unique();
             $table->string('pass_hash');
-            $table->string('lname', 100);
-            $table->string('fname', 100);
-            $table->string('mname', 100)->nullable();
+            $table->string('lname', 75);
+            $table->string('fname', 75);
+            $table->string('mname', 75)->nullable();
             $table->foreignIdFor(Department::class, 'dept_id')->constrained('departments')->cascadeOnDelete();
             $table->string('email')->unique();
             $table->string('phone_num', 20)->unique()->nullable();
