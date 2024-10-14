@@ -30,15 +30,16 @@ class LocationSeeder extends Seeder
 
         $designations = [
             'Stock Room' => '1',
-            'GYM Technical Room' => '2',
-            'GYM IT Laboratory 1' => '2',
-            'GYM IT Laboratory 2' => '2',
-            'GYM IT Laboratory 3' => '2',
-            'GYM IT Laboratory 4' => '2',
-            'GYM IT Laboratory 5' => '2',
-            'GYM IT Technical Laboratory' => '2',
-            'GYM IT Networking Lab' => '2',
-            'GYM IT Hallway' => '2'
+            'Gym Court' => '1',
+            'Gym Technical Room' => '2',
+            'Gym IT Laboratory 1' => '2',
+            'Gym IT Laboratory 2' => '2',
+            'Gym IT Laboratory 3' => '2',
+            'Gym IT Laboratory 4' => '2',
+            'Gym IT Laboratory 5' => '2',
+            'Gym IT Technical Laboratory' => '2',
+            'Gym IT Networking Lab' => '2',
+            'Gym IT Hallway' => '2'
         ];
 
         foreach ($designations as $designation => $deptId) {

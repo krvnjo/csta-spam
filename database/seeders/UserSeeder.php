@@ -17,67 +17,52 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $permissions = [
-            'Inventory Management',
-            'User Management',
-            'Role Management',
-            'Brand Maintenance',
-            'Category Maintenance',
-            'Condition Maintenance',
-            'Department Maintenance',
-            'Designation Maintenance',
-            'Status Maintenance',
-            'Subcategories Maintenance',
-            'Audit History',
-            'System Settings',
+        $permissionGroups = [
+            'User Management' => ['user management'],
+            'File Maintenance' => [
+                'brand maintenance',
+                'category maintenance',
+                'condition maintenance',
+                'department maintenance',
+                'designation maintenance',
+                'status maintenance',
+                'subcategory maintenance',
+            ],
+            'Audit History' => ['audit history'],
+            'System Settings' => ['system settings'],
         ];
 
-        foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
+        $actions = ['view', 'create', 'update', 'delete'];
+
+        foreach ($permissionGroups as $group => $basePermissions) {
+            foreach ($basePermissions as $base) {
+                foreach ($actions as $action) {
+                    if ($group === 'Audit History' && $action !== 'view') {
+                        continue;
+                    }
+                    if ($group === 'System Settings' && $action === 'create') {
+                        continue;
+                    }
+
+                    Permission::query()->create([
+                        'name' => "{$action} {$base}",
+                        'group_name' => $group,
+                    ]);
+                }
+            }
         }
 
         $roles = [
-            'Administrator' => 'Responsible for overseeing the entire system, with full access to all settings and controls.',
-            'Property Custodian' => 'In charge of managing, tracking, and maintaining all property and equipment within the system.',
-            'Student Assistant' => 'Supports the Property Custodian in handling the day-to-day tasks of managing assets and equipment.',
+            'Administrator' => 'Oversees the system with full access to all settings.',
+            'Property Custodian' => 'Manages and maintains all property and equipment.',
+            'Student Assistant' => 'Aids the Property Custodian in daily asset management.',
         ];
 
-        foreach ($roles as $roleName => $description) {
-            $role = Role::create([
-                'name' => $roleName,
+        foreach ($roles as $role => $description) {
+            Role::query()->create([
+                'name' => $role,
                 'description' => $description,
             ]);
-
-            foreach (Permission::all() as $permission) {
-                switch ($roleName) {
-                    case 'Administrator':
-                        $role->permissions()->attach($permission->id, [
-                            'can_view' => 1,
-                            'can_create' => 1,
-                            'can_edit' => 1,
-                            'can_delete' => 1,
-                        ]);
-                        break;
-
-                    case 'Property Custodian':
-                        $role->permissions()->attach($permission->id, [
-                            'can_view' => 1,
-                            'can_create' => 1,
-                            'can_edit' => 0,
-                            'can_delete' => 0,
-                        ]);
-                        break;
-
-                    case 'Student Assistant':
-                        $role->permissions()->attach($permission->id, [
-                            'can_view' => 1,
-                            'can_create' => 0,
-                            'can_edit' => 0,
-                            'can_delete' => 0,
-                        ]);
-                        break;
-                }
-            }
         }
 
         $users = [
@@ -87,7 +72,7 @@ class UserSeeder extends Seeder
                 'fname' => 'Joshua Trazen',
                 'mname' => 'Delos Santos',
                 'lname' => 'Achondo',
-                'role' => 'Administrator',
+                'role_id' => 1,
                 'dept_id' => 2,
                 'email' => 'dev.jt1005@gmail.com',
                 'phone_num' => '0934-221-6405',
@@ -100,7 +85,7 @@ class UserSeeder extends Seeder
                 'fname' => 'Rob Meynard',
                 'mname' => 'Pumento',
                 'lname' => 'Bunag',
-                'role' => 'Administrator',
+                'role_id' => 1,
                 'dept_id' => 2,
                 'email' => 'rm.bunag2202@gmail.com',
                 'phone_num' => '0916-437-4284',
@@ -113,7 +98,7 @@ class UserSeeder extends Seeder
                 'fname' => 'Khervin John',
                 'mname' => 'Pastoral',
                 'lname' => 'Quimora',
-                'role' => 'Administrator',
+                'role_id' => 1,
                 'dept_id' => 2,
                 'email' => 'khervinjohnquimora@gmail.com',
                 'phone_num' => '0976-216-2403',
@@ -129,26 +114,26 @@ class UserSeeder extends Seeder
                 'fname' => $data['fname'],
                 'mname' => $data['mname'],
                 'lname' => $data['lname'],
+                'role_id' => $data['role_id'],
                 'dept_id' => $data['dept_id'],
                 'email' => $data['email'],
                 'phone_num' => $data['phone_num'],
                 'user_image' => $data['user_image'],
                 'is_active' => $data['is_active'],
             ]);
-            $user->syncRoles($data['role']);
         }
 
-        $batchUuid = (string) Str::uuid();
+        $batchUuid = (string)Str::uuid();
         AuditHistory::query()->create([
-            'log_name'      => 'user_management',
-            'description'   => 'User has been updated in batch process',
-            'subject_type'  => User::class,
-            'subject_id'    => $user->id,
-            'causer_type'   => User::class,
-            'causer_id'     => $user->id,
-            'event'         => 'updated',
-            'properties'    => json_encode(['attribute' => 'value']),
-            'batch_uuid'    => $batchUuid,
+            'log_name' => 'user_management',
+            'description' => 'User has been updated in batch process',
+            'subject_type' => User::class,
+            'subject_id' => $user->id,
+            'causer_type' => User::class,
+            'causer_id' => $user->id,
+            'event' => 'updated',
+            'properties' => json_encode(['attribute' => 'value']),
+            'batch_uuid' => $batchUuid,
         ]);
     }
 }

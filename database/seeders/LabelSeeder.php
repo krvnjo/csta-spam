@@ -65,7 +65,7 @@ class LabelSeeder extends Seeder
             'Monitor',
             'Keyboard',
             'Mouse',
-            'TV',
+            'Television',
             'Air Conditioner',
             'Cables',
             'Table',

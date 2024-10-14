@@ -100,16 +100,29 @@ class StatusSeeder extends Seeder
         }
 
         $conditions = [
-            'Working' => 'Item works properly without issues or repairs needed.',
-            'Working with Minor Defects' => 'Item works but has minor defects that don’t affect use.',
-            'Working with Major Defects' => 'Item works with major defects affecting performance.',
-            'Not Working' => 'Item is non-functional and needs repair or replacement.'
+            'Working' => [
+                'description' => 'Item is fully operational.',
+                'color_id' => 17
+            ],
+            'Working with Minor Issues' => [
+                'description' => 'Item has small issues, still usable.',
+                'color_id' => 16
+            ],
+            'Working with Major Issues' => [
+                'description' => 'Item has significant issues affecting use.',
+                'color_id' => 15
+            ],
+            'Not Working' => [
+                'description' => 'Item not usable and needs repair or replacement.',
+                'color_id' => 14
+            ],
         ];
 
-        foreach ($conditions as $condition => $description) {
+        foreach ($conditions as $condition => $data) {
             Condition::query()->create([
                 'name' => $condition,
-                'description' => $description,
+                'description' => $data['description'],
+                'color_id' => $data['color_id'],
                 'is_active' => 1
             ]);
         }
@@ -144,11 +157,11 @@ class StatusSeeder extends Seeder
                 'color_id' => 6,
             ],
             'End of Life' => [
-                'description' => 'Item is no longer usable and at the end of life.',
+                'description' => 'Item is no longer usable and obsolete.',
                 'color_id' => 12,
             ],
             'Disposed' => [
-                'description' => 'Item has been permanently removed.',
+                'description' => 'Item has been permanently removed from CSTA.',
                 'color_id' => 13,
             ]
         ];

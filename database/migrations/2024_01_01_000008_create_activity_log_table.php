@@ -19,10 +19,24 @@ class CreateActivityLogTable extends Migration
             $table->softDeletes();
             $table->index('log_name');
         });
+
+        Schema::connection(config('activitylog.database_connection'))->table(config('activitylog.table_name'), function (Blueprint $table) {
+            $table->string('event')->nullable()->after('subject_type');
+        });
+
+        Schema::connection(config('activitylog.database_connection'))->table(config('activitylog.table_name'), function (Blueprint $table) {
+            $table->string('batch_uuid', 36)->nullable()->after('properties');
+        });
     }
 
     public function down(): void
     {
+        Schema::connection(config('activitylog.database_connection'))->table(config('activitylog.table_name'), function (Blueprint $table) {
+            $table->dropColumn('batch_uuid');
+        });
+        Schema::connection(config('activitylog.database_connection'))->table(config('activitylog.table_name'), function (Blueprint $table) {
+            $table->dropColumn('event');
+        });
         Schema::connection(config('activitylog.database_connection'))->dropIfExists(config('activitylog.table_name'));
     }
 }

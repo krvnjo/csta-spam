@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\Department;
+use App\Models\Permission;
+use App\Models\Role;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,16 +13,41 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        Schema::create('permissions', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 50)->unique();
+            $table->string('group_name', 50);
+            $table->unsignedTinyInteger('is_active')->default(1);
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('roles', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 50)->unique();
+            $table->string('description', 100)->unique();
+            $table->unsignedTinyInteger('is_active')->default(1);
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('role_permissions', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(Role::class, 'role_id')->constrained('roles')->cascadeOnDelete();
+            $table->foreignIdFor(Permission::class, 'perm_id')->constrained('permissions')->cascadeOnDelete();
+        });
+
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('user_name', 20)->unique();
+            $table->string('user_name', 25)->unique();
             $table->string('pass_hash');
             $table->string('lname', 75);
             $table->string('fname', 75);
             $table->string('mname', 75)->nullable();
+            $table->foreignIdFor(Role::class, 'role_id')->constrained('roles')->cascadeOnDelete();
             $table->foreignIdFor(Department::class, 'dept_id')->constrained('departments')->cascadeOnDelete();
             $table->string('email')->unique();
-            $table->string('phone_num', 20)->unique()->nullable();
+            $table->string('phone_num', 25)->unique()->nullable();
             $table->string('user_image')->default('default.jpg');
             $table->timestamp('last_login')->nullable();
             $table->unsignedTinyInteger('is_active')->default(1);
@@ -45,5 +72,8 @@ return new class extends Migration {
     {
         Schema::dropIfExists('sessions');
         Schema::dropIfExists('users');
+        Schema::dropIfExists('role_permissions');
+        Schema::dropIfExists('roles');
+        Schema::dropIfExists('permissions');
     }
 };

@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\Permission\Models\Role as SpatieRole;
 
-class Role extends SpatieRole
+class Role extends Model
 {
     use SoftDeletes;
 
