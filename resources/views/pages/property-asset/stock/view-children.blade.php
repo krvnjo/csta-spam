@@ -28,16 +28,41 @@
           <div class="col-sm mb-sm-0 mb-2">
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb breadcrumb-no-gutter">
-                <li class="breadcrumb-item active" aria-current="page">Property & Assets</li>
+                <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ route('prop-asset.index') }}">Property & Assets</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ $propertyParents->name }}</li>
               </ol>
             </nav>
-            <h1 class="page-header-title">Stock In</h1>
+            <div class="row">
+              <div class="col-auto">
+                <div class="avatar avatar-xl">
+                  @php
+                    $imagePath = public_path('storage/img-uploads/prop-asset/' . $propertyParents->image);
+                    $defaultImagePath = public_path('storage/img-uploads/prop-asset/default.jpg');
+                    $imageUrl = file_exists($imagePath)
+                        ? asset('storage/img-uploads/prop-asset/' . $propertyParents->image)
+                        : asset('storage/img-uploads/prop-asset/default.jpg');
+                  @endphp
+                  <img class="avatar-img" src="{{ $imageUrl }}" alt="Image Description">
+                </div>
+              </div>
+              <div class="col">
+                <h1 class="page-header-title position-relative">
+                  {{ $propertyParents->name }}
+                </h1>
+                <h3>
+                  <span class="badge bg-primary">{{ $propertyParents->brand->name }}</span>
+                  <span class="badge bg-secondary">{{ $propertyParents->category->name }} - {{ $propertyParents->subcategory->name }}</span>
+                </h3>
+                <p>{{ $propertyParents->description }}</p>
+              </div>
+            </div>
+
           </div>
           <!-- End Col -->
 
           <div class="col-sm-auto">
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPropertyModal" type="button">
-              <i class="bi bi-plus-lg me-1"></i> Add Item
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPropertyChild" type="button">
+              <i class="bi bi-plus-lg me-1"></i> Add Variant
             </button>
           </div>
           <!-- End Col -->
@@ -46,110 +71,86 @@
       </div>
       <!-- End Page Header -->
 
-      {{--    <!-- Stats --> --}}
-      {{--    <div class="row"> --}}
-      {{--      <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3"> --}}
-      {{--        <!-- Card --> --}}
-      {{--        <div class="card h-100"> --}}
-      {{--          <div class="card-body"> --}}
-      {{--            <h6 class="card-subtitle mb-2">Total Stocks</h6> --}}
+      <!-- Stats -->
+      <div class="row">
+        <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3">
+          <!-- Card -->
+          <div class="card h-100">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2">Total Quantity</h6>
 
-      {{--            <div class="row align-items-center gx-2"> --}}
-      {{--              <div class="col"> --}}
-      {{--                <span class="js-counter display-4 text-dark">24</span> --}}
-      {{--                <span class="text-body fs-5 ms-1">from 22</span> --}}
-      {{--              </div> --}}
-      {{--              <!-- End Col --> --}}
+              <div class="row align-items-center gx-2">
+                <div class="col">
+                  <span class="js-counter display-4 text-dark">{{ $propertyParents->quantity }}</span>
+                  {{--                <span class="text-body fs-5 ms-1">from 22</span> --}}
+                </div>
+                <!-- End Col -->
+              </div>
+              <!-- End Row -->
+            </div>
+          </div>
+          <!-- End Card -->
+        </div>
 
-      {{--              <div class="col-auto"> --}}
-      {{--                <span class="badge bg-soft-success text-success p-1"> --}}
-      {{--                  <i class="bi-graph-up"></i> 5.0% --}}
-      {{--                </span> --}}
-      {{--              </div> --}}
-      {{--              <!-- End Col --> --}}
-      {{--            </div> --}}
-      {{--            <!-- End Row --> --}}
-      {{--          </div> --}}
-      {{--        </div> --}}
-      {{--        <!-- End Card --> --}}
-      {{--      </div> --}}
+        <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3">
+          <!-- Card -->
+          <div class="card h-100">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2">In Stock</h6>
 
-      {{--      <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3"> --}}
-      {{--        <!-- Card --> --}}
-      {{--        <div class="card h-100"> --}}
-      {{--          <div class="card-body"> --}}
-      {{--            <h6 class="card-subtitle mb-2">Total Inventory</h6> --}}
+              <div class="row align-items-center gx-2">
+                <div class="col">
+                  <span class="js-counter display-4 text-dark">{{ $propertyActiveStock }}</span>
+                  {{--                <span class="text-body fs-5 ms-1">from 11</span> --}}
+                </div>
+              </div>
+              <!-- End Row -->
+            </div>
+          </div>
+          <!-- End Card -->
+        </div>
 
-      {{--            <div class="row align-items-center gx-2"> --}}
-      {{--              <div class="col"> --}}
-      {{--                <span class="js-counter display-4 text-dark">12</span> --}}
-      {{--                <span class="text-body fs-5 ms-1">from 11</span> --}}
-      {{--              </div> --}}
+        <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3">
+          <!-- Card -->
+          <div class="card h-100">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2">In Inventory</h6>
 
-      {{--              <div class="col-auto"> --}}
-      {{--                <span class="badge bg-soft-success text-success p-1"> --}}
-      {{--                  <i class="bi-graph-up"></i> 1.2% --}}
-      {{--                </span> --}}
-      {{--              </div> --}}
-      {{--            </div> --}}
-      {{--            <!-- End Row --> --}}
-      {{--          </div> --}}
-      {{--        </div> --}}
-      {{--        <!-- End Card --> --}}
-      {{--      </div> --}}
+              <div class="row align-items-center gx-2">
+                <div class="col">
+                  <span class="js-counter display-4 text-dark">{{ $propertyInInventory }}</span>
+                  {{--                <span class="text-body fs-5 ms-1">from 48.7</span> --}}
+                </div>
+              </div>
+              <!-- End Row -->
+            </div>
+          </div>
+          <!-- End Card -->
+        </div>
 
-      {{--      <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3"> --}}
-      {{--        <!-- Card --> --}}
-      {{--        <div class="card h-100"> --}}
-      {{--          <div class="card-body"> --}}
-      {{--            <h6 class="card-subtitle mb-2">New Stocks</h6> --}}
+        <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3">
+          <!-- Card -->
+          <div class="card h-100">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2">Active / Inactive (Stock)</h6>
+              <span class="js-counter display-4">
+                <span class="text-success">{{ $propertyActiveStock }}</span> /
+                <span class="text-danger">{{ $propertyInactiveStock }}</span>
+              </span>
+              <div class="row align-items-center gx-2">
+                <div class="col">
+                </div>
 
-      {{--            <div class="row align-items-center gx-2"> --}}
-      {{--              <div class="col"> --}}
-      {{--                <span class="js-counter display-4 text-dark">56</span> --}}
-      {{--                <span class="display-4 text-dark">%</span> --}}
-      {{--                <span class="text-body fs-5 ms-1">from 48.7</span> --}}
-      {{--              </div> --}}
-
-      {{--              <div class="col-auto"> --}}
-      {{--                <span class="badge bg-soft-danger text-danger p-1"> --}}
-      {{--                  <i class="bi-graph-down"></i> 2.8% --}}
-      {{--                </span> --}}
-      {{--              </div> --}}
-      {{--            </div> --}}
-      {{--            <!-- End Row --> --}}
-      {{--          </div> --}}
-      {{--        </div> --}}
-      {{--        <!-- End Card --> --}}
-      {{--      </div> --}}
-
-      {{--      <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3"> --}}
-      {{--        <!-- Card --> --}}
-      {{--        <div class="card h-100"> --}}
-      {{--          <div class="card-body"> --}}
-      {{--            <h6 class="card-subtitle mb-2">In Maintenance</h6> --}}
-
-      {{--            <div class="row align-items-center gx-2"> --}}
-      {{--              <div class="col"> --}}
-      {{--                <span class="js-counter display-4 text-dark">28.6</span> --}}
-      {{--                <span class="display-4 text-dark">%</span> --}}
-      {{--                <span class="text-body fs-5 ms-1">from 28.6%</span> --}}
-      {{--              </div> --}}
-
-      {{--              <div class="col-auto"> --}}
-      {{--                <span class="badge bg-soft-secondary text-secondary p-1">0.0%</span> --}}
-      {{--              </div> --}}
-      {{--            </div> --}}
-      {{--            <!-- End Row --> --}}
-      {{--          </div> --}}
-      {{--        </div> --}}
-      {{--        <!-- End Card --> --}}
-      {{--      </div> --}}
-      {{--    </div> --}}
-      {{--    <!-- End Stats --> --}}
+              </div>
+              <!-- End Row -->
+            </div>
+          </div>
+          <!-- End Card -->
+        </div>
+      </div>
+      <!-- End Stats -->
 
       <!-- Card -->
-
       <div class="card">
         <!-- Header -->
         <div class="card-header card-header-content-md-between">
@@ -160,7 +161,7 @@
                 <div class="input-group-prepend input-group-text">
                   <i class="bi-search"></i>
                 </div>
-                <input class="form-control" id="propertyDatatableSearch" type="search" aria-label="Search item" placeholder="Search item">
+                <input class="form-control" id="propertyStockDatatableSearch" type="search" aria-label="Search item" placeholder="Search item">
               </div>
               <!-- End Search -->
             </form>
@@ -168,27 +169,27 @@
 
           <div class="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
             <!-- Datatable Info -->
-            <div id="propertyDatatableCounterInfo" style="display: none;">
+            <div id="propertyStockDatatableCounterInfo" style="display: none;">
               <div class="d-flex align-items-center">
                 <span class="fs-5 me-3">
-                  <span id="propertyDatatableCounter">0</span>
+                  <span id="datatableCounter">0</span>
                   Selected
                 </span>
-                <a class="btn btn-outline-danger btn-md" href="">
-                  <i class="bi-trash"></i> Delete
-                </a>
+                <button class="btn btn-outline-info btn-md" id="btnMoveToInventory" type="button">
+                  <i class="bi bi-arrow-left-right"></i> Move to Inventory
+                </button>
               </div>
             </div>
             <!-- End Datatable Info -->
 
             <!-- Dropdown -->
             <div class="dropdown">
-              <button class="btn btn-white btn-md dropdown-toggle w-100" id="propertyExportDropdown" data-bs-toggle="dropdown" type="button"
+              <button class="btn btn-white btn-md dropdown-toggle w-100" id="usersExportDropdown" data-bs-toggle="dropdown" type="button"
                 aria-expanded="false">
                 <i class="bi-download me-2"></i> Export
               </button>
 
-              <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="propertyExportDropdown">
+              <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="usersExportDropdown">
                 <span class="dropdown-header">Options</span>
                 <a class="dropdown-item" id="export-copy" href="">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/copy-icon.svg') }}"
@@ -203,7 +204,8 @@
                 <div class="dropdown-divider"></div>
                 <span class="dropdown-header">Download options</span>
                 <a class="dropdown-item" id="export-excel" href="">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/excel-icon.svg') }}" alt="Image Description">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/excel-icon.svg') }}"
+                    alt="Image Description">
                   Excel
                 </a>
                 <a class="dropdown-item" id="export-csv" href="">
@@ -212,7 +214,8 @@
                   .CSV
                 </a>
                 <a class="dropdown-item" id="export-pdf" href="">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/pdf-icon.svg') }}" alt="Image Description">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/pdf-icon.svg') }}"
+                    alt="Image Description">
                   PDF
                 </a>
               </div>
@@ -221,8 +224,8 @@
 
             <!-- Dropdown -->
             <div class="dropdown">
-              <button class="btn btn-white" data-bs-toggle="offcanvas" data-bs-target="#offcanvasPropertyFilter" type="button"
-                aria-controls="offcanvasPropertyFilter">
+              <button class="btn btn-white" data-bs-toggle="offcanvas" data-bs-target="#propertyStockFilter" type="button"
+                aria-controls="propertyStockFilter">
                 <i class="bi-filter me-1"></i> Filters
               </button>
             </div>
@@ -234,88 +237,77 @@
         <!-- Table -->
         <div class="table-responsive datatable-custom position-relative">
           <table class="table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table table table-hover w-100"
-            id="propertyOverviewDatatable"
+            id="propertyChildDatatable"
             data-hs-datatables-options='{
                    "columnDefs": [{
-                      "targets": [0, 7],
+                      "targets": [0, 10],
                       "orderable": false
                     }],
                    "order": [],
                    "info": {
-                     "totalQty": "#propertyDatatableWithPaginationInfoTotalQty"
+                     "totalQty": "#propertyStockDatatableWithPaginationInfoTotalQty"
                    },
-                   "search": "#propertyDatatableSearch",
-                   "entries": "#propertyDatatableEntries",
-                   "pageLength": 5,
+                   "search": "#propertyStockDatatableSearch",
+                   "entries": "#propertyStockDatatableEntries",
+                   "pageLength": 10,
                    "isResponsive": false,
                    "isShowPaging": false,
-                   "pagination": "propertyDatatablePagination"
+                   "pagination": "propertyStockDatatablePagination"
                  }'>
             <thead class="thead-light">
               <tr>
-                <th class="table-column-pe-0" style="width: 5%">
+                <th class="table-column-pe-0">
                   <div class="form-check">
-                    <input class="form-check-input" id="propertyDatatableCheckAll" type="checkbox" value="">
-                    <label class="form-check-label" for="propertyDatatableCheckAll"></label>
+                    <input class="form-check-input" id="propertyStockDatatableCheckAll" type="checkbox" value="">
+                    <label class="form-check-label" for="propertyStockDatatableCheckAll"></label>
                   </div>
                 </th>
-                <th class="d-none w-auto">Property Id</th>
-                <th style="width: 20%">Item Name</th>
-                <th style="width: 20%">Description</th>
-                <th style="width: 15%">Category</th>
-                <th style="width: 15%">Brand</th>
-                <th style="width: 5%">Total Quantity</th>
-                <th style="width: 20%">Action</th>
+                <th class="table-column-ps-0">Item Code</th>
+                <th>Serial #</th>
+                <th>Acquired Type</th>
+                <th>Designation</th>
+                <th>Department</th>
+                <th>Condition</th>
+                <th>Status</th>
+                <th>Date Added</th>
+                <th>Active</th>
+                <th>Action</th>
               </tr>
             </thead>
 
             <tbody>
-              @foreach ($propertyParents->where('is_active', 1)->where('deleted_at', null)->sortByDesc('updated_at') as $propertyParent)
+              @foreach ($propertyChildren->where('inventory_date', null)->sortByDesc('updated_at') as $propertyChild)
                 <tr>
                   <td class="table-column-pe-0">
                     <div class="form-check">
-                      <input class="form-check-input" id="propertyCheckAll1" type="checkbox" value="">
-                      <label class="form-check-label" for="propertyCheckAll1"></label>
+                      <input class="form-check-input child-checkbox" id="propertyStockDatatableCheck{{ $propertyChild->id }}" type="checkbox"
+                        value="{{ $propertyChild->id }}">
+                      <label class="form-check-label" for="propertyStockDatatableCheck{{ $propertyChild->id }}"></label>
                     </div>
                   </td>
-                  <td class="d-none" data-property-id="{{ Crypt::encryptString($propertyParent->id) }}"></td>
-                  <td>
-                    <a class="d-flex align-items-center btnViewProperty">
-                      <div class="avatar avatar-lg">
-                        @php
-                          $imagePath = public_path('storage/img-uploads/prop-asset/' . $propertyParent->image);
-                          $defaultImagePath = public_path('storage/img-uploads/prop-asset/default.jpg');
-                          $imageUrl = file_exists($imagePath)
-                              ? asset('storage/img-uploads/prop-asset/' . $propertyParent->image)
-                              : asset('storage/img-uploads/prop-asset/default.jpg');
-                        @endphp
-                        <img class="avatar-img" src="{{ $imageUrl }}" alt="Image Description">
-                      </div>
-                      <div class="ms-3">
-                        <span class="d-block h5 mb-0 text-inherit">{{ $propertyParent->name }}</span>
-                      </div>
-                    </a>
+                  <td>{{ $propertyChild->prop_code }}</td>
+                  <td>{{ $propertyChild->serial_num ?? '-' }}</td>
+                  <td>{{ $propertyChild->acquisition->name }}</td>
+                  <td>{{ $propertyChild->designation->name }}</td>
+                  <td>{{ $propertyChild->department->dept_code }}</td>
+                  <td>{{ $propertyChild->condition->name }}</td>
+                  <td><span class="{{ $propertyChild->status->color->class }} fs-6">{{ $propertyChild->status->name }}</span></td>
+                  <td data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom"
+                    title="Date Acquired: {{ \Carbon\Carbon::parse($propertyChild->acq_date)->format('F j, Y') }}, Warranty Date: {{ $propertyChild->warranty_date ? \Carbon\Carbon::parse($propertyChild->warranty_date)->format('F j, Y') : '-' }}">
+                    {{ \Carbon\Carbon::parse($propertyChild->stock_date)->format('F j, Y') }}</td>
+                  <td
+                    @if ($propertyChild->remarks) data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="Remarks: {{ $propertyChild->remarks }}" @endif>
+                    @if ($propertyChild->is_active)
+                      <span class="legend-indicator bg-success"></span>Active
+                    @else
+                      <span class="legend-indicator bg-danger"></span>Deleted
+                    @endif
                   </td>
-                  <td>
-                    <span style="color:gray"
-                      @if (!empty($propertyParent->description) && strlen($propertyParent->description) > 25) data-bs-toggle="tooltip"
-                        data-bs-html="true"
-                        data-bs-placement="bottom"
-                        title="{{ $propertyParent->description }}" @endif>
-                      {{ Str::limit(!empty($propertyParent->description) ? $propertyParent->description : 'No description provided', 30) }}
-                    </span>
-                  </td>
-                  <td>
-                    <span class="d-block h5 mb-0">{{ $propertyParent->subcategory->category->name }}</span>
-                    <span class="d-block fs-5">{{ $propertyParent->subcategory->name }}</span>
-                  </td>
-                  <td>{{ $propertyParent->brand->name }}</td>
-                  <td style="text-align: center;">{{ $propertyParent->quantity }}</td>
                   <td>
                     <div class="btn-group" role="group">
-                      <a class="btn btn-white btn-sm" href="{{ route('prop-asset.child.index', Crypt::encryptString($propertyParent->id)) }}">
-                        <i class="bi-eye me-1"></i> View All
-                      </a>
+                      <button class="btn btn-white btn-sm" id="btnEditPropChild" data-prop-child-id="{{ $propertyChild->id }}" type="button">
+                        <i class="bi-pencil-fill me-1"></i> Edit
+                      </button>
 
                       <!-- Button Group -->
                       <div class="btn-group">
@@ -323,12 +315,18 @@
                           data-bs-toggle="dropdown" type="button" aria-expanded="false"></button>
 
                         <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="productsEditDropdown1">
-                          <button class="dropdown-item btnEditPropParent" type="button">
-                            <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Item
-                          </button>
-                          <button class="dropdown-item btnViewProperty" type="button">
-                            <i class="bi bi-info-square-fill dropdown-item-icon"></i> View Details
-                          </button>
+                          @if (!$propertyChild->is_active)
+                            <button class="dropdown-item" id="btnRestorePropChild" data-child-restore-id="{{ $propertyChild->id }}" type="button">
+                              <i class="bi-arrow-clockwise dropdown-item-icon"></i> Restore
+                            </button>
+                          @else
+                            {{--                          <button class="dropdown-item" type="button" id="btnMoveToInventory" data-child-move-id="{{ $propertyChild->id }}"> --}}
+                            {{--                            <i class="bi bi-arrow-left-right dropdown-item-icon"></i> Move to Inventory --}}
+                            {{--                          </button> --}}
+                            <button class="dropdown-item" id="btnDeletePropChild" data-child-delete-id="{{ $propertyChild->id }}" type="button">
+                              <i class="bi-trash dropdown-item-icon"></i> Delete
+                            </button>
+                          @endif
                         </div>
                       </div>
                       <!-- End Button Group -->
@@ -336,8 +334,8 @@
                   </td>
                 </tr>
               @endforeach
-
             </tbody>
+
           </table>
         </div>
         <!-- End Table -->
@@ -351,15 +349,15 @@
 
                 <!-- Select -->
                 <div class="tom-select-custom" style="width: 80px;">
-                  <select class="js-select form-select form-select-borderless" id="propertyDatatableEntries"
+                  <select class="js-select form-select form-select-borderless" id="propertyStockDatatableEntries"
                     data-hs-tom-select-options='{
                             "searchInDropdown": false,
                             "hideSearch": true
                           }'
                     autocomplete="off">
-                    <option value="5" selected>5</option>
-                    <option value="10">10</option>
+                    <option value="10" selected>10</option>
                     <option value="15">15</option>
+                    <option value="20">20</option>
                   </select>
                 </div>
                 <!-- End Select -->
@@ -367,7 +365,7 @@
                 <span class="text-secondary me-2">of</span>
 
                 <!-- Pagination Quantity -->
-                <span id="propertyDatatableWithPaginationInfoTotalQty"></span>
+                <span id="propertyStockDatatableWithPaginationInfoTotalQty"></span>
               </div>
             </div>
             <!-- End Col -->
@@ -375,7 +373,7 @@
             <div class="col-sm-auto">
               <div class="d-flex justify-content-center justify-content-sm-end">
                 <!-- Pagination -->
-                <nav id="propertyDatatablePagination" aria-label="Activity pagination"></nav>
+                <nav id="propertyStockDatatablePagination" aria-label="Activity pagination"></nav>
               </div>
             </div>
             <!-- End Col -->
@@ -395,17 +393,14 @@
 @endsection
 
 @section('sub-content')
-  <x-property-asset.add-property :brands="$brands" :subcategories="$subcategories" :conditions="$conditions" :acquisitions="$acquisitions" />
-
-  <x-property-asset.edit-property :brands="$brands" :subcategories="$subcategories" />
-
-  <x-property-asset.view-property />
-
+  {{--  <x-modals.add-property-child :propertyParents="$propertyParents" /> --}}
+  {{--  <x-modals.edit-property-child :propertyParents="$propertyParents" :conditions="$conditions" :acquisitions="$acquisitions" :propertyChildren="$propertyChildren" /> --}}
+  {{--  <x-modals.move-property :designations="$designations" :departments="$departments" :statuses="$statuses"/> --}}
 
   <!-- Product Filter Modal -->
-  <div class="offcanvas offcanvas-end" id="offcanvasPropertyFilter" aria-labelledby="offcanvasPropertyFilterLabel" tabindex="-1">
+  <div class="offcanvas offcanvas-end" id="propertyStockFilter" aria-labelledby="propertyStockFilterLabel" tabindex="-1">
     <div class="offcanvas-header">
-      <h4 class="mb-0" id="offcanvasPropertyFilterLabel">Filters</h4>
+      <h4 class="mb-0" id="offcanvasEcommerceProductFilterLabel">Filters</h4>
       <button class="btn-close" data-bs-dismiss="offcanvas" type="button" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
@@ -676,72 +671,15 @@
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/dropzone/dist/min/dropzone.min.js') }}"></script>
 
   <!-- JS Themes -->
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>
 
-  <!-- JS Modules -->
-  <script src="{{ Vite::asset('resources/js/modules/properties-assets/property-stock-crud.js') }}"></script>
-
-  <!-- JS Plugins Init. -->
-
-  <script>
-    // Initialize tooltips for elements with the data-bs-toggle attribute
-    document.addEventListener('DOMContentLoaded', function() {
-      var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-      var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl)
-      })
-    });
-
-    (function() {
-      // INITIALIZATION OF DROPZONE
-      // =======================================================
-      var addDropzone, editDropzone;
-
-      HSCore.components.HSDropzone.init('.js-dropzone', {
-        maxFiles: 1,
-        maxFilesize: 1,
-        acceptedFiles: ".jpeg,.jpg,.png",
-        dictDefaultMessage: "Drag and drop your file here or click to upload",
-
-        init: function() {
-          var dropzoneInstance = this;
-
-          if (this.element.id === 'addPropertyDropzone') {
-            addDropzone = this;
-          } else if (this.element.id === 'editPropertyDropzone') {
-            editDropzone = this;
-          }
-
-          this.on("addedfile", function(file) {
-            dropzoneInstance.element.querySelector(".dz-message").style.display = "none";
-          });
-
-          this.on("removedfile", function(file) {
-            dropzoneInstance.element.querySelector(".dz-message").style.display = "block";
-          });
-
-          this.on("error", function(file, message) {
-            if (file.size > 1048576) {
-              Swal.fire({
-                icon: 'error',
-                title: 'File too large',
-                text: 'File size exceeds the limit of 1MB. Please upload a smaller file.',
-              });
-              this.removeFile(file);
-            }
-          });
-        }
-      });
-    })();
-  </script>
   <script>
     $(document).on('ready', function() {
       // INITIALIZATION OF DATATABLES
       // =======================================================
-      HSCore.components.HSDatatables.init($('#propertyOverviewDatatable'), {
+      HSCore.components.HSDatatables.init($('#propertyChildDatatable'), {
         dom: 'Bfrtip',
         buttons: [{
             extend: 'copy',
@@ -768,9 +706,9 @@
           style: 'multi',
           selector: 'td:first-child input[type="checkbox"]',
           classMap: {
-            checkAll: '#propertyDatatableCheckAll',
-            counter: '#propertyDatatableCounter',
-            counterInfo: '#propertyDatatableCounterInfo'
+            checkAll: '#propertyStockDatatableCheckAll',
+            counter: '#propertyStockDatatableCounter',
+            counterInfo: '#propertyStockDatatableCounterInfo'
           }
         },
         language: {
@@ -823,20 +761,12 @@
       window.onload = function() {
         // INITIALIZATION OF NAVBAR VERTICAL ASIDE
         // =======================================================
-        new HSSideNav('.js-navbar-vertical-aside').init()
-
-
-        // INITIALIZATION OF NAV SCROLLER
-        // =======================================================
-        new HsNavScroller('.js-nav-scroller', {
-          delay: 400
-        })
+        new HSSideNav('.js-navbar-vertical-aside').init();
 
 
         // INITIALIZATION OF FORM SEARCH
         // =======================================================
-        new HSFormSearch('.js-form-search')
-
+        new HSFormSearch('.js-form-search');
       }
     })()
   </script>

@@ -1,7 +1,7 @@
 $(document).ready(function () {
   const propertyDatatable = $("#propertyOverviewDatatable");
 
-  // Create a Property
+  // ============ Add a Stock Item ============ //
   const propertyAddModal = $("#addPropertyModal");
   const propertyAddForm = $("#frmAddProperty");
 
@@ -44,7 +44,6 @@ $(document).ready(function () {
 
     formData.append('_token', $('meta[name="csrf-token"]').attr("content"));
 
-    // Append form fields to FormData
     Object.entries(requiredFields).forEach(([key, field]) => {
       if (field[0].tomselect) {
         formData.append(key, field[0].tomselect.getValue());
@@ -91,7 +90,7 @@ $(document).ready(function () {
       },
     });
   });
-  // End Create a Property
+  // ============ End Add a Stock Item ============ //
 
   // ============ Update a Stock Item ============ //
   const propertyEditModal = $("#editPropertyModal");
@@ -126,7 +125,6 @@ $(document).ready(function () {
 
     const editFormData = new FormData(propertyEditForm[0]);
 
-    // Append additional data
     editFormData.append("_method", "PATCH");
     editFormData.append("id", $("#txtEditPropertyId").val());
     editFormData.append("propertyName", $("#txtEditPropertyName").val());
@@ -148,7 +146,6 @@ $(document).ready(function () {
         if (response.success) {
           showSuccessAlert(response, propertyEditModal, propertyEditForm);
         } else {
-          // Show validation errors
           if (response.errors.propertyName) {
             $("#txtEditPropertyName").addClass("is-invalid");
             $("#valEditPropertyName").text(response.errors.propertyName[0]);
@@ -172,5 +169,36 @@ $(document).ready(function () {
       },
     });
   });
+
+  // ============ End Update a Stock Item ============ //
+
+  // ============ View a Stock Item ============ //
+  propertyDatatable.on("click", ".btnViewProperty", function () {
+    const propertyViewId = $(this).closest("tr").find("td[data-property-id]").data("property-id");
+
+    $.ajax({
+      url: "/properties-assets/stocks/show",
+      method: "GET",
+      data: { id: propertyViewId },
+      success: function (response) {
+        $("#viewPropertyModal").modal("toggle");
+
+        $("#lblViewItemName").text(response.name);
+        $("#lblViewBrand").text(response.brand);
+        $("#lblViewCategory").text(response.category);
+        $("#lblViewSubCategory").text(response.subcategory);
+        $("#lblViewDescription").text(response.description);
+        $("#lblViewInStock").text(response.inStock);
+        $("#lblViewInventory").text(response.inventory);
+        $("#lblViewTotalQty").text(response.quantity);
+        $("#lblViewDateAdded").text(response.created);
+        $("#lblViewDateUpdated").text(response.updated);
+      },
+      error: function (response) {
+        showErrorAlert(response.responseJSON);
+      },
+    });
+  });
+  // ============ End View a Stock Item ============ //
 
 });

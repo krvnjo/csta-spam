@@ -6,6 +6,7 @@ use App\Http\Controllers\ConditionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
+use App\Http\Controllers\PropertyChildController;
 use App\Http\Controllers\PropertyParentController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\StatusController;
@@ -28,10 +29,18 @@ Route::name('dashboard.')->controller(DashboardController::class)->group(functio
 Route::prefix('properties-assets/stocks')->name('prop-asset.')->controller(PropertyParentController::class)->group(function () {
     Route::get('/', 'index')->name('index');
     Route::post('/create', 'store')->name('store');
+    Route::get('/show', 'show')->name('show');
     Route::get('/edit', 'edit')->name('edit');
     Route::patch('/update', 'update')->name('update');
     Route::delete('/delete', 'destroy')->name('delete');
     Route::get('/get-subcategory-brands', 'getSubcategoryBrands')->name('getSubcategoryBrands');
+});
+Route::prefix('properties-assets/child-stocks')->name('prop-asset.child.')->controller(PropertyChildController::class)->group(function () {
+    Route::get('/{id}', 'index')->name('index');
+    Route::post('/create', 'store')->name('store');
+    Route::get('/edit', 'edit')->name('edit');
+    Route::patch('/update', 'update')->name('update');
+    Route::delete('/delete', 'destroy')->name('delete');
 });
 
 // ============ End Property & Assets Routes ============ //

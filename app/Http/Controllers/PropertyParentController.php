@@ -221,9 +221,37 @@ class PropertyParentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(PropertyParent $propertyParent)
+    public function show(Request $request)
     {
-        //
+        try {
+            $propertyParent = PropertyParent::query()->findOrFail(Crypt::decryptString($request->input('id')));
+
+            $propertyChildren = $propertyParent->propertyChildren;
+
+            $propertyInStock = $propertyChildren->whereNull('inventory_date')->where('is_active',1)->count();
+            $propertyInInventory = $propertyChildren->whereNotNull('inventory_date')->where('is_active',1)->count();
+            $propertyTotal = $propertyChildren->where('is_active',1)->count();
+            return response()->json([
+                'success' => true,
+                'name' => $propertyParent->name,
+                'description' => $propertyParent->description,
+                'brand' => $propertyParent->brand->name,
+                'category' => $propertyParent->subcategory->category->name,
+                'subcategory' => $propertyParent->subcategory->name,
+                'status' => $propertyParent->is_active,
+                'inStock' => $propertyInStock,
+                'inventory' => $propertyInInventory,
+                'quantity' => $propertyTotal,
+                'created' => $propertyParent->created_at->format('D, F d, Y | h:i:s A'),
+                'updated' => $propertyParent->updated_at->format('D, F d, Y | h:i:s A'),
+            ]);
+        } catch (Throwable) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Oops! Something went wrong.',
+                'message' => 'An error occurred while fetching the item.',
+            ], 500);
+        }
     }
 
     /**
