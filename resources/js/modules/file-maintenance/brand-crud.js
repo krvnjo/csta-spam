@@ -54,16 +54,12 @@ $(document).ready(function () {
 
         const subcategories = response.subcategories;
         const dropdownSubcategory = $('#subcategoriesDropdownMenu').empty();
-
-        let totalSubcategories = 0;
-        subcategories.forEach((category) => (totalSubcategories += category.subcategories.length));
-
+        let totalSubcategories = subcategories.reduce((total, category) => total + category.subcategories.length, 0);
         $('#lblViewTotalSubcategories').text(`${totalSubcategories} subcategories in this brand`);
 
-        if (totalSubcategories) {
+        if (totalSubcategories > 0) {
           subcategories.forEach((category) => {
             dropdownSubcategory.append($('<h5>').addClass('dropdown-header').text(category.category));
-
             category.subcategories.forEach((subcategory) => {
               dropdownSubcategory.append($('<span>').addClass('dropdown-item').text(subcategory));
             });

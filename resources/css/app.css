@@ -57,3 +57,8 @@
   height: 32rem;
   background-image: url("../img/others/csta-dashboard.png");
 }
+.ts-wrapper.is-invalid.focus .ts-control,
+.was-validated .invalid.focus .ts-control,
+.was-validated :invalid + .ts-wrapper.focus .ts-control {
+  box-shadow: none;
+}

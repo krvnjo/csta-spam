@@ -1,7 +1,7 @@
 @extends('layouts.guest')
 
 @section('title')
-  Sign In
+  Log In
 @endsection
 
 @push('styles')
@@ -34,7 +34,7 @@
               @csrf
               <div class="pb-5 text-center">
                 <h1 class="display-5">Welcome!</h1>
-                <p>Kindly sign in with your username and password.</p>
+                <p>Kindly log in with your username and password.</p>
               </div>
 
               <div class="mb-4">

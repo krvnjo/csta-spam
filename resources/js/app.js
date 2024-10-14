@@ -1,6 +1,6 @@
-import "./bootstrap";
-import "bootstrap-icons/font/bootstrap-icons.css";
-import Swal from "sweetalert2";
+import './bootstrap';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import Swal from 'sweetalert2';
 
 window.Swal = Swal;
 
@@ -8,34 +8,34 @@ $(document).ready(function () {
   // ============ Ajax CSRF Token ============ //
   $.ajaxSetup({
     headers: {
-      "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
     },
   });
   // ============ End Ajax CSRF Token ============ //
 
   // ============ Show Active Links JS ============ //
-  const navLinks = $("#navbarVerticalMenu .nav-link");
-  const currentRouteName = $('meta[name="current-route"]').attr("content");
+  const navLinks = $('#navbarVerticalMenu .nav-link');
+  const currentRouteName = $('meta[name="current-route"]').attr('content');
 
   navLinks.each(function () {
     const link = $(this);
-    const routeName = link.data("route");
+    const routeName = link.data('route');
 
     if (currentRouteName === routeName) {
-      link.addClass("active");
+      link.addClass('active');
 
-      let currentCollapse = link.closest(".nav-collapse");
+      let currentCollapse = link.closest('.nav-collapse');
 
       while (currentCollapse.length) {
-        currentCollapse.addClass("show");
+        currentCollapse.addClass('show');
         const dropdownToggle = currentCollapse.prev();
-        if (dropdownToggle.hasClass("dropdown-toggle")) {
-          currentCollapse = currentCollapse.parent().closest(".nav-collapse");
+        if (dropdownToggle.hasClass('dropdown-toggle')) {
+          currentCollapse = currentCollapse.parent().closest('.nav-collapse');
 
           if (currentCollapse.length) {
-            dropdownToggle.removeClass("active");
+            dropdownToggle.removeClass('active');
           } else {
-            dropdownToggle.addClass("active");
+            dropdownToggle.addClass('active');
           }
         }
       }
@@ -44,10 +44,10 @@ $(document).ready(function () {
   // ============ End Show Active Links JS ============ //
 
   // ============ Remove invalid validation on keydown JS ============ //
-  $("input, textarea, select").on("keydown change", function () {
-    $(this).removeClass("is-invalid");
-    $(this).siblings(".invalid-feedback").html("");
-    $(this).next(".ts-wrapper").removeClass("is-invalid");
+  $('input, textarea, select').on('keydown change', function () {
+    $(this).removeClass('is-invalid');
+    $(this).siblings('.invalid-feedback').html('');
+    $(this).next('.ts-wrapper').removeClass('is-invalid');
   });
   // ============ End Remove invalid validation on keydown JS ============ //
 });
@@ -62,10 +62,10 @@ function showSuccessAlert(response, modal, form) {
   Swal.fire({
     title: response.title,
     text: response.text,
-    icon: "success",
-    confirmButtonText: "OK",
+    icon: 'success',
+    confirmButtonText: 'OK',
     customClass: {
-      confirmButton: "btn btn-secondary",
+      confirmButton: 'btn btn-secondary',
     },
   }).then(() => {
     location.reload();
@@ -83,10 +83,10 @@ function showErrorAlert(response, modal = null, form = null) {
   Swal.fire({
     title: response.title,
     text: response.text,
-    icon: "error",
-    confirmButtonText: "Got it",
+    icon: 'error',
+    confirmButtonText: 'Got it',
     customClass: {
-      confirmButton: "btn btn-secondary",
+      confirmButton: 'btn btn-secondary',
     },
   }).then(() => {
     location.reload();
@@ -102,16 +102,16 @@ function handleUnsavedChanges(modal, form, saveButton) {
 
   function getFormValues() {
     let values = {};
-    form.find(":input").each(function () {
-      const name = $(this).attr("name");
+    form.find(':input').each(function () {
+      const name = $(this).attr('name');
 
-      if ($(this).hasClass("dropdown-input") || !name) {
+      if ($(this).hasClass('dropdown-input') || !name) {
         return;
       }
 
-      if ($(this).attr("type") === "checkbox") {
-        values[name] = $(this).is(":checked");
-      } else if ($(this).is("select[multiple]")) {
+      if ($(this).attr('type') === 'checkbox') {
+        values[name] = $(this).is(':checked');
+      } else if ($(this).is('select[multiple]')) {
         values[name] = $(this).val() || [];
       } else {
         values[name] = $(this).val();
@@ -129,15 +129,15 @@ function handleUnsavedChanges(modal, form, saveButton) {
 
       if (Array.isArray(initialValue) && Array.isArray(currentValue)) {
         if (!arraysEqual(initialValue, currentValue)) {
-          saveButton.prop("disabled", false);
+          saveButton.prop('disabled', false);
           return true;
         }
       } else if (initialValue !== currentValue) {
-        saveButton.prop("disabled", false);
+        saveButton.prop('disabled', false);
         return true;
       }
     }
-    saveButton.prop("disabled", true);
+    saveButton.prop('disabled', true);
     return false;
   }
 
@@ -151,42 +151,42 @@ function handleUnsavedChanges(modal, form, saveButton) {
     return true;
   }
 
-  modal.on("show.bs.modal", function () {
+  modal.on('show.bs.modal', function () {
     setTimeout(() => {
       initialFormValues = getFormValues();
-      saveButton.prop("disabled", true);
+      saveButton.prop('disabled', true);
       unsavedChanges = false;
     }, 100);
   });
 
-  form.on("input change", ":input", function () {
+  form.on('input change', ':input', function () {
     unsavedChanges = hasChanges();
   });
 
-  modal.on("hide.bs.modal", function (e) {
+  modal.on('hide.bs.modal', function (e) {
     if (unsavedChanges) {
       e.preventDefault();
 
       Swal.fire({
-        title: "Unsaved Changes!",
-        text: "You have unsaved changes. Are you sure you want to close the modal?",
-        icon: "warning",
+        title: 'Unsaved Changes!',
+        text: 'You have unsaved changes. Are you sure you want to close the modal?',
+        icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: "Yes, close it!",
-        cancelButtonText: "No, keep editing",
+        confirmButtonText: 'Yes, close it!',
+        cancelButtonText: 'No, keep editing',
         customClass: {
-          confirmButton: "btn btn-danger",
-          cancelButton: "btn btn-secondary",
+          confirmButton: 'btn btn-danger',
+          cancelButton: 'btn btn-secondary',
         },
       }).then((result) => {
         if (result.isConfirmed) {
           cleanModalForm(modal, form);
           unsavedChanges = false;
-          modal.modal("hide");
+          modal.modal('hide');
         }
       });
     } else {
-      cleanModalForm(modal, form, "edit");
+      cleanModalForm(modal, form, 'edit');
     }
   });
 }
@@ -194,31 +194,31 @@ function handleUnsavedChanges(modal, form, saveButton) {
 window.handleUnsavedChanges = handleUnsavedChanges;
 
 // Clean Modal Form
-function cleanModalForm(modal, form, flag = "add") {
-  form.find(":input").removeClass("is-invalid");
-  form.find(".invalid-feedback").empty();
+function cleanModalForm(modal, form, flag = 'add') {
+  form.find(':input').removeClass('is-invalid');
+  form.find('.invalid-feedback').empty();
 
-  form.find("select").each(function () {
-    const tsWrapper = $(this).next(".ts-wrapper");
+  form.find('select').each(function () {
+    const tsWrapper = $(this).next('.ts-wrapper');
     if (tsWrapper.length) {
-      tsWrapper.removeClass("is-invalid");
+      tsWrapper.removeClass('is-invalid');
     }
   });
 
-  if (flag === "add") {
-    form.trigger("reset");
+  if (flag === 'add') {
+    form.trigger('reset');
 
-    form.find("select").each(function () {
+    form.find('select').each(function () {
       const tomSelectInstance = this.tomselect;
       if (tomSelectInstance) {
         tomSelectInstance.clear();
-        tomSelectInstance.setValue("");
+        tomSelectInstance.setValue('');
       } else {
-        $(this).val("");
+        $(this).val('');
       }
     });
 
-    form.find(".js-dropzone").each(function () {
+    form.find('.js-dropzone').each(function () {
       const dropzoneElement = this;
       const dropzoneInstance = Dropzone.forElement(dropzoneElement);
       if (dropzoneInstance) {
@@ -236,8 +236,12 @@ window.cleanModalForm = cleanModalForm;
 function updateFilterCountBadge(filterCountId) {
   let selectedFilterCount = 0;
 
-  $(".js-datatable-filter").each(function () {
-    if ($(this).val() !== "") {
+  $('.js-datatable-filter').each(function () {
+    const $this = $(this);
+
+    if ($this.is('select[multiple]')) {
+      selectedFilterCount += $this.find('option:selected').length;
+    } else if ($this.val() !== '') {
       selectedFilterCount++;
     }
   });

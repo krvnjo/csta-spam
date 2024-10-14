@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -15,13 +15,17 @@ class Subcategory extends Model
 
     protected $fillable = [
         'name',
-        'categ_id',
         'is_active',
     ];
 
-    public function category(): BelongsTo
+    public function brands(): BelongsToMany
     {
-        return $this->belongsTo(Category::class, 'categ_id', 'id');
+        return $this->belongsToMany(Brand::class, 'brand_subcategories', 'subcateg_id', 'brand_id');
+    }
+
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class, 'category_subcategories', 'subcateg_id', 'categ_id');
     }
 
     public function properties(): HasMany

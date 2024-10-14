@@ -36,7 +36,9 @@
                 @foreach ($categories as $category)
                   <optgroup label="{{ $category->name }}">
                     @foreach ($category->subcategories as $subcategory)
-                      <option value="{{ $subcategory->id }}">{{ $subcategory->name }}</option>
+                      @if ($subcategory->is_active)
+                        <option value="{{ $subcategory->id }}">{{ $subcategory->name }}</option>
+                      @endif
                     @endforeach
                   </optgroup>
                 @endforeach

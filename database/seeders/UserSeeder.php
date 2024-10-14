@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\AuditHistory;
 use App\Models\Permission;
 use App\Models\Role;
+use App\Models\RolePermission;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
@@ -18,7 +19,13 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $permissionGroups = [
-            'User Management' => ['user management'],
+            'Item Inventory Management' => [
+                'item inventory management',
+            ],
+            'User Management' => [
+                'user management',
+                'role management',
+            ],
             'File Maintenance' => [
                 'brand maintenance',
                 'category maintenance',
@@ -30,6 +37,7 @@ class UserSeeder extends Seeder
             ],
             'Audit History' => ['audit history'],
             'System Settings' => ['system settings'],
+            'Recycle Bin' => ['recycle bin'],
         ];
 
         $actions = ['view', 'create', 'update', 'delete'];
@@ -37,10 +45,11 @@ class UserSeeder extends Seeder
         foreach ($permissionGroups as $group => $basePermissions) {
             foreach ($basePermissions as $base) {
                 foreach ($actions as $action) {
-                    if ($group === 'Audit History' && $action !== 'view') {
+                    if (($group === 'System Settings' || $group === 'Recycle Bin') && !in_array($action, ['view', 'update'])) {
                         continue;
                     }
-                    if ($group === 'System Settings' && $action === 'create') {
+
+                    if ($group === 'Audit History' && $action !== 'view') {
                         continue;
                     }
 
@@ -64,6 +73,39 @@ class UserSeeder extends Seeder
                 'description' => $description,
             ]);
         }
+
+        $roles = Role::all();
+        $permissions = Permission::all();
+
+        $rolePermissionMap = [
+            'Administrator' => $permissions,
+            'Property Custodian' => $permissions->filter(function ($permission) {
+                return !str_contains($permission->name, 'delete') &&
+                    !str_contains($permission->name, 'user management') &&
+                    !str_contains($permission->name, 'role management');
+            }),
+            'Student Assistant' => $permissions->filter(function ($permission) {
+                return (str_contains($permission->name, 'item inventory management') ||
+                        str_contains($permission->name, 'maintenance')) &&
+                    (str_contains($permission->name, 'view') ||
+                        str_contains($permission->name, 'create') ||
+                        str_contains($permission->name, 'update'));
+            }),
+        ];
+
+        foreach ($roles as $role) {
+            $roleName = $role->name;
+
+            if (isset($rolePermissionMap[$roleName])) {
+                foreach ($rolePermissionMap[$roleName] as $permission) {
+                    RolePermission::query()->insert([
+                        'role_id' => $role->id,
+                        'perm_id' => $permission->id,
+                    ]);
+                }
+            }
+        }
+
 
         $users = [
             [

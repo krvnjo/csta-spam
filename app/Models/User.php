@@ -18,6 +18,7 @@ class User extends Authenticatable
         'lname',
         'fname',
         'mname',
+        'role_id',
         'dept_id',
         'email',
         'phone_num',
@@ -25,25 +26,13 @@ class User extends Authenticatable
         'is_active'
     ];
 
+    public function role(): HasOne
+    {
+        return $this->hasOne(Role::class, 'id', 'role_id');
+    }
+
     public function department(): HasOne
     {
         return $this->hasOne(Department::class, 'id', 'dept_id');
-    }
-
-    public function hasPermission($permissionName, $actions): bool
-    {
-        $role = $this->roles()->first();
-
-        if (!$this->hasPermissionTo($permissionName) || !$role) {
-            return false;
-        }
-
-        foreach ($actions as $action) {
-            if ($role->permissions()->where('name', $permissionName)->where('can_' . $action, 1)->exists()) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

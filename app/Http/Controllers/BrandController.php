@@ -18,10 +18,10 @@ class BrandController extends Controller
      */
     public function index()
     {
-        $brands = Brand::with('subcategories')->whereNull('deleted_at')->get();
+        $brands = Brand::with('subcategories')->whereNull('deleted_at')->orderBy('name')->get();
         $categories = Category::with(['subcategories' => function ($query) {
-            $query->whereNull('deleted_at')->where('is_active', 1)->orderBy('name', 'asc');
-        }])->whereNull('deleted_at')->where('is_active', 1)->orderBy('name')->get();
+            $query->whereNull('deleted_at')->orderBy('name');
+        }])->whereNull('deleted_at')->orderBy('name')->get();
 
         $totalBrands = $brands->count();
         $deletedBrands = Brand::onlyTrashed()->count();
@@ -65,8 +65,8 @@ class BrandController extends Controller
                 'brand' => [
                     'required',
                     'regex:/^(?!.*([ -])\1)[a-zA-Z0-9&.\'-]+(?:[ -][a-zA-Z0-9&.\'-]+)*$/',
-                    'min:3',
-                    'max:50',
+                    'min:2',
+                    'max:30',
                     'unique:brands,name'
                 ],
                 'subcategories' => [
@@ -114,7 +114,9 @@ class BrandController extends Controller
     {
         try {
             $brand = Brand::query()->findOrFail(Crypt::decryptString($request->input('id')));
-            $subcategories = $brand->subcategories()->with('category')->whereNull('deleted_at')->orderBy('name')->get()->groupBy('category.name');
+            $subcategories = $brand->subcategories()->with('categories')->whereNull('deleted_at')->orderBy('name')->get()->groupBy(function ($subcategory) {
+                return $subcategory->categories->pluck('name')->first();
+            });
 
             $formattedSubcategories = [];
             foreach ($subcategories as $categoryName => $items) {
@@ -188,8 +190,8 @@ class BrandController extends Controller
                     'brand' => [
                         'required',
                         'regex:/^(?!.*([ -])\1)[a-zA-Z0-9&.\'-]+(?:[ -][a-zA-Z0-9&.\'-]+)*$/',
-                        'min:3',
-                        'max:50',
+                        'min:2',
+                        'max:30',
                         Rule::unique('brands', 'name')->ignore($brand->id)
                     ],
                     'subcategories' => [

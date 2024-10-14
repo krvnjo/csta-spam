@@ -19,7 +19,7 @@
           <!-- Brand Name -->
           <div class="form-group">
             <label class="col col-form-label form-label" for="txtEditBrand">Brand Name</label>
-            <input class="form-control" id="txtEditBrand" name="brand" type="text" placeholder="Enter a Brand">
+            <input class="form-control" id="txtEditBrand" name="brand" type="text" placeholder="Enter a brand">
             <span class="invalid-feedback" id="valEditBrand"></span>
           </div>
           <!-- End Brand Name -->
@@ -32,13 +32,15 @@
                 data-hs-tom-select-options='{
                   "singleMultiple": true,
                   "hideSelected": false,
-                  "placeholder": "Select Subcategories"
+                  "placeholder": "Select subcategories"
                 }'
-                multiple>
+                autocomplete="off" multiple>
                 @foreach ($categories as $category)
                   <optgroup label="{{ $category->name }}">
                     @foreach ($category->subcategories as $subcategory)
-                      <option value="{{ $subcategory->id }}">{{ $subcategory->name }}</option>
+                      @if ($subcategory->is_active)
+                        <option value="{{ $subcategory->id }}">{{ $subcategory->name }}</option>
+                      @endif
                     @endforeach
                   </optgroup>
                 @endforeach

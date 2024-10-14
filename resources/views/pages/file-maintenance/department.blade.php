@@ -26,13 +26,15 @@
             <h1 class="page-header-title mt-2">Departments</h1>
           </div>
 
-          <div class="col-sm-auto mt-sm-0 mt-3">
-            <div class="d-grid gap-2 d-sm-flex justify-content-sm-end">
-              <button class="btn btn-primary w-100 w-sm-auto" data-bs-toggle="modal" data-bs-target="#modalAddDepartment">
-                <i class="bi-plus me-1"></i> Add Department
-              </button>
+          @can('create department maintenance')
+            <div class="col-sm-auto mt-sm-0 mt-3">
+              <div class="d-grid gap-2 d-sm-flex justify-content-sm-end">
+                <button class="btn btn-primary w-100 w-sm-auto" data-bs-toggle="modal" data-bs-target="#modalAddDepartment">
+                  <i class="bi-plus me-1"></i> Add Department
+                </button>
+              </div>
             </div>
-          </div>
+          @endcan
         </div>
       </div>
       <!-- End Page Header -->
@@ -98,15 +100,17 @@
           </div>
 
           <div class="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
-            <!-- Datatable Counter -->
-            <div id="departmentsDatatableCounterInfo" style="display: none;">
-              <div class="d-flex align-items-center">
-                <span class="fs-5 me-3"><span id="departmentsDatatableCounter"></span> Selected</span>
-                <button class="btn btn-outline-danger btn-sm" id="btnMultiDeleteDepartment" type="button"><i class="bi-trash3-fill"></i>
-                  Delete</button>
+            @can('delete department maintenance')
+              <!-- Datatable Counter -->
+              <div id="departmentsDatatableCounterInfo" style="display: none;">
+                <div class="d-flex align-items-center">
+                  <span class="fs-5 me-3"><span id="departmentsDatatableCounter"></span> Selected</span>
+                  <button class="btn btn-outline-danger btn-sm" id="btnMultiDeleteDepartment" type="button"><i class="bi-trash3-fill"></i>
+                    Delete</button>
+                </div>
               </div>
-            </div>
-            <!-- End Datatable Counter -->
+              <!-- End Datatable Counter -->
+            @endcan
 
             <!-- Export Options Dropdown -->
             <div class="dropdown">
@@ -117,23 +121,22 @@
               <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="departmentExportDropdown">
                 <span class="dropdown-header">Options</span>
                 <button class="dropdown-item" id="export-copy" type="button">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/copy-icon.svg') }}" alt="Copy Icon">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/copy-icon.svg') }}" alt="Copy">
                   Copy
                 </button>
                 <button class="dropdown-item" id="export-print" type="button">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/print-icon.svg') }}"
-                    alt="Print Icon"> Print
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/print-icon.svg') }}" alt="Print">
+                  Print
                 </button>
 
                 <div class="dropdown-divider"></div>
 
                 <span class="dropdown-header">Download options</span>
                 <button class="dropdown-item" id="export-excel" type="button">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/excel-icon.svg') }}" alt="Excel Icon">
-                  Excel
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/excel-icon.svg') }}" alt="Excel"> Excel
                 </button>
                 <button class="dropdown-item" id="export-pdf" type="button">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/pdf-icon.svg') }}" alt="PDF Icon"> PDF
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/pdf-icon.svg') }}" alt="PDF"> PDF
                 </button>
               </div>
             </div>
@@ -215,12 +218,15 @@
             }'>
             <thead class="thead-light">
               <tr>
-                <th class="table-column-pe-0 w-auto">
-                  <div class="form-check">
-                    <input class="form-check-input" id="departmentsDatatableCheckAll" type="checkbox">
-                    <label class="form-check-label" for="departmentsDatatableCheckAll"></label>
-                  </div>
-                </th>
+                @can('delete department maintenance')
+                  <th class="table-column-pe-0 w-auto">
+                    <div class="form-check">
+                      <input class="form-check-input" id="departmentsDatatableCheckAll" type="checkbox">
+                      <label class="form-check-label" for="departmentsDatatableCheckAll"></label>
+                    </div>
+                  </th>
+                @endcan
+                <th class="table-column-pe-0 w-auto">#</th>
                 <th class="d-none w-auto">Department Id</th>
                 <th class="w-auto">Department Name</th>
                 <th class="w-auto">Department Code</th>
@@ -233,12 +239,15 @@
             <tbody>
               @foreach ($departments as $index => $department)
                 <tr>
-                  <td class="table-column-pe-0">
-                    <div class="form-check">
-                      <input class="form-check-input" id="departmentCheck{{ $index + 1 }}" type="checkbox">
-                      <label class="form-check-label" for="departmentCheck{{ $index + 1 }}"></label>
-                    </div>
-                  </td>
+                  @can('delete department maintenance')
+                    <td class="table-column-pe-0">
+                      <div class="form-check">
+                        <input class="form-check-input" id="departmentCheck{{ $index + 1 }}" type="checkbox">
+                        <label class="form-check-label" for="departmentCheck{{ $index + 1 }}"></label>
+                      </div>
+                    </td>
+                  @endcan
+                  <td>{{ $index + 1 }}</td>
                   <td class="d-none" data-department-id="{{ Crypt::encryptString($department->id) }}"></td>
                   <td><a class="d-block h5 mb-0 btnViewDepartment">{{ $department->name }}</a></td>
                   <td>{{ $department->dept_code }}</td>
@@ -246,15 +255,11 @@
                     <span><i class="bi-calendar-event me-1"></i> Updated {{ $department->updated_at->diffForHumans() }}</span>
                   </td>
                   <td>
-                    @if ($department->is_active)
-                      <span class="badge bg-soft-success text-success">
-                        <span class="legend-indicator bg-success"></span>Active
-                      </span>
-                    @else
-                      <span class="badge bg-soft-danger text-danger">
-                        <span class="legend-indicator bg-danger"></span>Inactive
-                      </span>
-                    @endif
+                    <span
+                      class="badge bg-soft-{{ $department->is_active ? 'success' : 'danger' }} text-{{ $department->is_active ? 'success' : 'danger' }}">
+                      <span
+                        class="legend-indicator bg-{{ $department->is_active ? 'success' : 'danger' }}"></span>{{ $department->is_active ? 'Active' : 'Inactive' }}
+                    </span>
                   </td>
                   <td>
                     <div class="btn-group" role="group">
@@ -262,28 +267,33 @@
                         <i class="bi-eye"></i> View
                       </button>
 
-                      <div class="btn-group">
-                        <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="departmentActionDropdown"
-                          data-bs-toggle="dropdown" type="button" aria-expanded="false"></button>
-                        <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="departmentActionDropdown">
-                          <button class="dropdown-item btnEditDepartment" type="button">
-                            <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
-                          </button>
-                          @if ($department->is_active)
-                            <button class="dropdown-item btnStatusDepartment" data-status="0" type="button">
-                              <i class="bi-x-circle-fill dropdown-item-icon text-danger fs-7"></i> Set to Inactive
-                            </button>
-                          @else
-                            <button class="dropdown-item btnStatusDepartment" data-status="1" type="button">
-                              <i class="bi-check-circle-fill dropdown-item-icon text-success"></i> Set to Active
-                            </button>
-                          @endif
-                          <div class="dropdown-divider"></div>
-                          <button class="dropdown-item text-danger btnDeleteDepartment" type="button">
-                            <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
-                          </button>
+                      @can('update department maintenance' || 'delete department maintenance')
+                        <div class="btn-group">
+                          <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="departmentActionDropdown"
+                            data-bs-toggle="dropdown" type="button" aria-expanded="false"></button>
+                          <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="departmentActionDropdown">
+                            @can('update department maintenance')
+                              <button class="dropdown-item btnEditDepartment" type="button">
+                                <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
+                              </button>
+                              <button class="dropdown-item btnStatusBrand" data-status="{{ $department->is_active ? 0 : 1 }}" type="button">
+                                <i
+                                  class="bi {{ $department->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
+                                {{ $department->is_active ? 'Set to Inactive' : 'Set to Active' }}
+                              </button>
+                              @can('delete department maintenance')
+                                <div class="dropdown-divider"></div>
+                              @endcan
+                            @endcan
+
+                            @can('delete department maintenance')
+                              <button class="dropdown-item text-danger btnDeleteDepartment" type="button">
+                                <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
+                              </button>
+                            @endcan
+                          </div>
                         </div>
-                      </div>
+                      @endcan
                     </div>
                   </td>
                 </tr>

@@ -47,7 +47,7 @@
                 <button class="btn btn-primary btn-lg" type="submit">Submit</button>
                 <div class="text-center">
                   <a class="btn btn-link" href="{{ route('auth.login') }}">
-                    <i class="bi-chevron-left"></i> Back to Sign in
+                    <i class="bi-chevron-left"></i> Back to log in
                   </a>
                 </div>
               </div>

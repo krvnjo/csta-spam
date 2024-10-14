@@ -296,7 +296,7 @@
                   </div>
                   <div class="flex-grow-1 ms-3">
                     <h5 class="mb-0">{{ Auth::user()->fname . ' ' . Auth::user()->lname }}</h5>
-                    <p class="card-text text-body">{{ Auth::user()->roles()->first()->name }}</p>
+                    <p class="card-text text-body">{{ Auth::user()->role->name }}</p>
                   </div>
                 </div>
               </div>

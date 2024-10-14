@@ -30,8 +30,7 @@
             </div>
             <div class="col-7 d-flex align-items-center">
               <div class="btn-group w-100">
-                <button class="btn btn-sm btn-white dropdown-toggle" id="lblViewTotalSubcategories" data-bs-toggle="dropdown" type="button"
-                  aria-expanded="false"></button>
+                <button class="btn btn-sm btn-white dropdown-toggle" id="lblViewTotalSubcategories" data-bs-toggle="dropdown" type="button"></button>
                 <div class="dropdown-menu w-100 scrollable-dropdown-menu" id="subcategoriesDropdownMenu"></div>
               </div>
             </div>
