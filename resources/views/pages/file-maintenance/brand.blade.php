@@ -9,7 +9,7 @@
 @endpush
 
 @section('main-content')
-  <main class="main" id="content" role="main">
+  <main class="main" id="content">
     <!-- Content -->
     <div class="content container-fluid">
       <!-- Page Header -->
@@ -187,10 +187,8 @@
                                 "dropdownWidth": "100%"
                               }'>
                               <option value="">All Status</option>
-                              <option data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-success"></span>Active</span>' value="Active">
-                              </option>
-                              <option data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-danger"></span>Inactive</span>' value="Inactive">
-                              </option>
+                              <option data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-success"></span>Active</span>' value="Active"></option>
+                              <option data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-danger"></span>Inactive</span>' value="Inactive"></option>
                             </select>
                           </div>
                         </div>
@@ -227,7 +225,7 @@
             }'>
             <thead class="thead-light">
               <tr>
-                <th style="width: 10%">
+                <th class="w-th">
                   @can('delete brand maintenance')
                     <div class="form-check">
                       <input class="form-check-input" id="brandsDatatableCheckAll" type="checkbox">
@@ -266,7 +264,7 @@
                       $subcategoryNames = $brand->subcategories->sortBy('name')->pluck('name')->implode(', ');
                       $truncatedSubcategories = Str::limit($subcategoryNames, 30, '...');
                     @endphp
-                    {{ $truncatedSubcategories }}
+                    {{ $subcategoryNames ? $truncatedSubcategories : 'No subcategories available.' }}
                   </td>
                   <td data-order="{{ $brand->updated_at }}"><span><i class="bi-calendar-event me-1"></i> Updated {{ $brand->updated_at->diffForHumans() }}</span></td>
                   <td>
@@ -275,7 +273,7 @@
                     </span>
                   </td>
                   <td>
-                    <div class="btn-group" role="group">
+                    <div class="btn-group">
                       <button class="btn btn-white btn-sm btnViewBrand" type="button"><i class="bi-eye"></i> View</button>
 
                       @can('update brand maintenance' || 'delete brand maintenance')
@@ -335,7 +333,7 @@
 
             <div class="col-sm-auto">
               <div class="d-flex justify-content-center justify-content-sm-end">
-                <nav id="brandsDatatablePagination" aria-label="Activity pagination"></nav>
+                <nav id="brandsDatatablePagination"></nav>
               </div>
             </div>
           </div>

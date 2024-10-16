@@ -58,7 +58,7 @@ class BrandController extends Controller
                 'brand.max' => 'The brand name may not be greater than :max characters.',
                 'brand.unique' => 'This brand name already exists.',
 
-                'subcategories.required' => 'Please select a brand subcategory!'
+                'subcategories.required' => 'Please select a subcategory!'
             ];
 
             $brandValidator = Validator::make($request->all(), [
@@ -183,7 +183,7 @@ class BrandController extends Controller
                     'brand.max' => 'The brand name may not be greater than :max characters.',
                     'brand.unique' => 'This brand name already exists.',
 
-                    'subcategories.required' => 'Please select a brand subcategory!',
+                    'subcategories.required' => 'Please select a subcategory!',
                 ];
 
                 $brandValidator = Validator::make($request->all(), [

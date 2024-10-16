@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\CategorySubcategory;
+use App\Models\Subcategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
@@ -16,7 +18,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::with('subcategories')->whereNull('deleted_at')->get();
+        $categories = Category::with('subcategories')->whereNull('deleted_at')->orderBy('name')->get();
+        $subcategories = Subcategory::with('categories')->whereNull('deleted_at')->orderBy('name')->get();
 
         $totalCategories = $categories->count();
         $deletedCategories = Category::onlyTrashed()->count();
@@ -29,6 +32,7 @@ class CategoryController extends Controller
         return view('pages.file-maintenance.category',
             compact(
                 'categories',
+                'subcategories',
                 'totalCategories',
                 'deletedCategories',
                 'activeCategories',
@@ -51,6 +55,8 @@ class CategoryController extends Controller
                 'category.min' => 'The category name must be at least :min characters.',
                 'category.max' => 'The category name may not be greater than :max characters.',
                 'category.unique' => 'This category name already exists.',
+
+                'subcategories.required' => 'Please select a subcategory!'
             ];
 
             $categoryValidator = Validator::make($request->all(), [
@@ -58,9 +64,12 @@ class CategoryController extends Controller
                     'required',
                     'regex:/^(?!.*([ -])\1)[a-zA-Z0-9&.\'-]+(?:[ -][a-zA-Z0-9&.\'-]+)*$/',
                     'min:3',
-                    'max:50',
+                    'max:30',
                     'unique:categories,name'
                 ],
+                'subcategories' => [
+                    'required',
+                ]
             ], $categoryValidationMessages);
 
             if ($categoryValidator->fails()) {
@@ -70,10 +79,17 @@ class CategoryController extends Controller
                 ]);
             }
 
-            Category::query()->create([
+            $category = Category::query()->create([
                 'name' => ucwords(trim($request->input('category'))),
                 'is_active' => 1,
             ]);
+
+            foreach ($request->input('subcategories') as $subcategory) {
+                CategorySubcategory::query()->insert([
+                    'categ_id' => $category->id,
+                    'subcateg_id' => $subcategory,
+                ]);
+            }
 
             return response()->json([
                 'success' => true,
@@ -122,11 +138,13 @@ class CategoryController extends Controller
     {
         try {
             $category = Category::query()->findOrFail(Crypt::decryptString($request->input('id')));
+            $subcategories = $category->subcategories()->whereNull('deleted_at')->orderBy('name')->pluck('subcateg_id')->toArray();
 
             return response()->json([
                 'success' => true,
                 'id' => Crypt::encryptString($category->id),
                 'category' => $category->name,
+                'subcategories' => $subcategories,
             ]);
         } catch (Throwable) {
             return response()->json([
@@ -146,13 +164,15 @@ class CategoryController extends Controller
             $category = Category::query()->findOrFail(Crypt::decryptString($request->input('id')));
             $subcategories = $category->subcategories->whereNull('deleted_at');
 
-            if ($request->has(['id', 'category'])) {
+            if ($request->has(['category', 'subcategories'])) {
                 $categoryValidationMessages = [
                     'category.required' => 'Please enter a category name!',
                     'category.regex' => 'It must not contain special symbols and multiple spaces.',
                     'category.min' => 'The category name must be at least :min characters.',
                     'category.max' => 'The category name may not be greater than :max characters.',
                     'category.unique' => 'This category name already exists.',
+
+                    'subcategories.required' => 'Please select a subcategory!'
                 ];
 
                 $categoryValidator = Validator::make($request->all(), [
@@ -163,6 +183,9 @@ class CategoryController extends Controller
                         'max:50',
                         Rule::unique('categories', 'name')->ignore($category->id)
                     ],
+                    'subcategories' => [
+                        'required',
+                    ]
                 ], $categoryValidationMessages);
 
                 if ($categoryValidator->fails()) {
@@ -171,7 +194,8 @@ class CategoryController extends Controller
                         'errors' => $categoryValidator->errors(),
                     ]);
                 } else {
-                    $category->name = $this->formatInput($request->input('category'));
+                    $category->name = ucwords(trim($request->input('category')));
+                    $category->subcategories()->sync(explode(',', $request->input('subcategories')));
                 }
             } elseif ($request->has('status')) {
                 $category->is_active = $request->input('status');
@@ -188,7 +212,6 @@ class CategoryController extends Controller
                     }
                 }
             }
-            $category->updated_at = now();
             $category->save();
 
             return response()->json([

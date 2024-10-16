@@ -4,21 +4,16 @@
       <!-- Logo -->
       <a class="navbar-brand" data-route="dashboard.index" href="{{ route('dashboard.index') }}">
         <img class="navbar-brand-logo" data-hs-theme-appearance="default" src="{{ Vite::asset('resources/svg/logos/logo.svg') }}" alt="CSTA - SPAM Logo">
-        <img class="navbar-brand-logo" data-hs-theme-appearance="dark" src="{{ Vite::asset('resources/svg/logos-light/logo.svg') }}"
-          alt="CSTA - SPAM Logo">
-        <img class="navbar-brand-logo-mini" data-hs-theme-appearance="default" src="{{ Vite::asset('resources/svg/logos/logo-short.svg') }}"
-          alt="CSTA - SPAM Logo">
-        <img class="navbar-brand-logo-mini" data-hs-theme-appearance="dark" src="{{ Vite::asset('resources/svg/logos-light/logo-short.svg') }}"
-          alt="CSTA - SPAM Logo">
+        <img class="navbar-brand-logo" data-hs-theme-appearance="dark" src="{{ Vite::asset('resources/svg/logos-light/logo.svg') }}" alt="CSTA - SPAM Logo">
+        <img class="navbar-brand-logo-mini" data-hs-theme-appearance="default" src="{{ Vite::asset('resources/svg/logos/logo-short.svg') }}" alt="CSTA - SPAM Logo">
+        <img class="navbar-brand-logo-mini" data-hs-theme-appearance="dark" src="{{ Vite::asset('resources/svg/logos-light/logo-short.svg') }}" alt="CSTA - SPAM Logo">
       </a>
       <!-- End Logo -->
 
       <!-- Sidebar Toggle -->
       <button class="js-navbar-vertical-aside-toggle-invoker navbar-aside-toggler" type="button">
-        <i class="bi-arrow-bar-left navbar-toggler-short-align"
-          data-bs-template='<div class="tooltip d-none d-md-block"><div class="arrow"></div><div class="tooltip-inner"></div></div>'></i>
-        <i class="bi-arrow-bar-right navbar-toggler-full-align"
-          data-bs-template='<div class="tooltip d-none d-md-block"><div class="arrow"></div><div class="tooltip-inner"></div></div>'></i>
+        <i class="bi-arrow-bar-left navbar-toggler-short-align"></i>
+        <i class="bi-arrow-bar-right navbar-toggler-full-align"></i>
       </button>
       <!-- End Sidebar Toggle -->
 
@@ -62,14 +57,14 @@
             </div>
             <!-- End Borrow and Reservation -->
 
-            <!-- Item Repair -->
+            <!-- Item Maintenance -->
             <div class="nav-item">
               <a class="nav-link" data-placement="left" href="#">
                 <i class="bi-tools nav-icon"></i>
-                <span class="nav-link-title">Item Repair</span>
+                <span class="nav-link-title">Item Maintenance</span>
               </a>
             </div>
-            <!-- End Item Repair -->
+            <!-- End Item Maintenance -->
 
             <!-- Reports & Analytics -->
             <div class="nav-item">

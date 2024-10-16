@@ -12,8 +12,8 @@
   {{-- Main Content --}}
 @endsection
 
-@section('sub-content')
-  {{-- Sub Content --}}
+@section('sec-content')
+  {{-- Secondary Content --}}
 @endsection
 
 @push('scripts')
@@ -39,8 +39,8 @@
 
         // INITIALIZATION OF BOOTSTRAP DROPDOWN
         // =======================================================
-        HSBsDropdown.init()
-      }
-    })()
+        HSBsDropdown.init();
+      };
+    })();
   </script>
 @endpush

@@ -9,14 +9,14 @@
 @endpush
 
 @section('main-content')
-  <main class="main" id="content" role="main">
+  <main class="main" id="content">
     <!-- Content -->
     <div class="content container-fluid">
       <!-- Page Header -->
       <div class="page-header">
         <div class="row align-items-end">
           <div class="col-sm mb-2 mb-sm-0">
-            <nav aria-label="breadcrumb">
+            <nav>
               <ol class="breadcrumb breadcrumb-no-gutter">
                 <li class="breadcrumb-item"><a class="breadcrumb-link" data-route="dashboard.index" href="{{ route('dashboard.index') }}">Home</a></li>
                 <li class="breadcrumb-item"><a class="breadcrumb-link">File Maintenance</a></li>
@@ -114,8 +114,8 @@
 
             <!-- Export Options Dropdown -->
             <div class="dropdown">
-              <button class="btn btn-white btn-sm dropdown-toggle w-100" id="departmentExportDropdown" data-bs-toggle="dropdown" type="button"
-                aria-expanded="false"><i class="bi-download me-2"></i> Export
+              <button class="btn btn-white btn-sm dropdown-toggle w-100" id="departmentExportDropdown" data-bs-toggle="dropdown" type="button" aria-expanded="false"><i class="bi-download me-2"></i>
+                Export
               </button>
 
               <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="departmentExportDropdown">
@@ -144,14 +144,11 @@
 
             <!-- Datatable Filter Dropdown -->
             <div class="dropdown">
-              <button class="btn btn-white btn-sm w-100" id="departmentFilterDropdown" data-bs-toggle="dropdown" type="button"
-                aria-expanded="false">
-                <i class="bi-filter me-1"></i> Filter<span class="badge bg-soft-dark text-dark rounded-circle ms-1"
-                  id="departmentFilterCount"></span>
+              <button class="btn btn-white btn-sm w-100" id="departmentFilterDropdown" data-bs-toggle="dropdown" type="button" aria-expanded="false">
+                <i class="bi-filter me-1"></i> Filter<span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="departmentFilterCount"></span>
               </button>
 
-              <div class="dropdown-menu dropdown-menu-sm-end dropdown-card card-dropdown-filter-centered w-100"
-                aria-labelledby="departmentFilterDropdown" style="min-width: 22rem;">
+              <div class="dropdown-menu dropdown-menu-sm-end dropdown-card card-dropdown-filter-centered w-100" aria-labelledby="departmentFilterDropdown" style="min-width: 22rem;">
                 <div class="card">
                   <div class="card-header card-header-content-between">
                     <h5 class="card-header-title">Department Filters</h5>
@@ -173,13 +170,9 @@
                                 "dropdownWidth": "100%"
                               }'>
                               <option value="">All Status</option>
-                              <option
-                                data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-success"></span>Active</span>'
-                                value="Active">
+                              <option data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-success"></span>Active</span>' value="Active">
                               </option>
-                              <option
-                                data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-danger"></span>Inactive</span>'
-                                value="Inactive">
+                              <option data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-danger"></span>Inactive</span>' value="Inactive">
                               </option>
                             </select>
                           </div>
@@ -198,8 +191,7 @@
 
         <!-- Departments Datatable -->
         <div class="table-responsive datatable-custom">
-          <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100"
-            id="departmentsDatatable"
+          <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100" id="departmentsDatatable"
             data-hs-datatables-options='{
               "columnDefs": [{
                  "targets": [0, 6],
@@ -255,10 +247,8 @@
                     <span><i class="bi-calendar-event me-1"></i> Updated {{ $department->updated_at->diffForHumans() }}</span>
                   </td>
                   <td>
-                    <span
-                      class="badge bg-soft-{{ $department->is_active ? 'success' : 'danger' }} text-{{ $department->is_active ? 'success' : 'danger' }}">
-                      <span
-                        class="legend-indicator bg-{{ $department->is_active ? 'success' : 'danger' }}"></span>{{ $department->is_active ? 'Active' : 'Inactive' }}
+                    <span class="badge bg-soft-{{ $department->is_active ? 'success' : 'danger' }} text-{{ $department->is_active ? 'success' : 'danger' }}">
+                      <span class="legend-indicator bg-{{ $department->is_active ? 'success' : 'danger' }}"></span>{{ $department->is_active ? 'Active' : 'Inactive' }}
                     </span>
                   </td>
                   <td>
@@ -269,16 +259,15 @@
 
                       @can('update department maintenance' || 'delete department maintenance')
                         <div class="btn-group">
-                          <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="departmentActionDropdown"
-                            data-bs-toggle="dropdown" type="button" aria-expanded="false"></button>
+                          <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="departmentActionDropdown" data-bs-toggle="dropdown" type="button"
+                            aria-expanded="false"></button>
                           <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="departmentActionDropdown">
                             @can('update department maintenance')
                               <button class="dropdown-item btnEditDepartment" type="button">
                                 <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
                               </button>
                               <button class="dropdown-item btnStatusBrand" data-status="{{ $department->is_active ? 0 : 1 }}" type="button">
-                                <i
-                                  class="bi {{ $department->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
+                                <i class="bi {{ $department->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
                                 {{ $department->is_active ? 'Set to Inactive' : 'Set to Active' }}
                               </button>
                               @can('delete department maintenance')
@@ -315,8 +304,7 @@
                     data-hs-tom-select-options='{
                       "searchInDropdown": false,
                       "hideSearch": true
-                    }'
-                    autocomplete="off">
+                    }' autocomplete="off">
                     <option value="5" selected>5</option>
                     <option value="10">10</option>
                     <option value="20">20</option>

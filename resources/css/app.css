@@ -62,3 +62,6 @@
 .was-validated :invalid + .ts-wrapper.focus .ts-control {
   box-shadow: none;
 }
+.w-th {
+  width: 10%;
+}

@@ -47,7 +47,7 @@
     <!-- ========== End Footer ========== -->
 
     <!-- ========== Secondary Content ========== -->
-    @yield('sub-content')
+    @yield('sec-content')
     <!-- ========== End Secondary Content ========== -->
 
     <!-- JS Global Compulsory -->

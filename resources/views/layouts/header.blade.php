@@ -2,20 +2,16 @@
   <div class="navbar-nav-wrap">
     <!-- Logo -->
     <a class="navbar-brand" data-route="dashboard.index" href="{{ route('dashboard.index') }}">
-      <img class="navbar-brand-logo-mini d-block" data-hs-theme-appearance="default" src="{{ Vite::asset('resources/svg/logos/logo-short.svg') }}"
-        alt="CSTA - SPAM Logo">
-      <img class="navbar-brand-logo-mini d-block" data-hs-theme-appearance="dark" src="{{ Vite::asset('resources/svg/logos-light/logo-short.svg') }}"
-        alt="CSTA - SPAM Logo">
+      <img class="navbar-brand-logo-mini d-block" data-hs-theme-appearance="default" src="{{ Vite::asset('resources/svg/logos/logo-short.svg') }}" alt="CSTA - SPAM Logo">
+      <img class="navbar-brand-logo-mini d-block" data-hs-theme-appearance="dark" src="{{ Vite::asset('resources/svg/logos-light/logo-short.svg') }}" alt="CSTA - SPAM Logo">
     </a>
     <!-- End Logo -->
 
     <div class="navbar-nav-wrap-content-start">
       <!-- Sidebar Toggle -->
       <button class="js-navbar-vertical-aside-toggle-invoker navbar-aside-toggler" type="button">
-        <i class="bi-arrow-bar-left navbar-toggler-short-align"
-          data-bs-template='<div class="tooltip d-none d-md-block" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'></i>
-        <i class="bi-arrow-bar-right navbar-toggler-full-align"
-          data-bs-template='<div class="tooltip d-none d-md-block" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'></i>
+        <i class="bi-arrow-bar-left navbar-toggler-short-align"></i>
+        <i class="bi-arrow-bar-right navbar-toggler-full-align"></i>
       </button>
       <!-- End Sidebar Toggle -->
 
@@ -25,7 +21,6 @@
         <div class="d-none d-lg-block">
           <div class="input-group input-group-merge input-group-borderless input-group-hover-light navbar-input-group">
             <div class="input-group-prepend input-group-text"><i class="bi-search"></i></div>
-
             <input class="js-form-search form-control"
               data-hs-form-search-options='{
                 "clearIcon": "#clearSearchResultsIcon",
@@ -53,8 +48,7 @@
         <!-- End Search Input Group -->
 
         <!-- Card Search Content -->
-        <div class="hs-form-search-menu-content dropdown-menu dropdown-menu-form-search navbar-dropdown-menu-borderless flex-grow-1"
-          id="searchDropdownMenu">
+        <div class="hs-form-search-menu-content dropdown-menu dropdown-menu-form-search navbar-dropdown-menu-borderless flex-grow-1" id="searchDropdownMenu">
           <div class="card">
             <div class="card-body-height">
               <div class="d-lg-none">
@@ -68,27 +62,15 @@
               <span class="dropdown-header">Recent searches</span>
               <a class="dropdown-item" href="#">
                 <div class="d-flex align-items-center">
-                  <div class="flex-shrink-0">
-                    <span class="icon icon-soft-dark icon-xs icon-circle">
-                      <i class="bi-box"></i>
-                    </span>
-                  </div>
-                  <div class="flex-grow-1 text-truncate ms-2">
-                    <span>Property and Assets</span>
-                  </div>
+                  <div class="flex-shrink-0"><span class="icon icon-soft-dark icon-xs icon-circle"><i class="bi-box"></i></span></div>
+                  <div class="flex-grow-1 text-truncate ms-2"><span>Property and Assets</span></div>
                 </div>
               </a>
 
               <a class="dropdown-item" href="#">
                 <div class="d-flex align-items-center">
-                  <div class="flex-shrink-0">
-                    <span class="icon icon-soft-dark icon-xs icon-circle">
-                      <i class="bi-bar-chart"></i>
-                    </span>
-                  </div>
-                  <div class="flex-grow-1 text-truncate ms-2">
-                    <span>Dashboard</span>
-                  </div>
+                  <div class="flex-shrink-0"><span class="icon icon-soft-dark icon-xs icon-circle"><i class="bi-bar-chart"></i></span></div>
+                  <div class="flex-grow-1 text-truncate ms-2"><span>Dashboard</span></div>
                 </div>
               </a>
 
@@ -97,40 +79,22 @@
               <span class="dropdown-header">Suggested</span>
               <a class="dropdown-item" href="#">
                 <div class="d-flex align-items-center">
-                  <div class="flex-shrink-0">
-                    <span class="icon icon-soft-dark icon-xs icon-circle">
-                      <i class="bi-question-square"></i>
-                    </span>
-                  </div>
-                  <div class="flex-grow-1 text-truncate ms-2">
-                    <span>What is CSTA - SPAM?</span>
-                  </div>
+                  <div class="flex-shrink-0"><span class="icon icon-soft-dark icon-xs icon-circle"><i class="bi-question-square"></i></span></div>
+                  <div class="flex-grow-1 text-truncate ms-2"><span>What is CSTA - SPAM?</span></div>
                 </div>
               </a>
 
               <a class="dropdown-item" href="#">
                 <div class="d-flex align-items-center">
-                  <div class="flex-shrink-0">
-                    <span class="icon icon-soft-dark icon-xs icon-circle">
-                      <i class="bi-paint-bucket"></i>
-                    </span>
-                  </div>
-                  <div class="flex-grow-1 text-truncate ms-2">
-                    <span>How to change theme color?</span>
-                  </div>
+                  <div class="flex-shrink-0"><span class="icon icon-soft-dark icon-xs icon-circle"><i class="bi-paint-bucket"></i></span></div>
+                  <div class="flex-grow-1 text-truncate ms-2"><span>How to change theme color?</span></div>
                 </div>
               </a>
 
               <a class="dropdown-item" href="#">
                 <div class="d-flex align-items-center">
-                  <div class="flex-shrink-0">
-                    <span class="icon icon-soft-dark icon-xs icon-circle">
-                      <i class="bi-question-square"></i>
-                    </span>
-                  </div>
-                  <div class="flex-grow-1 text-truncate ms-2">
-                    <span>Frequently Asked Questions</span>
-                  </div>
+                  <div class="flex-shrink-0"><span class="icon icon-soft-dark icon-xs icon-circle"><i class="bi-question-square"></i></span></div>
+                  <div class="flex-grow-1 text-truncate ms-2"><span>Frequently Asked Questions</span></div>
                 </div>
               </a>
             </div>
@@ -147,8 +111,9 @@
         <!-- Notification -->
         <li class="nav-item d-sm-inline-block">
           <div class="dropdown">
-            <button class="btn btn-ghost-secondary btn-icon rounded-circle" id="navbarNotificationsDropdown" data-bs-toggle="dropdown"
-              data-bs-auto-close="outside" data-bs-dropdown-animation type="button"><i class="bi-bell"></i>
+            <button class="btn btn-ghost-secondary btn-icon rounded-circle" id="navbarNotificationsDropdown" data-bs-toggle="dropdown" data-bs-dropdown-animation type="button">
+              <i class="bi-bell"></i>
+              <span class="btn-status btn-sm-status btn-status-danger"></span>
             </button>
 
             <div class="dropdown-menu dropdown-menu-end dropdown-card navbar-dropdown-menu navbar-dropdown-menu-borderless" style="width: 25rem;">
@@ -174,8 +139,7 @@
                                   <label class="form-check-label" for="notificationCheck1"></label>
                                   <span class="form-check-stretched-bg"></span>
                                 </div>
-                                <img class="avatar avatar-sm avatar-circle" src="{{ Vite::asset('resources/img/160x160/img3.jpg') }}"
-                                  alt="Image Description">
+                                <img class="avatar avatar-sm avatar-circle" src="{{ Vite::asset('resources/img/160x160/img3.jpg') }}" alt="Image Description">
                               </div>
                             </div>
                             <!-- End Col -->
@@ -278,16 +242,14 @@
         <!-- Account -->
         <li class="nav-item">
           <div class="dropdown">
-            <button class="btn navbar-dropdown-account-wrapper" id="accountNavbarDropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside"
-              data-bs-dropdown-animation type="button">
+            <button class="btn navbar-dropdown-account-wrapper" id="accountNavbarDropdown" data-bs-toggle="dropdown" data-bs-dropdown-animation type="button">
               <div class="avatar avatar-sm avatar-circle">
                 <img class="avatar-img" src="{{ asset('storage/img/user-images/' . Auth::user()->user_image) }}" alt="User Image">
                 <span class="avatar-status avatar-sm-status avatar-status-success"></span>
               </div>
             </button>
 
-            <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-account"
-              style="width: 16rem;">
+            <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-account" style="width: 16rem;">
               <!-- Profile Header -->
               <div class="dropdown-item-text">
                 <div class="d-flex align-items-center">
@@ -310,18 +272,16 @@
 
               <!-- System Appearance -->
               <div class="dropdown">
-                <button class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" id="selectThemeDropdown" data-bs-toggle="dropdown"
-                  type="button">System Appearance</button>
-                <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu"
-                  aria-labelledby="selectThemeDropdown">
+                <button class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" id="selectThemeDropdown" data-bs-toggle="dropdown" type="button">System Appearance</button>
+                <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu">
                   <button class="dropdown-item" data-icon="bi-moon-stars" data-value="auto" type="button">
-                    <i class="bi-moon-stars me-2"></i><span class="text-truncate" title="Auto (system default)">Auto (system default)</span>
+                    <i class="bi-moon-stars me-2"></i><span class="text-truncate">Auto (system default)</span>
                   </button>
                   <button class="dropdown-item" data-icon="bi-brightness-high" data-value="default" type="button">
-                    <i class="bi-brightness-high me-2"></i><span class="text-truncate" title="Default (light mode)">Default (light mode)</span>
+                    <i class="bi-brightness-high me-2"></i><span class="text-truncate">Default (light mode)</span>
                   </button>
                   <button class="dropdown-item" data-icon="bi-moon" data-value="dark" type="button">
-                    <i class="bi-moon me-2"></i><span class="text-truncate" title="Dark">Dark</span>
+                    <i class="bi-moon me-2"></i><span class="text-truncate">Dark</span>
                   </button>
                 </div>
               </div>
@@ -329,10 +289,9 @@
 
               <!-- Help & Support -->
               <div class="dropdown">
-                <button class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" id="navSubmenuPagesAccountDropdown2"
-                  data-bs-toggle="dropdown" type="button">Help & Support</button>
+                <button class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" id="navSubmenuPagesAccountDropdown2" data-bs-toggle="dropdown" type="button">Help & Support</button>
                 <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu">
-                  <a class="dropdown-item" href="{{ route('help.about') }}"><i class="bi-question-circle me-2"></i>About CSTA-SPAM</a>
+                  <a class="dropdown-item" href="{{ route('help.about') }}"><i class="bi-question-circle me-2"></i>About Us</a>
                   <a class="dropdown-item" href="{{ route('help.guide') }}"><i class="bi-journal-text me-2"></i>User Guide</a>
                 </div>
               </div>
@@ -340,12 +299,12 @@
 
               <div class="dropdown-divider"></div>
 
-              <!-- Sign out -->
+              <!-- Log Out -->
               <form id="frmLogoutUser" method="post" action="{{ route('auth.logout') }}">
                 @csrf
                 <button class="dropdown-item" type="submit">Log Out</button>
               </form>
-              <!-- End Sign out -->
+              <!-- End Log Out -->
             </div>
           </div>
         </li>

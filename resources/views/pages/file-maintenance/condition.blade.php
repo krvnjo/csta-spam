@@ -110,8 +110,8 @@
 
             <!-- Export Options Dropdown -->
             <div class="dropdown">
-              <button class="btn btn-white btn-sm dropdown-toggle w-100" id="conditionExportDropdown" data-bs-toggle="dropdown" type="button"
-                aria-expanded="false"><i class="bi-download me-2"></i> Export
+              <button class="btn btn-white btn-sm dropdown-toggle w-100" id="conditionExportDropdown" data-bs-toggle="dropdown" type="button" aria-expanded="false"><i class="bi-download me-2"></i>
+                Export
               </button>
 
               <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="conditionExportDropdown">
@@ -121,8 +121,7 @@
                   Copy
                 </button>
                 <button class="dropdown-item" id="export-print" type="button">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/print-icon.svg') }}"
-                    alt="Print Icon"> Print
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/print-icon.svg') }}" alt="Print Icon"> Print
                 </button>
 
                 <div class="dropdown-divider"></div>
@@ -141,13 +140,11 @@
 
             <!-- Datatable Filter Dropdown -->
             <div class="dropdown">
-              <button class="btn btn-white btn-sm w-100" id="conditionFilterDropdown" data-bs-toggle="dropdown" type="button"
-                aria-expanded="false">
+              <button class="btn btn-white btn-sm w-100" id="conditionFilterDropdown" data-bs-toggle="dropdown" type="button" aria-expanded="false">
                 <i class="bi-filter me-1"></i> Filter<span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="conditionFilterCount"></span>
               </button>
 
-              <div class="dropdown-menu dropdown-menu-sm-end dropdown-card card-dropdown-filter-centered w-100"
-                aria-labelledby="conditionFilterDropdown" style="min-width: 22rem;">
+              <div class="dropdown-menu dropdown-menu-sm-end dropdown-card card-dropdown-filter-centered w-100" aria-labelledby="conditionFilterDropdown" style="min-width: 22rem;">
                 <div class="card">
                   <div class="card-header card-header-content-between">
                     <h5 class="card-header-title">Condition Filters</h5>
@@ -169,13 +166,9 @@
                                 "dropdownWidth": "100%"
                               }'>
                               <option value="">All Status</option>
-                              <option
-                                data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-success"></span>Active</span>'
-                                value="Active">
+                              <option data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-success"></span>Active</span>' value="Active">
                               </option>
-                              <option
-                                data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-danger"></span>Inactive</span>'
-                                value="Inactive">
+                              <option data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-danger"></span>Inactive</span>' value="Inactive">
                               </option>
                             </select>
                           </div>
@@ -194,8 +187,7 @@
 
         <!-- Conditions Datatable -->
         <div class="table-responsive datatable-custom">
-          <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100"
-            id="conditionsDatatable"
+          <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100" id="conditionsDatatable"
             data-hs-datatables-options='{
               "columnDefs": [{
                  "targets": [0, 6],
@@ -239,7 +231,7 @@
                     </div>
                   </td>
                   <td class="d-none" data-condition-id="{{ Crypt::encryptString($condition->id) }}"></td>
-                  <td><a class="d-block h5 mb-0 btnViewCondition">{{ $condition->name }}</a></td>
+                  <td><a class="h5 btnViewCondition"><span class="{{ $condition->color->class }}"></span>{{ $condition->name }}</a></td>
                   <td>{{ \Illuminate\Support\Str::limit($condition->description, 50, '...') }}</td>
                   <td data-order="{{ $condition->updated_at }}">
                     <span><i class="bi-calendar-event me-1"></i> Updated {{ $condition->updated_at->diffForHumans() }}</span>
@@ -262,8 +254,8 @@
                       </button>
 
                       <div class="btn-group">
-                        <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="conditionActionDropdown"
-                          data-bs-toggle="dropdown" type="button" aria-expanded="false"></button>
+                        <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="conditionActionDropdown" data-bs-toggle="dropdown" type="button"
+                          aria-expanded="false"></button>
                         <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="conditionActionDropdown">
                           <button class="dropdown-item btnEditCondition" type="button">
                             <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
@@ -304,8 +296,7 @@
                     data-hs-tom-select-options='{
                       "searchInDropdown": false,
                       "hideSearch": true
-                    }'
-                    autocomplete="off">
+                    }' autocomplete="off">
                     <option value="5" selected>5</option>
                     <option value="10">10</option>
                     <option value="20">20</option>

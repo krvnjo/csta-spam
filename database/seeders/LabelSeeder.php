@@ -67,11 +67,12 @@ class LabelSeeder extends Seeder
             'Mouse',
             'Television',
             'Air Conditioner',
-            'Cables',
+            'Cable',
             'Table',
             'Chair',
-            'Desks',
-            'Bench'
+            'Desk',
+            'Bench',
+            'Paper'
         ];
 
         foreach ($subcategories as $subcategory) {
@@ -109,6 +110,8 @@ class LabelSeeder extends Seeder
             ['categ_id' => 3, 'subcateg_id' => 10],
             ['categ_id' => 4, 'subcateg_id' => 5],
             ['categ_id' => 5, 'subcateg_id' => 6],
+            ['categ_id' => 5, 'subcateg_id' => 11],
+            ['categ_id' => 6, 'subcateg_id' => 11],
         ];
 
         foreach ($categorySubcategories as $categorySubcategory) {

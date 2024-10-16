@@ -16,7 +16,6 @@ $(document).ready(function () {
       url: '/file-maintenance/categories',
       method: 'POST',
       data: addFormData,
-      dataType: 'json',
       processData: false,
       contentType: false,
       success: function (response) {
@@ -26,6 +25,10 @@ $(document).ready(function () {
           if (response.errors.category) {
             $('#txtAddCategory').addClass('is-invalid');
             $('#valAddCategory').text(response.errors.category[0]);
+          }
+          if (response.errors.subcategories) {
+            $('#selAddCategorySubcategories').next('.ts-wrapper').addClass('is-invalid');
+            $('#valAddCategorySubcategories').text(response.errors.subcategories[0]);
           }
         }
       },
@@ -96,6 +99,7 @@ $(document).ready(function () {
 
         $('#txtEditCategoryId').val(response.id);
         $('#txtEditCategory').val(response.category);
+        $('#selEditCategorySubcategories')[0].tomselect.setValue(response.subcategories);
       },
       error: function (response) {
         showErrorAlert(response.responseJSON, categoryEditModal, categoryEditForm);
@@ -111,6 +115,7 @@ $(document).ready(function () {
     editFormData.append('_method', 'PATCH');
     editFormData.append('id', $('#txtEditCategoryId').val());
     editFormData.append('category', $('#txtEditCategory').val());
+    editFormData.append('subcategories', $('#selEditCategorySubcategories').val());
 
     $.ajax({
       url: '/file-maintenance/categories',
@@ -125,6 +130,10 @@ $(document).ready(function () {
           if (response.errors.category) {
             $('#txtEditCategory').addClass('is-invalid');
             $('#valEditCategory').text(response.errors.category[0]);
+          }
+          if (response.errors.subcategories) {
+            $('#selEditCategorySubcategories').next('.ts-wrapper').addClass('is-invalid');
+            $('#valEditCategorySubcategories').text(response.errors.subcategories[0]);
           }
         }
       },

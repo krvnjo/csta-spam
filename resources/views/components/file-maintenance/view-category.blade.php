@@ -1,6 +1,6 @@
 <!-- View Category Modal -->
-<div class="modal fade" id="modalViewCategory" role="dialog" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal fade" id="modalViewCategory" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <!-- Header -->
       <div class="modal-header">
@@ -12,6 +12,7 @@
       <!-- Body -->
       <div class="modal-body">
         <div class="col">
+          <!-- Category Name -->
           <div class="row mb-4">
             <div class="col-5 d-flex align-items-center">
               <p class="form-label fw-semibold mb-0">Category Name:</p>
@@ -20,20 +21,23 @@
               <p class="mb-0" id="lblViewCategory"></p>
             </div>
           </div>
+          <!-- End Category Name -->
 
+          <!-- Category Subcategories -->
           <div class="row mb-3">
             <div class="col-5 d-flex align-items-center">
               <p class="form-label fw-semibold mb-0">Subcategories:</p>
             </div>
             <div class="col-7 d-flex align-items-center">
               <div class="btn-group w-100">
-                <button class="btn btn-sm btn-white dropdown-toggle" id="lblViewTotalSubcategories" data-bs-toggle="dropdown" type="button"
-                  aria-expanded="false"></button>
+                <button class="btn btn-sm btn-white dropdown-toggle" id="lblViewTotalSubcategories" data-bs-toggle="dropdown" type="button" aria-expanded="false"></button>
                 <div class="dropdown-menu w-100 scrollable-dropdown-menu" id="subcategoriesDropdownMenu"></div>
               </div>
             </div>
           </div>
+          <!-- End Category Subcategories -->
 
+          <!-- Status -->
           <div class="row mb-4">
             <div class="col-5 d-flex align-items-center">
               <p class="form-label fw-semibold mb-0">Status:</p>
@@ -42,7 +46,9 @@
               <p class="mb-0" id="lblViewStatus"></p>
             </div>
           </div>
+          <!-- End Status -->
 
+          <!-- Date Created -->
           <div class="row mb-4">
             <div class="col-5 d-flex align-items-center">
               <p class="form-label fw-semibold mb-0">Date Created:</p>
@@ -51,7 +57,9 @@
               <p class="mb-0" id="lblViewDateCreated"></p>
             </div>
           </div>
+          <!-- End Date Created -->
 
+          <!-- Date Updated -->
           <div class="row">
             <div class="col-5 d-flex align-items-center">
               <p class="form-label fw-semibold mb-0">Date Updated:</p>
@@ -60,6 +68,7 @@
               <p class="mb-0" id="lblViewDateUpdated"></p>
             </div>
           </div>
+          <!-- End Date Updated -->
         </div>
       </div>
       <!-- End Body -->
