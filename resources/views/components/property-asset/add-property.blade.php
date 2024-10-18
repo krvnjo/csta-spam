@@ -215,7 +215,22 @@
     new TomSelect('#cbxAcquiredType', {
       controlInput: false,
       hideSearch: true,
-      allowEmptyOption: true
+      allowEmptyOption: true,
+      onChange: function(value) {
+        const warrantyDateInput = document.getElementById('dtpWarranty');
+
+        const PURCHASED_ID = "1";
+        const DONATION_ID = "2";
+
+        if (value === DONATION_ID) {
+          warrantyDateInput.disabled = true;
+          warrantyDateInput.value = '';
+          warrantyDateInput.classList.add('bg-light');
+        } else if (value === PURCHASED_ID) {
+          warrantyDateInput.disabled = false;
+          warrantyDateInput.classList.remove('bg-light');
+        }
+      }
     });
 
     document.querySelectorAll('.tom-select input[type="text"]').forEach(function(input) {

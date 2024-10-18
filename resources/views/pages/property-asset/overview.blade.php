@@ -313,7 +313,7 @@
                   <td style="text-align: center;">{{ $propertyParent->quantity }}</td>
                   <td>
                     <div class="btn-group" role="group">
-                      <a class="btn btn-white btn-sm" href="{{ route('prop-asset.child.index', Crypt::encryptString($propertyParent->id)) }}">
+                      <a class="btn btn-white btn-sm" href="{{ route('prop-asset.child.index', $propertyParent) }}">
                         <i class="bi-eye me-1"></i> View All
                       </a>
 

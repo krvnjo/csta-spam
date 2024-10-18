@@ -35,8 +35,8 @@ Route::prefix('properties-assets/stocks')->name('prop-asset.')->controller(Prope
     Route::delete('/delete', 'destroy')->name('delete');
     Route::get('/get-subcategory-brands', 'getSubcategoryBrands')->name('getSubcategoryBrands');
 });
-Route::prefix('properties-assets/child-stocks')->name('prop-asset.child.')->controller(PropertyChildController::class)->group(function () {
-    Route::get('/{id}', 'index')->name('index');
+Route::prefix('properties-assets/{propertyParent}/child-stocks')->name('prop-asset.child.')->controller(PropertyChildController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
     Route::post('/create', 'store')->name('store');
     Route::get('/edit', 'edit')->name('edit');
     Route::patch('/update', 'update')->name('update');

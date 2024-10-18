@@ -50,8 +50,8 @@
                   {{ $propertyParents->name }}
                 </h1>
                 <h3>
-                  <span class="badge bg-primary">{{ $propertyParents->brand->name }}</span>
-                  <span class="badge bg-secondary">{{ $propertyParents->category->name }} - {{ $propertyParents->subcategory->name }}</span>
+{{--                  <span class="badge bg-primary">{{ $propertyParents->brand->name }}</span>--}}
+{{--                  <span class="badge bg-secondary">{{ $propertyParents->category->name }} - {{ $propertyParents->subcategory->name }}</span>--}}
                 </h3>
                 <p>{{ $propertyParents->description }}</p>
               </div>
@@ -262,6 +262,7 @@
                     <label class="form-check-label" for="propertyStockDatatableCheckAll"></label>
                   </div>
                 </th>
+                <th class="d-none w-auto">Child Id</th>
                 <th class="table-column-ps-0">Item Code</th>
                 <th>Serial #</th>
                 <th>Acquired Type</th>
@@ -285,7 +286,15 @@
                       <label class="form-check-label" for="propertyStockDatatableCheck{{ $propertyChild->id }}"></label>
                     </div>
                   </td>
-                  <td>{{ $propertyChild->prop_code }}</td>
+                  <td class="d-none" data-child-id="{{ Crypt::encryptString($propertyChild->id) }}"></td>
+                  <td>
+                    @if($propertyChild->created_at == $propertyChild->updated_at)
+                      <span class="badge bg-success">New</span>
+                      {{ $propertyChild->prop_code }}
+                    @else
+                    {{ $propertyChild->prop_code }}
+                    @endif
+                  </td>
                   <td>{{ $propertyChild->serial_num ?? '-' }}</td>
                   <td>{{ $propertyChild->acquisition->name }}</td>
                   <td>{{ $propertyChild->designation->name }}</td>
@@ -393,7 +402,7 @@
 @endsection
 
 @section('sub-content')
-  {{--  <x-modals.add-property-child :propertyParents="$propertyParents" /> --}}
+  <x-property-asset.stock.add-children :propertyParents="$propertyParents" />
   {{--  <x-modals.edit-property-child :propertyParents="$propertyParents" :conditions="$conditions" :acquisitions="$acquisitions" :propertyChildren="$propertyChildren" /> --}}
   {{--  <x-modals.move-property :designations="$designations" :departments="$departments" :statuses="$statuses"/> --}}
 
@@ -671,6 +680,8 @@
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
+
+  <script src="{{ Vite::asset('resources/js/modules/properties-assets/property-child-modules.js') }}"></script>
 
   <!-- JS Themes -->
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>
