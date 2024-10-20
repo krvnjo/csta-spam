@@ -175,21 +175,18 @@
 
             <!-- Dropdown -->
             <div class="dropdown">
-              <button class="btn btn-white btn-md dropdown-toggle w-100" id="propertyExportDropdown" data-bs-toggle="dropdown" type="button"
-                aria-expanded="false">
+              <button class="btn btn-white btn-md dropdown-toggle w-100" id="propertyExportDropdown" data-bs-toggle="dropdown" type="button" aria-expanded="false">
                 <i class="bi-download me-2"></i> Export
               </button>
 
               <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="propertyExportDropdown">
                 <span class="dropdown-header">Options</span>
                 <a class="dropdown-item" id="export-copy" href="">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/copy-icon.svg') }}"
-                    alt="Image Description">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/copy-icon.svg') }}" alt="Image Description">
                   Copy
                 </a>
                 <a class="dropdown-item" id="export-print" href="">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/print-icon.svg') }}"
-                    alt="Image Description">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/print-icon.svg') }}" alt="Image Description">
                   Print
                 </a>
                 <div class="dropdown-divider"></div>
@@ -199,8 +196,7 @@
                   Excel
                 </a>
                 <a class="dropdown-item" id="export-csv" href="">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/components/placeholder-csv-format.svg') }}"
-                    alt="Image Description">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/components/placeholder-csv-format.svg') }}" alt="Image Description">
                   .CSV
                 </a>
                 <a class="dropdown-item" id="export-pdf" href="">
@@ -213,8 +209,7 @@
 
             <!-- Dropdown -->
             <div class="dropdown">
-              <button class="btn btn-white" data-bs-toggle="offcanvas" data-bs-target="#offcanvasPropertyFilter" type="button"
-                aria-controls="offcanvasPropertyFilter">
+              <button class="btn btn-white" data-bs-toggle="offcanvas" data-bs-target="#offcanvasPropertyFilter" type="button" aria-controls="offcanvasPropertyFilter">
                 <i class="bi-filter me-1"></i> Filters
               </button>
             </div>
@@ -225,8 +220,7 @@
 
         <!-- Table -->
         <div class="table-responsive datatable-custom position-relative">
-          <table class="table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table table table-hover w-100"
-            id="propertyOverviewDatatable"
+          <table class="table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table table table-hover w-100" id="propertyOverviewDatatable"
             data-hs-datatables-options='{
                    "columnDefs": [{
                       "targets": [0, 7],
@@ -277,9 +271,7 @@
                         @php
                           $imagePath = public_path('storage/img-uploads/prop-asset/' . $propertyParent->image);
                           $defaultImagePath = public_path('storage/img-uploads/prop-asset/default.jpg');
-                          $imageUrl = file_exists($imagePath)
-                              ? asset('storage/img-uploads/prop-asset/' . $propertyParent->image)
-                              : asset('storage/img-uploads/prop-asset/default.jpg');
+                          $imageUrl = file_exists($imagePath) ? asset('storage/img-uploads/prop-asset/' . $propertyParent->image) : asset('storage/img-uploads/prop-asset/default.jpg');
                         @endphp
                         <img class="avatar-img" src="{{ $imageUrl }}" alt="Image Description">
                       </div>
@@ -311,8 +303,8 @@
 
                       <!-- Button Group -->
                       <div class="btn-group">
-                        <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="productsEditDropdown1"
-                          data-bs-toggle="dropdown" type="button" aria-expanded="false"></button>
+                        <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="productsEditDropdown1" data-bs-toggle="dropdown" type="button"
+                          aria-expanded="false"></button>
 
                         <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="productsEditDropdown1">
                           <button class="dropdown-item btnEditPropParent" type="button">
@@ -347,8 +339,7 @@
                     data-hs-tom-select-options='{
                             "searchInDropdown": false,
                             "hideSearch": true
-                          }'
-                    autocomplete="off">
+                          }' autocomplete="off">
                     <option value="5" selected>5</option>
                     <option value="10">10</option>
                     <option value="15">15</option>
@@ -382,13 +373,12 @@
   </main>
 @endsection
 
-@section('sub-content')
+@section('sec-content')
   <x-property-asset.add-property :brands="$brands" :subcategories="$subcategories" :conditions="$conditions" :acquisitions="$acquisitions" />
 
   <x-property-asset.edit-property :brands="$brands" :subcategories="$subcategories" />
 
   <x-property-asset.view-property />
-
 
   <!-- Product Filter Modal -->
   <div class="offcanvas offcanvas-end" id="offcanvasPropertyFilter" aria-labelledby="offcanvasPropertyFilterLabel" tabindex="-1">

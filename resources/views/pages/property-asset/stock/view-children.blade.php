@@ -38,9 +38,7 @@
                   @php
                     $imagePath = public_path('storage/img-uploads/prop-asset/' . $propertyParents->image);
                     $defaultImagePath = public_path('storage/img-uploads/prop-asset/default.jpg');
-                    $imageUrl = file_exists($imagePath)
-                        ? asset('storage/img-uploads/prop-asset/' . $propertyParents->image)
-                        : asset('storage/img-uploads/prop-asset/default.jpg');
+                    $imageUrl = file_exists($imagePath) ? asset('storage/img-uploads/prop-asset/' . $propertyParents->image) : asset('storage/img-uploads/prop-asset/default.jpg');
                   @endphp
                   <img class="avatar-img" src="{{ $imageUrl }}" alt="Image Description">
                 </div>
@@ -50,8 +48,8 @@
                   {{ $propertyParents->name }}
                 </h1>
                 <h3>
-{{--                  <span class="badge bg-primary">{{ $propertyParents->brand->name }}</span>--}}
-{{--                  <span class="badge bg-secondary">{{ $propertyParents->category->name }} - {{ $propertyParents->subcategory->name }}</span>--}}
+                  {{--                  <span class="badge bg-primary">{{ $propertyParents->brand->name }}</span> --}}
+                  {{--                  <span class="badge bg-secondary">{{ $propertyParents->category->name }} - {{ $propertyParents->subcategory->name }}</span> --}}
                 </h3>
                 <p>{{ $propertyParents->description }}</p>
               </div>
@@ -184,38 +182,32 @@
 
             <!-- Dropdown -->
             <div class="dropdown">
-              <button class="btn btn-white btn-md dropdown-toggle w-100" id="usersExportDropdown" data-bs-toggle="dropdown" type="button"
-                aria-expanded="false">
+              <button class="btn btn-white btn-md dropdown-toggle w-100" id="usersExportDropdown" data-bs-toggle="dropdown" type="button" aria-expanded="false">
                 <i class="bi-download me-2"></i> Export
               </button>
 
               <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="usersExportDropdown">
                 <span class="dropdown-header">Options</span>
                 <a class="dropdown-item" id="export-copy" href="">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/copy-icon.svg') }}"
-                    alt="Image Description">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/copy-icon.svg') }}" alt="Image Description">
                   Copy
                 </a>
                 <a class="dropdown-item" id="export-print" href="">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/print-icon.svg') }}"
-                    alt="Image Description">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/print-icon.svg') }}" alt="Image Description">
                   Print
                 </a>
                 <div class="dropdown-divider"></div>
                 <span class="dropdown-header">Download options</span>
                 <a class="dropdown-item" id="export-excel" href="">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/excel-icon.svg') }}"
-                    alt="Image Description">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/excel-icon.svg') }}" alt="Image Description">
                   Excel
                 </a>
                 <a class="dropdown-item" id="export-csv" href="">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/components/placeholder-csv-format.svg') }}"
-                    alt="Image Description">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/components/placeholder-csv-format.svg') }}" alt="Image Description">
                   .CSV
                 </a>
                 <a class="dropdown-item" id="export-pdf" href="">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/pdf-icon.svg') }}"
-                    alt="Image Description">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/pdf-icon.svg') }}" alt="Image Description">
                   PDF
                 </a>
               </div>
@@ -224,8 +216,7 @@
 
             <!-- Dropdown -->
             <div class="dropdown">
-              <button class="btn btn-white" data-bs-toggle="offcanvas" data-bs-target="#propertyStockFilter" type="button"
-                aria-controls="propertyStockFilter">
+              <button class="btn btn-white" data-bs-toggle="offcanvas" data-bs-target="#propertyStockFilter" type="button" aria-controls="propertyStockFilter">
                 <i class="bi-filter me-1"></i> Filters
               </button>
             </div>
@@ -236,8 +227,7 @@
 
         <!-- Table -->
         <div class="table-responsive datatable-custom position-relative">
-          <table class="table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table table table-hover w-100"
-            id="propertyChildDatatable"
+          <table class="table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table table table-hover w-100" id="propertyChildDatatable"
             data-hs-datatables-options='{
                    "columnDefs": [{
                       "targets": [0, 10],
@@ -281,18 +271,17 @@
                 <tr>
                   <td class="table-column-pe-0">
                     <div class="form-check">
-                      <input class="form-check-input child-checkbox" id="propertyStockDatatableCheck{{ $propertyChild->id }}" type="checkbox"
-                        value="{{ $propertyChild->id }}">
+                      <input class="form-check-input child-checkbox" id="propertyStockDatatableCheck{{ $propertyChild->id }}" type="checkbox" value="{{ $propertyChild->id }}">
                       <label class="form-check-label" for="propertyStockDatatableCheck{{ $propertyChild->id }}"></label>
                     </div>
                   </td>
                   <td class="d-none" data-child-id="{{ Crypt::encryptString($propertyChild->id) }}"></td>
                   <td>
-                    @if($propertyChild->created_at == $propertyChild->updated_at)
+                    @if ($propertyChild->created_at == $propertyChild->updated_at)
                       <span class="badge bg-success">New</span>
                       {{ $propertyChild->prop_code }}
                     @else
-                    {{ $propertyChild->prop_code }}
+                      {{ $propertyChild->prop_code }}
                     @endif
                   </td>
                   <td>{{ $propertyChild->serial_num ?? '-' }}</td>
@@ -304,8 +293,7 @@
                   <td data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom"
                     title="Date Acquired: {{ \Carbon\Carbon::parse($propertyChild->acq_date)->format('F j, Y') }}, Warranty Date: {{ $propertyChild->warranty_date ? \Carbon\Carbon::parse($propertyChild->warranty_date)->format('F j, Y') : '-' }}">
                     {{ \Carbon\Carbon::parse($propertyChild->stock_date)->format('F j, Y') }}</td>
-                  <td
-                    @if ($propertyChild->remarks) data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="Remarks: {{ $propertyChild->remarks }}" @endif>
+                  <td @if ($propertyChild->remarks) data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="Remarks: {{ $propertyChild->remarks }}" @endif>
                     @if ($propertyChild->is_active)
                       <span class="legend-indicator bg-success"></span>Active
                     @else
@@ -320,8 +308,8 @@
 
                       <!-- Button Group -->
                       <div class="btn-group">
-                        <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="productsEditDropdown1"
-                          data-bs-toggle="dropdown" type="button" aria-expanded="false"></button>
+                        <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="productsEditDropdown1" data-bs-toggle="dropdown" type="button"
+                          aria-expanded="false"></button>
 
                         <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="productsEditDropdown1">
                           @if (!$propertyChild->is_active)
@@ -362,8 +350,7 @@
                     data-hs-tom-select-options='{
                             "searchInDropdown": false,
                             "hideSearch": true
-                          }'
-                    autocomplete="off">
+                          }' autocomplete="off">
                     <option value="10" selected>10</option>
                     <option value="15">15</option>
                     <option value="20">20</option>
@@ -401,7 +388,7 @@
   @include('layouts.footer')
 @endsection
 
-@section('sub-content')
+@section('sec-content')
   <x-property-asset.stock.add-children :propertyParents="$propertyParents" />
   {{--  <x-modals.edit-property-child :propertyParents="$propertyParents" :conditions="$conditions" :acquisitions="$acquisitions" :propertyChildren="$propertyChildren" /> --}}
   {{--  <x-modals.move-property :designations="$designations" :departments="$departments" :statuses="$statuses"/> --}}
