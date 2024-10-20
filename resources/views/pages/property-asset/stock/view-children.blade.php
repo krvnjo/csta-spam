@@ -4,19 +4,11 @@
   P & A Masterlist | CSTA - SPAM
 @endsection
 
-@section('styles')
+@push('styles')
   <link href="{{ Vite::asset('resources/vendor/daterangepicker/daterangepicker.css') }}" rel="stylesheet">
   <link href="{{ Vite::asset('resources/vendor/jsvectormap/dist/css/jsvectormap.min.css') }}" rel="stylesheet">
   <link href="{{ Vite::asset('resources/vendor/tom-select/dist/css/tom-select.bootstrap5.css') }}" rel="stylesheet">
-@endsection
-
-@section('header')
-  @include('layouts.header')
-@endsection
-
-@section('sidebar')
-  @include('layouts.sidebar')
-@endsection
+@endpush
 
 @section('main-content')
   <main class="main" id="content" role="main">
@@ -36,9 +28,9 @@
               <div class="col-auto">
                 <div class="avatar avatar-xl">
                   @php
-                    $imagePath = public_path('storage/img-uploads/prop-asset/' . $propertyParents->image);
-                    $defaultImagePath = public_path('storage/img-uploads/prop-asset/default.jpg');
-                    $imageUrl = file_exists($imagePath) ? asset('storage/img-uploads/prop-asset/' . $propertyParents->image) : asset('storage/img-uploads/prop-asset/default.jpg');
+                    $imagePath = public_path('storage/img/prop-asset/' . $propertyParents->image);
+                    $defaultImagePath = public_path('storage/img/prop-asset/default.jpg');
+                    $imageUrl = file_exists($imagePath) ? asset('storage/img/prop-asset/' . $propertyParents->image) : asset('storage/img-uploads/prop-asset/default.jpg');
                   @endphp
                   <img class="avatar-img" src="{{ $imageUrl }}" alt="Image Description">
                 </div>
@@ -384,10 +376,6 @@
   </main>
 @endsection
 
-@section('footer')
-  @include('layouts.footer')
-@endsection
-
 @section('sec-content')
   <x-property-asset.stock.add-children :propertyParents="$propertyParents" />
   {{--  <x-modals.edit-property-child :propertyParents="$propertyParents" :conditions="$conditions" :acquisitions="$acquisitions" :propertyChildren="$propertyChildren" /> --}}
@@ -647,8 +635,10 @@
   <!-- End Product Filter Modal -->
 @endsection
 
-@section('scripts')
+@push('scripts')
   <!-- JS Other Plugins -->
+  <script src="{{ Vite::asset('resources/js/modules/properties-assets/property-child-crud.js') }}"></script>
+
   <script src="{{ Vite::asset('resources/vendor/hs-toggle-password/dist/js/hs-toggle-password.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/hs-file-attach/dist/hs-file-attach.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/hs-nav-scroller/dist/hs-nav-scroller.min.js') }}"></script>
@@ -667,8 +657,6 @@
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
-
-  <script src="{{ Vite::asset('resources/js/modules/properties-assets/property-child-modules.js') }}"></script>
 
   <!-- JS Themes -->
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>
@@ -768,4 +756,4 @@
       }
     })()
   </script>
-@endsection
+@endpush

@@ -139,7 +139,7 @@ class PropertyParentController extends Controller
                     $file = $request->file('propertyImage');
                     if ($file !== null && $file->isValid()) {
                         $filename = time() . '_' . $file->getClientOriginalName();
-                        $file->move(public_path('storage/img-uploads/prop-asset/'), $filename);
+                        $file->move(public_path('storage/img/prop-asset/'), $filename);
 //                        $file->move(resource_path('img/uploads/prop-asset/'), $filename);
                         $imageFileName = $filename;
                     } else {
@@ -236,7 +236,7 @@ class PropertyParentController extends Controller
                 'name' => $propertyParent->name,
                 'description' => $propertyParent->description,
                 'brand' => $propertyParent->brand->name,
-                'category' => $propertyParent->subcategory->category->name,
+                'category' => $propertyParent->subcategory->categories->pluck('name')->join(', '),
                 'subcategory' => $propertyParent->subcategory->name,
                 'status' => $propertyParent->is_active,
                 'inStock' => $propertyInStock,
@@ -334,13 +334,13 @@ class PropertyParentController extends Controller
                 $file = $request->file('image');
                 if ($file !== null && $file->isValid()) {
                     if ($property->image && $property->image !== 'default.jpg') {
-                        $oldImagePath = public_path('storage/img-uploads/prop-asset/' . $property->image);
+                        $oldImagePath = public_path('storage/img/prop-asset/' . $property->image);
                         if (file_exists($oldImagePath)) {
                             unlink($oldImagePath);
                         }
                     }
                     $filename = time() . '_' . $file->getClientOriginalName();
-                    $file->move(public_path('storage/img-uploads/prop-asset/'), $filename);
+                    $file->move(public_path('storage/img/prop-asset/'), $filename);
                     $property->image = $filename;
                 }
             } else {

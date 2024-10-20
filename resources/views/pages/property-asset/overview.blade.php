@@ -269,9 +269,9 @@
                     <a class="d-flex align-items-center btnViewProperty">
                       <div class="avatar avatar-lg">
                         @php
-                          $imagePath = public_path('storage/img-uploads/prop-asset/' . $propertyParent->image);
-                          $defaultImagePath = public_path('storage/img-uploads/prop-asset/default.jpg');
-                          $imageUrl = file_exists($imagePath) ? asset('storage/img-uploads/prop-asset/' . $propertyParent->image) : asset('storage/img-uploads/prop-asset/default.jpg');
+                          $imagePath = public_path('storage/img/prop-asset/' . $propertyParent->image);
+                          $defaultImagePath = public_path('storage/img/prop-asset/default.jpg');
+                          $imageUrl = file_exists($imagePath) ? asset('storage/img/prop-asset/' . $propertyParent->image) : asset('storage/img/prop-asset/default.jpg');
                         @endphp
                         <img class="avatar-img" src="{{ $imageUrl }}" alt="Image Description">
                       </div>
@@ -290,7 +290,11 @@
                     </span>
                   </td>
                   <td>
-                    <span class="d-block h5 mb-0">{{ $propertyParent->subcategory->category->name }}</span>
+                    <span class="d-block h5 mb-0">
+                      @foreach ($propertyParent->subcategory->categories as $category)
+                        {{ $category->name }}
+                      @endforeach
+                    </span>
                     <span class="d-block fs-5">{{ $propertyParent->subcategory->name }}</span>
                   </td>
                   <td>{{ $propertyParent->brand->name }}</td>

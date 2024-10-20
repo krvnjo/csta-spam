@@ -67,7 +67,7 @@ class PropertyChildController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, PropertyParent $propertyParent)
+    public function store(Request $request)
     {
         $childValidationMessages = [
             'VarQuantity.required' => 'Please enter a quantity!',
