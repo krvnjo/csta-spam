@@ -33,10 +33,8 @@
       <!-- Content -->
       <div class="container">
         <a class="position-absolute top-0 start-0 end-0 py-4" data-route="dashboard.index" href="{{ route('dashboard.index') }}">
-          <img class="avatar avatar-xl avatar-4x3 avatar-centered" data-hs-theme-appearance="default" src="{{ Vite::asset('resources/svg/logos/logo.svg') }}" alt="CSTA - SPAM Logo"
-            style="width: 18rem">
-          <img class="avatar avatar-xl avatar-4x3 avatar-centered" data-hs-theme-appearance="dark" src="{{ Vite::asset('resources/svg/logos-light/logo.svg') }}" alt="CSTA - SPAM Logo"
-            style="width: 18rem">
+          <img class="avatar avatar-xl avatar-4x3 avatar-centered" data-hs-theme-appearance="default" src="{{ Vite::asset('resources/svg/logos/logo.svg') }}" alt="Logo" style="width: 18rem">
+          <img class="avatar avatar-xl avatar-4x3 avatar-centered" data-hs-theme-appearance="dark" src="{{ Vite::asset('resources/svg/logos-light/logo.svg') }}" alt="Logo" style="width: 18rem">
         </a>
 
         <div class="footer-height-offset d-flex justify-content-center align-items-center flex-column">

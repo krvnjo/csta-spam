@@ -15,6 +15,7 @@
         "extraLiners": "",
         "indentInnerHtml": true,
         "parser": "blade",
+        "printWidth": 200,
         "sortHtmlAttributes": "code-guide"
       }
     },
