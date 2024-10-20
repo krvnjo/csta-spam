@@ -32,9 +32,4 @@ class Subcategory extends Model
     {
         return $this->hasMany(PropertyParent::class, 'subcateg_id');
     }
-
-    public function brands()
-    {
-        return $this->belongsToMany(Brand::class, 'brand_subcategory', 'subcateg_id', 'brand_id');
-    }
 }
