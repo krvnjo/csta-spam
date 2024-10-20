@@ -21,12 +21,12 @@ class Department extends Model
 
     public function designations(): HasMany
     {
-        return $this->hasMany(Designation::class, 'dept_id');
+        return $this->hasMany(Designation::class, 'dept_id', 'id');
     }
 
     public function users(): HasMany
     {
-        return $this->hasMany(User::class, 'dept_id');
+        return $this->hasMany(User::class, 'dept_id', 'id');
     }
 
     public function property(): BelongsTo

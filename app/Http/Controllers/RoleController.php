@@ -18,10 +18,8 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::whereNull('deleted_at')->with(['permissions' => function ($query) {
-            $query->withPivot('can_view', 'can_create', 'can_edit', 'can_delete');
-        }])->get();
-        $permissions = Permission::whereNull('deleted_at')->get();
+        $roles = Role::with('permissions')->whereNull('deleted_at')->where('is_active', 1)->get();
+        $permissions = Permission::with('roles')->whereNull('deleted_at')->get();
 
         return view('pages.user-management.role',
             compact(
@@ -77,22 +75,11 @@ class RoleController extends Controller
                     'errors' => $roleValidator->errors(),
                 ]);
             } else {
-                $role = Role::query()->create([
+                Role::query()->create([
                     'name' => ucwords(trim($request->input('role'))),
                     'description' => ucfirst(rtrim($request->input('description'))) . (str_ends_with(rtrim($request->input('description')), '.') ? '' : '.'),
                     'is_active' => 1,
                 ]);
-                foreach ($request->can_view as $permissionId => $view) {
-                    $permission = Permission::query()->find($permissionId);
-                    $role->syncPermissions($permission->name);
-
-                    DB::table('role_has_permissions')->where('permission_id', $permissionId)->where('role_id', $role->id)->update([
-                        'can_view' => isset($request->can_view[$permissionId]) ? 1 : 0,
-                        'can_create' => isset($request->can_create[$permissionId]) ? 1 : 0,
-                        'can_edit' => isset($request->can_edit[$permissionId]) ? 1 : 0,
-                        'can_delete' => isset($request->can_delete[$permissionId]) ? 1 : 0,
-                    ]);
-                }
                 return response()->json([
                     'success' => true,
                     'title' => 'Saved Successfully!',
@@ -104,6 +91,74 @@ class RoleController extends Controller
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
                 'text' => 'An error occurred while adding the role. Please try again later.',
+            ], 500);
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Request $request)
+    {
+        try {
+            $role = Role::query()->findOrFail(Crypt::decryptString($request->input('id')));
+
+            $permissions = $role->permissions->pluck('name');
+
+            return response()->json([
+                'success' => true,
+                'role' => $role->name,
+                'description' => $role->description,
+                'permissions' => $permissions,
+                'status' => $role->is_active,
+                'created' => $role->created_at->format('D, F d, Y | h:i:s A'),
+                'updated' => $role->updated_at->format('D, F d, Y | h:i:s A'),
+            ]);
+        } catch (Throwable) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Oops! Something went wrong.',
+                'message' => 'An error occurred while fetching the role.',
+            ], 500);
+        }
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Request $request)
+    {
+        try {
+            $role = Role::query()->findOrFail(Crypt::decryptString($request->input('id')));
+
+            $permissions = DB::table('role_has_permissions')
+                ->join('permissions', 'role_has_permissions.permission_id', '=', 'permissions.id')
+                ->where('role_has_permissions.role_id', $role->id)
+                ->select('permissions.id', 'permissions.name', 'role_has_permissions.can_view', 'role_has_permissions.can_create', 'role_has_permissions.can_edit', 'role_has_permissions.can_delete')
+                ->get()
+                ->map(function ($permission) {
+                    return [
+                        'id' => $permission->id,
+                        'name' => $permission->name,
+                        'can_view' => $permission->can_view,
+                        'can_create' => $permission->can_create,
+                        'can_edit' => $permission->can_edit,
+                        'can_delete' => $permission->can_delete,
+                    ];
+                });
+
+            return response()->json([
+                'success' => true,
+                'id' => $request->input('id'),
+                'role' => $role->name,
+                'description' => $role->description,
+                'permissions' => $permissions,
+            ]);
+        } catch (Throwable) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Oops! Something went wrong.',
+                'message' => 'An error occurred while fetching the role.',
             ], 500);
         }
     }
@@ -205,87 +260,6 @@ class RoleController extends Controller
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
                 'text' => 'An error occurred while updating the role.',
-            ], 500);
-        }
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Request $request)
-    {
-        try {
-            $role = Role::query()->findOrFail(Crypt::decryptString($request->input('id')));
-
-            $permissions = DB::table('role_has_permissions')
-                ->join('permissions', 'role_has_permissions.permission_id', '=', 'permissions.id')
-                ->where('role_has_permissions.role_id', $role->id)
-                ->select('permissions.name', 'role_has_permissions.can_view', 'role_has_permissions.can_create', 'role_has_permissions.can_edit', 'role_has_permissions.can_delete')
-                ->get()
-                ->map(function ($permission) {
-                    return [
-                        'name' => $permission->name,
-                        'can_view' => $permission->can_view,
-                        'can_create' => $permission->can_create,
-                        'can_edit' => $permission->can_edit,
-                        'can_delete' => $permission->can_delete,
-                    ];
-                });
-
-            return response()->json([
-                'success' => true,
-                'role' => $role->name,
-                'description' => $role->description,
-                'permissions' => $permissions,
-                'status' => $role->is_active,
-                'created' => $role->created_at->format('D, F d, Y | h:i:s A'),
-                'updated' => $role->updated_at->format('D, F d, Y | h:i:s A'),
-            ]);
-        } catch (Throwable) {
-            return response()->json([
-                'success' => false,
-                'title' => 'Oops! Something went wrong.',
-                'message' => 'An error occurred while fetching the role.',
-            ], 500);
-        }
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Request $request)
-    {
-        try {
-            $role = Role::query()->findOrFail(Crypt::decryptString($request->input('id')));
-
-            $permissions = DB::table('role_has_permissions')
-                ->join('permissions', 'role_has_permissions.permission_id', '=', 'permissions.id')
-                ->where('role_has_permissions.role_id', $role->id)
-                ->select('permissions.id', 'permissions.name', 'role_has_permissions.can_view', 'role_has_permissions.can_create', 'role_has_permissions.can_edit', 'role_has_permissions.can_delete')
-                ->get()
-                ->map(function ($permission) {
-                    return [
-                        'id' => $permission->id,
-                        'name' => $permission->name,
-                        'can_view' => $permission->can_view,
-                        'can_create' => $permission->can_create,
-                        'can_edit' => $permission->can_edit,
-                        'can_delete' => $permission->can_delete,
-                    ];
-                });
-
-            return response()->json([
-                'success' => true,
-                'id' => $request->input('id'),
-                'role' => $role->name,
-                'description' => $role->description,
-                'permissions' => $permissions,
-            ]);
-        } catch (Throwable) {
-            return response()->json([
-                'success' => false,
-                'title' => 'Oops! Something went wrong.',
-                'message' => 'An error occurred while fetching the role.',
             ], 500);
         }
     }

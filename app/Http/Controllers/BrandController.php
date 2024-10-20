@@ -168,6 +168,31 @@ class BrandController extends Controller
     }
 
     /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Request $request)
+    {
+        try {
+            $ids = array_map(fn($id) => Crypt::decryptString($id), (array)$request->input('id'));
+
+            Brand::query()->whereIn('id', $ids)->update(['is_active' => 0]);
+            Brand::destroy($ids);
+
+            return response()->json([
+                'success' => true,
+                'title' => 'Deleted Successfully!',
+                'text' => 'The brand has been deleted and can be restored from the bin.',
+            ]);
+        } catch (Throwable) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Oops! Something went wrong.',
+                'message' => 'An error occurred while deleting the brand.',
+            ], 500);
+        }
+    }
+
+    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request)
@@ -222,31 +247,6 @@ class BrandController extends Controller
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
                 'text' => 'An error occurred while updating the brand.',
-            ], 500);
-        }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Request $request)
-    {
-        try {
-            $ids = array_map(fn($id) => Crypt::decryptString($id), (array)$request->input('id'));
-
-            Brand::query()->whereIn('id', $ids)->update(['is_active' => 0]);
-            Brand::destroy($ids);
-
-            return response()->json([
-                'success' => true,
-                'title' => 'Deleted Successfully!',
-                'text' => 'The brand has been deleted and can be restored from the bin.',
-            ]);
-        } catch (Throwable) {
-            return response()->json([
-                'success' => false,
-                'title' => 'Oops! Something went wrong.',
-                'message' => 'An error occurred while deleting the brand.',
             ], 500);
         }
     }

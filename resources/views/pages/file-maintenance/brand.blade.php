@@ -133,7 +133,7 @@
             <!-- Datatable Filter Dropdown -->
             <div class="dropdown">
               <button class="btn btn-white btn-sm w-100" data-bs-toggle="dropdown" type="button">
-                <i class="bi-filter me-1"></i> Filter<span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="brandFilterCount"></span>
+                <i class="bi-filter me-1"></i> Filter <span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="brandFilterCount"></span>
               </button>
 
               <div class="dropdown-menu dropdown-menu-sm-end dropdown-card card-dropdown-filter-centered w-100" style="min-width: 22rem;">
@@ -287,7 +287,7 @@
                                 <i class="bi {{ $brand->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
                                 {{ $brand->is_active ? 'Set to Inactive' : 'Set to Active' }}
                               </button>
-                              @can('delete brand maintenance')
+                              @can('delete brad maintenance')
                                 <div class="dropdown-divider"></div>
                               @endcan
                             @endcan
@@ -346,7 +346,7 @@
   </main>
 @endsection
 
-@section('sub-content')
+@section('sec-content')
   <x-file-maintenance.add-brand :categories="$categories" />
   <x-file-maintenance.view-brand />
   <x-file-maintenance.edit-brand :categories="$categories" />
@@ -461,7 +461,7 @@
 
         // INITIALIZATION OF BOOTSTRAP DROPDOWN
         // =======================================================
-        HSBsDropdown.init()
+        HSBsDropdown.init();
 
 
         // INITIALIZATION OF SELECT

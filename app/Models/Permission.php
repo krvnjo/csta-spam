@@ -14,6 +14,7 @@ class Permission extends Model
 
     protected $fillable = [
         'name',
+        'group_name',
         'is_active'
     ];
 

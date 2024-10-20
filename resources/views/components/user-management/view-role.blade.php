@@ -1,5 +1,5 @@
 <!-- View Role Modal -->
-<div class="modal fade" id="modalViewRole" role="dialog" tabindex="-1">
+<div class="modal fade" id="modalViewRole" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content">
       <!-- Header -->

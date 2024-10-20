@@ -16,7 +16,6 @@ $(document).ready(function () {
       url: '/user-management/users',
       method: 'POST',
       data: addFormData,
-      dataType: 'json',
       processData: false,
       contentType: false,
       success: function (response) {
@@ -61,6 +60,10 @@ $(document).ready(function () {
           if (response.errors.user) {
             $('#txtAddUsername').addClass('is-invalid');
             $('#valAddUsername').text(response.errors.user[0]);
+          }
+
+          if (response.errors.image) {
+            $('#valAddUserImage').removeClass('d-none').text(response.errors.image[0]);
           }
         }
       },
@@ -130,8 +133,6 @@ $(document).ready(function () {
       method: 'GET',
       data: { id: userId },
       success: function (response) {
-        userEditModal.modal('toggle');
-
         $('#txtEditUserId').val(response.id);
         $('#txtEditUsername').val(response.user);
         $('#txtEditUserFname').val(response.fname);
@@ -142,6 +143,8 @@ $(document).ready(function () {
         $('#txtEditUserEmail').val(response.email);
         $('#txtEditUserPhone').val(response.phone);
         $('#imgEditDisplayUserImage').attr('src', response.image);
+
+        userEditModal.modal('toggle');
       },
       error: function (response) {
         showErrorAlert(response.responseJSON, userEditModal, userEditForm);
@@ -204,6 +207,10 @@ $(document).ready(function () {
           if (response.errors.phone) {
             $('#txtEditUserPhone').addClass('is-invalid');
             $('#valEditUserPhone').text(response.errors.phone[0]);
+          }
+
+          if (response.errors.image) {
+            $('#valEditUserImage').removeClass('d-none').text(response.errors.image[0]);
           }
         }
       },

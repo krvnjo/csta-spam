@@ -19,8 +19,8 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $permissionGroups = [
-            'Item Inventory Management' => [
-                'item inventory management',
+            'Inventory Management' => [
+                'item management',
             ],
             'User Management' => [
                 'user management',
@@ -35,9 +35,11 @@ class UserSeeder extends Seeder
                 'status maintenance',
                 'subcategory maintenance',
             ],
-            'Audit History' => ['audit history'],
-            'System Settings' => ['system settings'],
-            'Recycle Bin' => ['recycle bin'],
+            'Administrative Permissions' => [
+                'audit history',
+                'system settings',
+                'recycle bin'
+            ],
         ];
 
         $actions = ['view', 'create', 'update', 'delete'];
@@ -45,11 +47,11 @@ class UserSeeder extends Seeder
         foreach ($permissionGroups as $group => $basePermissions) {
             foreach ($basePermissions as $base) {
                 foreach ($actions as $action) {
-                    if (($group === 'System Settings' || $group === 'Recycle Bin') && !in_array($action, ['view', 'update'])) {
+                    if (($group === 'Administrative Permissions') && !in_array($action, ['view', 'update'])) {
                         continue;
                     }
 
-                    if ($group === 'Audit History' && $action !== 'view') {
+                    if ($group === 'audit history' && $action !== 'view') {
                         continue;
                     }
 
@@ -60,6 +62,7 @@ class UserSeeder extends Seeder
                 }
             }
         }
+
 
         $roles = [
             'Administrator' => 'Oversees the system with full access to all settings.',

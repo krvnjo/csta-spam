@@ -346,7 +346,7 @@
   </main>
 @endsection
 
-@section('sub-content')
+@section('sec-content')
   <x-file-maintenance.add-category :subcategories="$subcategories" />
   <x-file-maintenance.view-category />
   <x-file-maintenance.edit-category :subcategories="$subcategories" />

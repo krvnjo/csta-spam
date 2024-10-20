@@ -26,13 +26,13 @@ class User extends Authenticatable
         'is_active'
     ];
 
-    public function role(): HasOne
-    {
-        return $this->hasOne(Role::class, 'id', 'role_id');
-    }
-
     public function department(): HasOne
     {
         return $this->hasOne(Department::class, 'id', 'dept_id');
+    }
+
+    public function role(): HasOne
+    {
+        return $this->hasOne(Role::class, 'id', 'role_id');
     }
 }

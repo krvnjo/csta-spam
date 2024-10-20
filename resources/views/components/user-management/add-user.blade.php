@@ -1,11 +1,11 @@
 <!-- Add User Modal -->
-<div class="modal fade" id="modalAddUser" data-bs-backdrop="static" role="dialog" tabindex="-1">
+<div class="modal fade" id="modalAddUser" data-bs-backdrop="static" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
     <div class="modal-content">
       <!-- Header -->
       <div class="modal-header">
-        <h5 class="modal-title" id="modalAddUserLabel">Add User</h5>
-        <button class="btn-close" data-bs-dismiss="modal" type="button" aria-label="Close"></button>
+        <h5 class="modal-title">Add User</h5>
+        <button class="btn-close" data-bs-dismiss="modal" type="button"></button>
       </div>
       <!-- End Header -->
 
@@ -17,9 +17,8 @@
           <div class="profile-cover" style="height: 8rem;">
             <div class="profile-cover-img-wrapper" style="height: 8rem;">
               <img class="profile-cover-img" src="{{ Vite::asset('resources/img/1920x400/img1.jpg') }}" alt="Profile Cover" style="height: 8rem;">
-
               <div class="profile-cover-content profile-cover-uploader p-3">
-                <button class="js-file-attach-reset-img btn btn-sm btn-danger" id="btnRemoveUserImage" type="button">
+                <button class="js-file-attach-reset-img btn btn-sm btn-danger avatar-img-remove" id="btnRemoveUserImage" type="button">
                   <i class="bi-trash-fill"></i> Remove Avatar
                 </button>
               </div>
@@ -28,45 +27,28 @@
           <!-- End Profile Cover -->
 
           <!-- User Image -->
-          <label class="avatar avatar-xxl avatar-circle avatar-uploader profile-cover-avatar mb-5" for="imgAddImage">
-            <img class="avatar-img" id="imgDisplayUserImage" src="{{ Vite::asset('resources/img/uploads/user-images/default.jpg') }}"
-              alt="Image Description">
-
-            <input class="js-file-attach avatar-uploader-input" id="imgAddImage" name="image"
+          <label class="avatar avatar-xxl avatar-circle avatar-uploader profile-cover-avatar" for="imgAddImage">
+            <img class="avatar-img" id="imgDisplayUserImage" src="{{ asset('storage/img/user-images/default.jpg') }}" alt="User Image">
+            <input class="js-file-attach avatar-uploader-input avatar-img-user" id="imgAddImage" name="image"
               data-hs-file-attach-options='{
-                 "textTarget": "#imgDisplayUserImage",
-                 "mode": "image",
-                 "targetAttr": "src",
-                 "resetTarget": "#btnRemoveUserImage",
-                 "resetImg": "{{ Vite::asset('resources/img/uploads/user-images/default.jpg') }}",
-                 "allowTypes": [".png", ".jpeg", ".jpg"]
+                "textTarget": "#imgDisplayUserImage",
+                "mode": "image",
+                "targetAttr": "src",
+                "resetTarget": "#btnRemoveUserImage",
+                "resetImg": "{{ asset('storage/img/user-images/default.jpg') }}",
+                "allowTypes": [".jpg", ".jpeg", ".png"]
               }'
-              type="file" accept=".jpg, .png, .jpeg">
-
-            <span class="avatar-uploader-trigger">
-              <i class="bi-pencil-fill avatar-uploader-icon shadow-sm"></i>
-            </span>
+              type="file" accept=".jpg, .jpeg, .png">
+            <span class="avatar-uploader-trigger"><i class="bi-pencil-fill avatar-uploader-icon shadow-sm"></i></span>
           </label>
+          <div class="alert alert-soft-danger avatar-img-val d-none" id="valAddUserImage"></div>
           <!-- End User Image -->
 
-          <!-- Username -->
-          <div class="row mb-4">
-            <label class="col-sm-3 col-form-label form-label" for="txtAddUsername">Username</label>
-            <div class="col-sm-9">
-              <input class="js-input-mask form-control" id="txtAddUsername" name="user"
-                data-hs-mask-options='{
-                    "mask": "00-00000"
-                  }' type="text" placeholder="##-#####">
-              <span class="invalid-feedback" id="valAddUsername"></span>
-            </div>
-          </div>
-          <!-- End Username -->
-
           <!-- First Name -->
-          <div class="row mb-4">
+          <div class="row mb-4 mt-5">
             <label class="col-sm-3 col-form-label form-label" for="txtAddUserFname">First Name</label>
             <div class="col-sm-9">
-              <input class="form-control" id="txtAddUserFname" name="fname" type="text" placeholder="Enter First Name">
+              <input class="form-control" id="txtAddUserFname" name="fname" type="text" placeholder="Enter first name">
               <span class="invalid-feedback" id="valAddUserFname"></span>
             </div>
           </div>
@@ -74,10 +56,9 @@
 
           <!-- Middle Name -->
           <div class="row mb-4">
-            <label class="col-sm-3 col-form-label form-label" for="txtAddUserMname">Middle Name <span
-                class="form-label-secondary">(Optional)</span></label>
+            <label class="col-sm-3 col-form-label form-label" for="txtAddUserMname">Middle Name <span class="form-label-secondary">(Optional)</span></label>
             <div class="col-sm-9">
-              <input class="form-control" id="txtAddUserMname" name="mname" type="text" placeholder="Enter Middle Name">
+              <input class="form-control" id="txtAddUserMname" name="mname" type="text" placeholder="Enter middle name">
               <span class="invalid-feedback" id="valAddUserMname"></span>
             </div>
           </div>
@@ -87,7 +68,7 @@
           <div class="row mb-4">
             <label class="col-sm-3 col-form-label form-label" for="txtAddUserLname">Last Name</label>
             <div class="col-sm-9">
-              <input class="form-control" id="txtAddUserLname" name="lname" type="text" placeholder="Enter Last Name">
+              <input class="form-control" id="txtAddUserLname" name="lname" type="text" placeholder="Enter last name">
               <span class="invalid-feedback" id="valAddUserLname"></span>
             </div>
           </div>
@@ -146,21 +127,32 @@
           <!-- End Email -->
 
           <!-- Phone -->
-          <div class="row">
-            <label class="col-sm-3 col-form-label form-label" for="txtAddUserPhone">Phone <span
-                class="form-label-secondary">(Optional)</span></label>
+          <div class="row mb-4">
+            <label class="col-sm-3 col-form-label form-label" for="txtAddUserPhone">Phone <span class="form-label-secondary">(Optional)</span></label>
             <div class="col-sm-9">
               <div class="input-group">
-                <input class="js-input-mask form-control" id="txtAddUserPhone" name="phone"
-                  data-hs-mask-options='{
+                <input class="js-input-mask form-control" id="txtAddUserPhone" name="phone" data-hs-mask-options='{
                     "mask": "0900-000-0000"
-                  }' type="text"
-                  placeholder="####-###-####">
+                  }'
+                  type="text" placeholder="####-###-####">
                 <span class="invalid-feedback" id="valAddUserPhone"></span>
               </div>
             </div>
           </div>
           <!-- End Phone -->
+
+          <!-- Username -->
+          <div class="row">
+            <label class="col-sm-3 col-form-label form-label" for="txtAddUsername">Username</label>
+            <div class="col-sm-9">
+              <input class="js-input-mask form-control" id="txtAddUsername" name="user" data-hs-mask-options='{
+                  "mask": "00-00000"
+                }' type="text"
+                placeholder="##-#####">
+              <span class="invalid-feedback" id="valAddUsername"></span>
+            </div>
+          </div>
+          <!-- End Username -->
 
           {{--          <!-- Password --> --}}
           {{--          <div class="row mb-4"> --}}

@@ -59,8 +59,8 @@
 
                   <div class="col-3 text-end">
                     <div class="dropdown">
-                      <button class="btn btn-ghost-secondary btn-icon btn-sm rounded-circle" id="roleDropdown{{ $index + 1 }}"
-                        data-bs-toggle="dropdown" type="button"><i class="bi-three-dots-vertical"></i>
+                      <button class="btn btn-ghost-secondary btn-icon btn-sm rounded-circle" id="roleDropdown{{ $index + 1 }}" data-bs-toggle="dropdown" type="button"><i
+                          class="bi-three-dots-vertical"></i>
                       </button>
 
                       <div class="dropdown-menu dropdown-menu-sm dropdown-menu-end">
@@ -98,22 +98,6 @@
                   @foreach ($permissionsToShow as $permission)
                     <li class="list-pointer-item">
                       {{ $permission->name }}:
-                      @php
-                        $permissionsText = [];
-                        if ($permission->pivot->can_view) {
-                            $permissionsText[] = 'View';
-                        }
-                        if ($permission->pivot->can_create) {
-                            $permissionsText[] = 'Create';
-                        }
-                        if ($permission->pivot->can_edit) {
-                            $permissionsText[] = 'Edit';
-                        }
-                        if ($permission->pivot->can_delete) {
-                            $permissionsText[] = 'Delete';
-                        }
-                      @endphp
-                      {{ implode(', ', $permissionsText) }}
                     </li>
                   @endforeach
 
@@ -190,7 +174,7 @@
   </main>
 @endsection
 
-@section('sub-content')
+@section('sec-content')
   <x-user-management.add-role :permissions="$permissions" />
   <x-user-management.view-role />
   <x-user-management.edit-role :permissions="$permissions" />

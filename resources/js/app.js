@@ -49,6 +49,10 @@ $(document).ready(function () {
     $(this).siblings('.invalid-feedback').html('');
     $(this).next('.ts-wrapper').removeClass('is-invalid');
   });
+
+  $('.avatar-img-user, .avatar-img-remove').on('change click', function () {
+    $('.avatar-img-val').addClass('d-none').text('');
+  });
   // ============ End Remove invalid validation on keydown JS ============ //
 });
 
@@ -98,7 +102,9 @@ window.showErrorAlert = showErrorAlert;
 // Unsaved Changes Alert
 function handleUnsavedChanges(modal, form, saveButton) {
   let initialFormValues = {};
+  let initialImageSrc = '';
   let unsavedChanges = false;
+  let timeout; // For throttling
 
   function getFormValues() {
     let values = {};
@@ -122,6 +128,11 @@ function handleUnsavedChanges(modal, form, saveButton) {
 
   function hasChanges() {
     const currentFormValues = getFormValues();
+    const currentImageSrc = form.find('label .avatar-img').attr('src');
+
+    if (currentImageSrc !== initialImageSrc) {
+      return true;
+    }
 
     for (let key in initialFormValues) {
       const initialValue = initialFormValues[key];
@@ -129,15 +140,12 @@ function handleUnsavedChanges(modal, form, saveButton) {
 
       if (Array.isArray(initialValue) && Array.isArray(currentValue)) {
         if (!arraysEqual(initialValue, currentValue)) {
-          saveButton.prop('disabled', false);
           return true;
         }
       } else if (initialValue !== currentValue) {
-        saveButton.prop('disabled', false);
         return true;
       }
     }
-    saveButton.prop('disabled', true);
     return false;
   }
 
@@ -151,16 +159,31 @@ function handleUnsavedChanges(modal, form, saveButton) {
     return true;
   }
 
-  modal.on('show.bs.modal', function () {
-    setTimeout(() => {
-      initialFormValues = getFormValues();
-      saveButton.prop('disabled', true);
-      unsavedChanges = false;
+  $('.avatar-img-remove').on('click', function () {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      const fileInput = form.find('input[type="file"]');
+      fileInput.trigger('change');
+      unsavedChanges = initialImageSrc !== 'http://127.0.0.1:8000/storage/img/user-images/default.jpg';
+      saveButton.prop('disabled', !unsavedChanges);
     }, 100);
   });
 
   form.on('input change', ':input', function () {
-    unsavedChanges = hasChanges();
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      unsavedChanges = hasChanges();
+      saveButton.prop('disabled', !unsavedChanges);
+    }, 100);
+  });
+
+  modal.on('show.bs.modal', function () {
+    setTimeout(() => {
+      initialFormValues = getFormValues();
+      initialImageSrc = form.find('label .avatar-img').attr('src');
+      saveButton.prop('disabled', true);
+      unsavedChanges = false;
+    }, 100);
   });
 
   modal.on('hide.bs.modal', function (e) {
@@ -225,6 +248,10 @@ function cleanModalForm(modal, form, flag = 'add') {
         dropzoneInstance.removeAllFiles(true);
       }
     });
+
+    const defaultImageSrc = 'http://127.0.0.1:8000/storage/img/user-images/default.jpg';
+    form.find('.avatar-img').attr('src', defaultImageSrc);
+    $('.avatar-img-val').addClass('d-none').text('');
   }
   modal.hide();
 }

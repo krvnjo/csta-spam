@@ -64,15 +64,12 @@ $(document).ready(function () {
         let permissionsHtml = '';
         response.permissions.forEach(function (permission) {
           const actions = [];
-
           if (permission.can_view) actions.push('View');
           if (permission.can_create) actions.push('Create');
           if (permission.can_edit) actions.push('Edit');
           if (permission.can_delete) actions.push('Delete');
-
           permissionsHtml += `<li class="list-pointer-item">${permission.name}: ${actions.join(', ')}</li>`;
         });
-
         $('#lblViewPermission').html(`<ul class="list-pointer list-pointer-primary">${permissionsHtml}</ul>`);
 
         const roleStatus =

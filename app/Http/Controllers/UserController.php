@@ -5,12 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Department;
 use App\Models\Role;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Vite;
 use Illuminate\Validation\Rule;
 use Throwable;
 
@@ -21,9 +20,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::with('roles', 'department')->whereNull('deleted_at')->get();
-        $roles = Role::query()->whereNull('deleted_at')->where('is_active', 1)->orderBy('name')->pluck('name', 'id');
-        $depts = Department::query()->whereNull('deleted_at')->where('is_active', 1)->orderBy('name')->pluck('name', 'id');
+        $users = User::with('role', 'department')->whereNull('deleted_at')->orderBy('lname')->get();
+        $roles = Role::with('users')->whereNull('deleted_at')->where('is_active', 1)->orderBy('name')->pluck('name', 'id');
+        $depts = Department::with('users')->whereNull('deleted_at')->where('is_active', 1)->orderBy('name')->pluck('name', 'id');
 
         $totalUsers = $users->count();
 
@@ -70,6 +69,10 @@ class UserController extends Controller
 
             'phone.regex' => 'The phone number must follow the format: 09##-###-####.',
             'phone.unique' => 'This phone number is already taken!',
+
+            'image.image' => 'The file must be an image.',
+            'image.mimes' => 'Only jpeg, png, jpg formats are allowed.',
+            'image.max' => 'Image size must not exceed 2MB.',
         ];
 
         try {
@@ -113,6 +116,12 @@ class UserController extends Controller
                     'regex:/^(09)\d{2}-\d{3}-\d{4}$/',
                     'unique:users,phone_num'
                 ],
+                'image' => [
+                    'nullable',
+                    'image',
+                    'mimes:jpg,jpeg,png',
+                    'max:2048'
+                ],
             ], $userValidationMessages);
 
             if ($userValidator->fails()) {
@@ -122,32 +131,34 @@ class UserController extends Controller
                 ]);
             } else {
                 $user = User::query()->create([
+                    'user_name' => trim($request->input('user')),
+                    'pass_hash' => bcrypt('Spampass123!'),
                     'fname' => ucwords(trim($request->input('fname'))),
                     'mname' => ucwords(trim($request->input('mname'))),
                     'lname' => ucwords(trim($request->input('lname'))),
+                    'role_id' => $request->input('role'),
                     'dept_id' => $request->input('dept'),
                     'email' => trim($request->input('email')),
                     'phone_num' => trim($request->input('phone')),
-                    'user_name' => trim($request->input('user')),
-                    'pass_hash' => bcrypt('Spampass123!'),
-                    'user_image' => 'default.jpg',
                     'is_active' => 1,
                 ]);
-                $user->assignRole(Role::query()->find($request->input('role')));
 
                 if ($request->hasFile('image')) {
-                    $image = $request->file('image');
-                    $filename = time() . "-" . $user->id . '.' . $image->getClientOriginalExtension();
-                    $folderPath = resource_path('img/uploads/user-images/');
-
-                    if (!File::isDirectory($folderPath)) {
-                        File::makeDirectory($folderPath, 0755, true, true);
+                    if ($user->user_image && $user->user_image !== 'default.jpg' && Storage::exists('public/img/user-images/' . $user->user_image)) {
+                        Storage::delete('public/img/user-images/' . $user->user_image);
                     }
+                    $image = $request->file('image');
+                    $filename = time() . "_" . uniqid() . '.' . $image->getClientOriginalExtension();
 
-                    $image->move($folderPath, $filename);
+                    $image->storeAs('public/img/user-images', $filename);
                     $user->user_image = $filename;
-                    $user->save();
+                } else {
+                    if ($request->input('avatar') === 'default.jpg' && $user->user_image !== 'default.jpg') {
+                        Storage::delete('public/img/user-images/' . $user->user_image);
+                        $user->user_image = 'default.jpg';
+                    }
                 }
+                $user->save();
 
                 return response()->json([
                     'success' => true,
@@ -178,12 +189,12 @@ class UserController extends Controller
                 'fname' => $user->fname,
                 'mname' => $user->mname ? $user->mname : 'N/A',
                 'lname' => $user->lname,
-                'role' => $user->roles()->first()->name,
+                'role' => $user->role->name,
                 'dept' => $user->department->name,
                 'email' => $user->email,
                 'phone' => $user->phone_num ? $user->phone_num : 'N/A',
                 'login' => $user->last_login ? Carbon::parse($user->last_login)->format('D, F d, Y | h:i:s A') : 'Never',
-                'image' => Vite::asset('resources/img/uploads/user-images/' . $user->user_image),
+                'image' => asset('storage/img/user-images/' . $user->user_image),
                 'status' => $user->is_active,
                 'created' => $user->created_at->format('D, F d, Y | h:i:s A'),
                 'updated' => $user->updated_at->format('D, F d, Y | h:i:s A'),
@@ -212,11 +223,11 @@ class UserController extends Controller
                 'fname' => $user->fname,
                 'mname' => $user->mname,
                 'lname' => $user->lname,
-                'role' => $user->roles()->first()->id,
+                'role' => $user->role_id,
                 'dept' => $user->dept_id,
                 'email' => $user->email,
                 'phone' => $user->phone_num,
-                'image' => Vite::asset('resources/img/uploads/user-images/' . $user->user_image),
+                'image' => asset('storage/img/user-images/' . $user->user_image),
             ]);
         } catch (Throwable) {
             return response()->json([
@@ -265,6 +276,10 @@ class UserController extends Controller
 
                     'phone.regex' => 'The phone number must follow the format: 09##-###-####.',
                     'phone.unique' => 'This phone number is already taken!',
+
+                    'image.image' => 'The file must be an image.',
+                    'image.mimes' => 'Only jpeg, png, jpg formats are allowed.',
+                    'image.max' => 'Image size must not exceed 2MB.',
                 ];
 
                 $userValidator = Validator::make($request->all(), [
@@ -307,6 +322,12 @@ class UserController extends Controller
                         'regex:/^(09)\d{2}-\d{3}-\d{4}$/',
                         Rule::unique('users', 'phone_num')->ignore($user->id)
                     ],
+                    'image' => [
+                        'nullable',
+                        'image',
+                        'mimes:jpg,jpeg,png',
+                        'max:2048'
+                    ],
                 ], $userValidationMessages);
 
                 if ($userValidator->fails()) {
@@ -315,44 +336,32 @@ class UserController extends Controller
                         'errors' => $userValidator->errors(),
                     ]);
                 }
+
                 $user->user_name = trim($request->input('user'));
                 $user->fname = ucwords(trim($request->input('fname')));
                 $user->mname = ucwords(trim($request->input('mname')));
                 $user->lname = ucwords(trim($request->input('lname')));
+                $user->role_id = $request->input('role');
                 $user->dept_id = $request->input('dept');
                 $user->email = trim($request->input('email'));
                 $user->phone_num = trim($request->input('phone'));
-                $user->syncRoles(Role::query()->find($request->input('role')));
 
                 if ($request->hasFile('image')) {
-                    if ($user->user_image && $user->user_image !== 'default.jpg') {
-                        $oldImagePath = resource_path('img/uploads/user-images/' . $user->user_image);
-                        if (File::exists($oldImagePath)) {
-                            File::delete($oldImagePath);
-                        }
+                    if ($user->user_image && $user->user_image !== 'default.jpg' && Storage::exists('public/img/user-images/' . $user->user_image)) {
+                        Storage::delete('public/img/user-images/' . $user->user_image);
                     }
-
                     $image = $request->file('image');
-                    $filename = time() . "-" . $user->id . '.' . $image->getClientOriginalExtension();
-                    $folderPath = resource_path('img/uploads/user-images/');
+                    $filename = time() . "_" . uniqid() . '.' . $image->getClientOriginalExtension();
 
-                    if (!File::isDirectory($folderPath)) {
-                        File::makeDirectory($folderPath, 0755, true, true);
-                    }
-
-                    $image->move($folderPath, $filename);
+                    $image->storeAs('public/img/user-images', $filename);
                     $user->user_image = $filename;
                 } else {
                     if ($request->input('avatar') === 'default.jpg' && $user->user_image !== 'default.jpg') {
-                        $oldImagePath = resource_path('img/uploads/user-images/' . $user->user_image);
-                        if (File::exists($oldImagePath)) {
-                            File::delete($oldImagePath);
-                        }
+                        Storage::delete('public/img/user-images/' . $user->user_image);
                         $user->user_image = 'default.jpg';
                     }
                 }
             }
-            $user->updated_at = now();
             $user->save();
 
             return response()->json([

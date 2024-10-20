@@ -38,8 +38,7 @@
 
               <!-- User Image -->
               <label class="avatar avatar-xxl avatar-circle avatar-uploader profile-cover-avatar" for="imgAccountImage">
-                <img class="avatar-img" id="imgDisplayAccountImage" src="{{ asset('storage/img/user-images/' . Auth::user()->user_image) }}"
-                  alt="User Image">
+                <img class="avatar-img" id="imgDisplayAccountImage" src="{{ asset('storage/img/user-images/' . Auth::user()->user_image) }}" alt="User Image">
 
                 <input class="js-file-attach avatar-uploader-input" id="imgAccountImage" name="image"
                   data-hs-file-attach-options='{
@@ -47,7 +46,7 @@
                      "mode": "image",
                      "targetAttr": "src",
                      "resetTarget": "#btnRemoveAccountImage",
-                     "resetImg": "{{ Vite::asset('resources/img/uploads/user-images/default.jpg') }}",
+                     "resetImg": "{{ asset('storage/img/user-images/default.jpg') }}",
                      "allowTypes": [".png", ".jpeg", ".jpg"]
                   }'
                   type="file" accept=".jpg, .png, .jpeg">
@@ -64,7 +63,7 @@
             <ul class="list-inline list-px-2">
               <li class="list-inline-item">
                 <i class="bi-briefcase me-1"></i>
-                <span>{{ Auth::user()->roles()->first()->name }}</span>
+                <span>{{ Auth::user()->role->name }}</span>
               </li>
 
               <li class="list-inline-item">
@@ -87,7 +86,7 @@
                   <ul class="list-unstyled list-py-2 text-dark mb-0">
                     <li class="pb-0"><span class="card-subtitle">About</span></li>
                     <li><i class="bi-person dropdown-item-icon"></i> {{ Auth::user()->fname . ' ' . Auth::user()->lname }}</li>
-                    <li><i class="bi-briefcase dropdown-item-icon"></i> {{ Auth::user()->roles()->first()->name }}</li>
+                    <li><i class="bi-briefcase dropdown-item-icon"></i> {{ Auth::user()->role->name }}</li>
                     <li><i class="bi-building dropdown-item-icon"></i> {{ Auth::user()->department->name }}</li>
 
                     <li class="pt-4 pb-0"><span class="card-subtitle">Contacts</span></li>
@@ -130,8 +129,7 @@
                     <div class="row mb-4">
                       <label class="col-sm-3 col-form-label form-label" for="txtAccountEmail">Email</label>
                       <div class="col-sm-9">
-                        <input class="form-control" id="txtAccountEmail" name="email" type="email" value="{{ Auth::user()->email }}"
-                          placeholder="Enter your email address">
+                        <input class="form-control" id="txtAccountEmail" name="email" type="email" value="{{ Auth::user()->email }}" placeholder="Enter your email address">
                         <span class="invalid-feedback" id="valAccountEmail"></span>
                       </div>
                     </div>
@@ -144,8 +142,8 @@
                         <input class="js-input-mask form-control" id="txtAccountPhone" name="phone"
                           data-hs-mask-options='{
                           "mask": "0900-000-0000"
-                        }' type="text"
-                          value="{{ Auth::user()->phone_num }}" placeholder="Enter your phone number">
+                        }' type="text" value="{{ Auth::user()->phone_num }}"
+                          placeholder="Enter your phone number">
                         <span class="invalid-feedback" id="valAccountPhone"></span>
                       </div>
                     </div>

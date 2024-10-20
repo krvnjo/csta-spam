@@ -83,12 +83,8 @@ class AccountController extends Controller
 
                     $user->user_image = $filename;
                 } else {
-                    // Handle default image condition
                     if ($request->input('avatar') === 'default.jpg' && $user->user_image !== 'default.jpg') {
-                        // Delete the old image if it exists
                         Storage::delete('public/img/user-images/' . $user->user_image);
-
-                        // Set the image to 'default.jpg'
                         $user->user_image = 'default.jpg';
                     }
                 }

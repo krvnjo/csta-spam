@@ -24,11 +24,10 @@
               <label class="col col-form-label form-label" for="txtAddDescription">Description</label>
               <span class="col-form-label text-muted" id="maxLengthCountCharacters"></span>
             </div>
-            <textarea class="js-count-characters form-control" id="txtAddDescription" name="description"
-              data-hs-count-characters-options='{
+            <textarea class="js-count-characters form-control" id="txtAddDescription" name="description" data-hs-count-characters-options='{
                 "output": "#maxLengthCountCharacters"
-              }' style="resize: none;"
-              placeholder="Enter role description" rows="2" maxlength="120"></textarea>
+              }'
+              style="resize: none;" placeholder="Enter role description" rows="2" maxlength="120"></textarea>
             <span class="invalid-feedback" id="valAddDescription"></span>
           </div>
 
@@ -53,36 +52,55 @@
                 </tr>
               </thead>
 
+              @php
+                $groupedPermissions = $permissions->groupBy('group_name');
+              @endphp
+
               <tbody>
-                @foreach ($permissions as $index => $permission)
+                @foreach ($groupedPermissions as $groupName => $permissions)
                   <tr>
-                    <td class="d-none" data-permission-id="{{ $permission->id }}"></td>
-                    <td>{{ $permission->name }}</td>
-                    <td class="text-center">
-                      <div class="form-check form-check-inline">
-                        <input class="form-check-input cbx-view" id="cbxViewRole{{ $index }}" name="can_view[{{ $permission->id }}]"
-                          type="checkbox">
-                      </div>
-                    </td>
-                    <td class="text-center">
-                      <div class="form-check form-check-inline">
-                        <input class="form-check-input cbx-action" id="cbxCreateRole{{ $index }}" name="can_create[{{ $permission->id }}]"
-                          type="checkbox">
-                      </div>
-                    </td>
-                    <td class="text-center">
-                      <div class="form-check form-check-inline">
-                        <input class="form-check-input cbx-action" id="cbxEditRole{{ $index }}" name="can_edit[{{ $permission->id }}]"
-                          type="checkbox">
-                      </div>
-                    </td>
-                    <td class="text-center">
-                      <div class="form-check form-check-inline">
-                        <input class="form-check-input cbx-action" id="cbxDeleteRole{{ $index }}" name="can_delete[{{ $permission->id }}]"
-                          type="checkbox">
-                      </div>
-                    </td>
+                    <th colspan="5">{{ ucwords($groupName) }}</th>
                   </tr>
+
+                  @php
+                    $displayedBasePermissions = [];
+                  @endphp
+
+                  @foreach ($permissions as $permission)
+                    @php
+                      $basePermission = preg_replace('/^(view|create|update|delete)\s+/', '', $permission->name);
+                    @endphp
+
+                    @if (!in_array($basePermission, $displayedBasePermissions))
+                      <tr>
+                        <td>{{ ucwords($basePermission) }}</td>
+
+                        <td class="text-center">
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" id="cbxViewRole{{ $loop->parent->index }}-{{ $loop->index }}" name="can_view[{{ $permission->id }}]" type="checkbox">
+                          </div>
+                        </td>
+                        <td class="text-center">
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" id="cbxCreateRole{{ $loop->parent->index }}-{{ $loop->index }}" name="can_create[{{ $permission->id }}]" type="checkbox">
+                          </div>
+                        </td>
+                        <td class="text-center">
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" id="cbxEditRole{{ $loop->parent->index }}-{{ $loop->index }}" name="can_edit[{{ $permission->id }}]" type="checkbox">
+                          </div>
+                        </td>
+                        <td class="text-center">
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" id="cbxDeleteRole{{ $loop->parent->index }}-{{ $loop->index }}" name="can_delete[{{ $permission->id }}]" type="checkbox">
+                          </div>
+                        </td>
+                      </tr>
+                      @php
+                        $displayedBasePermissions[] = $basePermission;
+                      @endphp
+                    @endif
+                  @endforeach
                 @endforeach
               </tbody>
             </table>
