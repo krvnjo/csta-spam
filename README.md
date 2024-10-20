@@ -7,14 +7,13 @@ This capstone project is titled "SPAM: Systematized Property and Assets Manageme
 
 ## Main Features
 
+- Dashboard w/ Prescriptive Analytics
 - Item Inventory Management
-- Forms/Requisitions Builder
 - Borrowing and Reservation
 - Repair Management
-- Dashboard w/ Prescriptive Analytics
 - Reports Generation
 - User Management
-- File Settings & Maintenance
+- File Maintenance
 - Audit Trailing
 
 
@@ -22,24 +21,22 @@ This capstone project is titled "SPAM: Systematized Property and Assets Manageme
 
 **Frontend**
 - **Languages:** HTML, CSS, JavaScript
-- **CSS Framework:** [Bootstrap 5](https://getbootstrap.com/) (v5.2.2)
-- **JavaScript Library:** [jQuery](https://jquery.com/) (v3.6.0)
+- **CSS Framework:** Bootstrap 5 (v5.2)
+- **JavaScript Library:** jQuery (v3.6)
 
 **Backend**
-- **Framework:** [Laravel 11](https://laravel.com/) (v11.21.0)
-- **Language:** PHP (v8.2.12)
-- **Server:** [XAMPP](https://www.apachefriends.org/index.html)(v3.3.0) (includes [Apache](https://httpd.apache.org/) and [MySQL](https://www.mysql.com/) with [MariaDB](https://mariadb.org/) (v10.4.32))
-
-**DevOps**
-- **Version Control:** [Git](https://git-scm.com/) (v2.46.0)
+- **Framework:** Laravel 11 (v11)
+- **Language:** PHP (v8.2)
+- **Server:** XAMPP (v3.3) (includes Apache and MariaDB (v10.4.32))
+- **Version Control:** Git (v2.46)
 
 **Tools & Libraries**
-- **Package Managers:** [npm](https://www.npmjs.com/) (v10.8.1) and [Composer](https://getcomposer.org/) (v2.7.7)
-- **Code Editor:** [PHPStorm](https://www.jetbrains.com/phpstorm/) (v2024.2)
+- **Package Managers:** npm (v10.8) and Composer (v2.7.7)
+- **Code Editor:** PHPStorm (v2024.2)
 
 **Other Technologies**
-- **QR Code Generation:** [QRCode.js](https://github.com/davidshimjs/qrcodejs) / [Laravel QR Code](https://github.com/simple-qrcode)
-- **Hardware:** Thermal Printer, QR Code Scanner (optional)
+- **QR Code Generation:** QRCode.js / Laravel QR Code
+- **Hardware:** Thermal Printer and QR Code Scanner
 
 
 ## Clone the Repository/Run Locally
@@ -70,10 +67,10 @@ Generate a key
   php artisan key:generate
 ```
 
-Migrate the database
+Migrate and seed database
 
 ```bash
-  php artisan migrate
+  php artisan migrate && php artisan db:seed
 ```
 
 Run Vite
