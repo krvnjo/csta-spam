@@ -10,8 +10,11 @@ use App\Models\PropertyParent;
 use App\Models\Subcategory;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Throwable;
 
 class PropertyParentController extends Controller
@@ -21,14 +24,27 @@ class PropertyParentController extends Controller
      */
     public function index()
     {
-        $propertyParents = PropertyParent::with(['subcategory.category', 'brand'])->where('is_active', 1)->where('deleted_at', null)->get();
+        $propertyParents = PropertyParent::with(['subcategory', 'brand'])
+            ->where('is_active', 1)
+            ->whereNull('deleted_at')
+            ->get();
 
-        $subcategories = Subcategory::query()->select('id','name')->where('is_active', 1)->get();
-        $brands = Brand::query()->select('id','name')->where('is_active', 1)->get();
-        $conditions = Condition::query()->select('id','name')->where('is_active', 1)->get();
-        $acquisitions = Acquisition::query()->select('id','name')->where('is_active', 1)->get();
+        $subcategories = Subcategory::where('is_active', 1)->get();
+        $brands = Brand::where('is_active', 1)->get();
+        $conditions = Condition::where('is_active', 1)->get();
+        $acquisitions = Acquisition::where('is_active', 1)->get();
 
-        return view('pages.property-asset.overview', compact('brands','subcategories','conditions','acquisitions','propertyParents'));
+        return view('pages.property-asset.overview', compact('brands', 'subcategories', 'conditions', 'acquisitions', 'propertyParents'));
+    }
+
+    public function getSubcategoryBrands(Request $request)
+    {
+        $subcategoryId = $request->input('subcategory_id');
+        $brands = Brand::whereHas('subcategories', function ($query) use ($subcategoryId) {
+            $query->where('subcateg_id', $subcategoryId);
+        })->where('is_active', 1)->get();
+
+        return response()->json($brands);
     }
 
     /**
@@ -123,7 +139,8 @@ class PropertyParentController extends Controller
                     $file = $request->file('propertyImage');
                     if ($file !== null && $file->isValid()) {
                         $filename = time() . '_' . $file->getClientOriginalName();
-                        $file->move(resource_path('img/uploads/prop-asset/'), $filename);
+                        $file->move(public_path('storage/img-uploads/prop-asset/'), $filename);
+//                        $file->move(resource_path('img/uploads/prop-asset/'), $filename);
                         $imageFileName = $filename;
                     } else {
                         $imageFileName = 'default.jpg';
@@ -204,25 +221,150 @@ class PropertyParentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(PropertyParent $propertyParent)
+    public function show(Request $request)
     {
-        //
+        try {
+            $propertyParent = PropertyParent::query()->findOrFail(Crypt::decryptString($request->input('id')));
+
+            $propertyChildren = $propertyParent->propertyChildren;
+
+            $propertyInStock = $propertyChildren->whereNull('inventory_date')->where('is_active',1)->count();
+            $propertyInInventory = $propertyChildren->whereNotNull('inventory_date')->where('is_active',1)->count();
+            $propertyTotal = $propertyChildren->where('is_active',1)->count();
+            return response()->json([
+                'success' => true,
+                'name' => $propertyParent->name,
+                'description' => $propertyParent->description,
+                'brand' => $propertyParent->brand->name,
+                'category' => $propertyParent->subcategory->category->name,
+                'subcategory' => $propertyParent->subcategory->name,
+                'status' => $propertyParent->is_active,
+                'inStock' => $propertyInStock,
+                'inventory' => $propertyInInventory,
+                'quantity' => $propertyTotal,
+                'created' => $propertyParent->created_at->format('D, F d, Y | h:i:s A'),
+                'updated' => $propertyParent->updated_at->format('D, F d, Y | h:i:s A'),
+            ]);
+        } catch (Throwable) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Oops! Something went wrong.',
+                'message' => 'An error occurred while fetching the item.',
+            ], 500);
+        }
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(PropertyParent $propertyParent)
+    public function edit(Request $request)
     {
-        //
+        try {
+            $propertyParent = PropertyParent::query()->findOrFail(Crypt::decryptString($request->input('id')));
+
+            return response()->json([
+                'success' => true,
+                'id' => $request->input('id'),
+                'image' => $propertyParent->image,
+                'name' => $propertyParent->name,
+                'brand_id' => $propertyParent->brand_id,
+                'subcateg_id' => $propertyParent->subcateg_id,
+                'description' => $propertyParent->description,
+            ]);
+        } catch (Throwable) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Oops! Something went wrong.',
+                'message' => 'An error occurred while fetching the property item.',
+            ], 500);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, PropertyParent $propertyParent)
+    public function update(Request $request)
     {
-        //
+        try {
+            $property = PropertyParent::query()->findOrFail(Crypt::decryptString($request->input('id')));
+
+            $propertyValidationMessages = [
+                'propertyName.required' => 'Please enter an item name!',
+                'propertyName.regex' => 'The item name may only contain letters, numbers, spaces, and hyphens.',
+                'propertyName.min' => 'The item name must be at least :min characters.',
+                'propertyName.max' => 'The item name may not be greater than :max characters.',
+                'propertyName.unique' => 'This item name already exists.',
+                'category.required' => 'Please choose a category!',
+                'brand.required' => 'Please choose a brand!',
+                'description.regex' => 'The description may only contain letters, numbers, spaces, and some special characters.',
+                'description.min' => 'The description must be at least :min characters.',
+                'description.max' => 'The description may not be greater than :max characters.',
+            ];
+
+            $propertyValidator = Validator::make($request->all(), [
+                'propertyName' => [
+                    'required',
+                    'regex:/^[A-Za-z0-9\- ]+$/',
+                    'min:3',
+                    'max:50',
+                    'unique:property_parents,name,' . $property->id,
+                ],
+                'category' => ['required'],
+                'brand' => ['required'],
+                'description' => [
+                    'nullable',
+                    'regex:/^[A-Za-z0-9%,\- ×"]+$/',
+                    'min:3',
+                    'max:100',
+                ],
+            ], $propertyValidationMessages);
+
+            if ($propertyValidator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $propertyValidator->errors(),
+                ]);
+            } else {
+                $property->name = $this->formatInput($request->input('propertyName'));
+                $property->subcateg_id = $request->input('category');
+                $property->brand_id = $request->input('brand');
+                $property->description = $request->input('description');
+            }
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                if ($file !== null && $file->isValid()) {
+                    if ($property->image && $property->image !== 'default.jpg') {
+                        $oldImagePath = public_path('storage/img-uploads/prop-asset/' . $property->image);
+                        if (file_exists($oldImagePath)) {
+                            unlink($oldImagePath);
+                        }
+                    }
+                    $filename = time() . '_' . $file->getClientOriginalName();
+                    $file->move(public_path('storage/img-uploads/prop-asset/'), $filename);
+                    $property->image = $filename;
+                }
+            } else {
+                if (!$property->image || $property->image === 'default.jpg') {
+                    $property->image = 'default.jpg';
+                }
+            }
+
+
+            $property->updated_at = now();
+            $property->save();
+
+            return response()->json([
+                'success' => true,
+                'title' => 'Updated Successfully!',
+                'text' => 'The property has been updated successfully!',
+            ]);
+        } catch (Throwable) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Oops! Something went wrong.',
+                'text' => 'An error occurred while updating the property.',
+            ], 500);
+        }
     }
 
     /**
