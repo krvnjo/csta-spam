@@ -51,7 +51,6 @@ Install dependencies
 
 ```bash
   npm install
-
   composer install
 ```
 
@@ -70,7 +69,8 @@ Generate a key
 Migrate and seed database
 
 ```bash
-  php artisan migrate && php artisan db:seed
+  php artisan migrate
+  php artisan db:seed
 ```
 
 Run Vite
