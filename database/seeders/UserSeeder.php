@@ -2,13 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\AuditHistory;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\RolePermission;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 
 class UserSeeder extends Seeder
@@ -56,7 +54,7 @@ class UserSeeder extends Seeder
                     }
 
                     Permission::query()->create([
-                        'name' => "{$action} {$base}",
+                        'name' => "$action $base",
                         'group_name' => $group,
                     ]);
                 }
@@ -153,7 +151,7 @@ class UserSeeder extends Seeder
         ];
 
         foreach ($users as $data) {
-            $user = User::create([
+            User::create([
                 'user_name' => $data['user_name'],
                 'pass_hash' => $data['pass_hash'],
                 'fname' => $data['fname'],
@@ -167,18 +165,5 @@ class UserSeeder extends Seeder
                 'is_active' => $data['is_active'],
             ]);
         }
-
-        $batchUuid = (string)Str::uuid();
-        AuditHistory::query()->create([
-            'log_name' => 'user_management',
-            'description' => 'User has been updated in batch process',
-            'subject_type' => User::class,
-            'subject_id' => $user->id,
-            'causer_type' => User::class,
-            'causer_id' => $user->id,
-            'event' => 'updated',
-            'properties' => json_encode(['attribute' => 'value']),
-            'batch_uuid' => $batchUuid,
-        ]);
     }
 }
