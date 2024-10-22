@@ -4,7 +4,6 @@
 
 This capstone project is titled "SPAM: Systematized Property and Assets Management for Colegio de Sta. Teresa de Avila". It aims to create a management solution that improves the efficiency and accuracy of tracking the institution’s property, equipment, and assets. The system features QR code generation for streamlined tracking and prescriptive analytics for better decision-making. The study demonstrates how systematic asset management enhances operational efficiency, reduces errors, and supports optimal resource allocation.
 
-
 ## Main Features
 
 - Dashboard w/ Prescriptive Analytics
@@ -16,28 +15,30 @@ This capstone project is titled "SPAM: Systematized Property and Assets Manageme
 - File Maintenance
 - Audit Trailing
 
-
 ## Tech Stack
 
 **Frontend**
+
 - **Languages:** HTML, CSS, JavaScript
 - **CSS Framework:** Bootstrap 5 (v5.2)
 - **JavaScript Library:** jQuery (v3.6)
 
 **Backend**
+
 - **Framework:** Laravel 11 (v11)
 - **Language:** PHP (v8.2)
-- **Server:** XAMPP (v3.3) (includes Apache and MariaDB (v10.4.32))
+- **Server:** XAMPP (v3.3) (includes Apache and MariaDB (v10.4))
 - **Version Control:** Git (v2.46)
 
 **Tools & Libraries**
-- **Package Managers:** npm (v10.8) and Composer (v2.7.7)
+
+- **Package Managers:** npm (v10.9) and Composer (v2.8)
 - **Code Editor:** PHPStorm (v2024.2)
 
 **Other Technologies**
+
 - **QR Code Generation:** QRCode.js / Laravel QR Code
 - **Hardware:** Thermal Printer and QR Code Scanner
-
 
 ## Clone the Repository/Run Locally
 
@@ -84,7 +85,6 @@ Serve the project
 ```bash
   php artisan serve
 ```
-
 
 ## Authors/Developers
 
