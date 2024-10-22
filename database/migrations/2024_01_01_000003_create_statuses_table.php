@@ -25,7 +25,10 @@ return new class extends Migration {
             $table->id();
             $table->string('name', 50)->unique();
             $table->string('description', 75)->unique();
-            $table->foreignIdFor(Color::class, 'color_id')->constrained('colors')->cascadeOnDelete();
+            $table
+                ->foreignIdFor(Color::class, 'color_id')
+                ->constrained('colors')
+                ->cascadeOnDelete();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
             $table->softDeletes();
@@ -35,7 +38,10 @@ return new class extends Migration {
             $table->id();
             $table->string('name', 50)->unique();
             $table->string('description', 75)->unique();
-            $table->foreignIdFor(Color::class, 'color_id')->constrained('colors')->cascadeOnDelete();
+            $table
+                ->foreignIdFor(Color::class, 'color_id')
+                ->constrained('colors')
+                ->cascadeOnDelete();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
             $table->softDeletes();
@@ -45,7 +51,10 @@ return new class extends Migration {
             $table->id();
             $table->string('name', 50)->unique();
             $table->string('description', 75)->unique();
-            $table->foreignIdFor(Color::class, 'color_id')->constrained('colors')->cascadeOnDelete();
+            $table
+                ->foreignIdFor(Color::class, 'color_id')
+                ->constrained('colors')
+                ->cascadeOnDelete();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
             $table->softDeletes();

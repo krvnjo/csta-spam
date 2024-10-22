@@ -8,7 +8,6 @@ use App\Models\RolePermission;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
-
 class UserSeeder extends Seeder
 {
     /**
@@ -17,13 +16,8 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $permissionGroups = [
-            'Inventory Management' => [
-                'item management',
-            ],
-            'User Management' => [
-                'user management',
-                'role management',
-            ],
+            'Inventory Management' => ['item management'],
+            'User Management' => ['user management', 'role management'],
             'File Maintenance' => [
                 'brand maintenance',
                 'category maintenance',
@@ -33,11 +27,7 @@ class UserSeeder extends Seeder
                 'status maintenance',
                 'subcategory maintenance',
             ],
-            'Administrative Permissions' => [
-                'audit history',
-                'system settings',
-                'recycle bin'
-            ],
+            'Administrative Permissions' => ['audit history', 'system settings', 'recycle bin'],
         ];
 
         $actions = ['view', 'create', 'update', 'delete'];
@@ -45,7 +35,7 @@ class UserSeeder extends Seeder
         foreach ($permissionGroups as $group => $basePermissions) {
             foreach ($basePermissions as $base) {
                 foreach ($actions as $action) {
-                    if (($group === 'Administrative Permissions') && !in_array($action, ['view', 'update'])) {
+                    if ($group === 'Administrative Permissions' && !in_array($action, ['view', 'update'])) {
                         continue;
                     }
 
@@ -60,7 +50,6 @@ class UserSeeder extends Seeder
                 }
             }
         }
-
 
         $roles = [
             'Administrator' => 'Oversees the system with full access to all settings.',
@@ -87,7 +76,7 @@ class UserSeeder extends Seeder
             }),
             'Student Assistant' => $permissions->filter(function ($permission) {
                 return (str_contains($permission->name, 'item management') ||
-                        str_contains($permission->name, 'maintenance')) &&
+                    str_contains($permission->name, 'maintenance')) &&
                     (str_contains($permission->name, 'view') ||
                         str_contains($permission->name, 'create') ||
                         str_contains($permission->name, 'update'));
@@ -107,7 +96,6 @@ class UserSeeder extends Seeder
             }
         }
 
-
         $users = [
             [
                 'user_name' => '21-00017',
@@ -120,7 +108,7 @@ class UserSeeder extends Seeder
                 'email' => 'dev.jt1005@gmail.com',
                 'phone_num' => '0934-221-6405',
                 'user_image' => 'jt.jpg',
-                'is_active' => 1
+                'is_active' => 1,
             ],
             [
                 'user_name' => '21-00155',
@@ -133,7 +121,7 @@ class UserSeeder extends Seeder
                 'email' => 'rm.bunag2202@gmail.com',
                 'phone_num' => '0916-437-4284',
                 'user_image' => 'rob.jpg',
-                'is_active' => 1
+                'is_active' => 1,
             ],
             [
                 'user_name' => '21-00132',
@@ -146,8 +134,8 @@ class UserSeeder extends Seeder
                 'email' => 'khervinjohnquimora@gmail.com',
                 'phone_num' => '0976-216-2403',
                 'user_image' => 'kj.jpg',
-                'is_active' => 1
-            ]
+                'is_active' => 1,
+            ],
         ];
 
         foreach ($users as $data) {

@@ -17,47 +17,30 @@ class LabelSeeder extends Seeder
      */
     public function run(): void
     {
-        $acquisitions = [
-            'Purchased',
-            'Donation'
-        ];
+        $acquisitions = ['Purchased', 'Donation'];
 
         foreach ($acquisitions as $acquisition) {
             Acquisition::query()->create([
                 'name' => $acquisition,
-                'is_active' => 1
+                'is_active' => 1,
             ]);
         }
 
-        $brands = [
-            'Generic',
-            'A4Tech',
-            'Carrier',
-            'MSI',
-            'TCL',
-            'Samsung'
-        ];
+        $brands = ['Generic', 'A4Tech', 'Carrier', 'MSI', 'TCL', 'Samsung'];
 
         foreach ($brands as $brand) {
             Brand::query()->create([
                 'name' => $brand,
-                'is_active' => 1
+                'is_active' => 1,
             ]);
         }
 
-        $categories = [
-            'Electronics',
-            'Furniture',
-            'Tools',
-            'Equipment',
-            'Materials',
-            'Supplies'
-        ];
+        $categories = ['Electronics', 'Furniture', 'Tools', 'Equipment', 'Materials', 'Supplies'];
 
         foreach ($categories as $category) {
             Category::query()->create([
                 'name' => $category,
-                'is_active' => 1
+                'is_active' => 1,
             ]);
         }
 
@@ -72,13 +55,13 @@ class LabelSeeder extends Seeder
             'Chair',
             'Desk',
             'Bench',
-            'Paper'
+            'Paper',
         ];
 
         foreach ($subcategories as $subcategory) {
             Subcategory::query()->create([
                 'name' => $subcategory,
-                'is_active' => 1
+                'is_active' => 1,
             ]);
         }
 

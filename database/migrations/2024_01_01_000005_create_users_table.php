@@ -33,8 +33,14 @@ return new class extends Migration {
 
         Schema::create('role_permissions', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Role::class, 'role_id')->constrained('roles')->cascadeOnDelete();
-            $table->foreignIdFor(Permission::class, 'perm_id')->constrained('permissions')->cascadeOnDelete();
+            $table
+                ->foreignIdFor(Role::class, 'role_id')
+                ->constrained('roles')
+                ->cascadeOnDelete();
+            $table
+                ->foreignIdFor(Permission::class, 'perm_id')
+                ->constrained('permissions')
+                ->cascadeOnDelete();
         });
 
         Schema::create('users', function (Blueprint $table) {
@@ -44,8 +50,14 @@ return new class extends Migration {
             $table->string('lname', 75);
             $table->string('fname', 75);
             $table->string('mname', 75)->nullable();
-            $table->foreignIdFor(Role::class, 'role_id')->constrained('roles')->cascadeOnDelete();
-            $table->foreignIdFor(Department::class, 'dept_id')->constrained('departments')->cascadeOnDelete();
+            $table
+                ->foreignIdFor(Role::class, 'role_id')
+                ->constrained('roles')
+                ->cascadeOnDelete();
+            $table
+                ->foreignIdFor(Department::class, 'dept_id')
+                ->constrained('departments')
+                ->cascadeOnDelete();
             $table->string('email')->unique();
             $table->string('phone_num', 25)->unique()->nullable();
             $table->string('user_image')->default('default.jpg');

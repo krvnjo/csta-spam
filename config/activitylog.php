@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
      * If set to false, no activities will be saved to the database.
      */
@@ -11,7 +10,7 @@ return [
      * When the clean-command is executed, all recording activities older than
      * the number of days specified here will be deleted.
      */
-    'delete_records_older_than_days' => 365,
+    'delete_records_older_than_days' => 90,
 
     /*
      * If no log name is passed to the activity() helper
@@ -41,7 +40,7 @@ return [
      * This is the name of the table that will be created by the migration and
      * used by the Activity model shipped with this package.
      */
-    'table_name' => env('ACTIVITY_LOGGER_TABLE_NAME', 'activity_log'),
+    'table_name' => env('ACTIVITY_LOGGER_TABLE_NAME', 'audits'),
 
     /*
      * This is the database connection that will be used by the migration and
