@@ -76,7 +76,7 @@ class UserSeeder extends Seeder
             }),
             'Student Assistant' => $permissions->filter(function ($permission) {
                 return (str_contains($permission->name, 'item management') ||
-                    str_contains($permission->name, 'maintenance')) &&
+                        str_contains($permission->name, 'maintenance')) &&
                     (str_contains($permission->name, 'view') ||
                         str_contains($permission->name, 'create') ||
                         str_contains($permission->name, 'update'));

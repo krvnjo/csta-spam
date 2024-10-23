@@ -22,19 +22,9 @@ return new class extends Migration {
         Schema::create('property_parents', function (Blueprint $table) {
             $table->id();
             $table->string('name', 255)->unique();
-            $table
-                ->foreignIdFor(Brand::class, 'brand_id')
-                ->constrained('brands')
-                ->cascadeOnDelete();
-            $table
-                ->foreignIdFor(Category::class, 'categ_id')
-                ->nullable()
-                ->constrained('categories')
-                ->cascadeOnDelete();
-            $table
-                ->foreignIdFor(Subcategory::class, 'subcateg_id')
-                ->constrained('subcategories')
-                ->cascadeOnDelete();
+            $table->foreignIdFor(Brand::class, 'brand_id')->constrained('brands')->cascadeOnDelete();
+            $table->foreignIdFor(Category::class, 'categ_id')->nullable()->constrained('categories')->cascadeOnDelete();
+            $table->foreignIdFor(Subcategory::class, 'subcateg_id')->constrained('subcategories')->cascadeOnDelete();
             $table->string('description')->nullable();
             $table->string('image')->nullable()->default('default.jpg');
             $table->unsignedInteger('quantity')->default(1);
@@ -45,36 +35,18 @@ return new class extends Migration {
 
         Schema::create('property_children', function (Blueprint $table) {
             $table->id();
-            $table
-                ->foreignIdFor(PropertyParent::class, 'prop_id')
-                ->constrained('property_parents')
-                ->cascadeOnDelete();
+            $table->foreignIdFor(PropertyParent::class, 'prop_id')->constrained('property_parents')->cascadeOnDelete();
             $table->string('prop_code', 100)->unique();
             $table->string('serial_num', 100)->nullable()->unique();
-            $table
-                ->foreignIdFor(Acquisition::class, 'type_id')
-                ->constrained('acquisitions')
-                ->cascadeOnDelete();
+            $table->foreignIdFor(Acquisition::class, 'type_id')->constrained('acquisitions')->cascadeOnDelete();
             $table->date('acq_date')->nullable();
             $table->date('warranty_date')->nullable();
             $table->date('stock_date');
             $table->date('inventory_date')->nullable();
-            $table
-                ->foreignIdFor(Department::class, 'dept_id')
-                ->constrained('departments')
-                ->cascadeOnDelete();
-            $table
-                ->foreignIdFor(Designation::class, 'desig_id')
-                ->constrained('designations')
-                ->cascadeOnDelete();
-            $table
-                ->foreignIdFor(Condition::class, 'condi_id')
-                ->constrained('conditions')
-                ->cascadeOnDelete();
-            $table
-                ->foreignIdFor(Status::class, 'status_id')
-                ->constrained('statuses')
-                ->cascadeOnDelete();
+            $table->foreignIdFor(Department::class, 'dept_id')->constrained('departments')->cascadeOnDelete();
+            $table->foreignIdFor(Designation::class, 'desig_id')->constrained('designations')->cascadeOnDelete();
+            $table->foreignIdFor(Condition::class, 'condi_id')->constrained('conditions')->cascadeOnDelete();
+            $table->foreignIdFor(Status::class, 'status_id')->constrained('statuses')->cascadeOnDelete();
             $table->string('remarks')->nullable();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();

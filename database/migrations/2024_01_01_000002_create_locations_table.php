@@ -23,10 +23,7 @@ return new class extends Migration {
         Schema::create('designations', function (Blueprint $table) {
             $table->id();
             $table->string('name', 75)->unique();
-            $table
-                ->foreignIdFor(Department::class, 'dept_id')
-                ->constrained('departments')
-                ->cascadeOnDelete();
+            $table->foreignIdFor(Department::class, 'dept_id')->constrained('departments')->cascadeOnDelete();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
             $table->softDeletes();

@@ -18,7 +18,7 @@ class ItemFactory extends Factory
     public function definition(): array
     {
         return [
-                // Define the model's default state here
-            ];
+            //
+        ];
     }
 }

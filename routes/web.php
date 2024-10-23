@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
-use App\Http\Controllers\AuditHistoryController;
+use App\Http\Controllers\AuditController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
@@ -187,7 +187,7 @@ Route::middleware(['auth', 'nocache'])->group(function () {
     // ============ Other Routes ============ //
 
     // Audit History Routes
-    Route::middleware('can:view audit history')->prefix('audit-history')->name('audit.')->controller(AuditHistoryController::class)->group(function () {
+    Route::middleware('can:view audit history')->prefix('audit-history')->name('audit.')->controller(AuditController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/show', 'show')->name('show')->middleware('expectsJson');
     });
