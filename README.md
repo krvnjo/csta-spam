@@ -28,7 +28,7 @@ This capstone project is titled "SPAM: Systematized Property and Assets Manageme
 - **Framework:** Laravel 11 (v11)
 - **Language:** PHP (v8.2)
 - **Server:** XAMPP (v3.3) (includes Apache and MariaDB (v10.4))
-- **Version Control:** Git (v2.46)
+- **Version Control:** Git (v2.4)
 
 **Tools & Libraries**
 
