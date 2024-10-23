@@ -28,27 +28,33 @@ class PropertyChild extends Model
         'remarks'
     ];
 
-    public function property(): BelongsTo {
-        return $this->belongsTo(PropertyParent::class,'prop_id');
+    public function acquisition(): BelongsTo
+    {
+        return $this->belongsTo(Acquisition::class, 'type_id', 'id');
     }
 
-    public function acquisition(): BelongsTo {
-        return $this->belongsTo(Acquisition::class,'type_id','id');
+    public function condition(): BelongsTo
+    {
+        return $this->belongsTo(Condition::class, 'condi_id', 'id');
     }
 
-    public function condition(): BelongsTo {
-        return $this->belongsTo(Condition::class,'condi_id','id');
+    public function designation(): BelongsTo
+    {
+        return $this->belongsTo(Designation::class, 'desig_id', 'id');
     }
 
-    public function designation(): BelongsTo {
-        return $this->belongsTo(Designation::class,'desig_id','id');
+    public function department(): BelongsTo
+    {
+        return $this->belongsTo(Department::class, 'dept_id', 'id');
     }
 
-    public function status(): BelongsTo {
-        return $this->belongsTo(Status::class,'status_id','id');
+    public function status(): BelongsTo
+    {
+        return $this->belongsTo(Status::class, 'status_id', 'id');
     }
 
-    public function department(): BelongsTo {
-        return $this->belongsTo(Department::class,'dept_id','id');
+    public function property(): BelongsTo
+    {
+        return $this->belongsTo(PropertyParent::class, 'prop_id');
     }
 }

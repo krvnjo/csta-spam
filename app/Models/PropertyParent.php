@@ -24,19 +24,23 @@ class PropertyParent extends Model
         'categ_id'
     ];
 
-    public function brand(): BelongsTo {
+    public function brand(): BelongsTo
+    {
         return $this->belongsTo(Brand::class, 'brand_id');
     }
 
-    public function category(): BelongsTo {
+    public function category(): BelongsTo
+    {
         return $this->belongsTo(Category::class, 'categ_id');
     }
 
-    public function subcategory(): BelongsTo {
-        return $this->belongsTo(Subcategory::class, 'subcateg_id');
+    public function propertyChildren(): HasMany
+    {
+        return $this->hasMany(PropertyChild::class, 'prop_id', 'id');
     }
 
-    public function propertyChildren(): HasMany {
-        return $this->hasMany(PropertyChild::class, 'prop_id', 'id');
+    public function subcategory(): BelongsTo
+    {
+        return $this->belongsTo(Subcategory::class, 'subcateg_id');
     }
 }

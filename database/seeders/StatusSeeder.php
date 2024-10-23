@@ -178,18 +178,22 @@ class StatusSeeder extends Seeder
         $priorities = [
             'Urgent' => [
                 'description' => 'Needs immediate action and attention.',
+                'order' => 1,
                 'color_id' => 14,
             ],
             'High' => [
                 'description' => 'Should be addressed soon.',
+                'order' => 2,
                 'color_id' => 15,
             ],
             'Medium' => [
                 'description' => 'Can be scheduled but important.',
+                'order' => 3,
                 'color_id' => 16,
             ],
             'Low' => [
                 'description' => 'Can be addressed later without urgency.',
+                'order' => 4,
                 'color_id' => 17,
             ],
         ];
@@ -198,6 +202,7 @@ class StatusSeeder extends Seeder
             Priority::query()->create([
                 'name' => $priority,
                 'description' => $data['description'],
+                'order' => $data['order'],
                 'color_id' => $data['color_id'],
                 'is_active' => 1,
             ]);

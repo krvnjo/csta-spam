@@ -17,7 +17,8 @@ class Acquisition extends Model
         'is_active'
     ];
 
-    public function property_children(): HasMany {
+    public function property_children(): HasMany
+    {
         return $this->hasMany(PropertyChild::class, 'acqui_id');
     }
 }

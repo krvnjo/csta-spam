@@ -18,13 +18,13 @@ class Brand extends Model
         'is_active',
     ];
 
-    public function subcategories(): BelongsToMany
-    {
-        return $this->belongsToMany(Subcategory::class, 'brand_subcategories', 'brand_id', 'subcateg_id');
-    }
-
     public function property(): BelongsTo
     {
         return $this->BelongsTo(PropertyParent::class, 'id', 'prop_id');
+    }
+
+    public function subcategories(): BelongsToMany
+    {
+        return $this->belongsToMany(Subcategory::class, 'brand_subcategories', 'brand_id', 'subcateg_id');
     }
 }
