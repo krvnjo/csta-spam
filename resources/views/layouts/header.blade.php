@@ -242,7 +242,7 @@
         <!-- Account -->
         <li class="nav-item">
           <div class="dropdown">
-            <button class="btn navbar-dropdown-account-wrapper" id="accountNavbarDropdown" data-bs-toggle="dropdown" data-bs-dropdown-animation type="button">
+            <button class="btn navbar-dropdown-account-wrapper" id="accountNavbarDropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside" data-bs-dropdown-animation type="button">
               <div class="avatar avatar-sm avatar-circle">
                 <img class="avatar-img" src="{{ asset('storage/img/user-images/' . Auth::user()->user_image) }}" alt="User Image">
                 <span class="avatar-status avatar-sm-status avatar-status-success"></span>
@@ -272,8 +272,10 @@
 
               <!-- System Appearance -->
               <div class="dropdown">
-                <button class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" id="selectThemeDropdown" data-bs-toggle="dropdown" type="button">System Appearance</button>
-                <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu">
+                <button class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" id="selectThemeDropdown" data-bs-toggle="dropdown" data-bs-dropdown-animation type="button">
+                  System Appearance
+                </button>
+                <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="selectThemeDropdown">
                   <button class="dropdown-item" data-icon="bi-moon-stars" data-value="auto" type="button">
                     <i class="bi-moon-stars me-2"></i><span class="text-truncate">Auto (system default)</span>
                   </button>
