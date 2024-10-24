@@ -149,8 +149,8 @@ class PropertyParentController extends Controller
                     $imageFileName = 'default.jpg';
                 }
 
-                $subcateg = Subcategory::query()->find(request('category'));
-                $categ_id = $subcateg->categ_id;
+//                $subcateg = Subcategory::query()->find(request('category'));
+//                $categ_id = $subcateg->categ_id;
 
                 $parentProperty = PropertyParent::query()->create([
                     'name' => ucwords(strtolower(trim(request('propertyName')))),
@@ -159,7 +159,7 @@ class PropertyParentController extends Controller
                     'subcateg_id' => (int)request('category'),
                     'description' => trim(request('description')),
                     'quantity' => request('quantity'),
-                    'categ_id' => $categ_id,
+//                    'categ_id' => $categ_id,
                 ]);
 
                 $propertyQuantity = $request->input('quantity');

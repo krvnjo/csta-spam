@@ -23,7 +23,7 @@ return new class extends Migration {
             $table->id();
             $table->string('name', 255)->unique();
             $table->foreignIdFor(Brand::class, 'brand_id')->constrained('brands')->cascadeOnDelete();
-            $table->foreignIdFor(Category::class, 'categ_id')->nullable()->constrained('categories')->cascadeOnDelete();
+//            $table->foreignIdFor(Category::class, 'categ_id')->nullable()->constrained('categories')->cascadeOnDelete();
             $table->foreignIdFor(Subcategory::class, 'subcateg_id')->constrained('subcategories')->cascadeOnDelete();
             $table->string('description')->nullable();
             $table->string('image')->nullable()->default('default.jpg');

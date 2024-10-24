@@ -290,11 +290,11 @@
                     </span>
                   </td>
                   <td>
-                    <span class="d-block h5 mb-0">
-                      @foreach ($propertyParent->subcategory->categories as $category)
-                        {{ $category->name }}
-                      @endforeach
-                    </span>
+{{--                    <span class="d-block h5 mb-0">--}}
+{{--                      @foreach ($propertyParent->subcategory->categories as $category)--}}
+{{--                        {{ $category->name }}--}}
+{{--                      @endforeach--}}
+{{--                    </span>--}}
                     <span class="d-block fs-5">{{ $propertyParent->subcategory->name }}</span>
                   </td>
                   <td>{{ $propertyParent->brand->name }}</td>
