@@ -140,7 +140,6 @@ class PropertyParentController extends Controller
                     if ($file !== null && $file->isValid()) {
                         $filename = time() . '_' . $file->getClientOriginalName();
                         $file->move(public_path('storage/img/prop-asset/'), $filename);
-//                        $file->move(resource_path('img/uploads/prop-asset/'), $filename);
                         $imageFileName = $filename;
                     } else {
                         $imageFileName = 'default.jpg';
@@ -149,9 +148,6 @@ class PropertyParentController extends Controller
                     $imageFileName = 'default.jpg';
                 }
 
-//                $subcateg = Subcategory::query()->find(request('category'));
-//                $categ_id = $subcateg->categ_id;
-
                 $parentProperty = PropertyParent::query()->create([
                     'name' => ucwords(strtolower(trim(request('propertyName')))),
                     'image' => $imageFileName,
@@ -159,7 +155,6 @@ class PropertyParentController extends Controller
                     'subcateg_id' => (int)request('category'),
                     'description' => trim(request('description')),
                     'quantity' => request('quantity'),
-//                    'categ_id' => $categ_id,
                 ]);
 
                 $propertyQuantity = $request->input('quantity');
