@@ -43,10 +43,7 @@
       <div class="card mb-3 mb-lg-5">
         <div class="card-body">
           <div class="d-flex flex-column flex-md-row align-items-md-center text-md-start text-center">
-            <div class="flex-shrink-0">
-              <span class="display-3 text-dark">{{ $totalBrands }}</span>
-            </div>
-
+            <div class="flex-shrink-0"><span class="display-3 text-dark">{{ $totalBrands }}</span></div>
             <div class="flex-grow-1 ms-md-3 my-1 mt-md-0">
               <div class="row">
                 <div class="col-12 col-md">
@@ -54,10 +51,8 @@
                   <span class="badge bg-soft-primary text-primary rounded-pill p-1">
                     @if ($deletedBrands == 0)
                       <i class="bi-hand-thumbs-up-fill"></i> Everything looks great!
-                    @elseif ($deletedBrands == 1)
-                      <i class="bi-arrow-counterclockwise"></i>{{ $deletedBrands }} record can be restored from bin.
                     @else
-                      <i class="bi-arrow-counterclockwise"></i>{{ $deletedBrands }} records can be restored from bin.
+                      <i class="bi-arrow-counterclockwise"></i> {{ $deletedBrands }} record(s) can be restored from bin.
                     @endif
                   </span>
                 </div>
@@ -92,11 +87,11 @@
             <!-- End Datatable Search -->
           </div>
 
-          <div class="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
+          <div class="d-grid d-md-flex justify-content-md-end align-items-sm-center gap-2">
             @can('delete brand maintenance')
               <!-- Datatable Counter -->
               <div id="brandsDatatableCounterInfo" style="display: none;">
-                <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center justify-content-center">
                   <span class="fs-5 me-3"><span id="brandsDatatableCounter"></span> Selected</span>
                   <button class="btn btn-sm btn-outline-danger" id="btnMultiDeleteBrand" type="button"><i class="bi-trash3-fill"></i> Delete</button>
                 </div>
@@ -106,11 +101,8 @@
 
             <!-- Export Options Dropdown -->
             <div class="dropdown">
-              <button class="btn btn-white btn-sm dropdown-toggle w-100" data-bs-toggle="dropdown" type="button">
-                <i class="bi-download me-2"></i> Export
-              </button>
-
-              <div class="dropdown-menu dropdown-menu-sm-end">
+              <button class="btn btn-white btn-sm dropdown-toggle w-100" data-bs-toggle="dropdown" type="button"><i class="bi-download me-2"></i> Export</button>
+              <div class="dropdown-menu dropdown-menu-sm-end w-100">
                 <span class="dropdown-header">Options</span>
                 <button class="dropdown-item" id="export-copy" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/copy-icon.svg') }}" alt="Copy Icon"> Copy
@@ -118,7 +110,9 @@
                 <button class="dropdown-item" id="export-print" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/print-icon.svg') }}" alt="Print Icon"> Print
                 </button>
+
                 <div class="dropdown-divider"></div>
+
                 <span class="dropdown-header">Download</span>
                 <button class="dropdown-item" id="export-excel" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/excel-icon.svg') }}" alt="Excel Icon"> Excel
@@ -132,17 +126,15 @@
 
             <!-- Datatable Filter Dropdown -->
             <div class="dropdown">
-              <button class="btn btn-white btn-sm w-100" data-bs-toggle="dropdown" type="button">
+              <button class="btn btn-white btn-sm w-100" data-bs-toggle="dropdown" data-bs-auto-close="outside" type="button">
                 <i class="bi-filter me-1"></i> Filter <span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="brandFilterCount"></span>
               </button>
 
-              <div class="dropdown-menu dropdown-menu-sm-end dropdown-card card-dropdown-filter-centered w-100" style="min-width: 22rem;">
+              <div class="dropdown-menu dropdown-menu-sm-end dropdown-card card-dropdown-filter-centered w-100" id="filterDropdown" style="min-width: 22rem;">
                 <div class="card">
                   <div class="card-header card-header-content-between">
                     <h5 class="card-header-title">Brand Filters</h5>
-                    <button class="btn btn-ghost-secondary btn-icon btn-sm ms-2" type="button"><i class="bi-x-lg"></i></button>
                   </div>
-
                   <div class="card-body">
                     <!-- Subcategories Filter -->
                     <div class="mb-4">
@@ -150,21 +142,16 @@
                       <div class="row">
                         <div class="col">
                           <div class="tom-select-custom">
-                            <select class="js-select js-datatable-filter form-select form-select-sm" data-target-column-index="3"
+                            <select class="js-select js-datatable-filter form-select" data-target-column-index="3"
                               data-hs-tom-select-options='{
-                                "singleMultiple": true,
+                                "dropdownWidth": "100%",
                                 "hideSelected": false,
                                 "placeholder": "All Subcategories",
-                                "dropdownWidth": "100%"
+                                "singleMultiple": true
                               }'
-                              multiple>
-                              <option value="">All Subcategories</option>
-                              @foreach ($categories as $category)
-                                <optgroup label="{{ $category->name }}">
-                                  @foreach ($category->subcategories as $subcategory)
-                                    <option value="{{ $subcategory->name }}">{{ $subcategory->name }}</option>
-                                  @endforeach
-                                </optgroup>
+                              autocomplete="off" multiple>
+                              @foreach ($subcategories as $subcategory)
+                                <option value="{{ $subcategory->name }}">{{ $subcategory->name }}</option>
                               @endforeach
                             </select>
                           </div>
@@ -179,12 +166,12 @@
                       <div class="row">
                         <div class="col">
                           <div class="tom-select-custom">
-                            <select class="js-select js-datatable-filter form-select form-select-sm" data-target-column-index="5"
+                            <select class="js-select js-datatable-filter form-select" data-target-column-index="5"
                               data-hs-tom-select-options='{
                                 "allowEmptyOption": true,
-                                "placeholder": "All Status",
+                                "dropdownWidth": "100%",
                                 "hideSearch": true,
-                                "dropdownWidth": "100%"
+                                "placeholder": "All Status"
                               }'>
                               <option value="">All Status</option>
                               <option data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-success"></span>Active</span>' value="Active"></option>
@@ -209,9 +196,9 @@
           <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100" id="brandsDatatable"
             data-hs-datatables-options='{
               "columnDefs": [{
-                 "targets": [0, 6],
-                 "orderable": false
-               }],
+                "targets": [0, 6],
+                "orderable": false
+              }],
               "order": [4, "desc"],
               "info": {
                 "totalQty": "#brandsDatatableWithPagination"
@@ -227,10 +214,7 @@
               <tr>
                 <th class="w-th">
                   @can('delete brand maintenance')
-                    <div class="form-check">
-                      <input class="form-check-input" id="brandsDatatableCheckAll" type="checkbox">
-                      <label class="form-check-label" for="brandsDatatableCheckAll"></label>
-                    </div>
+                    <input class="form-check-input" id="brandsDatatableCheckAll" type="checkbox">
                   @else
                     #
                   @endcan
@@ -249,24 +233,21 @@
                 <tr>
                   <td>
                     @can('delete brand maintenance')
-                      <div class="form-check">
-                        <input class="form-check-input" id="brandCheck{{ $index + 1 }}" type="checkbox">
-                        <label class="form-check-label" for="brandCheck{{ $index + 1 }}"></label>
-                      </div>
+                      <input class="form-check-input" id="brandCheck{{ $index + 1 }}" type="checkbox">
                     @else
                       {{ $index + 1 }}
                     @endcan
                   </td>
                   <td class="d-none" data-brand-id="{{ Crypt::encryptString($brand->id) }}"></td>
-                  <td><a class="h5 btnViewBrand">{{ $brand->name }}</a></td>
+                  <td><span class="text-inherit h5 mb-0">{{ $brand->name }}</span></td>
                   <td>
                     @php
                       $subcategoryNames = $brand->subcategories->sortBy('name')->pluck('name')->implode(', ');
-                      $truncatedSubcategories = Str::limit($subcategoryNames, 30, '...');
+                      $truncatedSubcategories = Str::limit($subcategoryNames, 50, '...');
                     @endphp
                     {{ $subcategoryNames ? $truncatedSubcategories : 'No subcategories available.' }}
                   </td>
-                  <td data-order="{{ $brand->updated_at }}"><span><i class="bi-calendar-event me-1"></i> Updated {{ $brand->updated_at->diffForHumans() }}</span></td>
+                  <td data-order="{{ $brand->updated_at }}"><span><i class="bi-calendar2-event me-1"></i> Updated {{ $brand->updated_at->diffForHumans() }}</span></td>
                   <td>
                     <span class="badge bg-soft-{{ $brand->is_active ? 'success' : 'danger' }} text-{{ $brand->is_active ? 'success' : 'danger' }}">
                       <span class="legend-indicator bg-{{ $brand->is_active ? 'success' : 'danger' }}"></span>{{ $brand->is_active ? 'Active' : 'Inactive' }}
@@ -275,19 +256,17 @@
                   <td>
                     <div class="btn-group">
                       <button class="btn btn-white btn-sm btnViewBrand" type="button"><i class="bi-eye"></i> View</button>
-
                       @can('update brand maintenance' || 'delete brand maintenance')
                         <div class="btn-group">
-                          <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="brandActionDropdown" data-bs-toggle="dropdown" type="button"
-                            aria-expanded="false"></button>
-                          <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="brandActionDropdown">
+                          <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" data-bs-toggle="dropdown" type="button"></button>
+                          <div class="dropdown-menu dropdown-menu-end mt-1">
                             @can('update brand maintenance')
                               <button class="dropdown-item btnEditBrand" type="button"><i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record</button>
                               <button class="dropdown-item btnStatusBrand" data-status="{{ $brand->is_active ? 0 : 1 }}" type="button">
                                 <i class="bi {{ $brand->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
                                 {{ $brand->is_active ? 'Set to Inactive' : 'Set to Active' }}
                               </button>
-                              @can('delete brad maintenance')
+                              @can('delete brand maintenance')
                                 <div class="dropdown-divider"></div>
                               @endcan
                             @endcan
@@ -305,7 +284,7 @@
             </tbody>
           </table>
         </div>
-        <!-- End Brand Table -->
+        <!-- End Brand Datatable -->
 
         <!-- Footer -->
         <div class="card-footer">
@@ -316,8 +295,8 @@
                 <div class="tom-select-custom tom-page-w">
                   <select class="js-select form-select form-select-borderless" id="brandsDatatableEntries"
                     data-hs-tom-select-options='{
-                      "searchInDropdown": false,
-                      "hideSearch": true
+                      "hideSearch": true,
+                      "searchInDropdown": false
                     }' autocomplete="off">
                     <option value="5" selected>5</option>
                     <option value="10">10</option>
@@ -347,9 +326,9 @@
 @endsection
 
 @section('sec-content')
-  <x-file-maintenance.add-brand :categories="$categories" />
+  <x-file-maintenance.add-brand :subcategories="$subcategories" />
   <x-file-maintenance.view-brand />
-  <x-file-maintenance.edit-brand :categories="$categories" />
+  <x-file-maintenance.edit-brand :subcategories="$subcategories" />
 @endsection
 
 @push('scripts')
@@ -408,7 +387,7 @@
               <img class="mb-3" src="{{ Vite::asset('resources/svg/illustrations/oc-error.svg') }}" alt="No records to display." style="width: 10rem;" data-hs-theme-appearance="default">
               <img class="mb-3" src="{{ Vite::asset('resources/svg/illustrations-light/oc-error.svg') }}" alt="No records to display." style="width: 10rem;" data-hs-theme-appearance="dark">
             <p class="mb-0">No records to display.</p>
-            </div>`
+          </div>`
         }
       });
 
@@ -435,12 +414,12 @@
         let elVal = $this.val();
         let targetColumnIndex = $this.data("target-column-index");
 
-        if (!Array.isArray(elVal)) {
-          elVal = [];
+        if (Array.isArray(elVal)) {
+          elVal = elVal.map(val => val.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|");
+        } else {
+          elVal = elVal === "null" ? "" : elVal.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
         }
-
-        let searchPattern = elVal.map(val => val.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|");
-        datatable.column(targetColumnIndex).search(searchPattern, true, false, false).draw();
+        datatable.column(targetColumnIndex).search(elVal, true, false, false).draw();
 
         updateFilterCountBadge($("#brandFilterCount"));
       });

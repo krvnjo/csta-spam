@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\Models\Activity;
 
-class Audit extends Model
+class Audit extends Activity
 {
     use SoftDeletes;
 
-    protected $table = 'acquisitions';
+    protected $table = 'audits';
 
     protected $fillable = [
         'log_name',

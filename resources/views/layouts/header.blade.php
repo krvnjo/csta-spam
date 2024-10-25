@@ -142,19 +142,12 @@
                                 <img class="avatar avatar-sm avatar-circle" src="{{ Vite::asset('resources/img/160x160/img3.jpg') }}" alt="Image Description">
                               </div>
                             </div>
-                            <!-- End Col -->
-
                             <div class="col ms-n2">
                               <h5 class="mb-1">Brian Warner</h5>
                               <p class="text-body fs-5">changed an issue from "In Progress" to <span class="badge bg-success">Review</span></p>
                             </div>
-                            <!-- End Col -->
-
                             <small class="col-auto text-muted text-cap">2hr</small>
-                            <!-- End Col -->
                           </div>
-                          <!-- End Row -->
-
                           <a class="stretched-link" href="#"></a>
                         </li>
                         <!-- End Item -->
@@ -174,19 +167,12 @@
                                 </div>
                               </div>
                             </div>
-                            <!-- End Col -->
-
                             <div class="col ms-n2">
                               <h5 class="mb-1">Ruby Walter</h5>
                               <p class="text-body fs-5">joined the Slack group HS Team</p>
                             </div>
-                            <!-- End Col -->
-
                             <small class="col-auto text-muted text-cap">3dy</small>
-                            <!-- End Col -->
                           </div>
-                          <!-- End Row -->
-
                           <a class="stretched-link" href="#"></a>
                         </li>
                         <!-- End Item -->
@@ -206,21 +192,12 @@
                                 </div>
                               </div>
                             </div>
-                            <!-- End Col -->
-
                             <div class="col ms-n2">
                               <h5 class="mb-1">from Google</h5>
-                              <p class="text-body fs-5">Start using forms to capture the information of prospects
-                                visiting your Google website
-                              </p>
+                              <p class="text-body fs-5">Start using forms to capture the information of prospects visiting your Google website</p>
                             </div>
-                            <!-- End Col -->
-
                             <small class="col-auto text-muted text-cap">17dy</small>
-                            <!-- End Col -->
                           </div>
-                          <!-- End Row -->
-
                           <a class="stretched-link" href="#"></a>
                         </li>
                         <!-- End Item -->

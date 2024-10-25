@@ -30,19 +30,15 @@
             <div class="tom-select-custom">
               <select class="js-select form-select" id="selEditSubcategories" name="subcategories[]"
                 data-hs-tom-select-options='{
-                  "singleMultiple": true,
                   "hideSelected": false,
-                  "placeholder": "Select subcategories"
+                  "placeholder": "Select subcategories",
+                  "singleMultiple": true
                 }'
                 autocomplete="off" multiple>
-                @foreach ($categories as $category)
-                  <optgroup label="{{ $category->name }}">
-                    @foreach ($category->subcategories as $subcategory)
-                      @if ($subcategory->is_active)
-                        <option value="{{ $subcategory->id }}">{{ $subcategory->name }}</option>
-                      @endif
-                    @endforeach
-                  </optgroup>
+                @foreach ($subcategories as $subcategory)
+                  @if ($subcategory->is_active)
+                    <option value="{{ $subcategory->id }}">{{ $subcategory->name }}</option>
+                  @endif
                 @endforeach
               </select>
               <span class="invalid-feedback" id="valEditSubcategories"></span>
