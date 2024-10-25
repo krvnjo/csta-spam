@@ -74,7 +74,11 @@ $(document).ready(function () {
             : `<span class="badge bg-soft-danger text-danger"><span class="legend-indicator bg-danger"></span>Inactive</span>`;
 
         $('#lblViewStatus').html(brandStatus);
+        $('#imgViewCreatedByImage').attr('src', response.created_img);
+        $('#lblViewCreatedBy').text(response.created_by);
         $('#lblViewDateCreated').text(response.created);
+        $('#imgViewUpdatedByImage').attr('src', response.updated_img);
+        $('#lblViewUpdatedBy').text(response.updated_by);
         $('#lblViewDateUpdated').text(response.updated);
       },
       error: function (response) {

@@ -14,28 +14,28 @@ class CheckRolePermission
      *
      * @param Request $request
      * @param Closure $next
+     * @param string $permission
      * @return mixed
      */
-    public function handle(Request $request, Closure $next): mixed
+    public function handle(Request $request, Closure $next, string $permission): mixed
     {
         $user = Auth::user();
         $user->load('role.permissions');
-
-        if (!$this->roleHasAnyPermission($user->role)) {
+        if (!$this->roleHasPermission($user->role, $permission)) {
             abort(403, 'Unauthorized action. You do not have permission to access this.');
         }
-
         return $next($request);
     }
 
     /**
-     * Check if the role has any permissions.
+     * Check if the role has the specific permission.
      *
      * @param Role $role
+     * @param string $requiredPermission
      * @return bool
      */
-    protected function roleHasAnyPermission(Role $role): bool
+    protected function roleHasPermission(Role $role, string $requiredPermission): bool
     {
-        return $role && $role->permissions->isNotEmpty();
+        return $role && $role->permissions->contains('name', $requiredPermission);
     }
 }

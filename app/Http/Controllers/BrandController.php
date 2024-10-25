@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Audit;
 use App\Models\Brand;
 use App\Models\BrandSubcategory;
-use App\Models\Category;
+use App\Models\Subcategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Throwable;
@@ -19,14 +21,12 @@ class BrandController extends Controller
     public function index()
     {
         $brands = Brand::with('subcategories')->whereNull('deleted_at')->orderBy('name')->get();
-        $categories = Category::with(['subcategories' => function ($query) {
-            $query->whereNull('deleted_at')->orderBy('name');
-        }])->whereNull('deleted_at')->orderBy('name')->get();
+        $subcategories = Subcategory::with('brands')->whereNull('deleted_at')->orderBy('name')->get();
 
         $totalBrands = $brands->count();
         $deletedBrands = Brand::onlyTrashed()->count();
         $activeBrands = $brands->where('is_active', 1)->count();
-        $inactiveBrands = $totalBrands - $activeBrands;
+        $inactiveBrands = $brands->where('is_active', 0)->count();
 
         $activePercentage = $totalBrands ? ($activeBrands / $totalBrands) * 100 : 0;
         $inactivePercentage = $totalBrands ? ($inactiveBrands / $totalBrands) * 100 : 0;
@@ -34,7 +34,7 @@ class BrandController extends Controller
         return view('pages.file-maintenance.brand',
             compact(
                 'brands',
-                'categories',
+                'subcategories',
                 'totalBrands',
                 'deletedBrands',
                 'activeBrands',
@@ -54,8 +54,8 @@ class BrandController extends Controller
             $brandValidationMessages = [
                 'brand.required' => 'Please enter a brand name!',
                 'brand.regex' => 'No special symbols, consecutive spaces or hyphens allowed.',
-                'brand.min' => 'The brand name must be at least :min characters.',
-                'brand.max' => 'The brand name may not be greater than :max characters.',
+                'brand.min' => 'It must be at least :min characters.',
+                'brand.max' => 'It must not exceed :max characters.',
                 'brand.unique' => 'This brand name already exists.',
 
                 'subcategories.required' => 'Please select a subcategory!'
@@ -83,15 +83,28 @@ class BrandController extends Controller
 
             $brand = Brand::query()->create([
                 'name' => ucwords(trim($request->input('brand'))),
-                'is_active' => 1,
             ]);
 
+            $subcategories = [];
             foreach ($request->input('subcategories') as $subcategory) {
                 BrandSubcategory::query()->insert([
                     'brand_id' => $brand->id,
                     'subcateg_id' => $subcategory,
                 ]);
+                $subcategoryName = Subcategory::query()->find($subcategory)->name;
+                $subcategories[] = $subcategoryName;
             }
+
+            activity()
+                ->useLog('Add Brand')
+                ->performedOn($brand)
+                ->event('created')
+                ->causedBy(auth()->user())
+                ->withProperties([
+                    'name' => $brand->name,
+                    'subcategories' => $subcategories,
+                ])
+                ->log('A new brand has been created.');
 
             return response()->json([
                 'success' => true,
@@ -126,13 +139,38 @@ class BrandController extends Controller
                 ];
             }
 
+            $createdBy = Audit::query()
+                ->where('subject_type', Brand::class)
+                ->where('subject_id', $brand->id)
+                ->where('event', 'created')
+                ->first();
+
+            $updatedBy = Audit::query()
+                ->where('subject_type', Brand::class)
+                ->where('subject_id', $brand->id)
+                ->where('event', 'updated')
+                ->latest()
+                ->first() ?? $createdBy;
+
             return response()->json([
                 'success' => true,
                 'brand' => $brand->name,
                 'subcategories' => $formattedSubcategories,
                 'status' => $brand->is_active,
-                'created' => $brand->created_at->format('D, F d, Y | h:i:s A'),
-                'updated' => $brand->updated_at->format('D, F d, Y | h:i:s A'),
+                'created_img' => $createdBy && $createdBy->causer
+                    ? asset('storage/img/user-images/' . $createdBy->causer->user_image)
+                    : asset('storage/img/user-images/system.jpg'),
+                'created_by' => $createdBy && $createdBy->causer
+                    ? implode(" ", [$createdBy->causer->fname, $createdBy->causer->lname])
+                    : 'CSTA-SPAM System',
+                'created' => $brand->created_at->format('D, F d, Y | h:i A'),
+                'updated_img' => $updatedBy && $updatedBy->causer
+                    ? asset('storage/img/user-images/' . $updatedBy->causer->user_image)
+                    : asset('storage/img/user-images/system.jpg'),
+                'updated_by' => $updatedBy && $updatedBy->causer
+                    ? implode(" ", [$updatedBy->causer->fname, $updatedBy->causer->lname])
+                    : 'CSTA-SPAM System',
+                'updated' => $brand->updated_at->format('D, F d, Y | h:i A'),
             ]);
         } catch (Throwable) {
             return response()->json([
@@ -168,37 +206,17 @@ class BrandController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Request $request)
-    {
-        try {
-            $ids = array_map(fn($id) => Crypt::decryptString($id), (array)$request->input('id'));
-
-            Brand::query()->whereIn('id', $ids)->update(['is_active' => 0]);
-            Brand::destroy($ids);
-
-            return response()->json([
-                'success' => true,
-                'title' => 'Deleted Successfully!',
-                'text' => 'The brand has been deleted and can be restored from the bin.',
-            ]);
-        } catch (Throwable) {
-            return response()->json([
-                'success' => false,
-                'title' => 'Oops! Something went wrong.',
-                'message' => 'An error occurred while deleting the brand.',
-            ], 500);
-        }
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request)
     {
         try {
             $brand = Brand::query()->findOrFail(Crypt::decryptString($request->input('id')));
+
+            $logProperties = [
+                'name' => $brand->name,
+                'subcategories' => $brand->subcategories()->pluck('subcateg_id')->toArray(),
+            ];
 
             if ($request->has(['brand', 'subcategories'])) {
                 $brandValidationMessages = [
@@ -232,8 +250,30 @@ class BrandController extends Controller
                 }
                 $brand->name = ucwords(trim($request->input('brand')));
                 $brand->subcategories()->sync(explode(',', $request->input('subcategories')));
+
+                $logProperties['new_name'] = $brand->name;
+                $logProperties['new_subcategories'] = explode(',', $request->input('subcategories'));
+
+                activity()
+                    ->useLog('Update Brand')
+                    ->performedOn($brand)
+                    ->event('updated')
+                    ->causedBy(auth()->user())
+                    ->withProperties($logProperties)
+                    ->log('Brand name and subcategories have been updated.');
             } else {
                 $brand->is_active = $request->input('status');
+
+                activity()
+                    ->useLog('Update Brand')
+                    ->performedOn($brand)
+                    ->event('updated')
+                    ->causedBy(auth()->user())
+                    ->withProperties([
+                        'name' => $brand->name,
+                        'is_active' => $brand->is_active,
+                    ])
+                    ->log('Brand status has been updated.');
             }
             $brand->save();
 
@@ -242,11 +282,51 @@ class BrandController extends Controller
                 'title' => 'Updated Successfully!',
                 'text' => 'The brand has been updated successfully!',
             ]);
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            Log::error($e->getMessage());
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
                 'text' => 'An error occurred while updating the brand.',
+            ], 500);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Request $request)
+    {
+        try {
+            $ids = array_map(fn($id) => Crypt::decryptString($id), (array)$request->input('id'));
+
+            $brands = Brand::query()->whereIn('id', $ids)->get(['id', 'name']);
+
+            Brand::query()->whereIn('id', $ids)->update(['is_active' => 0]);
+            Brand::destroy($ids);
+
+            activity()
+                ->useLog('Delete Brand')
+                ->event('deleted')
+                ->causedBy(auth()->user())
+                ->withProperties([
+                    'deleted_brands' => $brands->map(fn($brand) => [
+                        'id' => $brand->id,
+                        'name' => $brand->name,
+                    ]),
+                ])
+                ->log('The following brands were deleted.');
+
+            return response()->json([
+                'success' => true,
+                'title' => 'Deleted Successfully!',
+                'text' => 'The brand has been deleted and can be restored from the bin.',
+            ]);
+        } catch (Throwable) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Oops! Something went wrong.',
+                'message' => 'An error occurred while deleting the brand.',
             ], 500);
         }
     }
