@@ -59,7 +59,7 @@ $(document).ready(function () {
     }
 
     $.ajax({
-      url: "/properties-assets/stocks/create",
+      url: "/properties-assets/stocks/",
       method: "POST",
       data: formData,
       processData: false,
@@ -137,7 +137,7 @@ $(document).ready(function () {
     }
 
     $.ajax({
-      url: "/properties-assets/stocks/update",
+      url: "/properties-assets/stocks/",
       method: "POST",
       data: editFormData,
       processData: false,

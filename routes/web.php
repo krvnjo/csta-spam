@@ -69,16 +69,16 @@ Route::middleware(['auth', 'nocache'])->group(function () {
     // Stock Routes
     Route::middleware('can:view item management')->prefix('properties-assets/stocks')->name('prop-asset.')->controller(PropertyParentController::class)->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::post('/create', 'store')->name('store');
-        Route::get('/show', 'show')->name('show');
-        Route::get('/edit', 'edit')->name('edit');
-        Route::patch('/update', 'update')->name('update');
-        Route::delete('/delete', 'destroy')->name('delete');
-        Route::get('/get-subcategory-brands', 'getSubcategoryBrands')->name('getSubcategoryBrands');
+        Route::post('/', 'store')->name('store')->middleware('can:create item management');
+        Route::get('/show', 'show')->name('show')->middleware('expectsJson');
+        Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
+        Route::patch('/', 'update')->name('update')->middleware('can:update item management');
+        Route::delete('/', 'destroy')->name('delete')->middleware('can:delete item management');
+        Route::get('/get-subcategory-brands', 'getSubcategoryBrands')->name('getSubcategoryBrands')->middleware('expectsJson');
     });
     Route::middleware('can:view item management')->prefix('properties-assets/{propertyParent}/child-stocks')->name('prop-asset.child.')->controller(PropertyChildController::class)->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::post('/create', 'store')->name('store');
+        Route::post('/', 'store')->name('store')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit');
         Route::patch('/update', 'update')->name('update');
         Route::delete('/delete', 'destroy')->name('delete');
