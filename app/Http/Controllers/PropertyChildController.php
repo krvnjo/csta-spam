@@ -11,6 +11,7 @@ use App\Models\PropertyParent;
 use App\Models\Status;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
 
@@ -150,9 +151,29 @@ class PropertyChildController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(PropertyChild $propertyChild)
+    public function edit(Request $request)
     {
-        //
+        try {
+            $propertyChild = PropertyChild::query()->findOrFail(Crypt::decryptString($request->input('id')));
+
+            return response()->json([
+                'success' => true,
+                'id' => $request->input('id'),
+                'propCode' => $propertyChild->prop_code,
+                'serialNumber' => $propertyChild->serial_num,
+                'remarks' => $propertyChild->remarks,
+                'type_id' => $propertyChild->type_id,
+                'condi_id' => $propertyChild->condi_id,
+                'acquiredDate' => $propertyChild->acq_date,
+                'warrantyDate' => $propertyChild->warranty_date,
+            ]);
+        } catch (Throwable) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Oops! Something went wrong.',
+                'message' => 'An error occurred while fetching the property variant.',
+            ], 500);
+        }
     }
 
     /**

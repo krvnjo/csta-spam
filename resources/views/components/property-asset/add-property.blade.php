@@ -15,7 +15,6 @@
           <button class="btn-close btn-close-light" data-bs-dismiss="modal" type="button"></button>
         </div>
       </div>
-      <!-- End Header -->
       <form id="frmAddProperty" method="post" novalidate enctype="multipart/form-data">
         @csrf
         <div class="modal-body custom-modal-body">
@@ -150,90 +149,7 @@
     </div>
   </div>
 </div>
-
+<!-- End Modal -->
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    let categorySelect = new TomSelect('#cbxCategory', {
-      controlInput: false,
-      hideSearch: true,
-      allowEmptyOption: true,
-      onChange: function(value) {
-        if (value) {
-          $.ajax({
-            url: '{{ route('prop-asset.getSubcategoryBrands') }}',
-            type: 'GET',
-            data: {
-              subcategory_id: value
-            },
-            success: function(data) {
-              brandSelect.clear();
-              brandSelect.clearOptions();
-              brandSelect.addOption({
-                value: '',
-                text: 'Select Brand...'
-              });
-              data.forEach(function(item) {
-                brandSelect.addOption({
-                  value: item.id,
-                  text: item.name
-                });
-              });
-              brandSelect.refreshOptions();
-            }
-          });
-        } else {
-          brandSelect.clear();
-          brandSelect.clearOptions();
-          brandSelect.addOption({
-            value: '',
-            text: 'Select Brand...'
-          });
-          brandSelect.refreshOptions();
-        }
-      }
-    });
-
-    let selectedCategory = categorySelect.getValue();
-    console.log(selectedCategory);
-
-    let brandSelect = new TomSelect('#cbxBrand', {
-      controlInput: false,
-      hideSearch: true,
-      allowEmptyOption: true
-    });
-
-
-    new TomSelect('#cbxCondition', {
-      controlInput: false,
-      hideSearch: true,
-      allowEmptyOption: true
-    });
-
-    new TomSelect('#cbxAcquiredType', {
-      controlInput: false,
-      hideSearch: true,
-      allowEmptyOption: true,
-      onChange: function(value) {
-        const warrantyDateInput = document.getElementById('dtpWarranty');
-
-        const PURCHASED_ID = "1";
-        const DONATION_ID = "2";
-
-        if (value === DONATION_ID) {
-          warrantyDateInput.disabled = true;
-          warrantyDateInput.value = '';
-          warrantyDateInput.classList.add('bg-light');
-        } else if (value === PURCHASED_ID) {
-          warrantyDateInput.disabled = false;
-          warrantyDateInput.classList.remove('bg-light');
-        }
-      }
-    });
-
-    document.querySelectorAll('.tom-select input[type="text"]').forEach(function(input) {
-      input.addEventListener('keydown', function(event) {
-        event.preventDefault();
-      });
-    });
-  });
+  const subcategoryBrandsUrl = "{{ route('prop-asset.getSubcategoryBrands') }}";
 </script>

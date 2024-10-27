@@ -38,10 +38,11 @@
               <div class="col">
                 <h1 class="page-header-title position-relative">
                   {{ $propertyParents->name }}
+                  <span class="d-none">{{ $propertyParents->id }}</span>
                 </h1>
                 <h3>
-                  {{--                  <span class="badge bg-primary">{{ $propertyParents->brand->name }}</span> --}}
-                  {{--                  <span class="badge bg-secondary">{{ $propertyParents->category->name }} - {{ $propertyParents->subcategory->name }}</span> --}}
+                  <span class="badge bg-primary">{{ $propertyParents->brand->name }}</span>
+                  <span class="badge bg-secondary">{{ $propertyParents->subcategory->name }}</span>
                 </h3>
                 <p>{{ $propertyParents->description }}</p>
               </div>
@@ -272,6 +273,8 @@
                     @if ($propertyChild->created_at == $propertyChild->updated_at)
                       <span class="badge bg-success">New</span>
                       {{ $propertyChild->prop_code }}
+                    @elseif ($propertyChild->created_at->diffInDays(Carbon::now()) >= 7)
+                      {{ $propertyChild->prop_code }}
                     @else
                       {{ $propertyChild->prop_code }}
                     @endif
@@ -294,7 +297,7 @@
                   </td>
                   <td>
                     <div class="btn-group" role="group">
-                      <button class="btn btn-white btn-sm" id="btnEditPropChild" data-prop-child-id="{{ $propertyChild->id }}" type="button">
+                      <button class="btn btn-white btn-sm btnEditPropChild" type="button">
                         <i class="bi-pencil-fill me-1"></i> Edit
                       </button>
 
@@ -378,6 +381,7 @@
 
 @section('sec-content')
   <x-property-asset.stock.add-children :propertyParents="$propertyParents" />
+  <x-property-asset.stock.edit-children :propertyParents="$propertyParents" :propertyChildren="$propertyChildren" :conditions="$conditions" :acquisitions="$acquisitions" />
   {{--  <x-modals.edit-property-child :propertyParents="$propertyParents" :conditions="$conditions" :acquisitions="$acquisitions" :propertyChildren="$propertyChildren" /> --}}
   {{--  <x-modals.move-property :designations="$designations" :departments="$departments" :statuses="$statuses"/> --}}
 

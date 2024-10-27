@@ -19,13 +19,11 @@
       </div>
 
       <!-- End Header -->
-      <form id="frmEditProperty" method="post" novalidate enctype="multipart/form-data">
+      <form id="frmEditProperty" method="post" enctype="multipart/form-data">
         @csrf
         @method('PATCH')
         <input id="txtEditPropertyId" name="id" type="hidden">
-
         <div class="modal-body custom-modal-body">
-          <input id="txtEditPropertyId" name="id" type="hidden">
           <div class="row">
             <div class="col-lg">
               <div class="mb-3">
@@ -59,7 +57,7 @@
                 <label class="form-label" for="cbxBrand">
                   Brand:
                   <span class="text-danger">*</span></label>
-                <select class="js-select form-select" id="cbxEditBrand" name="brand" autocomplete="off">
+                <select class="js-select form-select" id="cbxEditBrand" name="brand" autocomplete="off" required>
                   <option value="" disabled selected>Select Brand...</option>
                   @foreach ($brands as $brand)
                     <option value="{{ $brand->id }}">{{ $brand->name }}</option>
