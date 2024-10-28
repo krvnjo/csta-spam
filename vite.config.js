@@ -15,6 +15,7 @@ export default defineConfig({
         'resources/js/hs.theme-appearance-charts.js',
         'resources/js/hs-style-switcher.js',
         'resources/js/hs-window-config.js',
+        'resources/js/theme.min.js',
       ],
       refresh: true,
     }),
