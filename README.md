@@ -8,7 +8,7 @@ property, equipment, and assets. The system features QR code generation for stre
 analytics for better decision-making. The study demonstrates how systematic asset management enhances operational
 efficiency, reduces errors, and supports optimal resource allocation.
 
-## Main Features
+## Main Feature
 
 - Dashboard w/ Prescriptive Analytics
 - Item Inventory Management
