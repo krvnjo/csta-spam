@@ -80,6 +80,62 @@ $(document).ready(function() {
     });
   });
 
+  childEditForm.on("submit", function (e) {
+    e.preventDefault();
+
+    const editFormData = new FormData(childEditForm[0]);
+
+    editFormData.append("_method", "PATCH");
+    editFormData.append("id", $("#txtEditChildId").val());
+    editFormData.append("serialNumber", $("#txtEditSerialNumber").val());
+    editFormData.append("remarks", $("#txtEditRemarks").val());
+    editFormData.append("acquiredType", $("#cbxEditAcquiredType").val());
+    editFormData.append("condition", $("#cbxEditCondition").val());
+    editFormData.append("acquiredDate", $("#txtEditDateAcquired").val());
+    editFormData.append("warranty", $("#txtEditWarrantyDate").val());
+
+    $.ajax({
+      url: "/properties-assets/"+ parentId + "/child-stocks/",
+      method: "POST",
+      data: editFormData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        if (response.success) {
+          showSuccessAlert(response, childEditModal, childEditForm);
+        } else {
+          if (response.errors.serialNumber) {
+            $("#txtEditSerialNumber").addClass("is-invalid");
+            $("#valEditSerial").text(response.errors.serialNumber[0]);
+          }
+          if (response.errors.remarks) {
+            $("#txtEditRemarks").addClass("is-invalid");
+            $("#valEditRemarks").text(response.errors.remarks[0]);
+          }
+          if (response.errors.acquiredType) {
+            $("#cbxEditAcquiredType").next(".ts-wrapper").addClass("is-invalid");
+            $("#valEditAcquired").text(response.errors.acquiredType[0]);
+          }
+          if (response.errors.condition) {
+            $("#cbxEditCondition").next(".ts-wrapper").addClass("is-invalid");
+            $("#valEditCondition").text(response.errors.condition[0]);
+          }
+          if (response.errors.acquiredDate) {
+            $("#txtEditDateAcquired").addClass("is-invalid");
+            $("#valEditDateAcq").text(response.errors.acquiredDate[0]);
+          }
+          if (response.errors.warranty) {
+            $("#txtEditWarrantyDate").addClass("is-invalid");
+            $("#valEditWarranty").text(response.errors.warranty[0]);
+          }
+        }
+      },
+      error: function (response) {
+        showErrorAlert(response.responseJSON, childEditModal, childEditForm);
+      },
+    });
+  });
+
 
   // ============ End Update a Stock Variant ============ //
 });

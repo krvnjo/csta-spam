@@ -273,7 +273,7 @@
                     @if ($propertyChild->created_at == $propertyChild->updated_at)
                       <span class="badge bg-success">New</span>
                       {{ $propertyChild->prop_code }}
-                    @elseif ($propertyChild->created_at->diffInDays(Carbon::now()) >= 7)
+                    @elseif ($propertyChild->created_at->diffInDays(\Carbon\Carbon::now()) >= 7)
                       {{ $propertyChild->prop_code }}
                     @else
                       {{ $propertyChild->prop_code }}
@@ -287,6 +287,7 @@
                   <td><span class="{{ $propertyChild->status->color->class }} fs-6">{{ $propertyChild->status->name }}</span></td>
                   <td data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom"
                     title="Date Acquired: {{ \Carbon\Carbon::parse($propertyChild->acq_date)->format('F j, Y') }}, Warranty Date: {{ $propertyChild->warranty_date ? \Carbon\Carbon::parse($propertyChild->warranty_date)->format('F j, Y') : '-' }}">
+                    <i class="bi-calendar-event me-1"></i>
                     {{ \Carbon\Carbon::parse($propertyChild->stock_date)->format('F j, Y') }}</td>
                   <td @if ($propertyChild->remarks) data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="Remarks: {{ $propertyChild->remarks }}" @endif>
                     @if ($propertyChild->is_active)

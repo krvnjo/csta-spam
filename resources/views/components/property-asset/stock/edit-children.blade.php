@@ -28,8 +28,7 @@
             <div class="col-lg-6">
               <div class="mb-3">
                 <label for="editPropSerialNumber" class="form-label"> Serial Number </label>
-                <input type="text" class="form-control" placeholder="Serial Number" name="serialNumber" id="txtEditSerialNumber" pattern="[A-Za-z0-9]*"
-                       title="Only alphanumeric characters are allowed" />
+                <input type="text" class="form-control" placeholder="Serial Number" name="serialNumber" id="txtEditSerialNumber" />
                 <span class="invalid-feedback" id="valEditSerial"></span>
               </div>
             </div>
@@ -37,8 +36,7 @@
             <div class="col-lg-6">
               <div class="mb-3">
                 <label for="editPropRemarks" class="form-label">Remarks</label>
-                <input type="text" class="form-control" placeholder="Remarks" name="remarks" id="txtEditRemarks"
-                       pattern="^(?=.*[A-Za-z0-9])[A-Za-z0-9 ]+$" title="Only alphanumeric characters are allowed, and the input cannot be all spaces" />
+                <input type="text" class="form-control" placeholder="Remarks" name="remarks" id="txtEditRemarks"/>
                 <span class="invalid-feedback" id="valEditRemarks"></span>
               </div>
             </div>
@@ -91,7 +89,7 @@
                 <label for="editPropDateAcquired" class="form-label">
                   Date Acquired
                   <span class="font-13" style="color: red">*</span></label>
-                <input type="date" class="form-control" required name="dateAcquired" id="txtEditDateAcquired" max="{{ now()->toDateString() }}" />
+                <input type="date" class="form-control" name="dateAcquired" id="txtEditDateAcquired" />
                 <span class="invalid-feedback" id="valEditDateAcq"></span>
               </div>
             </div>
@@ -99,7 +97,7 @@
             <div class="col-lg-6">
               <div class="mb-3">
                 <label for="editPropWarrantyDate" class="form-label"> Warranty Date </label>
-                <input type="date" class="form-control" name="warranty" id="txtEditWarrantyDate" min="{{ now()->toDateString() }}" />
+                <input type="date" class="form-control" name="warranty" id="txtEditWarrantyDate" />
                 <span class="invalid-feedback" id="valEditWarranty"></span>
               </div>
             </div>

@@ -78,9 +78,9 @@ Route::middleware(['auth', 'nocache'])->group(function () {
     });
     Route::middleware('can:view item management')->prefix('properties-assets/{propertyParent}/child-stocks')->name('prop-asset.child.')->controller(PropertyChildController::class)->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::post('/', 'store')->name('store')->middleware('expectsJson');
-        Route::get('/edit', 'edit')->name('edit');
-        Route::patch('/update', 'update')->name('update');
+        Route::post('/', 'store')->name('store')->middleware('can:create item management');
+        Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
+        Route::patch('/', 'update')->name('update')->middleware('can:update item management');
         Route::delete('/delete', 'destroy')->name('delete');
     });
 
