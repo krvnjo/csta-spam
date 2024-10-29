@@ -185,72 +185,76 @@ class PropertyChildController extends Controller
         try {
             $children = PropertyChild::query()->findOrFail(Crypt::decryptString($request->input('id')));
 
-            $childrenValidationMessages = [
-                'remarks.regex' => 'The remarks may only contain letters, spaces, and hyphens.',
-                'remarks.min' => 'The remarks must be at least :min characters.',
-                'remarks.max' => 'The remarks may not be greater than :max characters.',
+            if ($request->has(['serialNumber', 'remarks', 'acquiredType', 'condition', 'acquiredDate', 'warranty',])) {
+                $childrenValidationMessages = [
+                    'remarks.regex' => 'The remarks may only contain letters, spaces, and hyphens.',
+                    'remarks.min' => 'The remarks must be at least :min characters.',
+                    'remarks.max' => 'The remarks may not be greater than :max characters.',
 
-                'acquiredType.required' => 'Please choose a acquisition type!',
+                    'acquiredType.required' => 'Please choose a acquisition type!',
 
-                'acquiredDate.required' => 'Please choose date acquired!',
-                'acquiredDate.before_or_equal' => 'The acquired date cannot be later than today.',
-                'acquiredDate.after_or_equal' => 'The acquired date must be on or after January 1, 2007.',
+                    'acquiredDate.required' => 'Please choose date acquired!',
+                    'acquiredDate.before_or_equal' => 'The acquired date cannot be later than today.',
+                    'acquiredDate.after_or_equal' => 'The acquired date must be on or after January 1, 2007.',
 
-                'condition.required' => 'Please choose a condition!',
+                    'condition.required' => 'Please choose a condition!',
 
-                'serialNumber.regex' => 'The serial number may only contain letters and numbers.',
-                'serialNumber.min' => 'The serial number must be at least :min characters.',
-                'serialNumber.max' => 'The serial number may not be greater than :max characters.',
+                    'serialNumber.regex' => 'The serial number may only contain letters and numbers.',
+                    'serialNumber.min' => 'The serial number must be at least :min characters.',
+                    'serialNumber.max' => 'The serial number may not be greater than :max characters.',
 
-                'warranty.after_or_equal' => 'The warranty date must be today or a future date.',
-                'warranty.before_or_equal' => 'The warranty date cannot be later than December 31, 2100.'
-            ];
+                    'warranty.after_or_equal' => 'The warranty date must be today or a future date.',
+                    'warranty.before_or_equal' => 'The warranty date cannot be later than December 31, 2100.'
+                ];
 
-            $childrenValidator = Validator::make($request->all(), [
-                'serialNumber' => [
-                    'nullable',
-                    'regex:/^[A-Za-z0-9]*$/',
-                    'min:3',
-                    'max:50'
-                ],
-                'remarks' => [
-                    'nullable',
-                    'regex:/^[A-Za-z0-9%,\- ×"]+$/',
-                    'min:3',
-                    'max:70'
-                ],
-                'acquiredType' => [
-                    'required'
-                ],
-                'acquiredDate' => [
-                    'required',
-                    'date',
-                    'after_or_equal:2007-01-01',
-                    'before_or_equal:today'
-                ],
-                'warranty' => [
-                    'nullable',
-                    'date',
-                    'after_or_equal:today',
-                    'before_or_equal:2100-12-31'
-                ],
-                'condition' => [
-                    'required'
-                ],
-            ], $childrenValidationMessages);
+                $childrenValidator = Validator::make($request->all(), [
+                    'serialNumber' => [
+                        'nullable',
+                        'regex:/^[A-Za-z0-9]*$/',
+                        'min:3',
+                        'max:50'
+                    ],
+                    'remarks' => [
+                        'nullable',
+                        'regex:/^[A-Za-z0-9%,\- ×"]+$/',
+                        'min:3',
+                        'max:70'
+                    ],
+                    'acquiredType' => [
+                        'required'
+                    ],
+                    'acquiredDate' => [
+                        'required',
+                        'date',
+                        'after_or_equal:2007-01-01',
+                        'before_or_equal:today'
+                    ],
+                    'warranty' => [
+                        'nullable',
+                        'date',
+                        'after_or_equal:today',
+                        'before_or_equal:2100-12-31'
+                    ],
+                    'condition' => [
+                        'required'
+                    ],
+                ], $childrenValidationMessages);
 
-            if ($childrenValidator->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'errors' => $childrenValidator->errors(),
-                ]);
+                if ($childrenValidator->fails()) {
+                    return response()->json([
+                        'success' => false,
+                        'errors' => $childrenValidator->errors(),
+                    ]);
+                } else {
+                    $children->serial_num = $request->input('serialNumber');
+                    $children->remarks = $request->input('remarks');
+                    $children->type_id = $request->input('acquiredType');
+                    $children->condi_id = $request->input('condition');
+                    $children->acq_date = $request->input('acquiredDate');
+                    $children->warranty_date = $request->input('warranty');
+                }
             } else {
-                $children->serial_num = $request->input('serialNumber');
-                $children->remarks = $request->input('remarks');
-                $children->type_id = $request->input('acquiredType');
-                $children->condi_id = $request->input('condition');
-                $children->acq_date = $request->input('acquiredDate');
-                $children->warranty_date = $request->input('warranty');
+                $children->is_active = $request->input('status');
             }
 
             $children->updated_at = now();

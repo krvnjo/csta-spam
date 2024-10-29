@@ -291,9 +291,10 @@
                   <td data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom"
                     title="Date Acquired: {{ \Carbon\Carbon::parse($propertyChild->acq_date)->format('F j, Y') }}, Warranty Date: {{ $propertyChild->warranty_date ? \Carbon\Carbon::parse($propertyChild->warranty_date)->format('F j, Y') : '-' }}">
                     <i class="bi-calendar-event me-1"></i>
-                    {{ \Carbon\Carbon::parse($propertyChild->stock_date)->format('F j, Y') }}</td>
+                    {{ \Carbon\Carbon::parse($propertyChild->stock_date)->format('F j, Y') }}
+                  </td>
                   <td @if ($propertyChild->remarks) data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="Remarks: {{ $propertyChild->remarks }}" @endif>
-                      <span class="badge bg-soft-{{ $propertyChild->is_active ? 'success' : 'danger' }} text-{{ $propertyChild->is_active ? 'success' : 'danger' }}">
+                    <span class="badge bg-soft-{{ $propertyChild->is_active ? 'success' : 'danger' }} text-{{ $propertyChild->is_active ? 'success' : 'danger' }}">
                       <span class="legend-indicator bg-{{ $propertyChild->is_active ? 'success' : 'danger' }}"></span>{{ $propertyChild->is_active ? 'Active' : 'Inactive' }}
                     </span>
                   </td>
@@ -306,22 +307,20 @@
 
                       <!-- Button Group -->
                       <div class="btn-group">
-                        <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="productsEditDropdown1" data-bs-toggle="dropdown" type="button"
+                        <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="childEditDropdown" data-bs-toggle="dropdown" type="button"
                           aria-expanded="false"></button>
 
-                        <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="productsEditDropdown1">
-                          @if (!$propertyChild->is_active)
-                            <button class="dropdown-item" id="btnRestorePropChild" data-child-restore-id="{{ $propertyChild->id }}" type="button">
-                              <i class="bi-arrow-clockwise dropdown-item-icon"></i> Restore
-                            </button>
-                          @else
-                            {{--                          <button class="dropdown-item" type="button" id="btnMoveToInventory" data-child-move-id="{{ $propertyChild->id }}"> --}}
-                            {{--                            <i class="bi bi-arrow-left-right dropdown-item-icon"></i> Move to Inventory --}}
-                            {{--                          </button> --}}
-                            <button class="dropdown-item btnDeleteChild" data-childdel-id="{{ $propertyChild->id }}" type="button">
-                              <i class="bi-trash dropdown-item-icon"></i> Delete
-                            </button>
-                          @endif
+                        <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="childEditDropdown">
+                          <button class="dropdown-item btnMoveToInventory" data-child-move-id="{{ $propertyChild->id }}" type="button">
+                            <i class="bi bi-arrow-left-right dropdown-item-icon text-info"></i> Move to Inventory
+                          </button>
+                          <button class="dropdown-item btnStatusChild" data-status="{{ $propertyChild->is_active ? 0 : 1 }}" type="button">
+                            <i class="bi {{ $propertyChild->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
+                            {{ $propertyChild->is_active ? 'Set to Inactive' : 'Set to Active' }}
+                          </button>
+                          <button class="dropdown-item text-danger btnDeleteChild" data-childdel-id="{{ $propertyChild->id }}" type="button">
+                            <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
+                          </button>
                         </div>
                       </div>
                       <!-- End Button Group -->

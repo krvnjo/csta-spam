@@ -136,6 +136,47 @@ $(document).ready(function() {
     });
   });
 
+  childDatatable.on('click', '.btnStatusChild', function () {
+    const childId = $(this).closest("tr").find("td[data-child-id]").data("child-id");
+    const childSetStatus = $(this).data('status');
+    let statusName;
+
+    if (childSetStatus === 1) {
+      statusName = 'active';
+    } else {
+      statusName = 'inactive';
+    }
+
+    Swal.fire({
+      title: 'Change status?',
+      text: 'Are you sure you want to set it to ' + statusName + '?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, set it to ' + statusName + '!',
+      cancelButtonText: 'No, cancel!',
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-secondary',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: "/properties-assets/"+ parentId + "/child-stocks/",
+          method: 'PATCH',
+          data: {
+            id: childId,
+            status: childSetStatus,
+          },
+          success: function (response) {
+            showSuccessAlert(response);
+          },
+          error: function (response) {
+            showErrorAlert(response.responseJSON);
+          },
+        });
+      }
+    });
+  });
 
   // ============ End Update a Stock Variant ============ //
 
