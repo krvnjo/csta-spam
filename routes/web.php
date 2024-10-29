@@ -112,7 +112,7 @@ Route::middleware(['auth', 'nocache'])->group(function () {
 
     // ============ File Maintenance Routes ============ //
 
-    // Brand Routes
+    // Brands Routes
     Route::middleware('can:view brand maintenance')->prefix('file-maintenance/brands')->name('brand.')->controller(BrandController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/show', 'show')->name('show')->middleware('expectsJson');

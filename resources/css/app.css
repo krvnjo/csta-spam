@@ -6,33 +6,41 @@
   background-repeat: no-repeat;
   height: 25rem;
 }
+
 .tom-page-w {
   width: 80px;
 }
+
 .modal-top-cover-icon {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
 }
+
 .custom-modal-body {
   max-height: 40rem;
   overflow-y: auto;
 }
+
 .tom-select input[type="text"] {
   caret-color: transparent;
   pointer-events: none;
 }
+
 .red-mark {
   color: #ff0000;
 }
+
 .navbar-brand-logo-mini {
   width: 2rem;
 }
+
 .card-body-height {
   max-height: 300px;
   overflow-y: auto;
 }
+
 .tom-select-invalid .ts-control {
   border-color: #dc3545 !important;
   padding-right: calc(1.5em + 0.75rem);
@@ -41,27 +49,43 @@
   background-position: right calc(0.375em + 0.1875rem) center;
   background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
 }
+
 .tom-select-invalid .ts-control:focus {
   border-color: #dc3545;
   box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
 }
+
 .scrollable-dropdown-menu {
   max-height: 150px;
   overflow-y: auto;
 }
+
 .description-long-text {
   word-break: break-word;
   white-space: pre-wrap;
 }
+
 .login-bg {
   height: 32rem;
   background-image: url("../img/others/csta-dashboard.png");
 }
+
 .ts-wrapper.is-invalid.focus .ts-control,
 .was-validated .invalid.focus .ts-control,
 .was-validated :invalid + .ts-wrapper.focus .ts-control {
   box-shadow: none;
 }
+
 .w-th {
   width: 10%;
+}
+
+.custom-dropdown {
+  width: 22rem;
+}
+
+@media (max-width: 576px) {
+  .custom-dropdown {
+    width: 100%;
+  }
 }

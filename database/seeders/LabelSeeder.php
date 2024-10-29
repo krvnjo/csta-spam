@@ -26,7 +26,7 @@ class LabelSeeder extends Seeder
             ]);
         }
 
-        $brands = ['Generic', 'A4Tech', 'Carrier', 'MSI', 'TCL', 'Samsung'];
+        $brands = ['Generic', 'A4Tech', 'Carriers', 'MSI', 'TCL', 'Samsung'];
 
         foreach ($brands as $brand) {
             Brand::query()->create([

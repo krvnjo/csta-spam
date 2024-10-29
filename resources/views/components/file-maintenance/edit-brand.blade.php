@@ -52,9 +52,9 @@
       <!-- Footer -->
       <div class="modal-footer">
         <div class="row align-items-sm-center flex-grow-1 mx-n2">
-          <div class="col-sm mb-2 mb-sm-0"></div>
+          <div class="col-sm"></div>
           <div class="col-sm-auto">
-            <div class="d-flex gap-2">
+            <div class="d-flex justify-content-end gap-2">
               <button class="btn btn-white" data-bs-dismiss="modal" type="button">Cancel</button>
               <button class="btn btn-primary" id="btnEditSaveBrand" form="frmEditBrand" type="submit">Save</button>
             </div>

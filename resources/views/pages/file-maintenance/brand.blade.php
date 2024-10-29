@@ -40,25 +40,25 @@
       <!-- End Page Header -->
 
       <!-- Active and Inactive Brands Card -->
-      <div class="card mb-3 mb-lg-5">
+      <div class="card mb-5">
         <div class="card-body">
-          <div class="d-flex flex-column flex-md-row align-items-md-center text-md-start text-center">
+          <div class="d-flex flex-column flex-sm-row align-items-sm-center text-sm-start text-center">
             <div class="flex-shrink-0"><span class="display-3 text-dark">{{ $totalBrands }}</span></div>
-            <div class="flex-grow-1 ms-md-3 my-1 mt-md-0">
+            <div class="flex-grow-1 ms-sm-3 my-1 mt-sm-0">
               <div class="row">
-                <div class="col-12 col-md">
+                <div class="col-lg-3 col-md-4 col-sm-5">
                   <span class="d-block">Total Brands</span>
                   <span class="badge bg-soft-primary text-primary rounded-pill p-1">
                     @if ($deletedBrands == 0)
                       <i class="bi-hand-thumbs-up-fill"></i> Everything looks great!
                     @else
-                      <i class="bi-arrow-counterclockwise"></i> {{ $deletedBrands }} record(s) can be restored from bin.
+                      <i class="bi-arrow-counterclockwise"></i> {{ $deletedBrands }} record(s) can be restored.
                     @endif
                   </span>
                 </div>
 
-                <div class="col-12 col-md-9 mt-3 mt-md-0">
-                  <div class="d-flex justify-content-center justify-content-md-start mb-2">
+                <div class="col-lg-9 col-md-8 col-sm-7 mt-3 mt-sm-0">
+                  <div class="d-flex justify-content-center justify-content-sm-start mb-2">
                     <div class="me-3"><span class="legend-indicator bg-success"></span>Active ({{ $activeBrands }})</div>
                     <div><span class="legend-indicator bg-danger"></span>Inactive ({{ $inactiveBrands }})</div>
                   </div>
@@ -87,7 +87,7 @@
             <!-- End Datatable Search -->
           </div>
 
-          <div class="d-grid d-md-flex justify-content-md-end align-items-sm-center gap-2">
+          <div class="d-grid d-sm-flex justify-content-sm-center justify-content-md-end align-items-sm-center gap-2">
             @can('delete brand maintenance')
               <!-- Datatable Counter -->
               <div id="brandsDatatableCounterInfo" style="display: none;">
@@ -126,11 +126,11 @@
 
             <!-- Datatable Filter Dropdown -->
             <div class="dropdown">
-              <button class="btn btn-white btn-sm w-100" data-bs-toggle="dropdown" data-bs-auto-close="outside" type="button">
-                <i class="bi-filter me-1"></i> Filter <span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="brandFilterCount"></span>
+              <button class="btn btn-white btn-sm dropdown-toggle w-100" data-bs-toggle="dropdown" data-bs-auto-close="outside" type="button">
+                <i class="bi-filter me-2"></i> Filter <span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="brandFilterCount"></span>
               </button>
 
-              <div class="dropdown-menu dropdown-menu-sm-end dropdown-card card-dropdown-filter-centered w-100" id="filterDropdown" style="min-width: 22rem;">
+              <div class="dropdown-menu dropdown-menu-sm-end custom-dropdown" id="filterDropdown">
                 <div class="card">
                   <div class="card-header card-header-content-between">
                     <h5 class="card-header-title">Brand Filters</h5>
@@ -239,7 +239,7 @@
                     @endcan
                   </td>
                   <td class="d-none" data-brand-id="{{ Crypt::encryptString($brand->id) }}"></td>
-                  <td><span class="text-inherit h5 mb-0">{{ $brand->name }}</span></td>
+                  <td><a class="d-block h5 mb-0 btnViewBrand">{{ $brand->name }}</a></td>
                   <td>
                     @php
                       $subcategoryNames = $brand->subcategories->sortBy('name')->pluck('name')->implode(', ');
@@ -295,9 +295,11 @@
                 <div class="tom-select-custom tom-page-w">
                   <select class="js-select form-select form-select-borderless" id="brandsDatatableEntries"
                     data-hs-tom-select-options='{
+                      "dropdownWidth": "100%",
                       "hideSearch": true,
                       "searchInDropdown": false
-                    }' autocomplete="off">
+                    }'
+                    autocomplete="off">
                     <option value="5" selected>5</option>
                     <option value="10">10</option>
                     <option value="20">20</option>
