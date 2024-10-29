@@ -311,6 +311,9 @@
                           aria-expanded="false"></button>
 
                         <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="childEditDropdown">
+                          <button class="dropdown-item btnViewChild" type="button">
+                            <i class="bi bi-info-square-fill dropdown-item-icon"></i> View Details
+                          </button>
                           <button class="dropdown-item btnMoveToInventory" data-child-move-id="{{ $propertyChild->id }}" type="button">
                             <i class="bi bi-arrow-left-right dropdown-item-icon text-info"></i> Move to Inventory
                           </button>
@@ -384,6 +387,7 @@
 @section('sec-content')
   <x-property-asset.stock.add-children :propertyParents="$propertyParents" />
   <x-property-asset.stock.edit-children :propertyParents="$propertyParents" :propertyChildren="$propertyChildren" :conditions="$conditions" :acquisitions="$acquisitions" />
+  <x-property-asset.stock.view-details-children />
   {{--  <x-modals.edit-property-child :propertyParents="$propertyParents" :conditions="$conditions" :acquisitions="$acquisitions" :propertyChildren="$propertyChildren" /> --}}
   {{--  <x-modals.move-property :designations="$designations" :departments="$departments" :statuses="$statuses"/> --}}
 

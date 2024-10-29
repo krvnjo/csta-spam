@@ -144,9 +144,35 @@ class PropertyChildController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(PropertyChild $propertyChild)
+    public function show(Request $request)
     {
-        //
+        try {
+            $child = PropertyChild::query()->findOrFail(Crypt::decryptString($request->input('id')));
+            $acquiredType = $child->type_id === 1 ? "Purchased" : ($child->type_id === 2 ? "Donation" : "Other");
+
+            return response()->json([
+                'success' => true,
+                'propcode' => $child->prop_code,
+                'serialNum' => $child->serial_num ?? "-",
+                'department' => $child->department->name,
+                'designation' => $child->designation->name,
+                'condition' => $child->condition->name,
+                'itemStatus' => $child->status->name,
+                'remarks' => $child->remarks ?? "-",
+                'acquiredType' => $acquiredType,
+                'acquiredDate' => $child->acq_date ? Carbon::parse($child->acq_date)->format('F d, Y') : "-",
+                'status' => $child->is_active,
+                'warrantyDate' => $child->warranty_date ? Carbon::parse($child->warranty_date)->format('F d, Y') : "-",
+                'dateCreated' => $child->created_at->format('D, F d, Y | h:i:s A'),
+                'dateUpdated' => $child->updated_at->format('D, F d, Y | h:i:s A'),
+            ]);
+        } catch (Throwable) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Oops! Something went wrong.',
+                'message' => 'An error occurred while fetching the item.',
+            ], 500);
+        }
     }
 
     /**

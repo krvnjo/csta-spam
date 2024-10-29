@@ -180,6 +180,58 @@ $(document).ready(function() {
 
   // ============ End Update a Stock Variant ============ //
 
+  // ============ View a Stock Item ============ //
+
+  function formatDate(dateString) {
+    if (!dateString || dateString === "-") return "-";
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    } catch (e) {
+      console.error('Date parsing error:', e);
+      return dateString;
+    }
+  }
+  childDatatable.on("click", ".btnViewChild", function () {
+    const childId = $(this).closest("tr").find("td[data-child-id]").data("child-id");
+
+    $.ajax({
+      url: "/properties-assets/"+ parentId + "/child-stocks/show",
+      method: "GET",
+      data: { id: childId },
+      success: function (response) {
+        $("#viewChildModal").modal("toggle");
+
+        $("#lblViewPropCode").text(response.propcode);
+        $("#lblViewSerialNum").text(response.serialNum);
+        $("#lblViewDepartment").text(response.department);
+        $("#lblViewDesignation").text(response.designation);
+        $("#lblViewCondition").text(response.condition);
+        const childStatus =
+          response.status === 1
+            ? `<span class="badge bg-soft-success text-success"><span class="legend-indicator bg-success"></span>Active</span>`
+            : `<span class="badge bg-soft-danger text-danger"><span class="legend-indicator bg-danger"></span>Inactive</span>`;
+        $('#lblViewStatus').html(childStatus);
+        $("#lblViewRemarks").text(response.remarks || "-");
+        $("#lblViewAcquiredType").text(response.acquiredType);
+        $("#lblViewItemStatus").text(response.itemStatus);
+        $("#lblViewAcquiredDate").text(response.acquiredDate);
+        $("#lblViewWarrantyDate").text(response.warrantyDate);
+        $("#lblViewDateCreated").text(response.dateCreated);
+        $("#lblViewDateUpdated").text(response.dateUpdated);
+      },
+      error: function (response) {
+        console.log("Error response:", response);
+        showErrorAlert(response.responseJSON);
+      },
+    });
+  });
+  // ============ End View a Stock Item ============ //
+
   // ============ Delete a Stock Variant ============ //
   childDatatable.on('click', '.btnDeleteChild', function () {
     const childId = $(this).data('childdel-id');
