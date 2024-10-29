@@ -163,11 +163,14 @@
             <div id="propertyStockDatatableCounterInfo" style="display: none;">
               <div class="d-flex align-items-center">
                 <span class="fs-5 me-3">
-                  <span id="datatableCounter">0</span>
+                  <span id="propertyStockDatatableCounter">0</span>
                   Selected
                 </span>
-                <button class="btn btn-outline-info btn-md" id="btnMoveToInventory" type="button">
+                <button class="btn btn-outline-info btn-md me-2" id="btnMoveToInventory" type="button">
                   <i class="bi bi-arrow-left-right"></i> Move to Inventory
+                </button>
+                <button class="btn btn-outline-danger btn-md" id="btnMultiDeleteChild" type="button">
+                  <i class="bi-trash3-fill"></i> Delete
                 </button>
               </div>
             </div>
@@ -290,12 +293,11 @@
                     <i class="bi-calendar-event me-1"></i>
                     {{ \Carbon\Carbon::parse($propertyChild->stock_date)->format('F j, Y') }}</td>
                   <td @if ($propertyChild->remarks) data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="Remarks: {{ $propertyChild->remarks }}" @endif>
-                    @if ($propertyChild->is_active)
-                      <span class="legend-indicator bg-success"></span>Active
-                    @else
-                      <span class="legend-indicator bg-danger"></span>Deleted
-                    @endif
+                      <span class="badge bg-soft-{{ $propertyChild->is_active ? 'success' : 'danger' }} text-{{ $propertyChild->is_active ? 'success' : 'danger' }}">
+                      <span class="legend-indicator bg-{{ $propertyChild->is_active ? 'success' : 'danger' }}"></span>{{ $propertyChild->is_active ? 'Active' : 'Inactive' }}
+                    </span>
                   </td>
+
                   <td>
                     <div class="btn-group" role="group">
                       <button class="btn btn-white btn-sm btnEditPropChild" type="button">
@@ -316,7 +318,7 @@
                             {{--                          <button class="dropdown-item" type="button" id="btnMoveToInventory" data-child-move-id="{{ $propertyChild->id }}"> --}}
                             {{--                            <i class="bi bi-arrow-left-right dropdown-item-icon"></i> Move to Inventory --}}
                             {{--                          </button> --}}
-                            <button class="dropdown-item" id="btnDeletePropChild" data-child-delete-id="{{ $propertyChild->id }}" type="button">
+                            <button class="dropdown-item btnDeleteChild" data-childdel-id="{{ $propertyChild->id }}" type="button">
                               <i class="bi-trash dropdown-item-icon"></i> Delete
                             </button>
                           @endif

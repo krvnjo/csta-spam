@@ -12,6 +12,7 @@ use App\Models\Status;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
 
@@ -272,8 +273,27 @@ class PropertyChildController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(PropertyChild $propertyChild)
+    public function destroy(Request $request)
     {
-        //
+        try {
+            $ids = $request->input('id');
+
+            PropertyChild::query()->whereIn('id', $ids)->update(['is_active' => 0]);
+
+            PropertyChild::destroy($ids);
+
+            return response()->json([
+                'success' => true,
+                'title' => 'Deleted Successfully!',
+                'text' => 'The item has been deleted and can be restored from the bin.',
+            ]);
+        } catch (Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Oops! Something went wrong.',
+                'message' => 'An error occurred while deleting the item: ',
+            ], 500);
+        }
     }
+
 }

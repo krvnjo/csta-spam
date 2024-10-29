@@ -81,7 +81,7 @@ Route::middleware(['auth', 'nocache'])->group(function () {
         Route::post('/', 'store')->name('store')->middleware('can:create item management');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
         Route::patch('/', 'update')->name('update')->middleware('can:update item management');
-        Route::delete('/delete', 'destroy')->name('delete');
+        Route::delete('/', 'destroy')->name('delete');
     });
 
     // ============ End Item Inventory Management Routes ============ //

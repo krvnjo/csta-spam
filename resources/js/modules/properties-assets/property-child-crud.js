@@ -138,6 +138,90 @@ $(document).ready(function() {
 
 
   // ============ End Update a Stock Variant ============ //
+
+  // ============ Delete a Stock Variant ============ //
+  childDatatable.on('click', '.btnDeleteChild', function () {
+    const childId = $(this).data('childdel-id');
+    console.log("Retrieved child ID:", childId);
+
+    Swal.fire({
+      title: 'Delete Record?',
+      text: 'Are you sure you want to delete the item?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
+      customClass: {
+        confirmButton: 'btn btn-danger',
+        cancelButton: 'btn btn-secondary',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: "/properties-assets/" + parentId + "/child-stocks/",
+          method: 'DELETE',
+          data: { id: [childId] },
+          success: function (response) {
+            showSuccessAlert(response);
+          },
+          error: function (response) {
+            // console.log("Error response:", response);
+            showErrorAlert(response.responseJSON);
+          },
+        });
+
+      }
+    });
+  });
+
+  $('#btnMultiDeleteChild').on('click', function () {
+    let checkedCheckboxes = childDatatable.rows().nodes().to$().find('input.form-check-input:checked');
+
+    let childIds = checkedCheckboxes
+      .map(function () {
+        return $(this).closest('tr').find('[data-childdel-id]').data('childdel-id');
+      })
+      .get();
+
+    if (childIds.length === 0) {
+      Swal.fire({
+        title: 'No Items Selected',
+        text: 'Please select at least one item to delete.',
+        icon: 'info',
+        confirmButtonText: 'OK',
+      });
+      return;
+    }
+
+    Swal.fire({
+      title: 'Delete Records?',
+      text: 'Are you sure you want to delete all the selected items?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
+      customClass: {
+        confirmButton: 'btn btn-danger',
+        cancelButton: 'btn btn-secondary',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: '/properties-assets/' + parentId + '/child-stocks/',
+          method: 'DELETE',
+          data: { id: childIds },
+          success: function (response) {
+            showSuccessAlert(response);
+          },
+          error: function (response) {
+            showErrorAlert(response.responseJSON);
+          },
+        });
+      }
+    });
+  });
+
+  // ============ End Delete a Stock Variant ============ //
 });
 document.addEventListener('DOMContentLoaded', function() {
   new TomSelect('#cbxEditAcquiredType', {
