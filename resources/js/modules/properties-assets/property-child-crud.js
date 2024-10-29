@@ -181,21 +181,6 @@ $(document).ready(function() {
   // ============ End Update a Stock Variant ============ //
 
   // ============ View a Stock Item ============ //
-
-  function formatDate(dateString) {
-    if (!dateString || dateString === "-") return "-";
-    try {
-      const date = new Date(dateString);
-      return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-    } catch (e) {
-      console.error('Date parsing error:', e);
-      return dateString;
-    }
-  }
   childDatatable.on("click", ".btnViewChild", function () {
     const childId = $(this).closest("tr").find("td[data-child-id]").data("child-id");
 
