@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 
 // ============ Guest Routes ============ //
 
-Route::middleware(['guest', 'nocache'])->group(function () {
+Route::middleware(['guest', 'noCache'])->group(function () {
     // Login Routes
     Route::name('auth.')->controller(AuthController::class)->group(function () {
         Route::get('/login', 'index')->name('index');
@@ -36,7 +36,7 @@ Route::middleware(['guest', 'nocache'])->group(function () {
 
 // ============ Auth Routes ============ //
 
-Route::middleware(['auth', 'nocache'])->group(function () {
+Route::middleware(['auth', 'noCache'])->group(function () {
     // Logout Routes
     Route::name('auth.')->controller(AuthController::class)->group(function () {
         Route::get('/logout', 'index')->name('index');
@@ -67,7 +67,7 @@ Route::middleware(['auth', 'nocache'])->group(function () {
     // ============ Item Inventory Management Routes ============ //
 
     // Stock Routes
-    Route::middleware('can:view item management')->prefix('properties-assets/stocks')->name('prop-asset.')->controller(PropertyParentController::class)->group(function () {
+    Route::middleware('checkPermission:view item management')->prefix('properties-assets/stocks')->name('prop-asset.')->controller(PropertyParentController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/create', 'store')->name('store');
         Route::get('/show', 'show')->name('show');
@@ -76,7 +76,7 @@ Route::middleware(['auth', 'nocache'])->group(function () {
         Route::delete('/delete', 'destroy')->name('delete');
         Route::get('/get-subcategory-brands', 'getSubcategoryBrands')->name('getSubcategoryBrands');
     });
-    Route::middleware('can:view item management')->prefix('properties-assets/{propertyParent}/child-stocks')->name('prop-asset.child.')->controller(PropertyChildController::class)->group(function () {
+    Route::middleware('checkPermission:view item management')->prefix('properties-assets/{propertyParent}/child-stocks')->name('prop-asset.child.')->controller(PropertyChildController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/create', 'store')->name('store');
         Route::get('/edit', 'edit')->name('edit');
@@ -89,97 +89,97 @@ Route::middleware(['auth', 'nocache'])->group(function () {
     // ============ User Management Routes ============ //
 
     // User Routes
-    Route::middleware('can:view user management')->prefix('user-management/users')->name('user.')->controller(UserController::class)->group(function () {
+    Route::middleware('checkPermission:view user management')->prefix('user-management/users')->name('user.')->controller(UserController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/show', 'show')->name('show')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
-        Route::post('/', 'store')->name('store')->middleware('can:create user management');
-        Route::patch('/', 'update')->name('update')->middleware('can:update user management');
-        Route::delete('/', 'destroy')->name('delete')->middleware('can:delete user management');
+        Route::post('/', 'store')->name('store')->middleware('checkPermission:create user management');
+        Route::patch('/', 'update')->name('update')->middleware('checkPermission:update user management');
+        Route::delete('/', 'destroy')->name('delete')->middleware('checkPermission:delete user management');
     });
 
     // Role Routes
-    Route::middleware('can:view role management')->prefix('user-management/roles')->name('role.')->controller(RoleController::class)->group(function () {
+    Route::middleware('checkPermission:view role management')->prefix('user-management/roles')->name('role.')->controller(RoleController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/show', 'show')->name('show')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
-        Route::post('/', 'store')->name('store')->middleware('can:create role management');
-        Route::patch('/', 'update')->name('update')->middleware('can:update role management');
-        Route::delete('/', 'destroy')->name('delete')->middleware('can:delete role management');
+        Route::post('/', 'store')->name('store')->middleware('checkPermission:create role management');
+        Route::patch('/', 'update')->name('update')->middleware('checkPermission:update role management');
+        Route::delete('/', 'destroy')->name('delete')->middleware('checkPermission:delete role management');
     });
 
     // ============ End User Management Routes ============ //
 
     // ============ File Maintenance Routes ============ //
 
-    // Brands Routes
-    Route::middleware('can:view brand maintenance')->prefix('file-maintenance/brands')->name('brand.')->controller(BrandController::class)->group(function () {
+    // Brand Routes
+    Route::middleware('checkPermission:view brand maintenance')->prefix('file-maintenance/brands')->name('brand.')->controller(BrandController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/show', 'show')->name('show')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
-        Route::post('/', 'store')->name('store')->middleware('can:create brand maintenance');
-        Route::patch('/', 'update')->name('update')->middleware('can:update brand maintenance');
-        Route::delete('/', 'destroy')->name('delete')->middleware('can:delete brand maintenance');
+        Route::post('/', 'store')->name('store')->middleware('checkPermission:create brand maintenance');
+        Route::patch('/', 'update')->name('update')->middleware('checkPermission:update brand maintenance');
+        Route::delete('/', 'destroy')->name('delete')->middleware('checkPermission:delete brand maintenance');
     });
 
     // Category Routes
-    Route::middleware('can:view category maintenance')->prefix('file-maintenance/categories')->name('category.')->controller(CategoryController::class)->group(function () {
+    Route::middleware('checkPermission:view category maintenance')->prefix('file-maintenance/categories')->name('category.')->controller(CategoryController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/show', 'show')->name('show')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
-        Route::post('/', 'store')->name('store')->middleware('can:create category maintenance');
-        Route::patch('/', 'update')->name('update')->middleware('can:update category maintenance');
-        Route::delete('/', 'destroy')->name('delete')->middleware('can:delete category maintenance');
+        Route::post('/', 'store')->name('store')->middleware('checkPermission:create category maintenance');
+        Route::patch('/', 'update')->name('update')->middleware('checkPermission:update category maintenance');
+        Route::delete('/', 'destroy')->name('delete')->middleware('checkPermission:delete category maintenance');
     });
 
     // Condition Routes
-    Route::middleware('can:view condition maintenance')->prefix('file-maintenance/conditions')->name('condition.')->controller(ConditionController::class)->group(function () {
+    Route::middleware('checkPermission:view condition maintenance')->prefix('file-maintenance/conditions')->name('condition.')->controller(ConditionController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/show', 'show')->name('show')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
-        Route::post('/', 'store')->name('store')->middleware('can:create condition maintenance');
-        Route::patch('/', 'update')->name('update')->middleware('can:update condition maintenance');
-        Route::delete('/', 'destroy')->name('delete')->middleware('can:delete condition maintenance');
+        Route::post('/', 'store')->name('store')->middleware('checkPermission:create condition maintenance');
+        Route::patch('/', 'update')->name('update')->middleware('checkPermission:update condition maintenance');
+        Route::delete('/', 'destroy')->name('delete')->middleware('checkPermission:delete condition maintenance');
     });
 
     // Department Routes
-    Route::middleware('can:view department maintenance')->prefix('file-maintenance/departments')->name('department.')->controller(DepartmentController::class)->group(function () {
+    Route::middleware('checkPermission:view department maintenance')->prefix('file-maintenance/departments')->name('department.')->controller(DepartmentController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/show', 'show')->name('show')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
-        Route::post('/', 'store')->name('store')->middleware('can:create department maintenance');
-        Route::patch('/', 'update')->name('update')->middleware('can:update department maintenance');
-        Route::delete('/', 'destroy')->name('delete')->middleware('can:delete department maintenance');
+        Route::post('/', 'store')->name('store')->middleware('checkPermission:create department maintenance');
+        Route::patch('/', 'update')->name('update')->middleware('checkPermission:update department maintenance');
+        Route::delete('/', 'destroy')->name('delete')->middleware('checkPermission:delete department maintenance');
     });
 
     // Designation Routes
-    Route::middleware('can:view designation maintenance')->prefix('file-maintenance/designations')->name('designation.')->controller(DesignationController::class)->group(function () {
+    Route::middleware('checkPermission:view designation maintenance')->prefix('file-maintenance/designations')->name('designation.')->controller(DesignationController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/show', 'show')->name('show')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
-        Route::post('/', 'store')->name('store')->middleware('can:create designation maintenance');
-        Route::patch('/', 'update')->name('update')->middleware('can:update designation maintenance');
-        Route::delete('/', 'destroy')->name('delete')->middleware('can:delete designation maintenance');
+        Route::post('/', 'store')->name('store')->middleware('checkPermission:create designation maintenance');
+        Route::patch('/', 'update')->name('update')->middleware('checkPermission:update designation maintenance');
+        Route::delete('/', 'destroy')->name('delete')->middleware('checkPermission:delete designation maintenance');
     });
 
     // Status Routes
-    Route::middleware('can:view status maintenance')->prefix('file-maintenance/statuses')->name('status.')->controller(StatusController::class)->group(function () {
+    Route::middleware('checkPermission:view status maintenance')->prefix('file-maintenance/statuses')->name('status.')->controller(StatusController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/show', 'show')->name('show')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
-        Route::post('/', 'store')->name('store')->middleware('can:create status maintenance');
-        Route::patch('/', 'update')->name('update')->middleware('can:update status maintenance');
-        Route::delete('/', 'destroy')->name('delete')->middleware('can:delete status maintenance');
+        Route::post('/', 'store')->name('store')->middleware('checkPermission:create status maintenance');
+        Route::patch('/', 'update')->name('update')->middleware('checkPermission:update status maintenance');
+        Route::delete('/', 'destroy')->name('delete')->middleware('checkPermission:delete status maintenance');
     });
 
     // Subcategory Routes
-    Route::middleware('can:view subcategory maintenance')->prefix('file-maintenance/subcategories')->name('subcategory.')->controller(SubcategoryController::class)->group(function () {
+    Route::middleware('checkPermission:view subcategory maintenance')->prefix('file-maintenance/subcategories')->name('subcategory.')->controller(SubcategoryController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/show', 'show')->name('show')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
-        Route::post('/', 'store')->name('store')->middleware('can:create subcategory maintenance');
-        Route::patch('/', 'update')->name('update')->middleware('can:update subcategory maintenance');
-        Route::delete('/', 'destroy')->name('delete')->middleware('can:delete subcategory maintenance');
+        Route::post('/', 'store')->name('store')->middleware('checkPermission:create subcategory maintenance');
+        Route::patch('/', 'update')->name('update')->middleware('checkPermission:update subcategory maintenance');
+        Route::delete('/', 'destroy')->name('delete')->middleware('checkPermission:delete subcategory maintenance');
     });
 
     // ============ End File Maintenance Routes ============ //
@@ -187,21 +187,21 @@ Route::middleware(['auth', 'nocache'])->group(function () {
     // ============ Other Routes ============ //
 
     // Audit History Routes
-    Route::middleware('can:view audit history')->prefix('audit-history')->name('audit.')->controller(AuditController::class)->group(function () {
+    Route::middleware('checkPermission:view audit history')->prefix('audit-history')->name('audit.')->controller(AuditController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/show', 'show')->name('show')->middleware('expectsJson');
     });
 
     // System Settings Routes
-    Route::middleware('can:view system settings')->prefix('system-settings')->name('system.')->controller(SystemSettingsController::class)->group(function () {
+    Route::middleware('checkPermission:view system settings')->prefix('system-settings')->name('system.')->controller(SystemSettingsController::class)->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::patch('/', 'update')->name('update')->middleware('can:update system settings');
+        Route::patch('/', 'update')->name('update')->middleware('checkPermission:update system settings');
     });
 
     // Recycle Bin Routes
-    Route::middleware('can:view recycle bin')->prefix('recycle-bin')->name('recycle.')->controller(RecycleController::class)->group(function () {
+    Route::middleware('checkPermission:view recycle bin')->prefix('recycle-bin')->name('recycle.')->controller(RecycleController::class)->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::patch('/', 'update')->name('update')->middleware('can:update recycle bin');
+        Route::patch('/', 'update')->name('update')->middleware('checkPermission:update recycle bin');
     });
 
     // ============ End Other Routes ============ //
