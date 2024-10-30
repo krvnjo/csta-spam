@@ -220,7 +220,7 @@ $(document).ready(function() {
   // ============ Delete a Stock Variant ============ //
   childDatatable.on('click', '.btnDeleteChild', function () {
     const childId = $(this).data('childdel-id');
-    console.log("Retrieved child ID:", childId);
+    // console.log("Retrieved child ID:", childId);
 
     Swal.fire({
       title: 'Delete Record?',
@@ -267,6 +267,9 @@ $(document).ready(function() {
         text: 'Please select at least one item to delete.',
         icon: 'info',
         confirmButtonText: 'OK',
+        customClass: {
+          confirmButton: 'btn btn-secondary',
+        },
       });
       return;
     }
@@ -300,6 +303,88 @@ $(document).ready(function() {
   });
 
   // ============ End Delete a Stock Variant ============ //
+
+  // ============ Move Stock to Inventory ============ //
+  const childMoveModal = $("#movePropChildModal");
+  const childMoveForm = $("#frmMovePropChild");
+
+  let selectedPropertyChildIds = [];
+
+  $("#propertyStockDatatableCheckAll").change(function () {
+    $(".child-checkbox").prop("checked", this.checked);
+
+    selectedPropertyChildIds = [];
+    if (this.checked) {
+      $(".child-checkbox:checked").each(function () {
+        selectedPropertyChildIds.push($(this).val());
+      });
+    }
+  });
+
+  $(document).on("change", ".child-checkbox", function () {
+    let propertyChildId = $(this).val();
+    if (this.checked) {
+      selectedPropertyChildIds.push(propertyChildId);
+    } else {
+      let index = selectedPropertyChildIds.indexOf(propertyChildId);
+      if (index > -1) {
+        selectedPropertyChildIds.splice(index, 1);
+      }
+    }
+  });
+
+
+  $("#btnMoveToInventory").on("click", function (event) {
+
+    childMoveModal.data("selectedCount", selectedPropertyChildIds.length);
+
+    childMoveModal.modal("show");
+  });
+
+  childMoveModal.on('show.bs.modal', function (event) {
+    let selectedCount = childMoveModal.data('selectedCount');
+
+    $("#movePropIds").text(selectedCount);
+  });
+
+
+  childMoveForm.on("submit", function (e) {
+    e.preventDefault();
+
+    const editFormData = new FormData(childMoveForm[0]);
+
+    editFormData.append("_method", "PATCH");
+    editFormData.append("movePropIds", selectedPropertyChildIds);
+    editFormData.append("status", $("#cbxMoveStatus").val());
+    editFormData.append("designation", $("#cbxMoveDesignation").val());
+
+    $.ajax({
+      url: "/properties-assets/"+ parentId + "/child-stocks/",
+      method: "POST",
+      data: editFormData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        if (response.success) {
+          showSuccessAlert(response, childMoveModal, childMoveForm);
+        } else {
+          if (response.errors.designation) {
+            $("#cbxMoveDesignation").next(".ts-wrapper").addClass("is-invalid");
+            $("#valMoveDesignation").text(response.errors.designation[0]);
+          }
+          if (response.errors.status) {
+            $("#cbxMoveStatus").next(".ts-wrapper").addClass("is-invalid");
+            $("#valMoveStatus").text(response.errors.status[0]);
+          }
+        }
+      },
+      error: function (response) {
+        showErrorAlert(response.responseJSON, childMoveModal, childMoveForm);
+      },
+    });
+  });
+
+  // ============ End Move Stock to Inventory ============ //
 });
 document.addEventListener('DOMContentLoaded', function() {
   new TomSelect('#cbxEditAcquiredType', {
@@ -327,6 +412,20 @@ document.addEventListener('DOMContentLoaded', function() {
     controlInput: false,
     hideSearch: true,
     allowEmptyOption: true
+  });
+
+  new TomSelect('#cbxMoveStatus', {
+    controlInput: false,
+    hideSearch: true,
+    allowEmptyOption: true,
+    placeholder: "Select Status...",
+  });
+
+  new TomSelect('#cbxMoveDesignation', {
+    controlInput: false,
+    hideSearch: true,
+    allowEmptyOption: true,
+    placeholder: "Select Designation...",
   });
 
   document.querySelectorAll('.tom-select input[type="text"]').forEach(function(input) {

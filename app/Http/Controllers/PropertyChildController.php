@@ -10,6 +10,7 @@ use App\Models\PropertyChild;
 use App\Models\PropertyParent;
 use App\Models\Status;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
@@ -44,6 +45,7 @@ class PropertyChildController extends Controller
         $propertyInInventory = $propertyChildren->whereNotNull('inventory_date')->where('is_active',1)->count();
         $propertyInactiveStock = $propertyChildren->whereNull('inventory_date')->where('is_active',0)->count();
         $propertyActiveStock = $propertyChildren->whereNull('inventory_date')->where('is_active',1)->count();
+        $propertyQuantity = $propertyChildren->where('is_active',1)->count();
 
         return view('pages.property-asset.stock.view-children',
             compact('propertyChildren',
@@ -51,6 +53,7 @@ class PropertyChildController extends Controller
                 'propertyInInventory',
                 'propertyActiveStock',
                 'propertyInactiveStock',
+                'propertyQuantity',
                 'conditions',
                 'acquisitions',
                 'designations',
@@ -326,4 +329,55 @@ class PropertyChildController extends Controller
         }
     }
 
+    public function move(Request $request): JsonResponse
+    {
+        try {
+            $propertyChildIds = explode(',', $request->input('movePropIds'));
+
+            $moveValidationMessages = [
+                'status.required' => 'Please choose a status type!',
+
+                'designation.required' => 'Please choose designation!',
+            ];
+
+            $moveValidator = Validator::make($request->all(), [
+                'status' => [
+                    'required'
+                ],
+                'designation' => [
+                    'required'
+                ],
+            ], $moveValidationMessages);
+
+            if ($moveValidator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $moveValidator->errors(),
+                ]);
+            } else {
+                $designation = $request->input('designation');
+                $status = $request->input('status');
+            }
+
+            PropertyChild::whereIn('id', $propertyChildIds)->update([
+                'desig_id' => $designation,
+                'status_id' => $status,
+                'inventory_date' => now(),
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'title' => 'Item Inventoried Successfully!',
+                'text' => 'The item has been added to the inventory.',
+            ]);
+
+        } catch (Throwable $e) {
+            Log::error('Error moving property child:', ['exception' => $e]);
+            return response()->json([
+                'success' => false,
+                'title' => 'Oops! Something went wrong.',
+                'message' => 'An error occurred while moving the item: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
 }

@@ -72,7 +72,7 @@
 
               <div class="row align-items-center gx-2">
                 <div class="col">
-                  <span class="js-counter display-4 text-dark">{{ $propertyParents->quantity }}</span>
+                  <span class="js-counter display-4 text-dark">{{ $propertyQuantity }}</span>
                   {{--                <span class="text-body fs-5 ms-1">from 22</span> --}}
                 </div>
                 <!-- End Col -->
@@ -314,7 +314,7 @@
                           <button class="dropdown-item btnViewChild" type="button">
                             <i class="bi bi-info-square-fill dropdown-item-icon"></i> View Details
                           </button>
-                          <button class="dropdown-item btnMoveToInventory" data-child-move-id="{{ $propertyChild->id }}" type="button">
+                          <button class="dropdown-item btnMoveToInventory" type="button">
                             <i class="bi bi-arrow-left-right dropdown-item-icon text-info"></i> Move to Inventory
                           </button>
                           <button class="dropdown-item btnStatusChild" data-status="{{ $propertyChild->is_active ? 0 : 1 }}" type="button">
@@ -388,6 +388,7 @@
   <x-property-asset.stock.add-children :propertyParents="$propertyParents" />
   <x-property-asset.stock.edit-children :propertyParents="$propertyParents" :propertyChildren="$propertyChildren" :conditions="$conditions" :acquisitions="$acquisitions" />
   <x-property-asset.stock.view-details-children />
+  <x-property-asset.stock.move-children :designations="$designations" :departments="$departments" :statuses="$statuses" />
   {{--  <x-modals.edit-property-child :propertyParents="$propertyParents" :conditions="$conditions" :acquisitions="$acquisitions" :propertyChildren="$propertyChildren" /> --}}
   {{--  <x-modals.move-property :designations="$designations" :departments="$departments" :statuses="$statuses"/> --}}
 
