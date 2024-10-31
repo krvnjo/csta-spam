@@ -308,6 +308,8 @@ $(document).ready(function() {
   const childMoveModal = $("#movePropChildModal");
   const childMoveForm = $("#frmMovePropChild");
 
+  handleUnsavedChanges(childMoveModal, childMoveForm, $("#btnMoveChildSave"));
+
   let selectedPropertyChildIds = [];
 
   $("#propertyStockDatatableCheckAll").change(function () {
@@ -334,18 +336,35 @@ $(document).ready(function() {
   });
 
 
-  $("#btnMoveToInventory").on("click", function (event) {
-
-    childMoveModal.data("selectedCount", selectedPropertyChildIds.length);
-
+  childDatatable.on('click', '.btnMoveToInventory', function () {
+    const childId = $(this).data('childmove-id');
+    selectedPropertyChildIds = [childId];
+    childMoveModal.data("selectedCount", 1);
     childMoveModal.modal("show");
   });
 
-  childMoveModal.on('show.bs.modal', function (event) {
-    let selectedCount = childMoveModal.data('selectedCount');
-
-    $("#movePropIds").text(selectedCount);
+  $("#btnMoveToInventory").on("click", function () {
+    if (selectedPropertyChildIds.length === 0) {
+      Swal.fire({
+        title: 'No Items Selected',
+        text: 'Please select at least one item to move.',
+        icon: 'info',
+        confirmButtonText: 'OK',
+        customClass: {
+          confirmButton: 'btn btn-secondary',
+        },
+      });
+    } else {
+      childMoveModal.data("selectedCount", selectedPropertyChildIds.length);
+      childMoveModal.modal("show");
+    }
   });
+
+  childMoveModal.on('show.bs.modal', function () {
+    const selectedCount = childMoveModal.data('selectedCount') || 0;
+    $("#movePropIds").text(`${selectedCount} item${selectedCount > 1 ? 's' : ''}`);
+  });
+
 
 
   childMoveForm.on("submit", function (e) {
@@ -359,7 +378,7 @@ $(document).ready(function() {
     editFormData.append("designation", $("#cbxMoveDesignation").val());
 
     $.ajax({
-      url: "/properties-assets/"+ parentId + "/child-stocks/",
+      url: "/properties-assets/"+ parentId + "/child-stocks/move",
       method: "POST",
       data: editFormData,
       processData: false,

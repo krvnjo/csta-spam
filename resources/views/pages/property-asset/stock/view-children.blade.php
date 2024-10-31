@@ -300,13 +300,12 @@
                   </td>
 
                   <td>
-                    <div class="btn-group" role="group">
+                    <div class="btn-group position-static">
                       <button class="btn btn-white btn-sm btnEditPropChild" type="button">
                         <i class="bi-pencil-fill me-1"></i> Edit
                       </button>
-
                       <!-- Button Group -->
-                      <div class="btn-group">
+                      <div class="btn-group position-static">
                         <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="childEditDropdown" data-bs-toggle="dropdown" type="button"
                           aria-expanded="false"></button>
 
@@ -314,7 +313,7 @@
                           <button class="dropdown-item btnViewChild" type="button">
                             <i class="bi bi-info-square-fill dropdown-item-icon"></i> View Details
                           </button>
-                          <button class="dropdown-item btnMoveToInventory" type="button">
+                          <button class="dropdown-item btnMoveToInventory"  data-childmove-id="{{ $propertyChild->id }}" type="button">
                             <i class="bi bi-arrow-left-right dropdown-item-icon text-info"></i> Move to Inventory
                           </button>
                           <button class="dropdown-item btnStatusChild" data-status="{{ $propertyChild->is_active ? 0 : 1 }}" type="button">

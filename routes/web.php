@@ -83,7 +83,10 @@ Route::middleware(['auth', 'nocache'])->group(function () {
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
         Route::patch('/', 'update')->name('update')->middleware('can:update item management');
         Route::delete('/', 'destroy')->name('delete')->middleware('can:delete item management');
-        Route::patch('/', 'move')->name('move')->middleware('can:update item management');
+        Route::patch('/move', 'move')->name('move')->middleware('can:update item management');
+        Route::fallback(function () {
+            abort(404);
+        });
     });
 
     // ============ End Item Inventory Management Routes ============ //

@@ -4,7 +4,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-top-cover bg-dark text-center w-100">
-        <div style="padding-top: 1rem;">
+        <div class="pt-6">
           <h4 class="modal-title" id="" style="color: whitesmoke">
             Inventory Items
           </h4>
@@ -37,7 +37,7 @@
                     "placeholder": "Select Designation...",
                     "hideSearch": true
                   }'>
-                  <option value=""></option>
+                  <option value="">Select Designation...</option>
                   @foreach ($designations as $designation)
                     <option value="{{ $designation->id }}">{{ $designation->name }}</option>
                   @endforeach
@@ -56,7 +56,7 @@
                     "placeholder": "Select Status...",
                     "hideSearch": true
                   }'>
-                  <option value=""></option>
+                  <option value="">Select Status...</option>
                   @foreach ($statuses as $status)
                     <option value="{{ $status->id }}">{{ $status->name }}</option>
                   @endforeach
