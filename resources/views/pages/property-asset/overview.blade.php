@@ -293,7 +293,15 @@
                     <span class="d-block fs-5">{{ $propertyParent->subcategory->name }}</span>
                   </td>
                   <td>{{ $propertyParent->brand->name }}</td>
-                  <td style="text-align: center;">{{ $propertyParent->quantity }}</td>
+                  <td style="text-align: center;">
+                    @if (!$propertyParent->propertyChildren->where('inventory_date', null)->count())
+                      <span class="legend-indicator bg-danger"></span>{{ $propertyParent->quantity }}
+                    @elseif ($propertyParent->propertyChildren->where('inventory_date', null)->count() <= 5)
+                      <span class="legend-indicator bg-info"></span>{{ $propertyParent->quantity }}
+                    @else
+                      {{ $propertyParent->quantity }}
+                    @endif
+                  </td>
                   <td>
                     <div class="btn-group position-static" role="group">
                       <a class="btn btn-white btn-sm" href="{{ route('prop-asset.child.index', $propertyParent) }}">
@@ -350,6 +358,7 @@
 
                 <!-- Pagination Quantity -->
                 <span id="propertyDatatableWithPaginationInfoTotalQty"></span>
+                <span class="text-secondary ms-2">records</span>
               </div>
             </div>
             <!-- End Col -->

@@ -360,6 +360,7 @@
 
                 <!-- Pagination Quantity -->
                 <span id="propertyStockDatatableWithPaginationInfoTotalQty"></span>
+                <span class="text-secondary ms-2">records</span>
               </div>
             </div>
             <!-- End Col -->

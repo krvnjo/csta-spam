@@ -440,6 +440,12 @@ document.addEventListener('DOMContentLoaded', function() {
     placeholder: "Select Status...",
   });
 
+  new TomSelect('#propertyStockDatatableEntries', {
+    controlInput: false,
+    hideSearch: true,
+    allowEmptyOption: true
+  });
+
   new TomSelect('#cbxMoveDesignation', {
     controlInput: false,
     hideSearch: true,

@@ -261,6 +261,12 @@ document.addEventListener('DOMContentLoaded', function() {
     allowEmptyOption: true
   });
 
+  new TomSelect('#propertyDatatableEntries', {
+    controlInput: false,
+    hideSearch: true,
+    allowEmptyOption: true
+  });
+
   new TomSelect('#cbxAcquiredType', {
     controlInput: false,
     hideSearch: true,
