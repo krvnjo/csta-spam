@@ -47,147 +47,184 @@
                 <p>{{ $propertyParents->description }}</p>
               </div>
             </div>
-            <div class="col-sm-auto">
-              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPropertyChild" type="button">
-                <i class="bi bi-plus-lg me-1"></i> Add Variant
+
+          </div>
+          <!-- End Col -->
+
+          <div class="col-sm-auto">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPropertyChild" type="button">
+              <i class="bi bi-plus-lg me-1"></i> Add Variant
+            </button>
+          </div>
+          <!-- End Col -->
+        </div>
+        <!-- End Row -->
+      </div>
+      <!-- End Page Header -->
+
+      <!-- Stats -->
+      <div class="row">
+        <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3">
+          <!-- Card -->
+          <div class="card h-100">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2">Total Quantity</h6>
+
+              <div class="row align-items-center gx-2">
+                <div class="col">
+                  <span class="js-counter display-4 text-dark">{{ $propertyQuantity }}</span>
+                  {{--                <span class="text-body fs-5 ms-1">from 22</span> --}}
+                </div>
+                <!-- End Col -->
+              </div>
+              <!-- End Row -->
+            </div>
+          </div>
+          <!-- End Card -->
+        </div>
+
+        <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3">
+          <!-- Card -->
+          <div class="card h-100">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2">In Stock</h6>
+
+              <div class="row align-items-center gx-2">
+                <div class="col">
+                  <span class="js-counter display-4 text-dark">{{ $propertyActiveStock }}</span>
+                  {{--                <span class="text-body fs-5 ms-1">from 11</span> --}}
+                </div>
+              </div>
+              <!-- End Row -->
+            </div>
+          </div>
+          <!-- End Card -->
+        </div>
+
+        <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3">
+          <!-- Card -->
+          <div class="card h-100">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2">In Inventory</h6>
+
+              <div class="row align-items-center gx-2">
+                <div class="col">
+                  <span class="js-counter display-4 text-dark">{{ $propertyInInventory }}</span>
+                  {{--                <span class="text-body fs-5 ms-1">from 48.7</span> --}}
+                </div>
+              </div>
+              <!-- End Row -->
+            </div>
+          </div>
+          <!-- End Card -->
+        </div>
+
+        <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3">
+          <!-- Card -->
+          <div class="card h-100">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2">Active / Inactive (Stock)</h6>
+              <span class="js-counter display-4">
+                <span class="text-success">{{ $propertyActiveStock }}</span> /
+                <span class="text-danger">{{ $propertyInactiveStock }}</span>
+              </span>
+              <div class="row align-items-center gx-2">
+                <div class="col">
+                </div>
+
+              </div>
+              <!-- End Row -->
+            </div>
+          </div>
+          <!-- End Card -->
+        </div>
+      </div>
+      <!-- End Stats -->
+
+      <!-- Card -->
+      <div class="card">
+        <!-- Header -->
+        <div class="card-header card-header-content-md-between">
+          <div class="mb-md-0 mb-2">
+            <form>
+              <!-- Search -->
+              <div class="input-group input-group-merge input-group-flush">
+                <div class="input-group-prepend input-group-text">
+                  <i class="bi-search"></i>
+                </div>
+                <input class="form-control" id="propertyStockDatatableSearch" type="search" aria-label="Search item" placeholder="Search item">
+              </div>
+              <!-- End Search -->
+            </form>
+          </div>
+
+          <div class="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
+            <!-- Datatable Info -->
+            <div id="propertyStockDatatableCounterInfo" style="display: none;">
+              <div class="d-flex align-items-center">
+                <span class="fs-5 me-3">
+                  <span id="propertyStockDatatableCounter">0</span>
+                  Selected
+                </span>
+                <button class="btn btn-outline-info btn-md me-2" id="btnMoveToInventory" type="button">
+                  <i class="bi bi-arrow-left-right"></i> Move to Inventory
+                </button>
+                <button class="btn btn-outline-danger btn-md" id="btnMultiDeleteChild" type="button">
+                  <i class="bi-trash3-fill"></i> Delete
+                </button>
+              </div>
+            </div>
+            <!-- End Datatable Info -->
+
+            <!-- Dropdown -->
+            <div class="dropdown">
+              <button class="btn btn-white btn-md dropdown-toggle w-100" id="usersExportDropdown" data-bs-toggle="dropdown" type="button" aria-expanded="false">
+                <i class="bi-download me-2"></i> Export
+              </button>
+
+              <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="usersExportDropdown">
+                <span class="dropdown-header">Options</span>
+                <a class="dropdown-item" id="export-copy" href="">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/copy-icon.svg') }}" alt="Image Description">
+                  Copy
+                </a>
+                <a class="dropdown-item" id="export-print" href="">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/print-icon.svg') }}" alt="Image Description">
+                  Print
+                </a>
+                <div class="dropdown-divider"></div>
+                <span class="dropdown-header">Download options</span>
+                <a class="dropdown-item" id="export-excel" href="">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/excel-icon.svg') }}" alt="Image Description">
+                  Excel
+                </a>
+                <a class="dropdown-item" id="export-csv" href="">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/components/placeholder-csv-format.svg') }}" alt="Image Description">
+                  .CSV
+                </a>
+                <a class="dropdown-item" id="export-pdf" href="">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/pdf-icon.svg') }}" alt="Image Description">
+                  PDF
+                </a>
+              </div>
+            </div>
+            <!-- End Dropdown -->
+
+            <!-- Dropdown -->
+            <div class="dropdown">
+              <button class="btn btn-white" data-bs-toggle="offcanvas" data-bs-target="#propertyStockFilter" type="button" aria-controls="propertyStockFilter">
+                <i class="bi-filter me-1"></i> Filters
               </button>
             </div>
+            <!-- End Dropdown -->
           </div>
         </div>
-        <!-- End Page Header -->
+        <!-- End Header -->
 
-        <!-- Stats -->
-        <div class="row">
-          <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3">
-            <div class="card h-100">
-              <div class="card-body">
-                <h6 class="card-subtitle mb-2">Total Quantity</h6>
-
-                <div class="row align-items-center gx-2">
-                  <div class="col">
-                    <span class="js-counter display-4 text-dark">{{ $propertyQuantity }}</span>
-                    {{--                <span class="text-body fs-5 ms-1">from 22</span> --}}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3">
-            <div class="card h-100">
-              <div class="card-body">
-                <h6 class="card-subtitle mb-2">In Stock</h6>
-                <div class="row align-items-center gx-2">
-                  <div class="col">
-                    <span class="js-counter display-4 text-dark">{{ $propertyActiveStock }}</span>
-                    {{--                <span class="text-body fs-5 ms-1">from 11</span> --}}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3">
-            <div class="card h-100">
-              <div class="card-body">
-                <h6 class="card-subtitle mb-2">In Inventory</h6>
-                <div class="row align-items-center gx-2">
-                  <div class="col">
-                    <span class="js-counter display-4 text-dark">{{ $propertyInInventory }}</span>
-                    {{--                <span class="text-body fs-5 ms-1">from 48.7</span> --}}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3">
-            <div class="card h-100">
-              <div class="card-body">
-                <h6 class="card-subtitle mb-2">Active / Inactive (Stock)</h6>
-                <span class="js-counter display-4">
-                  <span class="text-success">{{ $propertyActiveStock }}</span> /
-                  <span class="text-danger">{{ $propertyInactiveStock }}</span>
-                </span>
-                <div class="row align-items-center gx-2">
-                  <div class="col">
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- End Stats -->
-
-        <!-- Card -->
-        <div class="card">
-          <!-- Header -->
-          <div class="card-header card-header-content-md-between">
-            <div class="mb-md-0 mb-2">
-              <form>
-                <div class="input-group input-group-merge input-group-flush">
-                  <div class="input-group-prepend input-group-text">
-                    <i class="bi-search"></i>
-                  </div>
-                  <input class="form-control" id="propertyStockDatatableSearch" type="search" aria-label="Search item" placeholder="Search item">
-                </div>
-              </form>
-            </div>
-            <div class="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
-              <div id="propertyStockDatatableCounterInfo" style="display: none;">
-                <div class="d-flex align-items-center">
-                  <span class="fs-5 me-3">
-                    <span id="propertyStockDatatableCounter">0</span>
-                    Selected
-                  </span>
-                  <button class="btn btn-outline-info btn-md me-2" id="btnMoveToInventory" type="button">
-                    <i class="bi bi-arrow-left-right"></i> Move to Inventory
-                  </button>
-                  <button class="btn btn-outline-danger btn-md" id="btnMultiDeleteChild" type="button">
-                    <i class="bi-trash3-fill"></i> Delete
-                  </button>
-                </div>
-              </div>
-              <div class="dropdown">
-                <button class="btn btn-white btn-md dropdown-toggle w-100" id="usersExportDropdown" data-bs-toggle="dropdown" type="button" aria-expanded="false">
-                  <i class="bi-download me-2"></i> Export
-                </button>
-                <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="usersExportDropdown">
-                  <span class="dropdown-header">Options</span>
-                  <a class="dropdown-item" id="export-copy" href="">
-                    <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/copy-icon.svg') }}" alt="Image Description">
-                    Copy
-                  </a>
-                  <a class="dropdown-item" id="export-print" href="">
-                    <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/print-icon.svg') }}" alt="Image Description">
-                    Print
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <span class="dropdown-header">Download options</span>
-                  <a class="dropdown-item" id="export-excel" href="">
-                    <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/excel-icon.svg') }}" alt="Image Description">
-                    Excel
-                  </a>
-                  <a class="dropdown-item" id="export-csv" href="">
-                    <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/components/placeholder-csv-format.svg') }}" alt="Image Description">
-                    .CSV
-                  </a>
-                  <a class="dropdown-item" id="export-pdf" href="">
-                    <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/pdf-icon.svg') }}" alt="Image Description">
-                    PDF
-                  </a>
-                </div>
-              </div>
-              <div class="dropdown">
-                <button class="btn btn-white" data-bs-toggle="offcanvas" data-bs-target="#propertyStockFilter" type="button" aria-controls="propertyStockFilter">
-                  <i class="bi-filter me-1"></i> Filters
-                </button>
-              </div>
-            </div>
-          </div>
-          <!-- End Header -->
-
-          <!-- Table -->
-          <div class="table-responsive datatable-custom">
-            <table class="table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table table table-hover w-100" id="propertyChildDatatable"
-              data-hs-datatables-options='{
+        <!-- Table -->
+        <div class="table-responsive datatable-custom">
+          <table class="table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table table table-hover w-100" id="propertyChildDatatable"
+            data-hs-datatables-options='{
                    "columnDefs": [{
                       "targets": [0, 10],
                       "orderable": false
@@ -203,133 +240,143 @@
                    "isShowPaging": false,
                    "pagination": "propertyStockDatatablePagination"
                  }'>
-              <thead class="thead-light">
-                <tr>
-                  <th class="table-column-pe-0">
-                    <div class="form-check">
-                      <input class="form-check-input" id="propertyStockDatatableCheckAll" type="checkbox" value="">
-                      <label class="form-check-label" for="propertyStockDatatableCheckAll"></label>
-                    </div>
-                  </th>
-                  <th class="d-none w-auto">Child Id</th>
-                  <th class="table-column-ps-0">Item Code</th>
-                  <th>Serial #</th>
-                  <th>Acquired Type</th>
-                  <th>Designation</th>
-                  <th>Department</th>
-                  <th>Condition</th>
-                  <th>Status</th>
-                  <th>Date Added</th>
-                  <th>Active</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                @foreach ($propertyChildren->where('inventory_date', null)->sortByDesc('updated_at') as $propertyChild)
-                  <tr>
-                    <td class="table-column-pe-0">
-                      <div class="form-check">
-                        <input class="form-check-input child-checkbox" id="propertyStockDatatableCheck{{ $propertyChild->id }}" type="checkbox" value="{{ $propertyChild->id }}">
-                        <label class="form-check-label" for="propertyStockDatatableCheck{{ $propertyChild->id }}"></label>
-                      </div>
-                    </td>
-                    <td class="d-none" data-child-id="{{ Crypt::encryptString($propertyChild->id) }}"></td>
-                    <td>
-                      @if ($propertyChild->created_at == $propertyChild->updated_at)
-                        <span class="badge bg-success">New</span>
-                        {{ $propertyChild->prop_code }}
-                      @elseif ($propertyChild->created_at->diffInDays(\Carbon\Carbon::now()) >= 7)
-                        {{ $propertyChild->prop_code }}
-                      @else
-                        {{ $propertyChild->prop_code }}
-                      @endif
-                    </td>
-                    <td>{{ $propertyChild->serial_num ?? '-' }}</td>
-                    <td>{{ $propertyChild->acquisition->name }}</td>
-                    <td>{{ $propertyChild->designation->name }}</td>
-                    <td>{{ $propertyChild->department->dept_code }}</td>
-                    <td><span class="{{ $propertyChild->condition->color->class }}"></span>{{ $propertyChild->condition->name }}</td>
-                    <td><span class="{{ $propertyChild->status->color->class }} fs-6">{{ $propertyChild->status->name }}</span></td>
-                    <td data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom"
-                      title="Date Acquired: {{ \Carbon\Carbon::parse($propertyChild->acq_date)->format('F j, Y') }}, Warranty Date: {{ $propertyChild->warranty_date ? \Carbon\Carbon::parse($propertyChild->warranty_date)->format('F j, Y') : '-' }}">
-                      <i class="bi-calendar-event me-1"></i>
-                      {{ \Carbon\Carbon::parse($propertyChild->stock_date)->format('F j, Y') }}
-                    </td>
-                    <td @if ($propertyChild->remarks) data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="Remarks: {{ $propertyChild->remarks }}" @endif>
-                      <span class="badge bg-soft-{{ $propertyChild->is_active ? 'success' : 'danger' }} text-{{ $propertyChild->is_active ? 'success' : 'danger' }}">
-                        <span class="legend-indicator bg-{{ $propertyChild->is_active ? 'success' : 'danger' }}"></span>{{ $propertyChild->is_active ? 'Active' : 'Inactive' }}
-                      </span>
-                    </td>
-                    <td>
-                      <div class="btn-group position-static">
-                        <button class="btn btn-white btn-sm btnEditPropChild" type="button">
-                          <i class="bi-pencil-fill me-1"></i> Edit
-                        </button>
-                        <div class="btn-group position-static">
-                          <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="childEditDropdown" data-bs-toggle="dropdown" type="button"
-                            aria-expanded="false"></button>
+            <thead class="thead-light">
+              <tr>
+                <th class="table-column-pe-0">
+                  <div class="form-check">
+                    <input class="form-check-input" id="propertyStockDatatableCheckAll" type="checkbox" value="">
+                    <label class="form-check-label" for="propertyStockDatatableCheckAll"></label>
+                  </div>
+                </th>
+                <th class="d-none w-auto">Child Id</th>
+                <th class="table-column-ps-0">Item Code</th>
+                <th>Serial #</th>
+                <th>Acquired Type</th>
+                <th>Designation</th>
+                <th>Department</th>
+                <th>Condition</th>
+                <th>Status</th>
+                <th>Date Added</th>
+                <th>Active</th>
+                <th>Action</th>
+              </tr>
+            </thead>
 
-                          <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="childEditDropdown">
-                            <button class="dropdown-item btnViewChild" type="button">
-                              <i class="bi bi-info-square-fill dropdown-item-icon"></i> View Details
-                            </button>
-                            <button class="dropdown-item btnMoveToInventory" data-childmove-id="{{ $propertyChild->id }}" type="button">
-                              <i class="bi bi-arrow-left-right dropdown-item-icon text-info"></i> Move to Inventory
-                            </button>
-                            <button class="dropdown-item btnStatusChild" data-status="{{ $propertyChild->is_active ? 0 : 1 }}" type="button">
-                              <i class="bi {{ $propertyChild->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
-                              {{ $propertyChild->is_active ? 'Set to Inactive' : 'Set to Active' }}
-                            </button>
-                            <button class="dropdown-item text-danger btnDeleteChild" data-childdel-id="{{ $propertyChild->id }}" type="button">
-                              <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
-                            </button>
-                          </div>
+            <tbody>
+              @foreach ($propertyChildren->where('inventory_date', null)->sortByDesc('updated_at') as $propertyChild)
+                <tr>
+                  <td class="table-column-pe-0">
+                    <div class="form-check">
+                      <input class="form-check-input child-checkbox" id="propertyStockDatatableCheck{{ $propertyChild->id }}" type="checkbox" value="{{ $propertyChild->id }}">
+                      <label class="form-check-label" for="propertyStockDatatableCheck{{ $propertyChild->id }}"></label>
+                    </div>
+                  </td>
+                  <td class="d-none" data-child-id="{{ Crypt::encryptString($propertyChild->id) }}"></td>
+                  <td>
+                    @if ($propertyChild->created_at == $propertyChild->updated_at)
+                      <span class="badge bg-success">New</span>
+                      {{ $propertyChild->prop_code }}
+                    @elseif ($propertyChild->created_at->diffInDays(\Carbon\Carbon::now()) >= 7)
+                      {{ $propertyChild->prop_code }}
+                    @else
+                      {{ $propertyChild->prop_code }}
+                    @endif
+                  </td>
+                  <td>{{ $propertyChild->serial_num ?? '-' }}</td>
+                  <td>{{ $propertyChild->acquisition->name }}</td>
+                  <td>{{ $propertyChild->designation->name }}</td>
+                  <td>{{ $propertyChild->department->dept_code }}</td>
+                  <td><span class="{{ $propertyChild->condition->color->class }}"></span>{{ $propertyChild->condition->name }}</td>
+                  <td><span class="{{ $propertyChild->status->color->class }} fs-6">{{ $propertyChild->status->name }}</span></td>
+                  <td data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom"
+                    title="Date Acquired: {{ \Carbon\Carbon::parse($propertyChild->acq_date)->format('F j, Y') }}, Warranty Date: {{ $propertyChild->warranty_date ? \Carbon\Carbon::parse($propertyChild->warranty_date)->format('F j, Y') : '-' }}">
+                    <i class="bi-calendar-event me-1"></i>
+                    {{ \Carbon\Carbon::parse($propertyChild->stock_date)->format('F j, Y') }}
+                  </td>
+                  <td @if ($propertyChild->remarks) data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="Remarks: {{ $propertyChild->remarks }}" @endif>
+                    <span class="badge bg-soft-{{ $propertyChild->is_active ? 'success' : 'danger' }} text-{{ $propertyChild->is_active ? 'success' : 'danger' }}">
+                      <span class="legend-indicator bg-{{ $propertyChild->is_active ? 'success' : 'danger' }}"></span>{{ $propertyChild->is_active ? 'Active' : 'Inactive' }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="btn-group position-static">
+                      <button class="btn btn-white btn-sm btnEditPropChild" type="button">
+                        <i class="bi-pencil-fill me-1"></i> Edit
+                      </button>
+                      <!-- Button Group -->
+                      <div class="btn-group position-static">
+                        <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="childEditDropdown" data-bs-toggle="dropdown" type="button"
+                          aria-expanded="false"></button>
+
+                        <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="childEditDropdown">
+                          <button class="dropdown-item btnViewChild" type="button">
+                            <i class="bi bi-info-square-fill dropdown-item-icon"></i> View Details
+                          </button>
+                          <button class="dropdown-item btnMoveToInventory"  data-childmove-id="{{ $propertyChild->id }}" type="button">
+                            <i class="bi bi-arrow-left-right dropdown-item-icon text-info"></i> Move to Inventory
+                          </button>
+                          <button class="dropdown-item btnStatusChild" data-status="{{ $propertyChild->is_active ? 0 : 1 }}" type="button">
+                            <i class="bi {{ $propertyChild->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
+                            {{ $propertyChild->is_active ? 'Set to Inactive' : 'Set to Active' }}
+                          </button>
+                          <button class="dropdown-item text-danger btnDeleteChild" data-childdel-id="{{ $propertyChild->id }}" type="button">
+                            <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
+                          </button>
                         </div>
                       </div>
-                    </td>
-                  </tr>
-                @endforeach
-              </tbody>
-            </table>
-          </div>
-          <!-- End Table -->
+                      <!-- End Button Group -->
+                    </div>
+                  </td>
+                </tr>
+              @endforeach
+            </tbody>
 
-          <!-- Footer -->
-          <div class="card-footer">
-            <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
-              <div class="col-sm mb-sm-0 mb-2">
-                <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
-                  <span class="me-2">Showing:</span>
-                  <div class="tom-select-custom tom-page-w">
-                    <select class="js-select form-select form-select-borderless" id="propertyStockDatatableEntries"
-                      data-hs-tom-select-options='{
+          </table>
+        </div>
+        <!-- End Table -->
+
+        <!-- Footer -->
+        <div class="card-footer">
+          <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
+            <div class="col-sm mb-sm-0 mb-2">
+              <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
+                <span class="me-2">Showing:</span>
+
+                <!-- Select -->
+                <div class="tom-select-custom" style="width: 80px;">
+                  <select class="js-select form-select form-select-borderless" id="propertyStockDatatableEntries"
+                    data-hs-tom-select-options='{
                             "searchInDropdown": false,
                             "hideSearch": true
-                          }'
-                      autocomplete="off">
-                      <option value="10" selected>10</option>
-                      <option value="15">15</option>
-                      <option value="20">20</option>
-                      <option value="30">30</option>
-                    </select>
-                  </div>
-                  <span class="text-secondary me-2">of</span>
-                  <span id="propertyStockDatatableWithPaginationInfoTotalQty"></span>
-                  <span class="text-secondary ms-2">records</span>
+                          }' autocomplete="off">
+                    <option value="10" selected>10</option>
+                    <option value="15">15</option>
+                    <option value="20">20</option>
+                  </select>
                 </div>
-              </div>
+                <!-- End Select -->
 
-              <div class="col-sm-auto">
-                <div class="d-flex justify-content-center justify-content-sm-end">
-                  <nav id="propertyStockDatatablePagination" aria-label="Activity pagination"></nav>
-                </div>
+                <span class="text-secondary me-2">of</span>
+
+                <!-- Pagination Quantity -->
+                <span id="propertyStockDatatableWithPaginationInfoTotalQty"></span>
               </div>
             </div>
+            <!-- End Col -->
+
+            <div class="col-sm-auto">
+              <div class="d-flex justify-content-center justify-content-sm-end">
+                <!-- Pagination -->
+                <nav id="propertyStockDatatablePagination" aria-label="Activity pagination"></nav>
+              </div>
+            </div>
+            <!-- End Col -->
           </div>
-          <!-- End Footer -->
+          <!-- End Row -->
         </div>
-        <!-- End Card -->
+        <!-- End Footer -->
       </div>
+      <!-- End Card -->
     </div>
     <!-- End Content -->
   </main>
@@ -340,6 +387,8 @@
   <x-property-asset.stock.edit-children :propertyParents="$propertyParents" :propertyChildren="$propertyChildren" :conditions="$conditions" :acquisitions="$acquisitions" />
   <x-property-asset.stock.view-details-children />
   <x-property-asset.stock.move-children :designations="$designations" :departments="$departments" :statuses="$statuses" />
+  {{--  <x-modals.edit-property-child :propertyParents="$propertyParents" :conditions="$conditions" :acquisitions="$acquisitions" :propertyChildren="$propertyChildren" /> --}}
+  {{--  <x-modals.move-property :designations="$designations" :departments="$departments" :statuses="$statuses"/> --}}
 
   <!-- Product Filter Modal -->
   <div class="offcanvas offcanvas-end" id="propertyStockFilter" aria-labelledby="propertyStockFilterLabel" tabindex="-1">

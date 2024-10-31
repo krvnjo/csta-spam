@@ -231,7 +231,6 @@ class PropertyChildController extends Controller
                     'serialNumber.regex' => 'The serial number may only contain letters and numbers.',
                     'serialNumber.min' => 'The serial number must be at least :min characters.',
                     'serialNumber.max' => 'The serial number may not be greater than :max characters.',
-                    'serialNumber.unique' => 'This serial number already exists.',
 
                     'warranty.after_or_equal' => 'The warranty date must be today or a future date.',
                     'warranty.before_or_equal' => 'The warranty date cannot be later than December 31, 2100.'
@@ -242,8 +241,7 @@ class PropertyChildController extends Controller
                         'nullable',
                         'regex:/^[A-Za-z0-9]*$/',
                         'min:3',
-                        'max:50',
-                        'unique:property_children,serial_num'
+                        'max:50'
                     ],
                     'remarks' => [
                         'nullable',

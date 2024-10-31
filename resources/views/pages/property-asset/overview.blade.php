@@ -25,12 +25,16 @@
             </nav>
             <h1 class="page-header-title">Stock In</h1>
           </div>
+          <!-- End Col -->
+
           <div class="col-sm-auto">
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPropertyModal" type="button">
               <i class="bi bi-plus-lg me-1"></i> Add Item
             </button>
           </div>
+          <!-- End Col -->
         </div>
+        <!-- End Row -->
       </div>
       <!-- End Page Header -->
 
@@ -143,16 +147,19 @@
         <div class="card-header card-header-content-md-between">
           <div class="mb-md-0 mb-2">
             <form>
+              <!-- Search -->
               <div class="input-group input-group-merge input-group-flush">
                 <div class="input-group-prepend input-group-text">
                   <i class="bi-search"></i>
                 </div>
                 <input class="form-control" id="propertyDatatableSearch" type="search" aria-label="Search item" placeholder="Search item">
               </div>
+              <!-- End Search -->
             </form>
           </div>
 
           <div class="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
+            <!-- Datatable Info -->
             <div id="propertyDatatableCounterInfo" style="display: none;">
               <div class="d-flex align-items-center">
                 <span class="fs-5 me-3">
@@ -164,6 +171,9 @@
                 </a>
               </div>
             </div>
+            <!-- End Datatable Info -->
+
+            <!-- Dropdown -->
             <div class="dropdown">
               <button class="btn btn-white btn-md dropdown-toggle w-100" id="propertyExportDropdown" data-bs-toggle="dropdown" type="button" aria-expanded="false">
                 <i class="bi-download me-2"></i> Export
@@ -195,11 +205,15 @@
                 </a>
               </div>
             </div>
+            <!-- End Dropdown -->
+
+            <!-- Dropdown -->
             <div class="dropdown">
               <button class="btn btn-white" data-bs-toggle="offcanvas" data-bs-target="#offcanvasPropertyFilter" type="button" aria-controls="offcanvasPropertyFilter">
                 <i class="bi-filter me-1"></i> Filters
               </button>
             </div>
+            <!-- End Dropdown -->
           </div>
         </div>
         <!-- End Header -->
@@ -240,6 +254,7 @@
                 <th style="width: 20%">Action</th>
               </tr>
             </thead>
+
             <tbody>
               @foreach ($propertyParents->where('is_active', 1)->where('deleted_at', null)->sortByDesc('updated_at') as $propertyParent)
                 <tr>
@@ -284,6 +299,8 @@
                       <a class="btn btn-white btn-sm" href="{{ route('prop-asset.child.index', $propertyParent) }}">
                         <i class="bi-eye me-1"></i> View All
                       </a>
+
+                      <!-- Button Group -->
                       <div class="btn-group position-static">
                         <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="productsEditDropdown1" data-bs-toggle="dropdown" type="button"
                           aria-expanded="false"></button>
@@ -297,6 +314,7 @@
                           </button>
                         </div>
                       </div>
+                      <!-- End Button Group -->
                     </div>
                   </td>
                 </tr>
@@ -313,7 +331,9 @@
             <div class="col-sm mb-sm-0 mb-2">
               <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
                 <span class="me-2">Showing:</span>
-                <div class="tom-select-custom tom-page-w">
+
+                <!-- Select -->
+                <div class="tom-select-custom" style="width: 80px;">
                   <select class="js-select form-select form-select-borderless" id="propertyDatatableEntries"
                     data-hs-tom-select-options='{
                             "searchInDropdown": false,
@@ -322,20 +342,27 @@
                     <option value="5" selected>5</option>
                     <option value="10">10</option>
                     <option value="15">15</option>
-                    <option value="30">30</option>
                   </select>
                 </div>
+                <!-- End Select -->
+
                 <span class="text-secondary me-2">of</span>
+
+                <!-- Pagination Quantity -->
                 <span id="propertyDatatableWithPaginationInfoTotalQty"></span>
-                <span class="text-secondary ms-2">records</span>
               </div>
             </div>
+            <!-- End Col -->
+
             <div class="col-sm-auto">
               <div class="d-flex justify-content-center justify-content-sm-end">
+                <!-- Pagination -->
                 <nav id="propertyDatatablePagination" aria-label="Activity pagination"></nav>
               </div>
             </div>
+            <!-- End Col -->
           </div>
+          <!-- End Row -->
         </div>
         <!-- End Footer -->
       </div>
