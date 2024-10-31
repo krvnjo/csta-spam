@@ -22,14 +22,21 @@ $(document).ready(function () {
         if (response.success) {
           showSuccessAlert(response, brandAddModal, brandAddForm);
         } else {
-          if (response.errors.brand) {
-            $('#txtAddBrand').addClass('is-invalid');
-            $('#valAddBrand').text(response.errors.brand[0]);
-          }
-          if (response.errors.subcategories) {
-            $('#selAddSubcategories').next('.ts-wrapper').addClass('is-invalid');
-            $('#valAddSubcategories').text(response.errors.subcategories[0]);
-          }
+          const fields = {
+            brand: '#txtAddBrand',
+            subcategories: '#selAddSubcategories',
+          };
+
+          Object.keys(fields).forEach((key) => {
+            if (response.errors[key]) {
+              const element = $(fields[key]);
+              element.addClass('is-invalid');
+              if (key === 'subcategories') {
+                element.next('.ts-wrapper').addClass('is-invalid');
+              }
+              $(`#valAdd${key.charAt(0).toUpperCase() + key.slice(1)}`).text(response.errors[key][0]);
+            }
+          });
         }
       },
       error: function (response) {
@@ -68,12 +75,12 @@ $(document).ready(function () {
           dropdownSubcategory.append('<span class="dropdown-item text-muted">No subcategories available.</span>');
         }
 
-        const brandStatus =
-          response.status === 1
-            ? `<span class="badge bg-soft-success text-success"><span class="legend-indicator bg-success"></span>Active</span>`
-            : `<span class="badge bg-soft-danger text-danger"><span class="legend-indicator bg-danger"></span>Inactive</span>`;
+        const statusClass = response.status === 1 ? 'success' : 'danger';
+        const statusText = response.status === 1 ? 'Active' : 'Inactive';
+        $('#lblViewStatus').html(
+          `<span class="badge bg-soft-${statusClass} text-${statusClass}"><span class="legend-indicator bg-${statusClass}"></span>${statusText}</span>`,
+        );
 
-        $('#lblViewStatus').html(brandStatus);
         $('#imgViewCreatedByImage').attr('src', response.created_img);
         $('#lblViewCreatedBy').text(response.created_by);
         $('#lblViewDateCreated').text(response.created);
@@ -151,7 +158,7 @@ $(document).ready(function () {
     });
   });
 
-  brandsDatatable.on('click', '.btnStatusBrand', function () {
+  brandsDatatable.on('click', '.btnSetBrand', function () {
     const brandId = $(this).closest('tr').find('td[data-brand-id]').data('brand-id');
     const brandSetStatus = $(this).data('status');
     let statusName;
@@ -170,7 +177,7 @@ $(document).ready(function () {
       confirmButtonText: 'Yes, set it to ' + statusName + '!',
       cancelButtonText: 'No, cancel!',
       customClass: {
-        confirmButton: 'btn btn-primary',
+        confirmButton: 'btn btn-white',
         cancelButton: 'btn btn-secondary',
       },
     }).then((result) => {
@@ -235,32 +242,44 @@ $(document).ready(function () {
       })
       .get();
 
-    Swal.fire({
-      title: 'Delete Records?',
-      text: 'Are you sure you want to delete all the selected brands?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'No, cancel!',
-      customClass: {
-        confirmButton: 'btn btn-danger',
-        cancelButton: 'btn btn-secondary',
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        $.ajax({
-          url: '/file-maintenance/brands',
-          method: 'DELETE',
-          data: { id: brandIds },
-          success: function (response) {
-            showSuccessAlert(response);
-          },
-          error: function (response) {
-            showErrorAlert(response.responseJSON);
-          },
-        });
-      }
-    });
+    if (brandIds.length === 0) {
+      Swal.fire({
+        title: 'No brand selected!',
+        text: 'Please select at least one brand to delete.',
+        icon: 'info',
+        confirmButtonText: 'OK',
+        customClass: {
+          confirmButton: 'btn btn-info',
+        },
+      });
+    } else {
+      Swal.fire({
+        title: 'Delete Records?',
+        text: 'Are you sure you want to delete all the selected brands?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+        customClass: {
+          confirmButton: 'btn btn-danger',
+          cancelButton: 'btn btn-secondary',
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          $.ajax({
+            url: '/file-maintenance/brands',
+            method: 'DELETE',
+            data: { id: brandIds },
+            success: function (response) {
+              showSuccessAlert(response);
+            },
+            error: function (response) {
+              showErrorAlert(response.responseJSON);
+            },
+          });
+        }
+      });
+    }
   });
   // ============ End Delete a Brand ============ //
 });

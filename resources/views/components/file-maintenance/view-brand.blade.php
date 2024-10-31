@@ -18,7 +18,7 @@
               <p class="form-label fw-semibold mb-0">Brand Name:</p>
             </div>
             <div class="col-12 col-md-7 d-flex align-items-center">
-              <p class="mb-0" id="lblViewBrand"></p>
+              <p class="fw-semibold mb-0" id="lblViewBrand"></p>
             </div>
           </div>
           <!-- End Brand Name -->
@@ -58,7 +58,7 @@
                 <img class="avatar-img" id="imgViewCreatedByImage" src="" alt="User Image">
               </div>
               <div class="ms-3">
-                <span class="d-block h5 text-inherit mb-0" id="lblViewCreatedBy"></span>
+                <span class="d-block fw-semibold mb-0" id="lblViewCreatedBy"></span>
                 <span class="d-block fs-5 text-body" id="lblViewDateCreated"></span>
               </div>
             </div>
@@ -75,7 +75,7 @@
                 <img class="avatar-img" id="imgViewUpdatedByImage" src="" alt="User Image">
               </div>
               <div class="ms-3">
-                <span class="d-block h5 text-inherit mb-0" id="lblViewUpdatedBy"></span>
+                <span class="d-block fw-semibold mb-0" id="lblViewUpdatedBy"></span>
                 <span class="d-block fs-5 text-body" id="lblViewDateUpdated"></span>
               </div>
             </div>

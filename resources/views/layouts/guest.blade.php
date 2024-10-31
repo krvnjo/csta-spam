@@ -39,5 +39,8 @@
 
     <!-- JS Plugins -->
     @stack('scripts')
+
+    <!-- JS Style Switcher -->
+    <script src="{{ Vite::asset('resources/js/hs-style-switcher.js') }}"></script>
   </body>
 </html>

@@ -22,7 +22,7 @@
   <!-- JS Themes -->
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>
 
-  <!-- JS Plugins Init. -->
+  <!-- JS Plugins Initialization -->
   <script>
     // Initialization of Other Plugins
     (function() {

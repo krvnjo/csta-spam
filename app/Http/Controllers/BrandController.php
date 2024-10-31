@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Audit;
 use App\Models\Brand;
-use App\Models\BrandSubcategory;
 use App\Models\Subcategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -21,7 +20,7 @@ class BrandController extends Controller
     public function index()
     {
         $brands = Brand::with('subcategories')->whereNull('deleted_at')->orderBy('name')->get();
-        $subcategories = Subcategory::with('brands')->whereNull('deleted_at')->orderBy('name')->get();
+        $subcategories = Subcategory::whereNull('deleted_at')->orderBy('name')->get();
 
         $totalBrands = $brands->count();
         $deletedBrands = Brand::onlyTrashed()->count();
@@ -58,7 +57,7 @@ class BrandController extends Controller
                 'brand.max' => 'It must not exceed :max characters.',
                 'brand.unique' => 'This brand name already exists.',
 
-                'subcategories.required' => 'Please select a subcategory!'
+                'subcategories.required' => 'Please select at least one subcategory!'
             ];
 
             $brandValidator = Validator::make($request->all(), [
@@ -81,19 +80,10 @@ class BrandController extends Controller
                 ]);
             }
 
-            $brand = Brand::query()->create([
-                'name' => ucwords(trim($request->input('brand'))),
-            ]);
-
-            $subcategories = [];
-            foreach ($request->input('subcategories') as $subcategory) {
-                BrandSubcategory::query()->insert([
-                    'brand_id' => $brand->id,
-                    'subcateg_id' => $subcategory,
-                ]);
-                $subcategoryName = Subcategory::query()->find($subcategory)->name;
-                $subcategories[] = $subcategoryName;
-            }
+            $brand = Brand::create(['name' => ucwords(trim($request->input('brand')))]);
+            $subcategoryIds = $request->input('subcategories');
+            $brand->subcategories()->attach($subcategoryIds);
+            $subcategories = Subcategory::query()->whereIn('id', $subcategoryIds)->pluck('name')->toArray();
 
             activity()
                 ->useLog('Add Brand')
@@ -104,7 +94,7 @@ class BrandController extends Controller
                     'name' => $brand->name,
                     'subcategories' => $subcategories,
                 ])
-                ->log('A new brand has been created.');
+                ->log("A new brand: '{$brand->name}' has been created.");
 
             return response()->json([
                 'success' => true,
@@ -163,14 +153,14 @@ class BrandController extends Controller
                 'created_by' => $createdBy && $createdBy->causer
                     ? implode(" ", [$createdBy->causer->fname, $createdBy->causer->lname])
                     : 'CSTA-SPAM System',
-                'created' => $brand->created_at->format('D, F d, Y | h:i A'),
+                'created' => $brand->created_at->format('D, M d, Y | h:i A'),
                 'updated_img' => $updatedBy && $updatedBy->causer
                     ? asset('storage/img/user-images/' . $updatedBy->causer->user_image)
                     : asset('storage/img/user-images/system.jpg'),
                 'updated_by' => $updatedBy && $updatedBy->causer
                     ? implode(" ", [$updatedBy->causer->fname, $updatedBy->causer->lname])
                     : 'CSTA-SPAM System',
-                'updated' => $brand->updated_at->format('D, F d, Y | h:i A'),
+                'updated' => $brand->updated_at->format('D, M d, Y | h:i A'),
             ]);
         } catch (Throwable) {
             return response()->json([
@@ -226,7 +216,7 @@ class BrandController extends Controller
                     'brand.max' => 'The brand name may not be greater than :max characters.',
                     'brand.unique' => 'This brand name already exists.',
 
-                    'subcategories.required' => 'Please select a subcategory!',
+                    'subcategories.required' => 'Please select at least one subcategory!',
                 ];
 
                 $brandValidator = Validator::make($request->all(), [
@@ -255,7 +245,7 @@ class BrandController extends Controller
                 $logProperties['new_subcategories'] = explode(',', $request->input('subcategories'));
 
                 activity()
-                    ->useLog('Update Brand')
+                    ->useLog('Edit Brand')
                     ->performedOn($brand)
                     ->event('updated')
                     ->causedBy(auth()->user())
@@ -265,7 +255,7 @@ class BrandController extends Controller
                 $brand->is_active = $request->input('status');
 
                 activity()
-                    ->useLog('Update Brand')
+                    ->useLog('Edit Brand')
                     ->performedOn($brand)
                     ->event('updated')
                     ->causedBy(auth()->user())
@@ -311,7 +301,6 @@ class BrandController extends Controller
                 ->causedBy(auth()->user())
                 ->withProperties([
                     'deleted_brands' => $brands->map(fn($brand) => [
-                        'id' => $brand->id,
                         'name' => $brand->name,
                     ]),
                 ])
@@ -320,13 +309,13 @@ class BrandController extends Controller
             return response()->json([
                 'success' => true,
                 'title' => 'Deleted Successfully!',
-                'text' => 'The brand has been deleted and can be restored from the bin.',
+                'text' => 'The brand(s) has been deleted and can be restored from the bin.',
             ]);
         } catch (Throwable) {
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
-                'message' => 'An error occurred while deleting the brand.',
+                'message' => 'An error occurred while deleting the brand(s).',
             ], 500);
         }
     }

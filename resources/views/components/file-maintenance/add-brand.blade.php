@@ -11,7 +11,7 @@
 
       <!-- Body -->
       <div class="modal-body">
-        <form id="frmAddBrand" method="post" novalidate>
+        <form id="frmAddBrand" method="POST" novalidate>
           @csrf
           <!-- Brand Name -->
           <div class="form-group">
@@ -28,7 +28,7 @@
               <select class="js-select form-select" id="selAddSubcategories" name="subcategories[]"
                 data-hs-tom-select-options='{
                   "hideSelected": false,
-                  "placeholder": "Select subcategories",
+                  "placeholder": "Select a subcategory",
                   "singleMultiple": true
                 }'
                 autocomplete="off" multiple>

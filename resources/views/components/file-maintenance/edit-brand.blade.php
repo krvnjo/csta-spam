@@ -11,7 +11,7 @@
 
       <!-- Body -->
       <div class="modal-body">
-        <form id="frmEditBrand" method="post" novalidate>
+        <form id="frmEditBrand" method="POST" novalidate>
           @csrf
           @method('PATCH')
           <input id="txtEditBrandId" name="id" type="hidden">
@@ -31,7 +31,7 @@
               <select class="js-select form-select" id="selEditSubcategories" name="subcategories[]"
                 data-hs-tom-select-options='{
                   "hideSelected": false,
-                  "placeholder": "Select subcategories",
+                  "placeholder": "Select a subcategory",
                   "singleMultiple": true
                 }'
                 autocomplete="off" multiple>
