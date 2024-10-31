@@ -113,6 +113,7 @@ class LabelSeeder extends Seeder
 
         $categorySubcategories = [
             ['categ_id' => 1, 'subcateg_id' => 1],
+            ['categ_id' => 1, 'subcateg_id' => 6],
             ['categ_id' => 1, 'subcateg_id' => 7],
             ['categ_id' => 1, 'subcateg_id' => 8],
             ['categ_id' => 1, 'subcateg_id' => 11],
