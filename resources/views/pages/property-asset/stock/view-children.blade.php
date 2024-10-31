@@ -222,7 +222,7 @@
         <!-- End Header -->
 
         <!-- Table -->
-        <div class="table-responsive datatable-custom position-relative">
+        <div class="table-responsive datatable-custom">
           <table class="table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table table table-hover w-100" id="propertyChildDatatable"
             data-hs-datatables-options='{
                    "columnDefs": [{
@@ -286,7 +286,7 @@
                   <td>{{ $propertyChild->acquisition->name }}</td>
                   <td>{{ $propertyChild->designation->name }}</td>
                   <td>{{ $propertyChild->department->dept_code }}</td>
-                  <td>{{ $propertyChild->condition->name }}</td>
+                  <td><span class="{{ $propertyChild->condition->color->class }}"></span>{{ $propertyChild->condition->name }}</td>
                   <td><span class="{{ $propertyChild->status->color->class }} fs-6">{{ $propertyChild->status->name }}</span></td>
                   <td data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom"
                     title="Date Acquired: {{ \Carbon\Carbon::parse($propertyChild->acq_date)->format('F j, Y') }}, Warranty Date: {{ $propertyChild->warranty_date ? \Carbon\Carbon::parse($propertyChild->warranty_date)->format('F j, Y') : '-' }}">
@@ -298,7 +298,6 @@
                       <span class="legend-indicator bg-{{ $propertyChild->is_active ? 'success' : 'danger' }}"></span>{{ $propertyChild->is_active ? 'Active' : 'Inactive' }}
                     </span>
                   </td>
-
                   <td>
                     <div class="btn-group position-static">
                       <button class="btn btn-white btn-sm btnEditPropChild" type="button">
