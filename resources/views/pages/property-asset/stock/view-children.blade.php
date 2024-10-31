@@ -330,7 +330,8 @@
         </div>
         <!-- End Card -->
       </div>
-      <!-- End Content -->
+    </div>
+    <!-- End Content -->
   </main>
 @endsection
 
