@@ -219,7 +219,7 @@
         <!-- End Header -->
 
         <!-- Table -->
-        <div class="table-responsive datatable-custom position-relative">
+        <div class="table-responsive datatable-custom">
           <table class="table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table table table-hover w-100" id="propertyOverviewDatatable"
             data-hs-datatables-options='{
                    "columnDefs": [{
@@ -295,13 +295,13 @@
                   <td>{{ $propertyParent->brand->name }}</td>
                   <td style="text-align: center;">{{ $propertyParent->quantity }}</td>
                   <td>
-                    <div class="btn-group" role="group">
+                    <div class="btn-group position-static" role="group">
                       <a class="btn btn-white btn-sm" href="{{ route('prop-asset.child.index', $propertyParent) }}">
                         <i class="bi-eye me-1"></i> View All
                       </a>
 
                       <!-- Button Group -->
-                      <div class="btn-group">
+                      <div class="btn-group position-static">
                         <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="productsEditDropdown1" data-bs-toggle="dropdown" type="button"
                           aria-expanded="false"></button>
 
