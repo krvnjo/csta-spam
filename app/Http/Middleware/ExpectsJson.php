@@ -16,7 +16,7 @@ class ExpectsJson
      */
     public function handle(Request $request, Closure $next): mixed
     {
-        if (!$request->expectsJson() && !$request->isJson()) {
+        if (!$request->ajax() && !$request->expectsJson() && !$request->isJson()) {
             abort(404);
         }
 

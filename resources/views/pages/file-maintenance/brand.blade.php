@@ -10,36 +10,32 @@
 
 @section('main-content')
   <main class="main" id="content">
-    <!-- Content -->
     <div class="content container-fluid">
-      <!-- Page Header -->
+      <!-- Brands Header -->
       <div class="page-header">
-        <div class="row align-items-end">
+        <div class="row align-items-center">
           <div class="col-sm mb-2 mb-sm-0">
-            <nav>
-              <ol class="breadcrumb breadcrumb-no-gutter">
-                <li class="breadcrumb-item"><a class="breadcrumb-link" data-route="dashboard.index" href="{{ route('dashboard.index') }}">Home</a></li>
-                <li class="breadcrumb-item"><a class="breadcrumb-link">File Maintenance</a></li>
-                <li class="breadcrumb-item active">Brands</li>
-              </ol>
-            </nav>
+            <ol class="breadcrumb breadcrumb-no-gutter">
+              <li class="breadcrumb-item"><a class="breadcrumb-link" data-route="dashboard.index" href="{{ route('dashboard.index') }}">Home</a></li>
+              <li class="breadcrumb-item"><a class="breadcrumb-link">File Maintenance</a></li>
+              <li class="breadcrumb-item active">Brands</li>
+            </ol>
             <h1 class="page-header-title mt-2">Brands</h1>
+            <p class="page-header-text">Manage and organize brand records.</p>
           </div>
 
           @can('create brand maintenance')
             <div class="col-sm-auto mt-sm-0 mt-3">
-              <div class="d-grid gap-2 d-sm-flex justify-content-sm-end">
-                <button class="btn btn-primary w-100 w-sm-auto" data-bs-toggle="modal" data-bs-target="#modalAddBrand">
-                  <i class="bi-plus me-1"></i> Add Brand
-                </button>
-              </div>
+              <button class="btn btn-primary w-100 w-sm-auto" data-bs-toggle="modal" data-bs-target="#modalAddBrand">
+                <i class="bi-plus-lg me-1"></i> Add Brand
+              </button>
             </div>
           @endcan
         </div>
       </div>
-      <!-- End Page Header -->
+      <!-- End Brands Header -->
 
-      <!-- Active and Inactive Brands Card -->
+      <!-- Brands Details Card -->
       <div class="card mb-5">
         <div class="card-body">
           <div class="d-flex flex-column flex-sm-row align-items-sm-center text-sm-start text-center">
@@ -50,7 +46,7 @@
                   <span class="d-block">Total Brands</span>
                   <span class="badge bg-soft-primary text-primary rounded-pill p-1">
                     @if ($deletedBrands == 0)
-                      <i class="bi-hand-thumbs-up-fill"></i> Everything looks great!
+                      <i class="bi-check-circle-fill me-1"></i> Everything looks great!
                     @else
                       <i class="bi-arrow-counterclockwise"></i> {{ $deletedBrands }} record(s) can be restored.
                     @endif
@@ -59,8 +55,8 @@
 
                 <div class="col-lg-9 col-md-8 col-sm-7 mt-3 mt-sm-0">
                   <div class="d-flex justify-content-center justify-content-sm-start mb-2">
-                    <div class="me-3"><span class="legend-indicator bg-success"></span>Active ({{ $activeBrands }})</div>
-                    <div><span class="legend-indicator bg-danger"></span>Inactive ({{ $inactiveBrands }})</div>
+                    <div class="me-2"><span class="legend-indicator bg-success"></span>Active ({{ $activeBrands }})</div>
+                    <div class="ms-2"><span class="legend-indicator bg-danger"></span>Inactive ({{ $inactiveBrands }})</div>
                   </div>
                   <div class="progress rounded-pill">
                     <div class="progress-bar bg-success" style="width: {{ $activePercentage }}%"></div>
@@ -72,36 +68,39 @@
           </div>
         </div>
       </div>
-      <!-- End Active and Inactive Brands Card -->
+      <!-- End Brands Details Card -->
 
-      <!-- Datatable Card -->
+      <!-- Brands DataTable Card -->
       <div class="card">
         <!-- Header -->
         <div class="card-header card-header-content-md-between">
           <div class="mb-2 mb-md-0">
-            <!-- Datatable Search -->
+            <!-- DataTable Search -->
             <div class="input-group input-group-merge input-group-flush">
               <div class="input-group-prepend input-group-text"><i class="bi-search"></i></div>
               <input class="form-control" id="brandsDatatableSearch" type="search" placeholder="Search">
             </div>
-            <!-- End Datatable Search -->
+            <!-- End DataTable Search -->
           </div>
 
           <div class="d-grid d-sm-flex justify-content-sm-center justify-content-md-end align-items-sm-center gap-2">
             @can('delete brand maintenance')
-              <!-- Datatable Counter -->
-              <div id="brandsDatatableCounterInfo" style="display: none;">
+              <!-- DataTable Counter -->
+              <div class="w-100 w-sm-auto" id="brandsDatatableCounterInfo" style="display: none;">
                 <div class="d-flex align-items-center justify-content-center">
-                  <span class="fs-5 me-3"><span id="brandsDatatableCounter"></span> Selected</span>
-                  <button class="btn btn-sm btn-outline-danger" id="btnMultiDeleteBrand" type="button"><i class="bi-trash3-fill"></i> Delete</button>
+                  <button class="btn btn-sm btn-outline-danger w-100 w-sm-auto" id="btnMultiDeleteBrand" type="button">
+                    <i class="bi-trash3-fill"></i> Delete (<span class="fs-5"><span id="brandsDatatableCounter"></span></span>)
+                  </button>
                 </div>
               </div>
-              <!-- End Datatable Counter -->
+              <!-- End DataTable Counter -->
             @endcan
-
-            <!-- Export Options Dropdown -->
+            <!-- Export Dropdown -->
             <div class="dropdown">
-              <button class="btn btn-white btn-sm dropdown-toggle w-100" data-bs-toggle="dropdown" type="button"><i class="bi-download me-2"></i> Export</button>
+              <button class="btn btn-white btn-sm dropdown-toggle w-100" data-bs-toggle="dropdown" type="button">
+                <i class="bi-download me-2"></i> Export
+              </button>
+
               <div class="dropdown-menu dropdown-menu-sm-end w-100">
                 <span class="dropdown-header">Options</span>
                 <button class="dropdown-item" id="export-copy" type="button">
@@ -122,15 +121,15 @@
                 </button>
               </div>
             </div>
-            <!-- End Export Options Dropdown -->
+            <!-- End Export Dropdown -->
 
-            <!-- Datatable Filter Dropdown -->
+            <!-- Filter Dropdown -->
             <div class="dropdown">
               <button class="btn btn-white btn-sm dropdown-toggle w-100" data-bs-toggle="dropdown" data-bs-auto-close="outside" type="button">
-                <i class="bi-filter me-2"></i> Filter <span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="brandFilterCount"></span>
+                <i class="bi-filter me-2"></i> Filter <span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="brandsFilterCount"></span>
               </button>
 
-              <div class="dropdown-menu dropdown-menu-sm-end custom-dropdown" id="filterDropdown">
+              <div class="dropdown-menu dropdown-menu-sm-end custom-dropdown">
                 <div class="card">
                   <div class="card-header card-header-content-between">
                     <h5 class="card-header-title">Brand Filters</h5>
@@ -160,13 +159,13 @@
                     </div>
                     <!-- End Subcategories Filter -->
 
-                    <!-- Active and Inactive Filter -->
+                    <!-- Status Filter -->
                     <div class="mb-4">
                       <small class="text-cap text-body">Status</small>
                       <div class="row">
                         <div class="col">
                           <div class="tom-select-custom">
-                            <select class="js-select js-datatable-filter form-select" data-target-column-index="5"
+                            <select class="js-select js-datatable-filter form-select" data-target-column-index="6"
                               data-hs-tom-select-options='{
                                 "allowEmptyOption": true,
                                 "dropdownWidth": "100%",
@@ -181,25 +180,25 @@
                         </div>
                       </div>
                     </div>
-                    <!-- End Active and Inactive Filter -->
+                    <!-- End Status Filter -->
                   </div>
                 </div>
               </div>
             </div>
-            <!-- End Datatable Filter Dropdown -->
+            <!-- End Filter Dropdown -->
           </div>
         </div>
         <!-- End Header -->
 
-        <!-- Brands Datatable -->
+        <!-- Body -->
         <div class="table-responsive datatable-custom">
           <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100" id="brandsDatatable"
             data-hs-datatables-options='{
               "columnDefs": [{
-                "targets": [0, 6],
+                "targets": [0, 7],
                 "orderable": false
               }],
-              "order": [4, "desc"],
+              "order": [5, "desc"],
               "info": {
                 "totalQty": "#brandsDatatableWithPagination"
               },
@@ -222,6 +221,7 @@
                 <th class="d-none">Brand Id</th>
                 <th>Brand Name</th>
                 <th>Brand Subcategories</th>
+                <th>Date Created</th>
                 <th>Date Updated</th>
                 <th>Status</th>
                 <th>Action</th>
@@ -243,10 +243,11 @@
                   <td>
                     @php
                       $subcategoryNames = $brand->subcategories->sortBy('name')->pluck('name')->implode(', ');
-                      $truncatedSubcategories = Str::limit($subcategoryNames, 50, '...');
+                      $truncatedSubcategories = Str::limit($subcategoryNames, 40, '...');
                     @endphp
                     {{ $subcategoryNames ? $truncatedSubcategories : 'No subcategories available.' }}
                   </td>
+                  <td data-order="{{ $brand->created_at }}"><span><i class="bi-calendar-plus me-1"></i> {{ $brand->created_at->format('F d, Y') }}</span></td>
                   <td data-order="{{ $brand->updated_at }}"><span><i class="bi-calendar2-event me-1"></i> Updated {{ $brand->updated_at->diffForHumans() }}</span></td>
                   <td>
                     <span class="badge bg-soft-{{ $brand->is_active ? 'success' : 'danger' }} text-{{ $brand->is_active ? 'success' : 'danger' }}">
@@ -254,15 +255,15 @@
                     </span>
                   </td>
                   <td>
-                    <div class="btn-group">
+                    <div class="btn-group position-static">
                       <button class="btn btn-white btn-sm btnViewBrand" type="button"><i class="bi-eye"></i> View</button>
-                      @can('update brand maintenance' || 'delete brand maintenance')
-                        <div class="btn-group">
+                      @canAny('update brand maintenance, delete brand maintenance')
+                        <div class="btn-group position-static">
                           <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" data-bs-toggle="dropdown" type="button"></button>
                           <div class="dropdown-menu dropdown-menu-end mt-1">
                             @can('update brand maintenance')
                               <button class="dropdown-item btnEditBrand" type="button"><i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record</button>
-                              <button class="dropdown-item btnStatusBrand" data-status="{{ $brand->is_active ? 0 : 1 }}" type="button">
+                              <button class="dropdown-item btnSetBrand" data-status="{{ $brand->is_active ? 0 : 1 }}" type="button">
                                 <i class="bi {{ $brand->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
                                 {{ $brand->is_active ? 'Set to Inactive' : 'Set to Active' }}
                               </button>
@@ -273,10 +274,10 @@
 
                             @can('delete brand maintenance')
                               <button class="dropdown-item text-danger btnDeleteBrand" type="button"><i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete</button>
-                            @endcan
-                          </div>
+                            </div>
+                          @endcan
                         </div>
-                      @endcan
+                      @endcanAny
                     </div>
                   </td>
                 </tr>
@@ -284,7 +285,7 @@
             </tbody>
           </table>
         </div>
-        <!-- End Brand Datatable -->
+        <!-- End Body -->
 
         <!-- Footer -->
         <div class="card-footer">
@@ -298,8 +299,7 @@
                       "dropdownWidth": "100%",
                       "hideSearch": true,
                       "searchInDropdown": false
-                    }'
-                    autocomplete="off">
+                    }'>
                     <option value="5" selected>5</option>
                     <option value="10">10</option>
                     <option value="20">20</option>
@@ -321,9 +321,8 @@
         </div>
         <!-- End Footer -->
       </div>
-      <!-- End Datatable Card -->
+      <!-- End Brands DataTable Card -->
     </div>
-    <!-- End Content -->
   </main>
 @endsection
 
@@ -352,9 +351,9 @@
   <!-- JS Themes -->
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>
 
-  <!-- JS Plugins Init. -->
+  <!-- JS Plugins Initialization -->
   <script>
-    // Initialization of Datatables
+    // Initialization of DataTable
     $(document).on("ready", function() {
       HSCore.components.HSDatatables.init($("#brandsDatatable"), {
         dom: "Bfrtip",
@@ -421,9 +420,9 @@
         } else {
           elVal = elVal === "null" ? "" : elVal.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
         }
-        datatable.column(targetColumnIndex).search(elVal, true, false, false).draw();
 
-        updateFilterCountBadge($("#brandFilterCount"));
+        datatable.column(targetColumnIndex).search(elVal, true, false, false).draw();
+        updateFilterCountBadge($("#brandsFilterCount"));
       });
     });
 

@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Middleware\CheckRolePermission;
+use App\Http\Middleware\CheckPermission;
 use App\Http\Middleware\ExpectsJson;
 use App\Http\Middleware\NoCache;
 use Illuminate\Foundation\Application;
@@ -16,9 +16,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->redirectGuestsTo('/login');
         $middleware->alias([
-            'can' => CheckRolePermission::class,
+            'checkPermission' => CheckPermission::class,
             'expectsJson' => ExpectsJson::class,
-            'nocache' => NoCache::class,
+            'noCache' => NoCache::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
