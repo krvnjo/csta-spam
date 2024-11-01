@@ -107,7 +107,7 @@ class ItemSeeder extends Seeder
     private function randomDate($startDate = null, $endDate = null)
     {
         if (!$startDate) {
-            $startDate = strtotime('-5 years');
+            $startDate = strtotime('-3 years');
         }
         if (!$endDate) {
             $endDate = strtotime('now');
@@ -116,7 +116,7 @@ class ItemSeeder extends Seeder
     }
     private function randomPastDate()
     {
-        $startDate = strtotime('-5 years');
+        $startDate = strtotime('-3 years');
         $endDate = strtotime('now');
         return date('Y-m-d', mt_rand($startDate, $endDate));
     }
