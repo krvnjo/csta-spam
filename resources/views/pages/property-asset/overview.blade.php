@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-  P & A Masterlist | CSTA - SPAM
+  P & A Masterlist
 @endsection
 
 @push('styles')
@@ -195,10 +195,6 @@
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/excel-icon.svg') }}" alt="Image Description">
                   Excel
                 </a>
-                <a class="dropdown-item" id="export-csv" href="">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/components/placeholder-csv-format.svg') }}" alt="Image Description">
-                  .CSV
-                </a>
                 <a class="dropdown-item" id="export-pdf" href="">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/pdf-icon.svg') }}" alt="Image Description">
                   PDF
@@ -239,32 +235,31 @@
                  }'>
             <thead class="thead-light">
               <tr>
-                <th class="table-column-pe-0" style="width: 5%">
-                  <div class="form-check">
-                    <input class="form-check-input" id="propertyDatatableCheckAll" type="checkbox" value="">
-                    <label class="form-check-label" for="propertyDatatableCheckAll"></label>
-                  </div>
+                <th class="d-none" id="PropertyId"></th>
+                <th class="text-center" style="padding: 0; padding-left: 1rem;">
+                  <span class="legend-indicator bg-danger"></span>
+                  <span class="legend-indicator bg-info"></span>
                 </th>
-                <th class="d-none w-auto">Property Id</th>
-                <th style="width: 20%">Item Name</th>
-                <th style="width: 20%">Description</th>
-                <th style="width: 15%">Category</th>
-                <th style="width: 15%">Brand</th>
-                <th style="width: 5%">Total Quantity</th>
-                <th style="width: 20%">Action</th>
+                <th class="col-3">Item Name</th>
+                <th class="col-3">Description</th>
+                <th class="col-2">Category</th>
+                <th class="col-2">Brand</th>
+                <th class="col-1 text-center">Total Quantity</th>
+                <th class="col-3">Action</th>
               </tr>
             </thead>
 
             <tbody>
               @foreach ($propertyParents->where('is_active', 1)->where('deleted_at', null)->sortByDesc('updated_at') as $propertyParent)
                 <tr>
-                  <td class="table-column-pe-0">
-                    <div class="form-check">
-                      <input class="form-check-input" id="propertyCheckAll1" type="checkbox" value="">
-                      <label class="form-check-label" for="propertyCheckAll1"></label>
-                    </div>
-                  </td>
                   <td class="d-none" data-property-id="{{ Crypt::encryptString($propertyParent->id) }}"></td>
+                  <td style="text-align: center; padding: 0;">
+                    @if (!$propertyParent->propertyChildren->where('inventory_date', null)->count())
+                      <span class="legend-indicator bg-danger" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="No Stock"></span>
+                    @elseif ($propertyParent->propertyChildren->where('inventory_date', null)->count() <= 5)
+                      <span class="legend-indicator bg-info" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="Low Stock"></span>
+                    @endif
+                  </td>
                   <td>
                     <a class="d-flex align-items-center btnViewProperty">
                       <div class="avatar avatar-lg">
@@ -294,13 +289,7 @@
                   </td>
                   <td>{{ $propertyParent->brand->name }}</td>
                   <td style="text-align: center;">
-                    @if (!$propertyParent->propertyChildren->where('inventory_date', null)->count())
-                      <span class="legend-indicator bg-danger"></span>{{ $propertyParent->quantity }}
-                    @elseif ($propertyParent->propertyChildren->where('inventory_date', null)->count() <= 5)
-                      <span class="legend-indicator bg-info"></span>{{ $propertyParent->quantity }}
-                    @else
-                      {{ $propertyParent->quantity }}
-                    @endif
+                    {{ $propertyParent->quantity }}
                   </td>
                   <td>
                     <div class="btn-group position-static" role="group">
@@ -729,24 +718,66 @@
         dom: 'Bfrtip',
         buttons: [{
             extend: 'copy',
-            className: 'd-none'
+            className: 'd-none',
+            exportOptions: {
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8))'
+            }
           },
           {
             extend: 'excel',
-            className: 'd-none'
-          },
-          {
-            extend: 'csv',
-            className: 'd-none'
+            className: 'd-none',
+            exportOptions: {
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8))'
+            }
           },
           {
             extend: 'pdf',
-            className: 'd-none'
+            className: 'd-none',
+            exportOptions: {
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8))'
+            }
           },
           {
             extend: 'print',
-            className: 'd-none'
-          },
+            className: 'd-none',
+            title: '',
+            message: '',
+            exportOptions: {
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8))',
+            },
+            customize: function(win) {
+
+              function formatDate(date) {
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                return date.toLocaleDateString(undefined, options);
+              }
+
+              const currentDate = formatDate(new Date());
+
+              $(win.document.body)
+                .css('font-size', '10pt')
+                .prepend(`
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                    <div style="display: flex; align-items: center;">
+                      <img src="{{ Vite::asset('resources/svg/logos/logo.svg') }}" style="width: 14rem; margin-right: 7rem;" alt="CSTA - SPAM Logo" />
+                    </div>
+                    <div style="font-size: 10px;">${currentDate}</div> <!-- Add current date without right alignment -->
+                  </div>
+                  <h2 style="font-size: 12px; margin: 5px 0;">Colegio De Sta. Teresa De Avila - Stock Masterlist</h2> <!-- Custom print title -->
+                `);
+              $(win.document.body).find('table')
+                .css({
+                  'font-size': '8pt',
+                  'width': '100%',
+                  'border-collapse': 'collapse',
+                });
+              $(win.document.body).find('table th, table td')
+                .css({
+                  'padding': '4px',
+                  'border': '1px solid #ccc',
+                });
+            }
+          }
         ],
         select: {
           style: 'multi',
