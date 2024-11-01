@@ -115,9 +115,9 @@ Route::middleware(['auth', 'noCache'])->group(function () {
     // Brand Routes
     Route::middleware('checkPermission:view brand maintenance')->prefix('file-maintenance/brands')->name('brand.')->controller(BrandController::class)->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::get('/show', 'show')->name('show')->middleware('expectsJson');
+        Route::get('/show', 'show')->name('view')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
-        Route::post('/', 'store')->name('store')->middleware('checkPermission:create brand maintenance');
+        Route::post('/', 'store')->name('create')->middleware('checkPermission:create brand maintenance');
         Route::patch('/', 'update')->name('update')->middleware('checkPermission:update brand maintenance');
         Route::delete('/', 'destroy')->name('delete')->middleware('checkPermission:delete brand maintenance');
     });

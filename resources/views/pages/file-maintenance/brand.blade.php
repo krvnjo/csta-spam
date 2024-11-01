@@ -26,7 +26,7 @@
 
           @can('create brand maintenance')
             <div class="col-sm-auto mt-sm-0 mt-3">
-              <button class="btn btn-primary w-100 w-sm-auto" data-bs-toggle="modal" data-bs-target="#modalAddBrand">
+              <button class="btn btn-primary w-100 w-sm-auto" id="btnAddBrandModal" data-bs-toggle="modal" data-bs-target="#modalAddBrand">
                 <i class="bi-plus-lg me-1"></i> Add Brand
               </button>
             </div>
@@ -75,48 +75,50 @@
         <!-- Header -->
         <div class="card-header card-header-content-md-between">
           <div class="mb-2 mb-md-0">
-            <!-- DataTable Search -->
             <div class="input-group input-group-merge input-group-flush">
               <div class="input-group-prepend input-group-text"><i class="bi-search"></i></div>
               <input class="form-control" id="brandsDatatableSearch" type="search" placeholder="Search">
             </div>
-            <!-- End DataTable Search -->
           </div>
 
           <div class="d-grid d-sm-flex justify-content-sm-center justify-content-md-end align-items-sm-center gap-2">
-            @can('delete brand maintenance')
+            @canAny('update brand maintenance, delete brand maintenance')
               <!-- DataTable Counter -->
               <div class="w-100 w-sm-auto" id="brandsDatatableCounterInfo" style="display: none;">
-                <div class="d-flex align-items-center justify-content-center">
+                <div class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-2">
+                  <button class="btn btn-sm btn-outline-secondary w-100 w-sm-auto" id="btnMultiSetBrand" type="button">
+                    <i class="bi-toggles me-1"></i> Set Status (<span class="fs-5"><span class="brandsDatatableCounter"></span></span>)
+                  </button>
                   <button class="btn btn-sm btn-outline-danger w-100 w-sm-auto" id="btnMultiDeleteBrand" type="button">
-                    <i class="bi-trash3-fill"></i> Delete (<span class="fs-5"><span id="brandsDatatableCounter"></span></span>)
+                    <i class="bi-trash3-fill"></i> Delete (<span class="fs-5"><span class="brandsDatatableCounter"></span></span>)
                   </button>
                 </div>
               </div>
               <!-- End DataTable Counter -->
-            @endcan
+            @endcanAny
+
             <!-- Export Dropdown -->
             <div class="dropdown">
-              <button class="btn btn-white btn-sm dropdown-toggle w-100" data-bs-toggle="dropdown" type="button">
+              <button class="btn btn-white btn-sm dropdown-toggle w-100" data-bs-toggle="dropdown" data-bs-auto-close="outside" type="button">
                 <i class="bi-download me-2"></i> Export
               </button>
 
               <div class="dropdown-menu dropdown-menu-sm-end w-100">
                 <span class="dropdown-header">Options</span>
-                <button class="dropdown-item" id="export-copy" type="button">
+                <button class="dropdown-item" id="brandExportCopy" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/copy-icon.svg') }}" alt="Copy Icon"> Copy
                 </button>
-                <button class="dropdown-item" id="export-print" type="button">
+                <button class="dropdown-item" id="brandExportPrint" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/print-icon.svg') }}" alt="Print Icon"> Print
                 </button>
 
                 <div class="dropdown-divider"></div>
 
                 <span class="dropdown-header">Download</span>
-                <button class="dropdown-item" id="export-excel" type="button">
+                <button class="dropdown-item" id="brandExportExcel" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/excel-icon.svg') }}" alt="Excel Icon"> Excel
                 </button>
-                <button class="dropdown-item" id="export-pdf" type="button">
+                <button class="dropdown-item" id="brandExportPdf" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/pdf-icon.svg') }}" alt="PDF Icon"> PDF
                 </button>
               </div>
@@ -218,7 +220,7 @@
                     #
                   @endcan
                 </th>
-                <th class="d-none">Brand Id</th>
+                <th class="d-none"></th>
                 <th>Brand Name</th>
                 <th>Brand Subcategories</th>
                 <th>Date Created</th>
@@ -240,12 +242,11 @@
                   </td>
                   <td class="d-none" data-brand-id="{{ Crypt::encryptString($brand->id) }}"></td>
                   <td><a class="d-block h5 mb-0 btnViewBrand">{{ $brand->name }}</a></td>
-                  <td>
+                  <td data-full-value="{{ $brand->subcategories->sortBy('name')->pluck('name')->implode(', ') }}">
                     @php
                       $subcategoryNames = $brand->subcategories->sortBy('name')->pluck('name')->implode(', ');
-                      $truncatedSubcategories = Str::limit($subcategoryNames, 40, '...');
                     @endphp
-                    {{ $subcategoryNames ? $truncatedSubcategories : 'No subcategories available.' }}
+                    {{ $subcategoryNames ? Str::limit($subcategoryNames, 30, '...') : 'No subcategories available.' }}
                   </td>
                   <td data-order="{{ $brand->created_at }}"><span><i class="bi-calendar-plus me-1"></i> {{ $brand->created_at->format('F d, Y') }}</span></td>
                   <td data-order="{{ $brand->updated_at }}"><span><i class="bi-calendar2-event me-1"></i> Updated {{ $brand->updated_at->diffForHumans() }}</span></td>
@@ -271,7 +272,6 @@
                                 <div class="dropdown-divider"></div>
                               @endcan
                             @endcan
-
                             @can('delete brand maintenance')
                               <button class="dropdown-item text-danger btnDeleteBrand" type="button"><i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete</button>
                             </div>
@@ -311,7 +311,6 @@
                 <span class="text-secondary ms-2">records</span>
               </div>
             </div>
-
             <div class="col-sm-auto">
               <div class="d-flex justify-content-center justify-content-sm-end">
                 <nav id="brandsDatatablePagination"></nav>
@@ -328,8 +327,8 @@
 
 @section('sec-content')
   <x-file-maintenance.add-brand :subcategories="$subcategories" />
-  <x-file-maintenance.view-brand />
   <x-file-maintenance.edit-brand :subcategories="$subcategories" />
+  <x-file-maintenance.view-brand />
 @endsection
 
 @push('scripts')
@@ -359,19 +358,31 @@
         dom: "Bfrtip",
         buttons: [{
             extend: "copy",
-            className: "d-none"
-          },
-          {
-            extend: "excel",
-            className: "d-none"
-          },
-          {
-            extend: "pdf",
-            className: "d-none"
+            className: "d-none",
+            exportOptions: {
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8))'
+            }
           },
           {
             extend: "print",
-            className: "d-none"
+            className: "d-none",
+            exportOptions: {
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8))'
+            }
+          },
+          {
+            extend: "excel",
+            className: "d-none",
+            exportOptions: {
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8))'
+            }
+          },
+          {
+            extend: "pdf",
+            className: "d-none",
+            exportOptions: {
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8))'
+            }
           }
         ],
         select: {
@@ -379,7 +390,7 @@
           selector: "td:first-child input[type=\"checkbox\"]",
           classMap: {
             checkAll: "#brandsDatatableCheckAll",
-            counter: "#brandsDatatableCounter",
+            counter: ".brandsDatatableCounter",
             counterInfo: "#brandsDatatableCounterInfo"
           }
         },
@@ -394,35 +405,24 @@
 
       const datatable = HSCore.components.HSDatatables.getItem(0);
 
-      $("#export-copy").click(function() {
+      $("#brandExportCopy").click(function() {
         datatable.button(".buttons-copy").trigger();
       });
 
-      $("#export-excel").click(function() {
-        datatable.button(".buttons-excel").trigger();
-      });
-
-      $("#export-pdf").click(function() {
-        datatable.button(".buttons-pdf").trigger();
-      });
-
-      $("#export-print").click(function() {
+      $("#brandExportPrint").click(function() {
         datatable.button(".buttons-print").trigger();
       });
 
+      $("#brandExportExcel").click(function() {
+        datatable.button(".buttons-excel").trigger();
+      });
+
+      $("#brandExportPdf").click(function() {
+        datatable.button(".buttons-pdf").trigger();
+      });
+
       $(".js-datatable-filter").on("change", function() {
-        let $this = $(this);
-        let elVal = $this.val();
-        let targetColumnIndex = $this.data("target-column-index");
-
-        if (Array.isArray(elVal)) {
-          elVal = elVal.map(val => val.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|");
-        } else {
-          elVal = elVal === "null" ? "" : elVal.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        }
-
-        datatable.column(targetColumnIndex).search(elVal, true, false, false).draw();
-        updateFilterCountBadge($("#brandsFilterCount"));
+        filterDatatableAndCount(datatable, "#brandsFilterCount");
       });
     });
 

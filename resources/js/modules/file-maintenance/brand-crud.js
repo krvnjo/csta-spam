@@ -4,11 +4,13 @@ $(document).ready(function () {
   // ============ Create a Brand ============ //
   const brandAddModal = $('#modalAddBrand');
   const brandAddForm = $('#frmAddBrand');
+  const brandAddSaveBtn = $('#btnAddSaveBrand');
 
-  handleUnsavedChanges(brandAddModal, brandAddForm, $('#btnAddSaveBrand'));
+  handleUnsavedChanges(brandAddModal, brandAddForm, brandAddSaveBtn);
 
   brandAddForm.on('submit', function (e) {
     e.preventDefault();
+    toggleButtonState(brandAddSaveBtn, true);
 
     const addFormData = new FormData(brandAddForm[0]);
 
@@ -20,27 +22,14 @@ $(document).ready(function () {
       contentType: false,
       success: function (response) {
         if (response.success) {
-          showSuccessAlert(response, brandAddModal, brandAddForm);
+          showResponseAlert(response, 'success', brandAddModal, brandAddForm);
         } else {
-          const fields = {
-            brand: '#txtAddBrand',
-            subcategories: '#selAddSubcategories',
-          };
-
-          Object.keys(fields).forEach((key) => {
-            if (response.errors[key]) {
-              const element = $(fields[key]);
-              element.addClass('is-invalid');
-              if (key === 'subcategories') {
-                element.next('.ts-wrapper').addClass('is-invalid');
-              }
-              $(`#valAdd${key.charAt(0).toUpperCase() + key.slice(1)}`).text(response.errors[key][0]);
-            }
-          });
+          handleValidationErrors(response, 'Add');
+          toggleButtonState(brandAddSaveBtn, false);
         }
       },
       error: function (response) {
-        showErrorAlert(response.responseJSON, brandAddModal, brandAddForm);
+        showResponseAlert(response, 'error', brandAddModal, brandAddForm);
       },
     });
   });
@@ -61,15 +50,12 @@ $(document).ready(function () {
 
         const subcategories = response.subcategories;
         const dropdownSubcategory = $('#subcategoriesDropdownMenu').empty();
-        let totalSubcategories = subcategories.reduce((total, category) => total + category.subcategories.length, 0);
+        let totalSubcategories = subcategories.length;
         $('#lblViewTotalSubcategories').text(`${totalSubcategories} subcategories in this brand`);
 
         if (totalSubcategories > 0) {
-          subcategories.forEach((category) => {
-            dropdownSubcategory.append($('<h5>').addClass('dropdown-header').text(category.category));
-            category.subcategories.forEach((subcategory) => {
-              dropdownSubcategory.append($('<span>').addClass('dropdown-item').text(subcategory));
-            });
+          subcategories.forEach((subcategory) => {
+            dropdownSubcategory.append($('<span>').addClass('dropdown-item').text(subcategory));
           });
         } else {
           dropdownSubcategory.append('<span class="dropdown-item text-muted">No subcategories available.</span>');
@@ -83,24 +69,19 @@ $(document).ready(function () {
 
         $('#imgViewCreatedByImage').attr('src', response.created_img);
         $('#lblViewCreatedBy').text(response.created_by);
-        $('#lblViewDateCreated').text(response.created);
+        $('#lblViewCreatedAt').text(response.created_at);
         $('#imgViewUpdatedByImage').attr('src', response.updated_img);
         $('#lblViewUpdatedBy').text(response.updated_by);
-        $('#lblViewDateUpdated').text(response.updated);
+        $('#lblViewUpdatedAt').text(response.updated_at);
       },
       error: function (response) {
-        showErrorAlert(response.responseJSON);
+        showResponseAlert(response, 'error');
       },
     });
   });
   // ============ End View a Brand ============ //
 
-  // ============ Update a Brand ============ //
-  const brandEditModal = $('#modalEditBrand');
-  const brandEditForm = $('#frmEditBrand');
-
-  handleUnsavedChanges(brandEditModal, brandEditForm, $('#btnEditSaveBrand'));
-
+  // ============ Edit a Brand ============ //
   brandsDatatable.on('click', '.btnEditBrand', function () {
     const brandId = $(this).closest('tr').find('td[data-brand-id]').data('brand-id');
 
@@ -116,17 +97,27 @@ $(document).ready(function () {
         $('#selEditSubcategories')[0].tomselect.setValue(response.subcategories);
       },
       error: function (response) {
-        showErrorAlert(response.responseJSON, brandEditModal, brandEditForm);
+        showResponseAlert(response, 'error');
       },
     });
   });
+  // ============ End Edit a Brand ============ //
+
+  // ============ Update a Brand ============ //
+  const brandEditModal = $('#modalEditBrand');
+  const brandEditForm = $('#frmEditBrand');
+  const brandEditSaveBtn = $('#btnEditSaveBrand');
+
+  handleUnsavedChanges(brandEditModal, brandEditForm, brandEditSaveBtn);
 
   brandEditForm.on('submit', function (e) {
     e.preventDefault();
 
+    toggleButtonState(brandEditSaveBtn, true);
     const editFormData = new FormData(brandEditForm[0]);
 
     editFormData.append('_method', 'PATCH');
+    editFormData.append('action', 'update');
     editFormData.append('id', $('#txtEditBrandId').val());
     editFormData.append('brand', $('#txtEditBrand').val());
     editFormData.append('subcategories', $('#selEditSubcategories').val());
@@ -139,21 +130,14 @@ $(document).ready(function () {
       contentType: false,
       success: function (response) {
         if (response.success) {
-          showSuccessAlert(response, brandEditModal, brandEditForm);
+          showResponseAlert(response, 'success', brandEditModal, brandEditForm);
         } else {
-          if (response.errors.brand) {
-            $('#txtEditBrand').addClass('is-invalid');
-            $('#valEditBrand').text(response.errors.brand[0]);
-          }
-
-          if (response.errors.subcategories) {
-            $('#selEditSubcategories').next('.ts-wrapper').addClass('is-invalid');
-            $('#valEditSubcategories').text(response.errors.subcategories[0]);
-          }
+          handleValidationErrors(response, 'Edit');
+          toggleButtonState(brandEditSaveBtn, false);
         }
       },
       error: function (response) {
-        showErrorAlert(response.responseJSON, brandEditModal, brandEditForm);
+        showResponseAlert(response, 'error', brandEditModal, brandEditForm);
       },
     });
   });
@@ -177,8 +161,11 @@ $(document).ready(function () {
       confirmButtonText: 'Yes, set it to ' + statusName + '!',
       cancelButtonText: 'No, cancel!',
       customClass: {
-        confirmButton: 'btn btn-white',
-        cancelButton: 'btn btn-secondary',
+        popup: 'bg-light rounded-3 shadow fs-4',
+        title: 'fs-1',
+        htmlContainer: 'text-muted text-center fs-4',
+        confirmButton: 'btn btn-sm btn-white',
+        cancelButton: 'btn btn-sm btn-secondary',
       },
     }).then((result) => {
       if (result.isConfirmed) {
@@ -190,14 +177,75 @@ $(document).ready(function () {
             status: brandSetStatus,
           },
           success: function (response) {
-            showSuccessAlert(response);
+            showResponseAlert(response, 'success');
           },
           error: function (response) {
-            showErrorAlert(response.responseJSON);
+            showResponseAlert(response, 'error');
           },
         });
       }
     });
+  });
+
+  $('#btnMultiSetBrand').on('click', function () {
+    let checkedCheckboxes = brandsDatatable.rows().nodes().to$().find('input.form-check-input:checked');
+
+    let brandIds = checkedCheckboxes
+      .map(function () {
+        return $(this).closest('tr').find('[data-brand-id]').data('brand-id');
+      })
+      .get();
+
+    if (brandIds.length === 0) {
+      Swal.fire({
+        title: 'No brand selected!',
+        text: 'Please select at least one brand to change status.',
+        icon: 'info',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-light rounded-3 shadow fs-4',
+          title: 'fs-1',
+          htmlContainer: 'text-muted text-center fs-4',
+          confirmButton: 'btn btn-sm btn-info',
+        },
+      });
+    } else {
+      Swal.fire({
+        title: 'Change the status?',
+        text: 'Are you sure you want to change the status of all the selected brands?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Set to Active!',
+        cancelButtonText: 'Set to Inactive!',
+        customClass: {
+          popup: 'bg-light rounded-3 shadow fs-4',
+          title: 'fs-1',
+          htmlContainer: 'text-muted text-center fs-4',
+          confirmButton: 'btn btn-sm btn-success',
+          cancelButton: 'btn btn-sm btn-danger',
+        },
+      }).then((result) => {
+        let status;
+        if (result.isConfirmed) {
+          status = 1;
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          status = 0;
+        }
+        if (status !== undefined) {
+          $.ajax({
+            url: '/file-maintenance/brands',
+            method: 'PATCH',
+            data: { id: brandIds, status: status },
+            success: function (response) {
+              showResponseAlert(response, 'success');
+            },
+            error: function (response) {
+              showResponseAlert(response, 'error');
+            },
+          });
+        }
+      });
+    }
   });
   // ============ End Update a Brand ============ //
 
@@ -213,8 +261,11 @@ $(document).ready(function () {
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'No, cancel!',
       customClass: {
-        confirmButton: 'btn btn-danger',
-        cancelButton: 'btn btn-secondary',
+        popup: 'bg-light rounded-3 shadow fs-4',
+        title: 'fs-1',
+        htmlContainer: 'text-muted text-center fs-4',
+        confirmButton: 'btn btn-sm btn-danger',
+        cancelButton: 'btn btn-sm btn-secondary',
       },
     }).then((result) => {
       if (result.isConfirmed) {
@@ -223,10 +274,10 @@ $(document).ready(function () {
           method: 'DELETE',
           data: { id: brandId },
           success: function (response) {
-            showSuccessAlert(response);
+            showResponseAlert(response, 'success');
           },
           error: function (response) {
-            showErrorAlert(response.responseJSON);
+            showResponseAlert(response, 'error');
           },
         });
       }
@@ -249,7 +300,10 @@ $(document).ready(function () {
         icon: 'info',
         confirmButtonText: 'OK',
         customClass: {
-          confirmButton: 'btn btn-info',
+          popup: 'bg-light rounded-3 shadow fs-4',
+          title: 'fs-1',
+          htmlContainer: 'text-muted text-center fs-4',
+          confirmButton: 'btn btn-sm btn-info',
         },
       });
     } else {
@@ -261,8 +315,11 @@ $(document).ready(function () {
         confirmButtonText: 'Yes, delete it!',
         cancelButtonText: 'No, cancel!',
         customClass: {
-          confirmButton: 'btn btn-danger',
-          cancelButton: 'btn btn-secondary',
+          popup: 'bg-light rounded-3 shadow fs-4',
+          title: 'fs-1',
+          htmlContainer: 'text-muted text-center fs-4',
+          confirmButton: 'btn btn-sm btn-danger',
+          cancelButton: 'btn btn-sm btn-secondary',
         },
       }).then((result) => {
         if (result.isConfirmed) {
@@ -271,10 +328,10 @@ $(document).ready(function () {
             method: 'DELETE',
             data: { id: brandIds },
             success: function (response) {
-              showSuccessAlert(response);
+              showResponseAlert(response, 'success');
             },
             error: function (response) {
-              showErrorAlert(response.responseJSON);
+              showResponseAlert(response, 'error');
             },
           });
         }

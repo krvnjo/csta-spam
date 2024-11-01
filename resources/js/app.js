@@ -56,55 +56,58 @@ $(document).ready(function () {
   // ============ End Remove invalid validation on keydown JS ============ //
 });
 
+// ============ Toggle Button State Function ============ //
+function toggleButtonState(button, isLoading) {
+  const spinner = button.find('.spinner-border');
+  const spinnerLabel = button.find('.spinner-label');
+
+  if (isLoading) {
+    spinner.removeClass('d-none');
+    spinnerLabel.addClass('d-none');
+    button.prop('disabled', true);
+  } else {
+    spinner.addClass('d-none');
+    spinnerLabel.removeClass('d-none');
+    button.prop('disabled', false);
+  }
+}
+
+window.toggleButtonState = toggleButtonState;
+// ============ End Toggle Button State Function ============ //
+
 // ============ Show Alerts Function ============ //
-// Success Alert
-function showSuccessAlert(response, modal, form) {
+// Response Alert
+function showResponseAlert(response, type, modal = null, form = null) {
+  const data = response.responseJSON ? response.responseJSON : response;
+
   if (modal && form) {
     cleanModalForm(modal, form);
   }
 
   Swal.fire({
-    title: response.title,
-    text: response.text,
-    icon: 'success',
-    confirmButtonText: 'OK',
+    title: data.title,
+    text: data.text,
+    icon: type,
+    confirmButtonText: type === 'success' ? 'Done' : 'Ok, got it!',
     customClass: {
-      confirmButton: 'btn btn-secondary',
+      popup: 'bg-light rounded-3 shadow fs-4',
+      title: 'fs-1',
+      htmlContainer: 'text-muted text-center fs-4',
+      confirmButton: 'btn btn-sm btn-secondary',
     },
   }).then(() => {
     location.reload();
   });
 }
 
-window.showSuccessAlert = showSuccessAlert;
-
-// Error Alert
-function showErrorAlert(response, modal = null, form = null) {
-  if (modal && form) {
-    cleanModalForm(modal, form);
-  }
-
-  Swal.fire({
-    title: response.title,
-    text: response.text,
-    icon: 'error',
-    confirmButtonText: 'Got it',
-    customClass: {
-      confirmButton: 'btn btn-secondary',
-    },
-  }).then(() => {
-    location.reload();
-  });
-}
-
-window.showErrorAlert = showErrorAlert;
+window.showResponseAlert = showResponseAlert;
 
 // Unsaved Changes Alert
 function handleUnsavedChanges(modal, form, saveButton) {
   let initialFormValues = {};
   let initialImageSrc = '';
   let unsavedChanges = false;
-  let timeout; // For throttling
+  let timeout;
 
   function getFormValues() {
     let values = {};
@@ -181,9 +184,12 @@ function handleUnsavedChanges(modal, form, saveButton) {
     setTimeout(() => {
       initialFormValues = getFormValues();
       initialImageSrc = form.find('label .avatar-img').attr('src');
-      saveButton.prop('disabled', true);
       unsavedChanges = false;
     }, 100);
+  });
+
+  modal.on('shown.bs.modal', function () {
+    form.find('input[type="text"]').first().focus();
   });
 
   modal.on('hide.bs.modal', function (e) {
@@ -215,8 +221,9 @@ function handleUnsavedChanges(modal, form, saveButton) {
 }
 
 window.handleUnsavedChanges = handleUnsavedChanges;
+// ============ End Show Alerts Function ============ //
 
-// Clean Modal Form
+// ============ Clean Modal Form Function ============ //
 function cleanModalForm(modal, form, flag = 'add') {
   form.find(':input').removeClass('is-invalid');
   form.find('.invalid-feedback').empty();
@@ -257,29 +264,81 @@ function cleanModalForm(modal, form, flag = 'add') {
 }
 
 window.cleanModalForm = cleanModalForm;
-// ============ End Show Alerts Function ============ //
+// ============ End Clean Modal Form Function ============ //
 
-// ============ Update Filter Count Function ============ //
-function updateFilterCountBadge(filterCountId) {
+// ============ Handle Validation Errors Function ============ //
+function handleValidationErrors(response, mode = 'Add') {
+  $.each(response.errors, function (field, messages) {
+    const inputSelector = '#txt' + mode + capitalizeFirstLetter(field);
+    const selectWrapperSelector = '#sel' + mode + capitalizeFirstLetter(field);
+    const errorTextSelector = '#val' + mode + capitalizeFirstLetter(field);
+
+    if ($(inputSelector).length) {
+      $(inputSelector).addClass('is-invalid');
+      $(errorTextSelector).text(messages[0]);
+    } else if ($(selectWrapperSelector).length) {
+      $(selectWrapperSelector).next('.ts-wrapper').addClass('is-invalid');
+      $(errorTextSelector).text(messages[0]);
+    } else if (field === 'image' && $(errorTextSelector).length) {
+      $(errorTextSelector).removeClass('d-none').text(messages[0]);
+    }
+  });
+
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+}
+
+window.handleValidationErrors = handleValidationErrors;
+// ============ End Handle Validation Errors Function ============ //
+
+// ============ Filter DataTable and Filter Count Function ============ //
+function filterDatatableAndCount(filterDatatable, filterCount) {
+  const filterElements = $('.js-datatable-filter');
+  const badge = $(filterCount);
   let selectedFilterCount = 0;
 
-  $('.js-datatable-filter').each(function () {
+  $.fn.dataTable.ext.search = [];
+
+  filterElements.each(function () {
     const $this = $(this);
+    const filterVal = $this.val();
+    const targetColumnIndex = $this.data('target-column-index');
+
+    if (!filterVal || (Array.isArray(filterVal) && filterVal.length === 0)) {
+      return;
+    }
 
     if ($this.is('select[multiple]')) {
       selectedFilterCount += $this.find('option:selected').length;
     } else if ($this.val() !== '') {
       selectedFilterCount++;
     }
+
+    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+      const cell = filterDatatable.cell(dataIndex, targetColumnIndex).node();
+      const fullValue = $(cell).attr('data-full-value') || data[targetColumnIndex].trim();
+
+      if (filterVal === 'Active' || filterVal === 'Inactive') {
+        return fullValue === filterVal;
+      }
+
+      if (Array.isArray(filterVal)) {
+        return filterVal.every((val) => fullValue.includes(val));
+      }
+
+      return fullValue === filterVal;
+    });
   });
 
-  const $badge = filterCountId;
+  filterDatatable.draw();
+
   if (selectedFilterCount > 0) {
-    $badge.text(selectedFilterCount).show();
+    badge.text(selectedFilterCount).show();
   } else {
-    $badge.hide();
+    badge.hide();
   }
 }
 
-window.updateFilterCountBadge = updateFilterCountBadge;
-// ============ End Update Filter Count Function ============ //
+window.filterDatatableAndCount = filterDatatableAndCount;
+// ============ End Filter DataTable and Filter Count Function ============ //

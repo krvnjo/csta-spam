@@ -13,6 +13,7 @@
       <div class="modal-body">
         <form id="frmAddBrand" method="POST" novalidate>
           @csrf
+
           <!-- Brand Name -->
           <div class="form-group">
             <label class="col col-form-label form-label" for="txtAddBrand">Brand Name</label>
@@ -54,7 +55,10 @@
           <div class="col-sm-auto">
             <div class="d-flex justify-content-end gap-2">
               <button class="btn btn-white" data-bs-dismiss="modal" type="button">Cancel</button>
-              <button class="btn btn-primary" id="btnAddSaveBrand" form="frmAddBrand" type="submit">Save</button>
+              <button class="btn btn-primary" id="btnAddSaveBrand" form="frmAddBrand" type="submit" disabled>
+                <span class="spinner-label">Save</span>
+                <span class="spinner-border spinner-border-sm d-none"></span>
+              </button>
             </div>
           </div>
         </div>

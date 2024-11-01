@@ -48,10 +48,10 @@
           </div>
           <!-- End Status -->
 
-          <!-- Date Created -->
+          <!-- Created By -->
           <div class="row mb-4">
             <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
-              <p class="form-label fw-semibold mb-0">Date Created:</p>
+              <p class="form-label fw-semibold mb-0">Created By:</p>
             </div>
             <div class="col-12 col-md-7 d-flex align-items-center">
               <div class="avatar avatar-xs avatar-circle">
@@ -59,16 +59,16 @@
               </div>
               <div class="ms-3">
                 <span class="d-block fw-semibold mb-0" id="lblViewCreatedBy"></span>
-                <span class="d-block fs-5 text-body" id="lblViewDateCreated"></span>
+                <span class="d-block fs-5 text-body" id="lblViewCreatedAt"></span>
               </div>
             </div>
           </div>
-          <!-- End Date Created -->
+          <!-- End Created By -->
 
-          <!-- Date Updated -->
+          <!-- Updated By -->
           <div class="row">
             <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
-              <p class="form-label fw-semibold mb-0">Date Updated:</p>
+              <p class="form-label fw-semibold mb-0">Updated By:</p>
             </div>
             <div class="col-12 col-md-7 d-flex align-items-center">
               <div class="avatar avatar-xs avatar-circle">
@@ -76,11 +76,11 @@
               </div>
               <div class="ms-3">
                 <span class="d-block fw-semibold mb-0" id="lblViewUpdatedBy"></span>
-                <span class="d-block fs-5 text-body" id="lblViewDateUpdated"></span>
+                <span class="d-block fs-5 text-body" id="lblViewUpdatedAt"></span>
               </div>
             </div>
           </div>
-          <!-- End Date Updated -->
+          <!-- End Updated By -->
         </div>
       </div>
       <!-- End Body -->

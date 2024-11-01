@@ -30,11 +30,11 @@ class LabelSeeder extends Seeder
 
         $brands = [
             'Generic',
-            'A4Tech',
+            'A4tech',
             'Carrier',
-            'MSI',
+            'Msi',
             'Samsung',
-            'TCL',
+            'Tcl',
             'Uratex'
         ];
 

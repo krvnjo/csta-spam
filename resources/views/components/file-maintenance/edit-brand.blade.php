@@ -56,7 +56,10 @@
           <div class="col-sm-auto">
             <div class="d-flex justify-content-end gap-2">
               <button class="btn btn-white" data-bs-dismiss="modal" type="button">Cancel</button>
-              <button class="btn btn-primary" id="btnEditSaveBrand" form="frmEditBrand" type="submit">Save</button>
+              <button class="btn btn-primary" id="btnEditSaveBrand" form="frmEditBrand" type="submit" disabled>
+                <span class="spinner-label">Save</span>
+                <span class="spinner-border spinner-border-sm d-none"></span>
+              </button>
             </div>
           </div>
         </div>
