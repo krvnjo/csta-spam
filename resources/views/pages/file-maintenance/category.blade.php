@@ -210,7 +210,7 @@
             }'>
             <thead class="thead-light">
               <tr>
-                <th class="w-th">
+                <th class="w-th" style="width: 8%">
                   @canAny('update category maintenance, delete category maintenance')
                     <input class="form-check-input" id="categoriesDatatableCheckAll" type="checkbox">
                   @else
