@@ -9,63 +9,51 @@
 @endpush
 
 @section('main-content')
-  <main class="main" id="content" role="main">
-    <!-- Content -->
+  <main class="main" id="content">
     <div class="content container-fluid">
-      <!-- Page Header -->
+      <!-- Categories Header -->
       <div class="page-header">
-        <div class="row align-items-end">
+        <div class="row align-items-center">
           <div class="col-sm mb-2 mb-sm-0">
-            <nav>
-              <ol class="breadcrumb breadcrumb-no-gutter">
-                <li class="breadcrumb-item"><a class="breadcrumb-link" data-route="dashboard.index" href="{{ route('dashboard.index') }}">Home</a></li>
-                <li class="breadcrumb-item"><a class="breadcrumb-link">File Maintenance</a></li>
-                <li class="breadcrumb-item active">Categories</li>
-              </ol>
-            </nav>
+            <ol class="breadcrumb breadcrumb-no-gutter">
+              <li class="breadcrumb-item"><a class="breadcrumb-link" data-route="dashboard.index" href="{{ route('dashboard.index') }}">Home</a></li>
+              <li class="breadcrumb-item"><a class="breadcrumb-link">File Maintenance</a></li>
+              <li class="breadcrumb-item active">Categories</li>
+            </ol>
             <h1 class="page-header-title mt-2">Categories</h1>
+            <p class="page-header-text">Manage and organize category records.</p>
           </div>
 
           @can('create category maintenance')
             <div class="col-sm-auto mt-sm-0 mt-3">
-              <div class="d-grid gap-2 d-sm-flex justify-content-sm-end">
-                <button class="btn btn-primary w-100 w-sm-auto" data-bs-toggle="modal" data-bs-target="#modalAddCategory">
-                  <i class="bi-plus me-1"></i> Add Category
-                </button>
-              </div>
+              <button class="btn btn-primary w-100 w-sm-auto" id="btnAddCategoryModal" data-bs-toggle="modal" data-bs-target="#modalAddCategory">
+                <i class="bi-plus-lg me-1"></i> Add Category
+              </button>
             </div>
           @endcan
         </div>
       </div>
-      <!-- End Page Header -->
+      <!-- End Categories Header -->
 
-      <!-- Active and Inactive Categories Card -->
-      <div class="card mb-3 mb-lg-5">
+      <!-- Categories Details Card -->
+      <div class="card mb-5">
         <div class="card-body">
-          <div class="d-flex flex-column flex-md-row align-items-md-center text-md-start text-center">
-            <div class="flex-shrink-0">
-              <span class="display-3 text-dark">{{ $totalCategories }}</span>
-            </div>
-
-            <div class="flex-grow-1 ms-md-3 my-1 mt-md-0">
+          <div class="d-flex flex-column flex-sm-row align-items-sm-center text-sm-start text-center">
+            <div class="flex-shrink-0"><span class="display-3 text-dark">{{ $totalCategories }}</span></div>
+            <div class="flex-grow-1 ms-sm-3 my-1 mt-sm-0">
               <div class="row">
-                <div class="col-12 col-md">
+                <div class="col-lg-3 col-md-4 col-sm-5">
                   <span class="d-block">Total Categories</span>
                   <span class="badge bg-soft-primary text-primary rounded-pill p-1">
-                    @if ($deletedCategories == 0)
-                      <i class="bi-hand-thumbs-up-fill"></i> Everything looks great!
-                    @elseif ($deletedCategories == 1)
-                      <i class="bi-arrow-counterclockwise"></i>{{ $deletedCategories }} record can be restored from bin.
-                    @else
-                      <i class="bi-arrow-counterclockwise"></i>{{ $deletedCategories }} records can be restored from bin.
-                    @endif
+                    <i class="bi-{{ $deletedCategories == 0 ? 'check-circle-fill' : 'arrow-counterclockwise' }} me-1"></i>
+                    {{ $deletedCategories == 0 ? 'Everything looks great!' : "$deletedCategories record(s) can be restored." }}
                   </span>
                 </div>
 
-                <div class="col-12 col-md-9 mt-3 mt-md-0">
-                  <div class="d-flex justify-content-center justify-content-md-start mb-2">
-                    <div class="me-3"><span class="legend-indicator bg-success"></span>Active ({{ $activeCategories }})</div>
-                    <div><span class="legend-indicator bg-danger"></span>Inactive ({{ $inactiveCategories }})</div>
+                <div class="col-lg-9 col-md-8 col-sm-7 mt-3 mt-sm-0">
+                  <div class="d-flex justify-content-center justify-content-sm-start mb-2">
+                    <div class="me-2"><span class="legend-indicator bg-success"></span>Active ({{ $activeCategories }})</div>
+                    <div class="ms-2"><span class="legend-indicator bg-danger"></span>Inactive ({{ $inactiveCategories }})</div>
                   </div>
                   <div class="progress rounded-pill">
                     <div class="progress-bar bg-success" style="width: {{ $activePercentage }}%"></div>
@@ -77,72 +65,77 @@
           </div>
         </div>
       </div>
-      <!-- End Active and Inactive Categories Card -->
+      <!-- End Categories Details Card -->
 
-      <!-- Datatable Card -->
+      <!-- Categories DataTable Card -->
       <div class="card">
         <!-- Header -->
         <div class="card-header card-header-content-md-between">
           <div class="mb-2 mb-md-0">
-            <!-- Datatable Search -->
             <div class="input-group input-group-merge input-group-flush">
               <div class="input-group-prepend input-group-text"><i class="bi-search"></i></div>
               <input class="form-control" id="categoriesDatatableSearch" type="search" placeholder="Search">
             </div>
-            <!-- End Datatable Search -->
           </div>
 
-          <div class="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
-            @can('delete category maintenance')
-              <!-- Datatable Counter -->
-              <div id="categoriesDatatableCounterInfo" style="display: none;">
-                <div class="d-flex align-items-center">
-                  <span class="fs-5 me-3"><span id="categoriesDatatableCounter"></span> Selected</span>
-                  <button class="btn btn-outline-danger btn-sm" id="btnMultiDeleteCategory" type="button"><i class="bi-trash3-fill"></i> Delete</button>
+          <div class="d-grid d-sm-flex justify-content-sm-center justify-content-md-end align-items-sm-center gap-2">
+            @canAny('update category maintenance, delete category maintenance')
+              <!-- DataTable Counter -->
+              <div class="w-100 w-sm-auto" id="categoriesDatatableCounterInfo" style="display: none;">
+                <div class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-2">
+                  @can('update category maintenance')
+                    <button class="btn btn-sm btn-outline-secondary w-100 w-sm-auto" id="btnMultiSetCategory" type="button">
+                      <i class="bi-toggles me-1"></i> Set Status (<span class="fs-5"><span class="categoriesDatatableCounter"></span></span>)
+                    </button>
+                  @endcan
+
+                  @can('delete category maintenance')
+                    <button class="btn btn-sm btn-outline-danger w-100 w-sm-auto" id="btnMultiDeleteCategory" type="button">
+                      <i class="bi-trash3-fill"></i> Delete (<span class="fs-5"><span class="categoriesDatatableCounter"></span></span>)
+                    </button>
+                  @endcan
                 </div>
               </div>
-              <!-- End Datatable Counter -->
-            @endcan
+              <!-- End DataTable Counter -->
+            @endcanAny
 
-            <!-- Export Options Dropdown -->
+            <!-- Export Dropdown -->
             <div class="dropdown">
-              <button class="btn btn-white btn-sm dropdown-toggle w-100" data-bs-toggle="dropdown" type="button">
+              <button class="btn btn-white btn-sm dropdown-toggle w-100" data-bs-toggle="dropdown" data-bs-auto-close="outside" type="button">
                 <i class="bi-download me-2"></i> Export
               </button>
 
-              <div class="dropdown-menu dropdown-menu-sm-end">
+              <div class="dropdown-menu dropdown-menu-sm-end w-100">
                 <span class="dropdown-header">Options</span>
-                <button class="dropdown-item" id="export-copy" type="button">
+                <button class="dropdown-item" id="categoryExportCopy" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/copy-icon.svg') }}" alt="Copy Icon"> Copy
                 </button>
-                <button class="dropdown-item" id="export-print" type="button">
+                <button class="dropdown-item" id="categoryExportPrint" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/print-icon.svg') }}" alt="Print Icon"> Print
                 </button>
                 <div class="dropdown-divider"></div>
                 <span class="dropdown-header">Download</span>
-                <button class="dropdown-item" id="export-excel" type="button">
+                <button class="dropdown-item" id="categoryExportExcel" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/excel-icon.svg') }}" alt="Excel Icon"> Excel
                 </button>
-                <button class="dropdown-item" id="export-pdf" type="button">
+                <button class="dropdown-item" id="categoryExportPdf" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/pdf-icon.svg') }}" alt="PDF Icon"> PDF
                 </button>
               </div>
             </div>
-            <!-- End Export Options Dropdown -->
+            <!-- End Export Dropdown -->
 
-            <!-- Datatable Filter Dropdown -->
+            <!-- Filter Dropdown -->
             <div class="dropdown">
-              <button class="btn btn-white btn-sm w-100" data-bs-toggle="dropdown" type="button">
-                <i class="bi-filter me-1"></i> Filter<span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="categoryFilterCount"></span>
+              <button class="btn btn-white btn-sm dropdown-toggle w-100" data-bs-toggle="dropdown" data-bs-auto-close="outside" type="button">
+                <i class="bi-filter me-2"></i> Filter <span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="categoriesFilterCount"></span>
               </button>
 
-              <div class="dropdown-menu dropdown-menu-sm-end dropdown-card card-dropdown-filter-centered w-100" style="min-width: 22rem;">
+              <div class="dropdown-menu dropdown-menu-sm-end custom-dropdown">
                 <div class="card">
                   <div class="card-header card-header-content-between">
                     <h5 class="card-header-title">Category Filters</h5>
-                    <button class="btn btn-ghost-secondary btn-icon btn-sm ms-2" type="button"><i class="bi-x-lg"></i></button>
                   </div>
-
                   <div class="card-body">
                     <!-- Subcategories Filter -->
                     <div class="mb-4">
@@ -150,15 +143,12 @@
                       <div class="row">
                         <div class="col">
                           <div class="tom-select-custom">
-                            <select class="js-select js-datatable-filter form-select form-select-sm" data-target-column-index="3"
+                            <select class="js-select js-datatable-filter form-select" data-target-column-index="3"
                               data-hs-tom-select-options='{
-                                "singleMultiple": true,
-                                "hideSelected": false,
                                 "placeholder": "All Subcategories",
-                                "dropdownWidth": "100%"
+                                "singleMultiple": true
                               }'
-                              multiple>
-                              <option value="">All Subcategories</option>
+                              autocomplete="off" multiple>
                               @foreach ($subcategories as $subcategory)
                                 <option value="{{ $subcategory->name }}">{{ $subcategory->name }}</option>
                               @endforeach
@@ -169,18 +159,17 @@
                     </div>
                     <!-- End Subcategories Filter -->
 
-                    <!-- Active and Inactive Filter -->
+                    <!-- Status Filter -->
                     <div class="mb-4">
                       <small class="text-cap text-body">Status</small>
                       <div class="row">
                         <div class="col">
                           <div class="tom-select-custom">
-                            <select class="js-select js-datatable-filter form-select form-select-sm" data-target-column-index="5"
+                            <select class="js-select js-datatable-filter form-select" data-target-column-index="6"
                               data-hs-tom-select-options='{
                                 "allowEmptyOption": true,
-                                "placeholder": "All Status",
                                 "hideSearch": true,
-                                "dropdownWidth": "100%"
+                                "placeholder": "All Status"
                               }'>
                               <option value="">All Status</option>
                               <option data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-success"></span>Active</span>' value="Active"></option>
@@ -190,25 +179,25 @@
                         </div>
                       </div>
                     </div>
-                    <!-- End Active and Inactive Filter -->
+                    <!-- End Status Filter -->
                   </div>
                 </div>
               </div>
             </div>
-            <!-- End Datatable Filter Dropdown -->
+            <!-- End Filter Dropdown -->
           </div>
         </div>
         <!-- End Header -->
 
-        <!-- Categories Datatable -->
+        <!-- Body -->
         <div class="table-responsive datatable-custom">
           <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100" id="categoriesDatatable"
             data-hs-datatables-options='{
               "columnDefs": [{
-                 "targets": [0, 6],
-                 "orderable": false
-               }],
-              "order": [4, "desc"],
+                "targets": [0, 7],
+                "orderable": false
+              }],
+              "order": [5, "desc"],
               "info": {
                 "totalQty": "#categoriesDatatableWithPagination"
               },
@@ -222,19 +211,17 @@
             <thead class="thead-light">
               <tr>
                 <th class="w-th">
-                  @can('delete category maintenance')
-                    <div class="form-check">
-                      <input class="form-check-input" id="categoriesDatatableCheckAll" type="checkbox">
-                      <label class="form-check-label" for="categoriesDatatableCheckAll"></label>
-                    </div>
+                  @canAny('update category maintenance, delete category maintenance')
+                    <input class="form-check-input" id="categoriesDatatableCheckAll" type="checkbox">
                   @else
                     #
-                  @endcan
+                  @endcanAny
                 </th>
-                <th class="d-none">Category Id</th>
+                <th class="d-none"></th>
                 <th>Category Name</th>
                 <th>Category Subcategories</th>
-                <th>Date Updated</th>
+                <th>Date Created</th>
+                <th>Last Updated</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
@@ -244,44 +231,36 @@
               @foreach ($categories as $index => $category)
                 <tr>
                   <td>
-                    @can('delete category maintenance')
-                      <div class="form-check">
-                        <input class="form-check-input" id="categoryCheck{{ $index + 1 }}" type="checkbox">
-                        <label class="form-check-label" for="categoryCheck{{ $index + 1 }}"></label>
-                      </div>
+                    @canAny('update category maintenance, delete category maintenance')
+                      <input class="form-check-input" id="categoryCheck{{ $index + 1 }}" type="checkbox">
                     @else
                       {{ $index + 1 }}
-                    @endcan
+                    @endcanAny
                   </td>
                   <td class="d-none" data-category-id="{{ Crypt::encryptString($category->id) }}"></td>
-                  <td><a class="h5 btnViewCategory">{{ $category->name }}</a></td>
-                  <td>
-                    @php
-                      $subcategoryNames = $category->subcategories->sortBy('name')->pluck('name')->implode(', ');
-                      $truncatedSubcategories = Str::limit($subcategoryNames, 30, '...');
-                    @endphp
-                    {{ $subcategoryNames ? $truncatedSubcategories : 'No subcategories available.' }}
+                  <td><a class="d-block h5 mb-0 btnViewCategory">{{ $category->name }}</a></td>
+                  <td data-full-value="{{ $subcategoryNames = $category->subcategories->sortBy('name')->pluck('name')->implode(', ') }}">
+                    {{ $subcategoryNames ? Str::limit($subcategoryNames, 30, '...') : 'No subcategories available.' }}
                   </td>
-                  <td data-order="{{ $category->updated_at }}"><span><i class="bi-calendar-event me-1"></i> Updated {{ $category->updated_at->diffForHumans() }}</span></td>
+                  <td data-order="{{ $category->created_at }}"><span><i class="bi-calendar-plus me-1"></i> {{ $category->created_at->format('F d, Y') }}</span></td>
+                  <td data-order="{{ $category->updated_at }}"><span><i class="bi-calendar2-event me-1"></i> Updated {{ $category->updated_at->diffForHumans() }}</span></td>
                   <td>
                     <span class="badge bg-soft-{{ $category->is_active ? 'success' : 'danger' }} text-{{ $category->is_active ? 'success' : 'danger' }}">
                       <span class="legend-indicator bg-{{ $category->is_active ? 'success' : 'danger' }}"></span>{{ $category->is_active ? 'Active' : 'Inactive' }}
                     </span>
                   </td>
                   <td>
-                    <div class="btn-group">
-                      <button class="btn btn-white btn-sm btnViewCategory" type="button">
-                        <i class="bi-eye"></i> View
-                      </button>
-
-                      @can('update category maintenance' || 'delete category maintenance')
-                        <div class="btn-group">
-                          <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="categoryActionDropdown" data-bs-toggle="dropdown" type="button"
-                            aria-expanded="false"></button>
-                          <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="categoryActionDropdown">
+                    <div class="btn-group position-static">
+                      <button class="btn btn-white btn-sm btnViewCategory" type="button"><i class="bi-eye"></i> View</button>
+                      @canAny('update category maintenance, delete category maintenance')
+                        <div class="btn-group position-static">
+                          <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" data-bs-toggle="dropdown" type="button"></button>
+                          <div class="dropdown-menu dropdown-menu-end mt-1">
                             @can('update category maintenance')
-                              <button class="dropdown-item btnEditCategory" type="button"><i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record</button>
-                              <button class="dropdown-item btnStatusCategory" data-status="{{ $category->is_active ? 0 : 1 }}" type="button">
+                              <button class="dropdown-item btnEditCategory" type="button">
+                                <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
+                              </button>
+                              <button class="dropdown-item btnSetCategory" data-status="{{ $category->is_active ? 0 : 1 }}" type="button">
                                 <i class="bi {{ $category->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
                                 {{ $category->is_active ? 'Set to Inactive' : 'Set to Active' }}
                               </button>
@@ -297,7 +276,7 @@
                             @endcan
                           </div>
                         </div>
-                      @endcan
+                      @endcanAny
                     </div>
                   </td>
                 </tr>
@@ -305,7 +284,7 @@
             </tbody>
           </table>
         </div>
-        <!-- End Category Table -->
+        <!-- End Body -->
 
         <!-- Footer -->
         <div class="card-footer">
@@ -316,9 +295,9 @@
                 <div class="tom-select-custom tom-page-w">
                   <select class="js-select form-select form-select-borderless" id="categoriesDatatableEntries"
                     data-hs-tom-select-options='{
-                      "searchInDropdown": false,
-                      "hideSearch": true
-                    }' autocomplete="off">
+                      "hideSearch": true,
+                      "searchInDropdown": false
+                    }'>
                     <option value="5" selected>5</option>
                     <option value="10">10</option>
                     <option value="20">20</option>
@@ -330,7 +309,6 @@
                 <span class="text-secondary ms-2">records</span>
               </div>
             </div>
-
             <div class="col-sm-auto">
               <div class="d-flex justify-content-center justify-content-sm-end">
                 <nav id="categoriesDatatablePagination"></nav>
@@ -340,9 +318,8 @@
         </div>
         <!-- End Footer -->
       </div>
-      <!-- End Datatable Card -->
+      <!-- End Categories DataTable Card -->
     </div>
-    <!-- End Content -->
   </main>
 @endsection
 
@@ -371,7 +348,7 @@
   <!-- JS Themes -->
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>
 
-  <!-- JS Plugins Init. -->
+  <!-- JS Plugins Initialization -->
   <script>
     // Initialization of Datatables
     $(document).on("ready", function() {
@@ -379,19 +356,31 @@
         dom: "Bfrtip",
         buttons: [{
             extend: "copy",
-            className: "d-none"
-          },
-          {
-            extend: "excel",
-            className: "d-none"
-          },
-          {
-            extend: "pdf",
-            className: "d-none"
+            className: "d-none",
+            exportOptions: {
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8))'
+            }
           },
           {
             extend: "print",
-            className: "d-none"
+            className: "d-none",
+            exportOptions: {
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8))'
+            }
+          },
+          {
+            extend: "excel",
+            className: "d-none",
+            exportOptions: {
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8))'
+            }
+          },
+          {
+            extend: "pdf",
+            className: "d-none",
+            exportOptions: {
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8))'
+            }
           }
         ],
         select: {
@@ -399,7 +388,7 @@
           selector: "td:first-child input[type=\"checkbox\"]",
           classMap: {
             checkAll: "#categoriesDatatableCheckAll",
-            counter: "#categoriesDatatableCounter",
+            counter: ".categoriesDatatableCounter",
             counterInfo: "#categoriesDatatableCounterInfo"
           }
         },
@@ -408,41 +397,30 @@
               <img class="mb-3" src="{{ Vite::asset('resources/svg/illustrations/oc-error.svg') }}" alt="No records to display." style="width: 10rem;" data-hs-theme-appearance="default">
               <img class="mb-3" src="{{ Vite::asset('resources/svg/illustrations-light/oc-error.svg') }}" alt="No records to display." style="width: 10rem;" data-hs-theme-appearance="dark">
             <p class="mb-0">No records to display.</p>
-            </div>`
+          </div>`
         }
       });
 
       const datatable = HSCore.components.HSDatatables.getItem(0);
 
-      $("#export-copy").click(function() {
+      $("#categoryExportCopy").click(function() {
         datatable.button(".buttons-copy").trigger();
       });
 
-      $("#export-excel").click(function() {
-        datatable.button(".buttons-excel").trigger();
-      });
-
-      $("#export-pdf").click(function() {
-        datatable.button(".buttons-pdf").trigger();
-      });
-
-      $("#export-print").click(function() {
+      $("#categoryExportPrint").click(function() {
         datatable.button(".buttons-print").trigger();
       });
 
+      $("#categoryExportExcel").click(function() {
+        datatable.button(".buttons-excel").trigger();
+      });
+
+      $("#categoryExportPdf").click(function() {
+        datatable.button(".buttons-pdf").trigger();
+      });
+
       $(".js-datatable-filter").on("change", function() {
-        let $this = $(this);
-        let elVal = $this.val();
-        let targetColumnIndex = $this.data("target-column-index");
-
-        if (!Array.isArray(elVal)) {
-          elVal = [];
-        }
-
-        let searchPattern = elVal.map(val => val.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|");
-        datatable.column(targetColumnIndex).search(searchPattern, true, false, false).draw();
-
-        updateFilterCountBadge($("#categoryFilterCount"));
+        filterDatatableAndCount(datatable, "#categoriesFilterCount");
       });
     });
 

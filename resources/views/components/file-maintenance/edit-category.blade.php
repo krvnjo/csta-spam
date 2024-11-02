@@ -11,7 +11,7 @@
 
       <!-- Body -->
       <div class="modal-body">
-        <form id="frmEditCategory" method="post" novalidate>
+        <form id="frmEditCategory" method="POST" novalidate>
           @csrf
           @method('PATCH')
           <input id="txtEditCategoryId" name="id" type="hidden">
@@ -26,23 +26,20 @@
 
           <!-- Category Subcategories -->
           <div class="form-group">
-            <label class="col col-form-label form-label mt-2" for="selEditCategorySubcategories">Category Subcategories</label>
+            <label class="col col-form-label form-label mt-2" for="selEditSubcategories">Category Subcategories</label>
             <div class="tom-select-custom">
-              <select class="js-select form-select" id="selEditCategorySubcategories" name="subcategories[]"
+              <select class="js-select form-select" id="selEditSubcategories" name="subcategories[]"
                 data-hs-tom-select-options='{
-                  "singleMultiple": true,
-                  "hideSelected": false,
-                  "placeholder": "Select subcategories"
-                }'
-                autocomplete="off" multiple>
-                <option value=""></option>
+                  "placeholder": "Select a subcategory",
+                  "singleMultiple": true
+                }' autocomplete="off" multiple>
                 @foreach ($subcategories as $subcategory)
                   @if ($subcategory->is_active)
                     <option value="{{ $subcategory->id }}">{{ $subcategory->name }}</option>
                   @endif
                 @endforeach
               </select>
-              <span class="invalid-feedback" id="valEditCategorySubcategories"></span>
+              <span class="invalid-feedback" id="valEditSubcategories"></span>
             </div>
           </div>
           <!-- End Category Subcategories -->
@@ -53,12 +50,12 @@
       <!-- Footer -->
       <div class="modal-footer">
         <div class="row align-items-sm-center flex-grow-1 mx-n2">
-          <div class="col-sm mb-2 mb-sm-0"></div>
-          <div class="col-sm-auto">
-            <div class="d-flex gap-2">
-              <button class="btn btn-white" data-bs-dismiss="modal" type="button">Cancel</button>
-              <button class="btn btn-primary" id="btnEditSaveCategory" form="frmEditCategory" type="submit">Save</button>
-            </div>
+          <div class="col d-flex justify-content-end gap-2">
+            <button class="btn btn-white" data-bs-dismiss="modal" type="button">Cancel</button>
+            <button class="btn btn-primary" id="btnEditSaveCategory" form="frmEditCategory" type="submit" disabled>
+              <span class="spinner-label">Save</span>
+              <span class="spinner-border spinner-border-sm d-none"></span>
+            </button>
           </div>
         </div>
       </div>

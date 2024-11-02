@@ -130,9 +130,9 @@ Route::middleware(['auth', 'noCache'])->group(function () {
     // Category Routes
     Route::middleware('checkPermission:view category maintenance')->prefix('file-maintenance/categories')->name('category.')->controller(CategoryController::class)->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::get('/show', 'show')->name('show')->middleware('expectsJson');
+        Route::post('/', 'store')->name('create')->middleware('checkPermission:create category maintenance');
+        Route::get('/show', 'show')->name('view')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
-        Route::post('/', 'store')->name('store')->middleware('checkPermission:create category maintenance');
         Route::patch('/', 'update')->name('update')->middleware('checkPermission:update category maintenance');
         Route::delete('/', 'destroy')->name('delete')->middleware('checkPermission:delete category maintenance');
     });

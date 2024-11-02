@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Audit;
 use App\Models\Category;
-use App\Models\CategorySubcategory;
 use App\Models\Subcategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Spatie\Activitylog\Facades\LogBatch;
 use Throwable;
 
 class CategoryController extends Controller
@@ -19,12 +20,12 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::with('subcategories')->whereNull('deleted_at')->orderBy('name')->get();
-        $subcategories = Subcategory::with('categories')->whereNull('deleted_at')->orderBy('name')->get();
+        $subcategories = Subcategory::whereNull('deleted_at')->orderBy('name')->get();
 
         $totalCategories = $categories->count();
         $deletedCategories = Category::onlyTrashed()->count();
         $activeCategories = $categories->where('is_active', 1)->count();
-        $inactiveCategories = $totalCategories - $activeCategories;
+        $inactiveCategories = $categories->where('is_active', 0)->count();
 
         $activePercentage = $totalCategories ? ($activeCategories / $totalCategories) * 100 : 0;
         $inactivePercentage = $totalCategories ? ($inactiveCategories / $totalCategories) * 100 : 0;
@@ -49,23 +50,27 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         try {
+            $request->merge([
+                'category' => ucwords(strtolower(trim($request->input('category')))),
+            ]);
+
             $categoryValidationMessages = [
                 'category.required' => 'Please enter a category name!',
-                'category.regex' => 'No special symbols, consecutive spaces or hyphens allowed.',
-                'category.min' => 'The category name must be at least :min characters.',
-                'category.max' => 'The category name may not be greater than :max characters.',
+                'category.regex' => 'No consecutive spaces and symbols allowed. Allowed: (. & \' -)',
+                'category.min' => 'It must be at least :min characters.',
+                'category.max' => 'It must not exceed :max characters.',
                 'category.unique' => 'This category name already exists.',
 
-                'subcategories.required' => 'Please select a subcategory!'
+                'subcategories.required' => 'Please select at least one subcategory!'
             ];
 
             $categoryValidator = Validator::make($request->all(), [
                 'category' => [
                     'required',
-                    'regex:/^(?!.*([ -])\1)[a-zA-Z0-9&.\'-]+(?:[ -][a-zA-Z0-9&.\'-]+)*$/',
-                    'min:3',
+                    'regex:/^(?!.*([ .&\'-])\1)[a-zA-Z0-9][a-zA-Z0-9 .&\'-]*[a-zA-Z0-9]$/',
+                    'min:2',
                     'max:30',
-                    'unique:categories,name'
+                    Rule::unique('categories', 'name')->whereNull('deleted_at'),
                 ],
                 'subcategories' => [
                     'required',
@@ -79,22 +84,25 @@ class CategoryController extends Controller
                 ]);
             }
 
-            $category = Category::query()->create([
-                'name' => ucwords(trim($request->input('category'))),
-                'is_active' => 1,
+            $category = Category::create([
+                'name' => $request->input('category')
             ]);
+            $category->subcategories()->sync($request->input('subcategories'));
 
-            foreach ($request->input('subcategories') as $subcategory) {
-                CategorySubcategory::query()->insert([
-                    'categ_id' => $category->id,
-                    'subcateg_id' => $subcategory,
-                ]);
-            }
+            activity()
+                ->useLog('Add Category')
+                ->performedOn($category)
+                ->event('created')
+                ->withProperties([
+                    'name' => $category->name,
+                    'subcategories' => Subcategory::whereIn('id', $request->input('subcategories'))->pluck('name')->toArray(),
+                ])
+                ->log("A new category: '{$category->name}' has been created.");
 
             return response()->json([
                 'success' => true,
                 'title' => 'Saved Successfully!',
-                'text' => 'The category has been added successfully!',
+                'text' => 'A new category has been added successfully!',
             ]);
         } catch (Throwable) {
             return response()->json([
@@ -111,16 +119,26 @@ class CategoryController extends Controller
     public function show(Request $request)
     {
         try {
-            $category = Category::query()->findOrFail(Crypt::decryptString($request->input('id')));
-            $subcategories = $category->subcategories->whereNull('deleted_at')->pluck('name');
+            $category = Category::findOrFail(Crypt::decryptString($request->input('id')));
+            $subcategories = $category->subcategories()->whereNull('deleted_at')->pluck('name')->toArray();
+
+            $createdBy = Audit::where('subject_type', Category::class)->where('subject_id', $category->id)->where('event', 'created')->first();
+            $createdDetails = $this->getUserAuditDetails($createdBy);
+
+            $updatedBy = Audit::where('subject_type', Category::class)->where('subject_id', $category->id)->where('event', 'updated')->latest()->first() ?? $createdBy;
+            $updatedDetails = $this->getUserAuditDetails($updatedBy);
 
             return response()->json([
                 'success' => true,
                 'category' => $category->name,
                 'subcategories' => $subcategories,
                 'status' => $category->is_active,
-                'created' => $category->created_at->format('D, F d, Y | h:i:s A'),
-                'updated' => $category->updated_at->format('D, F d, Y | h:i:s A'),
+                'created_img' => $createdDetails['image'],
+                'created_by' => $createdDetails['name'],
+                'created_at' => $category->created_at->format('D, M d, Y | h:i A'),
+                'updated_img' => $updatedDetails['image'],
+                'updated_by' => $updatedDetails['name'],
+                'updated_at' => $category->updated_at->format('D, M d, Y | h:i A'),
             ]);
         } catch (Throwable) {
             return response()->json([
@@ -137,7 +155,7 @@ class CategoryController extends Controller
     public function edit(Request $request)
     {
         try {
-            $category = Category::query()->findOrFail(Crypt::decryptString($request->input('id')));
+            $category = Category::findOrFail(Crypt::decryptString($request->input('id')));
             $subcategories = $category->subcategories()->whereNull('deleted_at')->orderBy('name')->pluck('subcateg_id')->toArray();
 
             return response()->json([
@@ -161,27 +179,30 @@ class CategoryController extends Controller
     public function update(Request $request)
     {
         try {
-            $category = Category::query()->findOrFail(Crypt::decryptString($request->input('id')));
-            $subcategories = $category->subcategories->whereNull('deleted_at');
+            if ($request->has('action') && $request->input('action') === 'update') {
+                $category = Category::findOrFail(Crypt::decryptString($request->input('id')));
 
-            if ($request->has(['category', 'subcategories'])) {
+                $request->merge([
+                    'category' => ucwords(strtolower(trim($request->input('category')))),
+                ]);
+
                 $categoryValidationMessages = [
                     'category.required' => 'Please enter a category name!',
-                    'category.regex' => 'It must not contain special symbols and multiple spaces.',
-                    'category.min' => 'The category name must be at least :min characters.',
-                    'category.max' => 'The category name may not be greater than :max characters.',
+                    'category.regex' => 'No consecutive spaces and symbols allowed. Allowed: (. & \' -)',
+                    'category.min' => 'It must be at least :min characters.',
+                    'category.max' => 'It must not exceed :max characters.',
                     'category.unique' => 'This category name already exists.',
 
-                    'subcategories.required' => 'Please select a subcategory!'
+                    'subcategories.required' => 'Please select at least one subcategory!'
                 ];
 
                 $categoryValidator = Validator::make($request->all(), [
                     'category' => [
                         'required',
-                        'regex:/^(?!.*([ -])\1)[a-zA-Z0-9]+(?:[ -][a-zA-Z0-9]+)*$/',
-                        'min:3',
+                        'regex:/^(?!.*([ .&\'-])\1)[a-zA-Z0-9][a-zA-Z0-9 .&\'-]*[a-zA-Z0-9]$/',
+                        'min:2',
                         'max:50',
-                        Rule::unique('categories', 'name')->ignore($category->id)
+                        Rule::unique('categories', 'name')->whereNull('deleted_at')->ignore($category->id),
                     ],
                     'subcategories' => [
                         'required',
@@ -193,32 +214,100 @@ class CategoryController extends Controller
                         'success' => false,
                         'errors' => $categoryValidator->errors(),
                     ]);
-                } else {
-                    $category->name = ucwords(trim($request->input('category')));
-                    $category->subcategories()->sync(explode(',', $request->input('subcategories')));
                 }
-            } elseif ($request->has('status')) {
-                $category->is_active = $request->input('status');
 
-                if ($category->is_active == 0) {
-                    foreach ($subcategories as $subcategory) {
-                        $subcategory->is_active = 0;
-                        $subcategory->save();
-                    }
-                } else {
-                    foreach ($subcategories as $subcategory) {
-                        $subcategory->is_active = 1;
-                        $subcategory->save();
+                $categoryName = $category->name;
+                $updatedProperties = [];
+
+                if ($category->name !== $request->input('category')) {
+                    $updatedProperties['old']['name'] = $category->name;
+                    $updatedProperties['new']['name'] = $request->input('category');
+                }
+
+                $newSubcategories = explode(',', $request->input('subcategories'));
+                $oldSubcategoryNames = $category->subcategories()->pluck('name')->toArray();
+                $newSubcategoryNames = [];
+
+                foreach ($newSubcategories as $subcategId) {
+                    $subcateg = Subcategory::find($subcategId);
+                    if ($subcateg) {
+                        $newSubcategoryNames[] = $subcateg->name;
                     }
                 }
+
+                if ($oldSubcategoryNames !== $newSubcategoryNames) {
+                    $updatedProperties['old']['subcategories'] = $oldSubcategoryNames;
+                    $updatedProperties['new']['subcategories'] = $newSubcategoryNames;
+                }
+
+                $category->update([
+                    'name' => $request->input('category')
+                ]);
+                $category->subcategories()->sync($newSubcategories);
+
+                if (!empty($updatedProperties)) {
+                    activity()
+                        ->useLog('Edit Category')
+                        ->performedOn($category)
+                        ->event('updated')
+                        ->withProperties($updatedProperties)
+                        ->log("The category: '{$categoryName}' has been updated.");
+                }
+
+                return response()->json([
+                    'success' => true,
+                    'title' => 'Updated Successfully!',
+                    'text' => 'The category has been updated successfully!',
+                ]);
+            } else {
+                $ids = array_map(fn($id) => Crypt::decryptString($id), (array)$request->input('id'));
+                $status = $request->input('status');
+                $statusText = $status == 1 ? 'Active' : 'Inactive';
+                $categories = Category::whereIn('id', $ids)->get();
+
+                $allHaveSameStatus = $categories->every(fn($category) => $category->is_active == $status);
+
+                if ($allHaveSameStatus) {
+                    return response()->json([
+                        'success' => true,
+                        'title' => 'No changes made!',
+                        'text' => 'The categories were already set to the desired status.',
+                        'type' => 'info',
+                    ]);
+                }
+
+                $categoriesToUpdate = $categories->filter(fn($category) => $category->is_active != $status);
+                Category::whereIn('id', $categoriesToUpdate->pluck('id'))->update(['is_active' => $status]);
+
+                if ($categoriesToUpdate->count() > 1) {
+                    LogBatch::startBatch();
+                }
+
+                foreach ($categoriesToUpdate as $category) {
+                    if ($category->is_active != $status) {
+                        activity()
+                            ->useLog('Set Category Status')
+                            ->performedOn($category)
+                            ->event('updated')
+                            ->causedBy(auth()->user())
+                            ->withProperties([
+                                'name' => $category->name,
+                                'status' => $statusText
+                            ])
+                            ->log("Updated the status of category: '{$category->name}' to {$statusText}.");
+                    }
+                }
+
+                if ($categoriesToUpdate->count() > 1) {
+                    LogBatch::endBatch();
+                }
+
+                return response()->json([
+                    'success' => true,
+                    'title' => 'Updated Successfully!',
+                    'text' => 'The status of the categories has been updated successfully!',
+                ]);
             }
-            $category->save();
-
-            return response()->json([
-                'success' => true,
-                'title' => 'Updated Successfully!',
-                'text' => 'The category has been updated successfully!',
-            ]);
         } catch (Throwable) {
             return response()->json([
                 'success' => false,
@@ -233,42 +322,46 @@ class CategoryController extends Controller
      */
     public function destroy(Request $request)
     {
+        $categoryText = (isset($ids) ? count($ids) : 0 > 1) ? 'categories' : 'category';
         try {
-            $ids = $request->input('id');
+            $ids = array_map(fn($id) => Crypt::decryptString($id), (array)$request->input('id'));
+            $categories = Category::whereIn('id', $ids)->get(['id', 'name']);
 
-            if (!is_array($ids)) {
-                $ids = [$ids];
+            Category::whereIn('id', $ids)->update(['is_active' => 0]);
+            Category::destroy($ids);
+
+            $isBatchLogging = count($categories) > 1;
+            if ($isBatchLogging) {
+                LogBatch::startBatch();
             }
 
-            $ids = array_map(function ($id) {
-                return Crypt::decryptString($id);
-            }, $ids);
-
-            $categories = Category::query()->whereIn('id', $ids)->get();
-
             foreach ($categories as $category) {
-                if ($category->subcategories->count() > 0) {
-                    return response()->json([
-                        'success' => false,
-                        'title' => 'Deletion Failed!',
-                        'text' => 'The category cannot be deleted because it has associated subcategories.',
-                    ], 400);
-                }
-                $category->is_active = 0;
-                $category->save();
-                $category->delete();
+                activity()
+                    ->useLog('Delete Category')
+                    ->performedOn($category)
+                    ->event('deleted')
+                    ->withProperties([
+                        'name' => $category->name,
+                        'status' => $category->is_active == 1 ? 'Active' : 'Inactive'
+                    ])
+                    ->log("The category: '{$category->name}' has been deleted and moved to the bin.");
+            }
+
+            if ($isBatchLogging) {
+                LogBatch::endBatch();
             }
 
             return response()->json([
                 'success' => true,
                 'title' => 'Deleted Successfully!',
-                'text' => count($categories) > 1 ? 'The categories have been deleted and can be restored from the bin.' : 'The category has been deleted and can be restored from the bin.',
+                'text' => "The {$categoryText} have been deleted and can be restored from the bin.",
             ]);
+
         } catch (Throwable) {
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
-                'message' => 'An error occurred while deleting the category.',
+                'message' => "An error occurred while deleting the {$categoryText}. Please try again later.",
             ], 500);
         }
     }
