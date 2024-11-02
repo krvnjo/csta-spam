@@ -30,11 +30,9 @@
             <div class="tom-select-custom">
               <select class="js-select form-select" id="selEditSubcategories" name="subcategories[]"
                 data-hs-tom-select-options='{
-                  "hideSelected": false,
                   "placeholder": "Select a subcategory",
                   "singleMultiple": true
-                }'
-                autocomplete="off" multiple>
+                }' autocomplete="off" multiple>
                 @foreach ($subcategories as $subcategory)
                   @if ($subcategory->is_active)
                     <option value="{{ $subcategory->id }}">{{ $subcategory->name }}</option>
@@ -52,15 +50,12 @@
       <!-- Footer -->
       <div class="modal-footer">
         <div class="row align-items-sm-center flex-grow-1 mx-n2">
-          <div class="col-sm"></div>
-          <div class="col-sm-auto">
-            <div class="d-flex justify-content-end gap-2">
-              <button class="btn btn-white" data-bs-dismiss="modal" type="button">Cancel</button>
-              <button class="btn btn-primary" id="btnEditSaveBrand" form="frmEditBrand" type="submit" disabled>
-                <span class="spinner-label">Save</span>
-                <span class="spinner-border spinner-border-sm d-none"></span>
-              </button>
-            </div>
+          <div class="col d-flex justify-content-end gap-2">
+            <button class="btn btn-white" data-bs-dismiss="modal" type="button">Cancel</button>
+            <button class="btn btn-primary" id="btnEditSaveBrand" form="frmEditBrand" type="submit" disabled>
+              <span class="spinner-label">Save</span>
+              <span class="spinner-border spinner-border-sm d-none"></span>
+            </button>
           </div>
         </div>
       </div>

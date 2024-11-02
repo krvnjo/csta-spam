@@ -89,14 +89,17 @@ function showResponseAlert(response, type, modal = null, form = null) {
     text: data.text,
     icon: type,
     confirmButtonText: type === 'success' ? 'Done' : 'Ok, got it!',
+    focusCancel: true,
     customClass: {
       popup: 'bg-light rounded-3 shadow fs-4',
       title: 'fs-1',
       htmlContainer: 'text-muted text-center fs-4',
       confirmButton: 'btn btn-sm btn-secondary',
     },
-  }).then(() => {
-    location.reload();
+  }).then((result) => {
+    if (type !== 'info' && result.isConfirmed) {
+      location.reload();
+    }
   });
 }
 

@@ -8,7 +8,6 @@ use App\Models\Subcategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Spatie\Activitylog\Facades\LogBatch;
 use Throwable;
@@ -71,7 +70,7 @@ class BrandController extends Controller
                     'regex:/^(?!.*([ .&\'-])\1)[a-zA-Z0-9][a-zA-Z0-9 .&\'-]*[a-zA-Z0-9]$/',
                     'min:2',
                     'max:30',
-                    Rule::unique('brands', 'name')->where('is_deleted', 0),
+                    Rule::unique('brands', 'name')->whereNull('deleted_at'),
                 ],
                 'subcategories' => [
                     'required',
@@ -94,7 +93,6 @@ class BrandController extends Controller
                 ->useLog('Add Brand')
                 ->performedOn($brand)
                 ->event('created')
-                ->causedBy(auth()->user())
                 ->withProperties([
                     'name' => $brand->name,
                     'subcategories' => Subcategory::whereIn('id', $request->input('subcategories'))->pluck('name')->toArray(),
@@ -137,10 +135,10 @@ class BrandController extends Controller
                 'status' => $brand->is_active,
                 'created_img' => $createdDetails['image'],
                 'created_by' => $createdDetails['name'],
-                'created_at' => $brand->created_at->format('M d, Y | D, h:i A'),
+                'created_at' => $brand->created_at->format('D, M d, Y | h:i A'),
                 'updated_img' => $updatedDetails['image'],
                 'updated_by' => $updatedDetails['name'],
-                'updated_at' => $brand->updated_at->format('M d, Y | D, h:i A'),
+                'updated_at' => $brand->updated_at->format('D, M d, Y | h:i A'),
             ]);
         } catch (Throwable) {
             return response()->json([
@@ -181,7 +179,7 @@ class BrandController extends Controller
     public function update(Request $request)
     {
         try {
-            if ($request->has(['action'] && $request->input('action') === 'update')) {
+            if ($request->has('action') && $request->input('action') === 'update') {
                 $brand = Brand::findOrFail(Crypt::decryptString($request->input('id')));
 
                 $request->merge([
@@ -204,7 +202,7 @@ class BrandController extends Controller
                         'regex:/^(?!.*([ .&\'-])\1)[a-zA-Z0-9][a-zA-Z0-9 .&\'-]*[a-zA-Z0-9]$/',
                         'min:2',
                         'max:30',
-                        Rule::unique('brands', 'name')->ignore($brand->id)->where('is_deleted', 0),
+                        Rule::unique('brands', 'name')->whereNull('deleted_at')->ignore($brand->id),
                     ],
                     'subcategories' => [
                         'required',
@@ -218,32 +216,43 @@ class BrandController extends Controller
                     ]);
                 }
 
+                $brandName = $brand->name;
                 $updatedProperties = [];
 
                 if ($brand->name !== $request->input('brand')) {
-                    $updatedProperties['old_name'] = $brand->name;
-                    $updatedProperties['new_name'] = $request->input('brand');
+                    $updatedProperties['old']['name'] = $brand->name;
+                    $updatedProperties['new']['name'] = $request->input('brand');
                 }
 
                 $newSubcategories = explode(',', $request->input('subcategories'));
-                $currentSubcategories = $brand->subcategories()->pluck('id')->toArray();
+                $oldSubcategoryNames = $brand->subcategories()->pluck('name')->toArray();
+                $newSubcategoryNames = [];
 
-                if ($currentSubcategories !== $newSubcategories) {
-                    $updatedProperties['old_subcategories'] = $currentSubcategories;
-                    $updatedProperties['new_subcategories'] = $newSubcategories;
+                foreach ($newSubcategories as $subcategId) {
+                    $subcateg = Subcategory::find($subcategId);
+                    if ($subcateg) {
+                        $newSubcategoryNames[] = $subcateg->name;
+                    }
                 }
 
-                $brand->name = $request->input('brand');
-                $brand->subcategories()->sync($newSubcategories);
-                $brand->save();
+                if ($oldSubcategoryNames !== $newSubcategoryNames) {
+                    $updatedProperties['old']['subcategories'] = $oldSubcategoryNames;
+                    $updatedProperties['new']['subcategories'] = $newSubcategoryNames;
+                }
 
-                activity()
-                    ->useLog('Edit Brand')
-                    ->performedOn($brand)
-                    ->event('updated')
-                    ->causedBy(auth()->user())
-                    ->withProperties($updatedProperties)
-                    ->log("The brand: '{$brand->name}' has been updated.");
+                $brand->update([
+                    'name' => $request->input('brand')
+                ]);
+                $brand->subcategories()->sync($newSubcategories);
+
+                if (!empty($updatedProperties)) {
+                    activity()
+                        ->useLog('Edit Brand')
+                        ->performedOn($brand)
+                        ->event('updated')
+                        ->withProperties($updatedProperties)
+                        ->log("The brand: '{$brandName}' has been updated.");
+                }
 
                 return response()->json([
                     'success' => true,
@@ -252,57 +261,58 @@ class BrandController extends Controller
                 ]);
             } else {
                 $ids = array_map(fn($id) => Crypt::decryptString($id), (array)$request->input('id'));
-
-                $brands = Brand::whereIn('id', $ids)->get();
-
                 $status = $request->input('status');
                 $statusText = $status == 1 ? 'Active' : 'Inactive';
+                $brands = Brand::whereIn('id', $ids)->get();
 
-                $brandsToUpdate = $brands->filter(function ($brand) use ($status) {
-                    return $brand->is_active != $status;
-                });
+                $allHaveSameStatus = $brands->every(fn($brand) => $brand->is_active == $status);
 
-                if ($brandsToUpdate->isEmpty()) {
+                if ($allHaveSameStatus) {
                     return response()->json([
                         'success' => true,
-                        'title' => 'No Changes Made!',
-                        'text' => 'The brand(s) were already set to the desired status.',
+                        'title' => 'No changes made!',
+                        'text' => 'The brands were already set to the desired status.',
+                        'type' => 'info',
                     ]);
                 }
 
-                $brandIdsToUpdate = $brandsToUpdate->pluck('id')->toArray();
-                Brand::whereIn('id', $brandIdsToUpdate)->update(['is_active' => $status]);
+                $brandsToUpdate = $brands->filter(fn($brand) => $brand->is_active != $status);
+                Brand::whereIn('id', $brandsToUpdate->pluck('id'))->update(['is_active' => $status]);
 
-                $batchUUID = (string)Str::uuid();
-                foreach ($brandsToUpdate as $brand) {
-                    $updatedBrandData = [
-                        'name' => $brand->name,
-                        'status' => $statusText
-                    ];
-
-
+                if ($brandsToUpdate->count() > 1) {
                     LogBatch::startBatch();
-                    activity()
-                        ->useLog('Update Brand Status')
-                        ->performedOn($brand)
-                        ->event('updated')
-                        ->causedBy(auth()->user())
-                        ->withProperties([$updatedBrandData, 'batchUUID' => $batchUUID])
-                        ->log("Updated the status of brand: {$brand->name} to {$statusText}.");
+                }
+
+                foreach ($brandsToUpdate as $brand) {
+                    if ($brand->is_active != $status) {
+                        activity()
+                            ->useLog('Set Brand Status')
+                            ->performedOn($brand)
+                            ->event('updated')
+                            ->causedBy(auth()->user())
+                            ->withProperties([
+                                'name' => $brand->name,
+                                'status' => $statusText
+                            ])
+                            ->log("Updated the status of brand: '{$brand->name}' to {$statusText}.");
+                    }
+                }
+
+                if ($brandsToUpdate->count() > 1) {
                     LogBatch::endBatch();
                 }
 
                 return response()->json([
                     'success' => true,
-                    'title' => 'Status Updated!',
-                    'text' => 'The status of the brand(s) has been updated successfully!',
+                    'title' => 'Updated Successfully!',
+                    'text' => 'The status of the brands has been updated successfully!',
                 ]);
             }
         } catch (Throwable) {
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
-                'text' => 'An error occurred while updating the brand. Please try again later.',
+                'text' => 'An error occurred while updating the brand(s). Please try again later.',
             ], 500);
         }
     }
@@ -312,41 +322,46 @@ class BrandController extends Controller
      */
     public function destroy(Request $request)
     {
+        $brandText = (isset($ids) ? count($ids) : 0 > 1) ? 'brands' : 'brand';
         try {
             $ids = array_map(fn($id) => Crypt::decryptString($id), (array)$request->input('id'));
-
             $brands = Brand::whereIn('id', $ids)->get(['id', 'name']);
 
             Brand::whereIn('id', $ids)->update(['is_active' => 0]);
             Brand::destroy($ids);
 
-            $batchUUID = (string)Str::uuid();
-            foreach ($brands as $brand) {
+            $isBatchLogging = count($brands) > 1;
+            if ($isBatchLogging) {
                 LogBatch::startBatch();
+            }
+
+            foreach ($brands as $brand) {
                 activity()
                     ->useLog('Delete Brand')
                     ->performedOn($brand)
                     ->event('deleted')
-                    ->causedBy(auth()->user())
                     ->withProperties([
                         'name' => $brand->name,
-                        'batchUUID' => $batchUUID
+                        'status' => $brand->is_active == 1 ? 'Active' : 'Inactive'
                     ])
-                    ->log("The brand '{$brand->name}' has been deleted and moved to the bin.");
+                    ->log("The brand: '{$brand->name}' has been deleted and moved to the bin.");
+            }
+
+            if ($isBatchLogging) {
                 LogBatch::endBatch();
             }
 
             return response()->json([
                 'success' => true,
                 'title' => 'Deleted Successfully!',
-                'text' => 'Brand(s) has been deleted and can be restored from the bin.',
+                'text' => "The {$brandText} have been deleted and can be restored from the bin.",
             ]);
 
         } catch (Throwable) {
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
-                'message' => 'An error occurred while deleting the brand(s). Please try again later.',
+                'message' => "An error occurred while deleting the {$brandText}. Please try again later.",
             ], 500);
         }
     }

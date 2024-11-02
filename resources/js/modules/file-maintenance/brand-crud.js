@@ -49,9 +49,9 @@ $(document).ready(function () {
         $('#lblViewBrand').text(response.brand);
 
         const subcategories = response.subcategories;
-        const dropdownSubcategory = $('#subcategoriesDropdownMenu').empty();
+        const dropdownSubcategory = $('#dropdownMenuViewSubcategories').empty();
         let totalSubcategories = subcategories.length;
-        $('#lblViewTotalSubcategories').text(`${totalSubcategories} subcategories in this brand`);
+        $('#lblViewSubcategories').text(`${totalSubcategories} subcategories in this brand`);
 
         if (totalSubcategories > 0) {
           subcategories.forEach((subcategory) => {
@@ -63,14 +63,14 @@ $(document).ready(function () {
 
         const statusClass = response.status === 1 ? 'success' : 'danger';
         const statusText = response.status === 1 ? 'Active' : 'Inactive';
-        $('#lblViewStatus').html(
+        $('#lblViewSetStatus').html(
           `<span class="badge bg-soft-${statusClass} text-${statusClass}"><span class="legend-indicator bg-${statusClass}"></span>${statusText}</span>`,
         );
 
-        $('#imgViewCreatedByImage').attr('src', response.created_img);
+        $('#imgViewCreatedBy').attr('src', response.created_img);
         $('#lblViewCreatedBy').text(response.created_by);
         $('#lblViewCreatedAt').text(response.created_at);
-        $('#imgViewUpdatedByImage').attr('src', response.updated_img);
+        $('#imgViewUpdatedBy').attr('src', response.updated_img);
         $('#lblViewUpdatedBy').text(response.updated_by);
         $('#lblViewUpdatedAt').text(response.updated_at);
       },
@@ -112,15 +112,15 @@ $(document).ready(function () {
 
   brandEditForm.on('submit', function (e) {
     e.preventDefault();
-
     toggleButtonState(brandEditSaveBtn, true);
+
     const editFormData = new FormData(brandEditForm[0]);
 
     editFormData.append('_method', 'PATCH');
-    editFormData.append('action', 'update');
     editFormData.append('id', $('#txtEditBrandId').val());
     editFormData.append('brand', $('#txtEditBrand').val());
     editFormData.append('subcategories', $('#selEditSubcategories').val());
+    editFormData.append('action', 'update');
 
     $.ajax({
       url: '/file-maintenance/brands',
@@ -144,21 +144,17 @@ $(document).ready(function () {
 
   brandsDatatable.on('click', '.btnSetBrand', function () {
     const brandId = $(this).closest('tr').find('td[data-brand-id]').data('brand-id');
-    const brandSetStatus = $(this).data('status');
-    let statusName;
-
-    if (brandSetStatus === 1) {
-      statusName = 'active';
-    } else {
-      statusName = 'inactive';
-    }
+    const brandName = $(this).closest('tr').find('a.btnViewBrand').text().trim();
+    const brandStatus = $(this).data('status');
+    const statusName = brandStatus === 1 ? 'active' : 'inactive';
 
     Swal.fire({
-      title: 'Change status?',
-      text: 'Are you sure you want to set it to ' + statusName + '?',
+      title: 'Update brand status?',
+      text: `Are you sure you want to set the brand "${brandName}" to ${statusName}?`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, set it to ' + statusName + '!',
+      focusCancel: true,
+      confirmButtonText: `Yes, set it to ${statusName}!`,
       cancelButtonText: 'No, cancel!',
       customClass: {
         popup: 'bg-light rounded-3 shadow fs-4',
@@ -174,7 +170,7 @@ $(document).ready(function () {
           method: 'PATCH',
           data: {
             id: brandId,
-            status: brandSetStatus,
+            status: brandStatus,
           },
           success: function (response) {
             showResponseAlert(response, 'success');
@@ -188,56 +184,56 @@ $(document).ready(function () {
   });
 
   $('#btnMultiSetBrand').on('click', function () {
-    let checkedCheckboxes = brandsDatatable.rows().nodes().to$().find('input.form-check-input:checked');
-
-    let brandIds = checkedCheckboxes
+    let brandIds = brandsDatatable
+      .rows()
+      .nodes()
+      .to$()
+      .find('input.form-check-input:checked')
       .map(function () {
         return $(this).closest('tr').find('[data-brand-id]').data('brand-id');
       })
       .get();
 
     if (brandIds.length === 0) {
-      Swal.fire({
-        title: 'No brand selected!',
-        text: 'Please select at least one brand to change status.',
-        icon: 'info',
-        confirmButtonText: 'OK',
-        customClass: {
-          popup: 'bg-light rounded-3 shadow fs-4',
-          title: 'fs-1',
-          htmlContainer: 'text-muted text-center fs-4',
-          confirmButton: 'btn btn-sm btn-info',
+      showResponseAlert(
+        {
+          title: 'No record selected!',
+          text: 'Please select at least one brand to change status.',
         },
-      });
+        'info',
+      );
     } else {
       Swal.fire({
-        title: 'Change the status?',
-        text: 'Are you sure you want to change the status of all the selected brands?',
+        title: 'Update brands status?',
+        text: 'Are you sure you want to change the status of the selected brands?',
         icon: 'warning',
+        showDenyButton: true,
         showCancelButton: true,
+        focusCancel: true,
         confirmButtonText: 'Set to Active!',
-        cancelButtonText: 'Set to Inactive!',
+        denyButtonText: 'Set to Inactive!',
+        cancelButtonText: 'No, cancel!',
         customClass: {
           popup: 'bg-light rounded-3 shadow fs-4',
           title: 'fs-1',
           htmlContainer: 'text-muted text-center fs-4',
-          confirmButton: 'btn btn-sm btn-success',
-          cancelButton: 'btn btn-sm btn-danger',
+          confirmButton: 'btn btn-sm btn-soft-success',
+          denyButton: 'btn btn-sm btn-soft-danger',
+          cancelButton: 'btn btn-sm btn-secondary',
         },
       }).then((result) => {
-        let status;
-        if (result.isConfirmed) {
-          status = 1;
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-          status = 0;
-        }
+        const status = result.isConfirmed ? 1 : result.isDenied ? 0 : undefined;
+
         if (status !== undefined) {
           $.ajax({
             url: '/file-maintenance/brands',
             method: 'PATCH',
-            data: { id: brandIds, status: status },
+            data: {
+              id: brandIds,
+              status: status,
+            },
             success: function (response) {
-              showResponseAlert(response, 'success');
+              showResponseAlert(response, response.type ?? 'success');
             },
             error: function (response) {
               showResponseAlert(response, 'error');
@@ -252,12 +248,14 @@ $(document).ready(function () {
   // ============ Delete a Brand ============ //
   brandsDatatable.on('click', '.btnDeleteBrand', function () {
     const brandId = $(this).closest('tr').find('td[data-brand-id]').data('brand-id');
+    const brandName = $(this).closest('tr').find('a.btnViewBrand').text().trim();
 
     Swal.fire({
       title: 'Delete Record?',
-      text: 'Are you sure you want to delete the brand?',
+      text: `Are you sure you want to delete the brand "${brandName}"?`,
       icon: 'warning',
       showCancelButton: true,
+      focusCancel: true,
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'No, cancel!',
       customClass: {
@@ -285,33 +283,31 @@ $(document).ready(function () {
   });
 
   $('#btnMultiDeleteBrand').on('click', function () {
-    let checkedCheckboxes = brandsDatatable.rows().nodes().to$().find('input.form-check-input:checked');
-
-    let brandIds = checkedCheckboxes
+    let brandIds = brandsDatatable
+      .rows()
+      .nodes()
+      .to$()
+      .find('input.form-check-input:checked')
       .map(function () {
         return $(this).closest('tr').find('[data-brand-id]').data('brand-id');
       })
       .get();
 
     if (brandIds.length === 0) {
-      Swal.fire({
-        title: 'No brand selected!',
-        text: 'Please select at least one brand to delete.',
-        icon: 'info',
-        confirmButtonText: 'OK',
-        customClass: {
-          popup: 'bg-light rounded-3 shadow fs-4',
-          title: 'fs-1',
-          htmlContainer: 'text-muted text-center fs-4',
-          confirmButton: 'btn btn-sm btn-info',
+      showResponseAlert(
+        {
+          title: 'No record selected!',
+          text: 'Please select at least one brand to delete.',
         },
-      });
+        'info',
+      );
     } else {
       Swal.fire({
         title: 'Delete Records?',
         text: 'Are you sure you want to delete all the selected brands?',
         icon: 'warning',
         showCancelButton: true,
+        focusCancel: true,
         confirmButtonText: 'Yes, delete it!',
         cancelButtonText: 'No, cancel!',
         customClass: {

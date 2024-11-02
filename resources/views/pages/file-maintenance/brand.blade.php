@@ -45,11 +45,8 @@
                 <div class="col-lg-3 col-md-4 col-sm-5">
                   <span class="d-block">Total Brands</span>
                   <span class="badge bg-soft-primary text-primary rounded-pill p-1">
-                    @if ($deletedBrands == 0)
-                      <i class="bi-check-circle-fill me-1"></i> Everything looks great!
-                    @else
-                      <i class="bi-arrow-counterclockwise"></i> {{ $deletedBrands }} record(s) can be restored.
-                    @endif
+                    <i class="bi-{{ $deletedBrands == 0 ? 'check-circle-fill' : 'arrow-counterclockwise' }} me-1"></i>
+                    {{ $deletedBrands == 0 ? 'Everything looks great!' : "$deletedBrands record(s) can be restored." }}
                   </span>
                 </div>
 
@@ -86,12 +83,17 @@
               <!-- DataTable Counter -->
               <div class="w-100 w-sm-auto" id="brandsDatatableCounterInfo" style="display: none;">
                 <div class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-2">
-                  <button class="btn btn-sm btn-outline-secondary w-100 w-sm-auto" id="btnMultiSetBrand" type="button">
-                    <i class="bi-toggles me-1"></i> Set Status (<span class="fs-5"><span class="brandsDatatableCounter"></span></span>)
-                  </button>
-                  <button class="btn btn-sm btn-outline-danger w-100 w-sm-auto" id="btnMultiDeleteBrand" type="button">
-                    <i class="bi-trash3-fill"></i> Delete (<span class="fs-5"><span class="brandsDatatableCounter"></span></span>)
-                  </button>
+                  @can('update brand maintenance')
+                    <button class="btn btn-sm btn-outline-secondary w-100 w-sm-auto" id="btnMultiSetBrand" type="button">
+                      <i class="bi-toggles me-1"></i> Set Status (<span class="fs-5"><span class="brandsDatatableCounter"></span></span>)
+                    </button>
+                  @endcan
+
+                  @can('delete brand maintenance')
+                    <button class="btn btn-sm btn-outline-danger w-100 w-sm-auto" id="btnMultiDeleteBrand" type="button">
+                      <i class="bi-trash3-fill"></i> Delete (<span class="fs-5"><span class="brandsDatatableCounter"></span></span>)
+                    </button>
+                  @endcan
                 </div>
               </div>
               <!-- End DataTable Counter -->
@@ -111,9 +113,7 @@
                 <button class="dropdown-item" id="brandExportPrint" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/print-icon.svg') }}" alt="Print Icon"> Print
                 </button>
-
                 <div class="dropdown-divider"></div>
-
                 <span class="dropdown-header">Download</span>
                 <button class="dropdown-item" id="brandExportExcel" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/excel-icon.svg') }}" alt="Excel Icon"> Excel
@@ -145,8 +145,6 @@
                           <div class="tom-select-custom">
                             <select class="js-select js-datatable-filter form-select" data-target-column-index="3"
                               data-hs-tom-select-options='{
-                                "dropdownWidth": "100%",
-                                "hideSelected": false,
                                 "placeholder": "All Subcategories",
                                 "singleMultiple": true
                               }'
@@ -170,7 +168,6 @@
                             <select class="js-select js-datatable-filter form-select" data-target-column-index="6"
                               data-hs-tom-select-options='{
                                 "allowEmptyOption": true,
-                                "dropdownWidth": "100%",
                                 "hideSearch": true,
                                 "placeholder": "All Status"
                               }'>
@@ -214,17 +211,17 @@
             <thead class="thead-light">
               <tr>
                 <th class="w-th">
-                  @can('delete brand maintenance')
+                  @canAny('update brand maintenance, delete brand maintenance')
                     <input class="form-check-input" id="brandsDatatableCheckAll" type="checkbox">
                   @else
                     #
-                  @endcan
+                  @endcanAny
                 </th>
                 <th class="d-none"></th>
                 <th>Brand Name</th>
                 <th>Brand Subcategories</th>
                 <th>Date Created</th>
-                <th>Date Updated</th>
+                <th>Last Updated</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
@@ -234,18 +231,15 @@
               @foreach ($brands as $index => $brand)
                 <tr>
                   <td>
-                    @can('delete brand maintenance')
+                    @canAny('update brand maintenance, delete brand maintenance')
                       <input class="form-check-input" id="brandCheck{{ $index + 1 }}" type="checkbox">
                     @else
                       {{ $index + 1 }}
-                    @endcan
+                    @endcanAny
                   </td>
                   <td class="d-none" data-brand-id="{{ Crypt::encryptString($brand->id) }}"></td>
                   <td><a class="d-block h5 mb-0 btnViewBrand">{{ $brand->name }}</a></td>
-                  <td data-full-value="{{ $brand->subcategories->sortBy('name')->pluck('name')->implode(', ') }}">
-                    @php
-                      $subcategoryNames = $brand->subcategories->sortBy('name')->pluck('name')->implode(', ');
-                    @endphp
+                  <td data-full-value="{{ $subcategoryNames = $brand->subcategories->sortBy('name')->pluck('name')->implode(', ') }}">
                     {{ $subcategoryNames ? Str::limit($subcategoryNames, 30, '...') : 'No subcategories available.' }}
                   </td>
                   <td data-order="{{ $brand->created_at }}"><span><i class="bi-calendar-plus me-1"></i> {{ $brand->created_at->format('F d, Y') }}</span></td>
@@ -263,7 +257,9 @@
                           <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" data-bs-toggle="dropdown" type="button"></button>
                           <div class="dropdown-menu dropdown-menu-end mt-1">
                             @can('update brand maintenance')
-                              <button class="dropdown-item btnEditBrand" type="button"><i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record</button>
+                              <button class="dropdown-item btnEditBrand" type="button">
+                                <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
+                              </button>
                               <button class="dropdown-item btnSetBrand" data-status="{{ $brand->is_active ? 0 : 1 }}" type="button">
                                 <i class="bi {{ $brand->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
                                 {{ $brand->is_active ? 'Set to Inactive' : 'Set to Active' }}
@@ -272,10 +268,13 @@
                                 <div class="dropdown-divider"></div>
                               @endcan
                             @endcan
+
                             @can('delete brand maintenance')
-                              <button class="dropdown-item text-danger btnDeleteBrand" type="button"><i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete</button>
-                            </div>
-                          @endcan
+                              <button class="dropdown-item text-danger btnDeleteBrand" type="button">
+                                <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
+                              </button>
+                            @endcan
+                          </div>
                         </div>
                       @endcanAny
                     </div>
@@ -296,7 +295,6 @@
                 <div class="tom-select-custom tom-page-w">
                   <select class="js-select form-select form-select-borderless" id="brandsDatatableEntries"
                     data-hs-tom-select-options='{
-                      "dropdownWidth": "100%",
                       "hideSearch": true,
                       "searchInDropdown": false
                     }'>
@@ -327,8 +325,8 @@
 
 @section('sec-content')
   <x-file-maintenance.add-brand :subcategories="$subcategories" />
-  <x-file-maintenance.edit-brand :subcategories="$subcategories" />
   <x-file-maintenance.view-brand />
+  <x-file-maintenance.edit-brand :subcategories="$subcategories" />
 @endsection
 
 @push('scripts')
