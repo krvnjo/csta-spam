@@ -4,6 +4,7 @@ $(document).ready(function () {
   // ============ Add a Stock Item ============ //
   const propertyAddModal = $("#addPropertyModal");
   const propertyAddForm = $("#frmAddProperty");
+  const propertyAddSaveBtn = $('#btnAddSaveProperty');
 
   const requiredFields = {
     propertyName: $("#txtPropertyName"),
@@ -35,14 +36,13 @@ $(document).ready(function () {
     warranty: $("#valAddWarranty")
   };
 
-  handleUnsavedChanges(propertyAddModal, propertyAddForm, $('#btnAddSaveProperty'));
+  handleUnsavedChanges(propertyAddModal, propertyAddForm, propertyAddSaveBtn);
 
   propertyAddForm.on("submit", function (e) {
     e.preventDefault();
+    toggleButtonState(propertyAddSaveBtn, true);
 
     const formData = new FormData();
-
-    formData.append('_token', $('meta[name="csrf-token"]').attr("content"));
 
     Object.entries(requiredFields).forEach(([key, field]) => {
       if (field[0].tomselect) {
@@ -66,9 +66,10 @@ $(document).ready(function () {
       contentType: false,
       success: function (response) {
         if (response.success) {
-          showSuccessAlert(response, propertyAddModal, propertyAddForm);
+          showResponseAlert(response, 'success', propertyAddModal, propertyAddForm);
           propertyDropzone.removeAllFiles();
         } else {
+          toggleButtonState(propertyAddSaveBtn, false);
           Object.keys(response.errors).forEach(function(fieldName) {
             const field = requiredFields[fieldName] || nonRequiredFields[fieldName];
             const validationMessage = validationMessages[fieldName];
@@ -86,7 +87,7 @@ $(document).ready(function () {
         }
       },
       error: function (response) {
-        showErrorAlert(response.responseJSON, propertyAddModal, propertyAddForm);
+        showResponseAlert(response, 'error', propertyAddModal, propertyAddForm);
       },
     });
   });
@@ -96,8 +97,9 @@ $(document).ready(function () {
   const propertyEditModal = $("#editPropertyModal");
   const propertyEditForm = $("#frmEditProperty");
   const propertyDropzoneEdit = Dropzone.forElement("#editPropertyDropzone");
+  const propertyEditSaveBtn = $("#btnEditSaveProperty");
 
-  handleUnsavedChanges(propertyEditModal, propertyEditForm, $("#btnEditSaveProperty"));
+  handleUnsavedChanges(propertyEditModal, propertyEditForm, propertyEditSaveBtn);
 
   propertyDatatable.on("click", ".btnEditPropParent", function () {
     const propertyId = $(this).closest("tr").find("td[data-property-id]").data("property-id");
@@ -115,13 +117,14 @@ $(document).ready(function () {
         $("#txtEditDescription").val(response.description);
       },
       error: function (response) {
-        showErrorAlert(response.responseJSON, propertyEditModal, propertyEditForm);
+        showResponseAlert(response,'error' );
       },
     });
   });
 
   propertyEditForm.on("submit", function (e) {
     e.preventDefault();
+    toggleButtonState(propertyEditSaveBtn, true);
 
     const editFormData = new FormData(propertyEditForm[0]);
 
@@ -144,8 +147,9 @@ $(document).ready(function () {
       contentType: false,
       success: function (response) {
         if (response.success) {
-          showSuccessAlert(response, propertyEditModal, propertyEditForm);
+          showResponseAlert(response, 'success',propertyEditModal, propertyEditForm);
         } else {
+          toggleButtonState(propertyEditSaveBtn, false);
           if (response.errors.propertyName) {
             $("#txtEditPropertyName").addClass("is-invalid");
             $("#valEditPropertyName").text(response.errors.propertyName[0]);
@@ -165,7 +169,7 @@ $(document).ready(function () {
         }
       },
       error: function (response) {
-        showErrorAlert(response.responseJSON, propertyEditModal, propertyEditForm);
+        showResponseAlert(response, 'error', propertyEditModal, propertyEditForm);
       },
     });
   });
@@ -195,7 +199,7 @@ $(document).ready(function () {
         $("#lblViewDateUpdated").text(response.updated);
       },
       error: function (response) {
-        showErrorAlert(response.responseJSON);
+        showResponseAlert(response, 'error');
       },
     });
   });

@@ -106,7 +106,10 @@
 
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary" id="btnEditSaveChild" form="frmEditPropChild">Update</button>
+          <button class="btn btn-primary" id="btnEditSaveChild" form="frmEditPropChild" type="submit" disabled>
+            <span class="spinner-label">Update</span>
+            <span class="spinner-border spinner-border-sm d-none"></span>
+          </button>
         </div>
       </form>
     </div>

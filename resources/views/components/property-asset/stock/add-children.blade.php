@@ -20,9 +20,9 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-white" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary" id="btnAddSaveChild">
-            <span>Save</span>
-            <span class="spinner-border spinner-border-sm ms-1 d-none" id="btnLoader"></span>
+          <button class="btn btn-primary" id="btnAddSaveChild" form="frmAddVarProperty" type="submit" disabled>
+            <span class="spinner-label">Save</span>
+            <span class="spinner-border spinner-border-sm d-none"></span>
           </button>
         </div>
       </form>

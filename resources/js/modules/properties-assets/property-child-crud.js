@@ -4,17 +4,13 @@ $(document).ready(function() {
   const childDatatable = $("#propertyChildDatatable").DataTable();
   const childAddModal = $("#addPropertyChild");
   const childAddForm = $("#frmAddVarProperty");
-  const submitBtn = $("#btnAddSaveChild");
-  const btnLoader = $("#btnLoader");
+  const childAddSaveBtn = $("#btnAddSaveChild");
 
-  handleUnsavedChanges(childAddModal, childAddForm, submitBtn);
+  handleUnsavedChanges(childAddModal, childAddForm, childAddSaveBtn);
 
   childAddForm.on("submit", function(e) {
     e.preventDefault();
-
-    // Start loading
-    submitBtn.prop('disabled', true);
-    btnLoader.removeClass('d-none');
+    toggleButtonState(childAddSaveBtn, true);
 
     const addFormData = new FormData(childAddForm[0]);
 
@@ -27,8 +23,9 @@ $(document).ready(function() {
       contentType: false,
       success: function(response) {
         if (response.success) {
-          showSuccessAlert(response, childAddModal, childAddForm);
+          showResponseAlert(response, 'success', childAddModal, childAddForm);
         } else {
+          toggleButtonState(childAddSaveBtn, false);
           if (response.errors.VarQuantity) {
             $("#txtVarQuantity").addClass("is-invalid");
             $("#valAddChildQty").text(response.errors.VarQuantity[0]);
@@ -36,12 +33,7 @@ $(document).ready(function() {
         }
       },
       error: function(response) {
-        showErrorAlert(response.responseJSON, childAddModal, childAddForm);
-      },
-      complete: function() {
-        // Stop loading
-        submitBtn.prop('disabled', false);
-        btnLoader.addClass('d-none');
+        showResponseAlert(response, 'error', childAddModal, childAddForm);
       }
     });
   });
@@ -51,10 +43,11 @@ $(document).ready(function() {
 
   const childEditModal = $("#editPropChildModal");
   const childEditForm = $("#frmEditPropChild");
+  const childEditSaveBtn = $('#btnEditSaveChild');
 
   const parentId = $(".page-header-title span").text().trim();
 
-  handleUnsavedChanges(childEditModal, childEditForm, $("#btnEditSaveChild"));
+  handleUnsavedChanges(childEditModal, childEditForm, childEditSaveBtn);
 
   childDatatable.on("click", ".btnEditPropChild", function () {
     const childId = $(this).closest("tr").find("td[data-child-id]").data("child-id");
@@ -75,13 +68,14 @@ $(document).ready(function() {
         $("#txtEditWarrantyDate").val(response.warrantyDate);
       },
       error: function (response) {
-        showErrorAlert(response.responseJSON, childEditModal, childEditForm);
+        showResponseAlert(response, 'error');
       },
     });
   });
 
   childEditForm.on("submit", function (e) {
     e.preventDefault();
+    toggleButtonState(childEditSaveBtn, true);
 
     const editFormData = new FormData(childEditForm[0]);
 
@@ -102,8 +96,9 @@ $(document).ready(function() {
       contentType: false,
       success: function (response) {
         if (response.success) {
-          showSuccessAlert(response, childEditModal, childEditForm);
+          showResponseAlert(response, 'success', childEditModal, childEditForm);
         } else {
+          toggleButtonState(childEditSaveBtn, false);
           if (response.errors.serialNumber) {
             $("#txtEditSerialNumber").addClass("is-invalid");
             $("#valEditSerial").text(response.errors.serialNumber[0]);
@@ -131,7 +126,7 @@ $(document).ready(function() {
         }
       },
       error: function (response) {
-        showErrorAlert(response.responseJSON, childEditModal, childEditForm);
+        showResponseAlert(response, 'error', childEditModal, childEditForm);
       },
     });
   });
@@ -168,10 +163,10 @@ $(document).ready(function() {
             status: childSetStatus,
           },
           success: function (response) {
-            showSuccessAlert(response);
+            showResponseAlert(response, 'success');
           },
           error: function (response) {
-            showErrorAlert(response.responseJSON);
+            showResponseAlert(response, 'error');
           },
         });
       }
@@ -210,8 +205,7 @@ $(document).ready(function() {
         $("#lblViewDateUpdated").text(response.dateUpdated);
       },
       error: function (response) {
-        console.log("Error response:", response);
-        showErrorAlert(response.responseJSON);
+        showResponseAlert(response, 'error');
       },
     });
   });
@@ -220,7 +214,6 @@ $(document).ready(function() {
   // ============ Delete a Stock Variant ============ //
   childDatatable.on('click', '.btnDeleteChild', function () {
     const childId = $(this).data('childdel-id');
-    // console.log("Retrieved child ID:", childId);
 
     Swal.fire({
       title: 'Delete Record?',
@@ -230,8 +223,11 @@ $(document).ready(function() {
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'No, cancel!',
       customClass: {
-        confirmButton: 'btn btn-danger',
-        cancelButton: 'btn btn-secondary',
+        popup: 'bg-light rounded-3 shadow fs-4',
+        title: 'fs-1',
+        htmlContainer: 'text-muted text-center fs-4',
+        confirmButton: 'btn btn-sm btn-danger',
+        cancelButton: 'btn btn-sm btn-secondary',
       },
     }).then((result) => {
       if (result.isConfirmed) {
@@ -240,11 +236,10 @@ $(document).ready(function() {
           method: 'DELETE',
           data: { id: [childId] },
           success: function (response) {
-            showSuccessAlert(response);
+            showResponseAlert(response, 'success');
           },
           error: function (response) {
-            // console.log("Error response:", response);
-            showErrorAlert(response.responseJSON);
+            showResponseAlert(response, 'error');
           },
         });
 
@@ -268,7 +263,10 @@ $(document).ready(function() {
         icon: 'info',
         confirmButtonText: 'OK',
         customClass: {
-          confirmButton: 'btn btn-secondary',
+          popup: 'bg-light rounded-3 shadow fs-4',
+          title: 'fs-1',
+          htmlContainer: 'text-muted text-center fs-4',
+          confirmButton: 'btn btn-sm btn-info',
         },
       });
       return;
@@ -282,8 +280,11 @@ $(document).ready(function() {
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'No, cancel!',
       customClass: {
-        confirmButton: 'btn btn-danger',
-        cancelButton: 'btn btn-secondary',
+        popup: 'bg-light rounded-3 shadow fs-4',
+        title: 'fs-1',
+        htmlContainer: 'text-muted text-center fs-4',
+        confirmButton: 'btn btn-sm btn-danger',
+        cancelButton: 'btn btn-sm btn-secondary',
       },
     }).then((result) => {
       if (result.isConfirmed) {
@@ -292,10 +293,10 @@ $(document).ready(function() {
           method: 'DELETE',
           data: { id: childIds },
           success: function (response) {
-            showSuccessAlert(response);
+            showResponseAlert(response, 'success');
           },
           error: function (response) {
-            showErrorAlert(response.responseJSON);
+            showResponseAlert(response, 'error');
           },
         });
       }
@@ -307,8 +308,9 @@ $(document).ready(function() {
   // ============ Move Stock to Inventory ============ //
   const childMoveModal = $("#movePropChildModal");
   const childMoveForm = $("#frmMovePropChild");
+  const childMoveSaveBtn = $("#btnMoveChildSave");
 
-  handleUnsavedChanges(childMoveModal, childMoveForm, $("#btnMoveChildSave"));
+  handleUnsavedChanges(childMoveModal, childMoveForm, childMoveSaveBtn);
 
   let selectedPropertyChildIds = [];
 
@@ -351,7 +353,10 @@ $(document).ready(function() {
         icon: 'info',
         confirmButtonText: 'OK',
         customClass: {
-          confirmButton: 'btn btn-secondary',
+          popup: 'bg-light rounded-3 shadow fs-4',
+          title: 'fs-1',
+          htmlContainer: 'text-muted text-center fs-4',
+          confirmButton: 'btn btn-sm btn-info',
         },
       });
     } else {
@@ -370,6 +375,7 @@ $(document).ready(function() {
   childMoveForm.on("submit", function (e) {
     e.preventDefault();
 
+    toggleButtonState(childMoveSaveBtn, true);
     const editFormData = new FormData(childMoveForm[0]);
 
     editFormData.append("_method", "PATCH");
@@ -385,8 +391,9 @@ $(document).ready(function() {
       contentType: false,
       success: function (response) {
         if (response.success) {
-          showSuccessAlert(response, childMoveModal, childMoveForm);
+          showResponseAlert(response, 'success', childMoveModal, childMoveForm);
         } else {
+          toggleButtonState(childMoveSaveBtn, false);
           if (response.errors.designation) {
             $("#cbxMoveDesignation").next(".ts-wrapper").addClass("is-invalid");
             $("#valMoveDesignation").text(response.errors.designation[0]);
@@ -398,7 +405,7 @@ $(document).ready(function() {
         }
       },
       error: function (response) {
-        showErrorAlert(response.responseJSON, childMoveModal, childMoveForm);
+        showResponseAlert(response, 'error', childMoveModal, childMoveForm);
       },
     });
   });

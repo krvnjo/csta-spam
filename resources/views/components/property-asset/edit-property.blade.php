@@ -104,7 +104,10 @@
 
         <div class="modal-footer">
           <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Close</button>
-          <button class="btn btn-primary" id="btnEditSaveProperty" form="frmEditProperty" type="submit">Save</button>
+          <button class="btn btn-primary" id="btnEditSaveProperty" form="frmEditProperty" type="submit" disabled>
+            <span class="spinner-label">Save</span>
+            <span class="spinner-border spinner-border-sm d-none"></span>
+          </button>
         </div>
       </form>
     </div>

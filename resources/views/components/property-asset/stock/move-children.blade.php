@@ -70,7 +70,10 @@
 
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary" form="frmMovePropChild" id="btnMoveChildSave">Move</button>
+          <button class="btn btn-primary" id="btnMoveChildSave" form="frmMovePropChild" type="submit" disabled>
+            <span class="spinner-label">Move</span>
+            <span class="spinner-border spinner-border-sm d-none"></span>
+          </button>
         </div>
       </form>
     </div>
