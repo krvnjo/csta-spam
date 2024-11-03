@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Subcategory extends Model
@@ -26,10 +25,5 @@ class Subcategory extends Model
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class, 'category_subcategories', 'subcateg_id', 'categ_id');
-    }
-
-    public function properties(): HasMany
-    {
-        return $this->hasMany(PropertyParent::class, 'subcateg_id');
     }
 }

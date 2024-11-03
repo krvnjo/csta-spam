@@ -67,10 +67,10 @@ class CategoryController extends Controller
             $categoryValidator = Validator::make($request->all(), [
                 'category' => [
                     'required',
-                    'regex:/^(?!.*([ .&\'-])\1)[a-zA-Z0-9][a-zA-Z0-9 .&\'-]*[a-zA-Z0-9]$/',
+                    'regex:/^(?!.*([ .&\'-])\1)[a-zA-Z0-9][a-zA-Z0-9 .&\'-]*$/',
                     'min:2',
                     'max:30',
-                    Rule::unique('categories', 'name')->whereNull('deleted_at'),
+                    Rule::unique('categories', 'name'),
                 ],
                 'subcategories' => [
                     'required',
@@ -199,10 +199,10 @@ class CategoryController extends Controller
                 $categoryValidator = Validator::make($request->all(), [
                     'category' => [
                         'required',
-                        'regex:/^(?!.*([ .&\'-])\1)[a-zA-Z0-9][a-zA-Z0-9 .&\'-]*[a-zA-Z0-9]$/',
+                        'regex:/^(?!.*([ .&\'-])\1)[a-zA-Z0-9][a-zA-Z0-9 .&\'-]*$/',
                         'min:2',
                         'max:50',
-                        Rule::unique('categories', 'name')->whereNull('deleted_at')->ignore($category->id),
+                        Rule::unique('categories', 'name')->ignore($category->id),
                     ],
                     'subcategories' => [
                         'required',

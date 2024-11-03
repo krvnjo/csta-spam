@@ -140,9 +140,9 @@ Route::middleware(['auth', 'noCache'])->group(function () {
     // Condition Routes
     Route::middleware('checkPermission:view condition maintenance')->prefix('file-maintenance/conditions')->name('condition.')->controller(ConditionController::class)->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::get('/show', 'show')->name('show')->middleware('expectsJson');
+        Route::post('/', 'store')->name('create')->middleware('checkPermission:create condition maintenance');
+        Route::get('/show', 'show')->name('view')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
-        Route::post('/', 'store')->name('store')->middleware('checkPermission:create condition maintenance');
         Route::patch('/', 'update')->name('update')->middleware('checkPermission:update condition maintenance');
         Route::delete('/', 'destroy')->name('delete')->middleware('checkPermission:delete condition maintenance');
     });
@@ -180,9 +180,9 @@ Route::middleware(['auth', 'noCache'])->group(function () {
     // Subcategory Routes
     Route::middleware('checkPermission:view subcategory maintenance')->prefix('file-maintenance/subcategories')->name('subcategory.')->controller(SubcategoryController::class)->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::get('/show', 'show')->name('show')->middleware('expectsJson');
+        Route::post('/', 'store')->name('create')->middleware('checkPermission:create subcategory maintenance');
+        Route::get('/show', 'show')->name('view')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
-        Route::post('/', 'store')->name('store')->middleware('checkPermission:create subcategory maintenance');
         Route::patch('/', 'update')->name('update')->middleware('checkPermission:update subcategory maintenance');
         Route::delete('/', 'destroy')->name('delete')->middleware('checkPermission:delete subcategory maintenance');
     });

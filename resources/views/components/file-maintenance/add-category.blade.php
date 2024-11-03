@@ -16,7 +16,7 @@
           <!-- Category Name -->
           <div class="form-group">
             <label class="col col-form-label form-label" for="txtAddCategory">Category Name</label>
-            <input class="form-control" id="txtAddCategory" name="category" type="text" placeholder="Enter a Category">
+            <input class="form-control" id="txtAddCategory" name="category" type="text" placeholder="Enter a category">
             <span class="invalid-feedback" id="valAddCategory"></span>
           </div>
           <!-- End Category Name -->

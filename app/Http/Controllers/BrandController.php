@@ -67,10 +67,10 @@ class BrandController extends Controller
             $brandValidator = Validator::make($request->all(), [
                 'brand' => [
                     'required',
-                    'regex:/^(?!.*([ .&\'-])\1)[a-zA-Z0-9][a-zA-Z0-9 .&\'-]*[a-zA-Z0-9]$/',
+                    'regex:/^(?!.*([ .&\'-])\1)[a-zA-Z0-9][a-zA-Z0-9 .&\'-]*$/',
                     'min:2',
                     'max:30',
-                    Rule::unique('brands', 'name')->whereNull('deleted_at'),
+                    Rule::unique('brands', 'name'),
                 ],
                 'subcategories' => [
                     'required',
@@ -199,10 +199,10 @@ class BrandController extends Controller
                 $brandValidator = Validator::make($request->all(), [
                     'brand' => [
                         'required',
-                        'regex:/^(?!.*([ .&\'-])\1)[a-zA-Z0-9][a-zA-Z0-9 .&\'-]*[a-zA-Z0-9]$/',
+                        'regex:/^(?!.*([ .&\'-])\1)[a-zA-Z0-9][a-zA-Z0-9 .&\'-]*$/',
                         'min:2',
                         'max:30',
-                        Rule::unique('brands', 'name')->whereNull('deleted_at')->ignore($brand->id),
+                        Rule::unique('brands', 'name')->ignore($brand->id),
                     ],
                     'subcategories' => [
                         'required',
