@@ -20,10 +20,17 @@
           <div class="col-sm mb-sm-0 mb-2">
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb breadcrumb-no-gutter">
-                <li class="breadcrumb-item active" aria-current="page">Property & Assets</li>
+                <li class="breadcrumb-item"><a class="breadcrumb-link" data-route="dashboard.index" href="{{ route('dashboard.index') }}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Stock Masterlist</li>
               </ol>
             </nav>
             <h1 class="page-header-title">Stock In</h1>
+            <p class="page-header-text">Manage and organize stock records.</p>
+            <p class="page-header-text">
+            <span class="legend-indicator bg-danger "></span>No stock
+              <span class="ms-2"></span>
+            <span class="legend-indicator bg-info"></span>Low stock
+            </p>
           </div>
           <!-- End Col -->
 
