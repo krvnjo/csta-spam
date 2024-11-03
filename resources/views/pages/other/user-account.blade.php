@@ -19,8 +19,9 @@
             <div class="profile-cover-img-wrapper">
               <img class="profile-cover-img" id="profileCoverImg" src="{{ Vite::asset('resources/img/1920x400/img1.jpg') }}" alt="User Image">
               <div class="profile-cover-content profile-cover-uploader p-3">
-                <button class="js-file-attach-reset-img btn btn-sm btn-danger" id="btnRemoveAccountImage" type="button">
-                  <i class="bi-trash-fill"></i> Remove Avatar
+                <button class="js-file-attach-reset-img profile-cover-uploader-label btn btn-sm btn-danger avatar-img-remove" id="btnRemoveAccountImage" type="button">
+                  <i class="bi-trash-fill"></i>
+                  <span class="d-none d-sm-inline-block ms-1">Remove Avatar</span>
                 </button>
               </div>
             </div>
@@ -261,7 +262,7 @@
   </main>
 @endsection
 
-@section('sub-content')
+@section('sec-content')
   {{-- Sub Content --}}
 @endsection
 

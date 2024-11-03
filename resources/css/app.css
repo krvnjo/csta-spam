@@ -84,6 +84,18 @@
   width: 22rem;
 }
 
+.navbar-brand-help {
+  width: 100%;
+  min-width: 6.5rem;
+  max-width: 15rem;
+}
+
+.navbar-brand-helps {
+  width: 100%;
+  min-width: 2rem;
+  max-width: 5rem;
+}
+
 @media (max-width: 576px) {
   .custom-dropdown {
     width: 100%;

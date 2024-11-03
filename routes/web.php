@@ -16,7 +16,7 @@ use App\Http\Controllers\RecycleController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\SubcategoryController;
-use App\Http\Controllers\SystemSettingsController;
+use App\Http\Controllers\SystemController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -37,18 +37,16 @@ Route::middleware(['guest', 'noCache'])->group(function () {
 // ============ Auth Routes ============ //
 
 Route::middleware(['auth', 'noCache'])->group(function () {
-    // Logout Routes
-    Route::name('auth.')->controller(AuthController::class)->group(function () {
-        Route::get('/logout', 'index')->name('index');
-        Route::post('/logout', 'logout')->name('logout');
-    });
+    // ============ Dashboard Routes ============ //
 
-    // ============ Header Routes ============ //
-
-    // Dashboard Routes
+    // Main Dashboard Routes
     Route::name('dashboard.')->controller(DashboardController::class)->group(function () {
         Route::get('/', 'index')->name('index');
     });
+
+    // ============ End Dashboard Routes ============ //
+
+    // ============ Header Routes ============ //
 
     // Account Routes
     Route::prefix('account')->name('account.')->controller(AccountController::class)->group(function () {
@@ -56,10 +54,16 @@ Route::middleware(['auth', 'noCache'])->group(function () {
         Route::patch('/{username}', 'update')->name('update');
     });
 
-    // Help & Support Routes
-    Route::prefix('help-support')->name('help.')->controller(HelpController::class)->group(function () {
-        Route::get('/about', 'about')->name('about');
-        Route::get('/guide', 'guide')->name('guide');
+    // Help Resources Routes
+    Route::prefix('help-resources')->name('help.')->controller(HelpController::class)->group(function () {
+        Route::get('/about-us', 'about')->name('about');
+        Route::get('/user-guide', 'guide')->name('guide');
+    });
+
+    // Logout Routes
+    Route::name('auth.')->controller(AuthController::class)->group(function () {
+        Route::get('/logout', 'index')->name('index');
+        Route::post('/logout', 'logout')->name('logout');
     });
 
     // ============ End Header Routes ============ //
@@ -198,10 +202,11 @@ Route::middleware(['auth', 'noCache'])->group(function () {
     Route::middleware('checkPermission:view audit history')->prefix('audit-history')->name('audit.')->controller(AuditController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/show', 'show')->name('show')->middleware('expectsJson');
+        Route::patch('/', 'update')->name('update')->middleware('checkPermission:update audit history');
     });
 
     // System Settings Routes
-    Route::middleware('checkPermission:view system settings')->prefix('system-settings')->name('system.')->controller(SystemSettingsController::class)->group(function () {
+    Route::middleware('checkPermission:view system settings')->prefix('system-settings')->name('system.')->controller(SystemController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::patch('/', 'update')->name('update')->middleware('checkPermission:update system settings');
     });

@@ -22,7 +22,7 @@ class AccountController extends Controller
         if (Auth::user()->user_name !== $username) {
             abort(404);
         }
-        return view('pages.account.account');
+        return view('pages.other.user-account');
     }
 
     /**

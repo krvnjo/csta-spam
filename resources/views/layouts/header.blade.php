@@ -2,8 +2,10 @@
   <div class="navbar-nav-wrap">
     <!-- Logo -->
     <a class="navbar-brand" data-route="dashboard.index" href="{{ route('dashboard.index') }}">
-      <img class="navbar-brand-logo-mini d-block" data-hs-theme-appearance="default" src="{{ Vite::asset('resources/svg/logos/logo-short.svg') }}" alt="CSTA - SPAM Logo">
-      <img class="navbar-brand-logo-mini d-block" data-hs-theme-appearance="dark" src="{{ Vite::asset('resources/svg/logos-light/logo-short.svg') }}" alt="CSTA - SPAM Logo">
+      <img class="navbar-brand-logo d-none d-sm-inline-block" data-hs-theme-appearance="default" src="{{ Vite::asset('resources/svg/logos/logo.svg') }}" alt="CSTA - SPAM Logo">
+      <img class="navbar-brand-logo d-none d-sm-inline-block" data-hs-theme-appearance="dark" src="{{ Vite::asset('resources/svg/logos-light/logo.svg') }}" alt="CSTA - SPAM Logo">
+      <img class="navbar-brand-logo-mini d-inline-block d-sm-none" data-hs-theme-appearance="default" src="{{ Vite::asset('resources/svg/logos/logo-short.svg') }}" alt="CSTA - SPAM Logo">
+      <img class="navbar-brand-logo-mini d-inline-block d-sm-none" data-hs-theme-appearance="dark" src="{{ Vite::asset('resources/svg/logos-light/logo-short.svg') }}" alt="CSTA - SPAM Logo">
     </a>
     <!-- End Logo -->
 
@@ -18,7 +20,7 @@
       <!-- Search Form -->
       <div class="dropdown ms-2">
         <!-- Search Input Group -->
-        <div class="d-none d-lg-block">
+        <div class="d-none d-md-block">
           <div class="input-group input-group-merge input-group-borderless input-group-hover-light navbar-input-group">
             <div class="input-group-prepend input-group-text"><i class="bi-search"></i></div>
             <input class="js-form-search form-control"
@@ -34,7 +36,7 @@
           </div>
         </div>
 
-        <button class="js-form-search js-form-search-mobile-toggle btn btn-ghost-secondary btn-icon rounded-circle d-lg-none"
+        <button class="js-form-search js-form-search-mobile-toggle btn btn-ghost-secondary btn-icon rounded-circle d-md-none"
           data-hs-form-search-options='{
             "clearIcon": "#clearSearchResultsIcon",
             "dropMenuElement": "#searchDropdownMenu",
@@ -109,111 +111,111 @@
     <div class="navbar-nav-wrap-content-end">
       <ul class="navbar-nav">
         <!-- Notification -->
-        <li class="nav-item d-sm-inline-block">
-          <div class="dropdown">
-            <button class="btn btn-ghost-secondary btn-icon rounded-circle" id="navbarNotificationsDropdown" data-bs-toggle="dropdown" data-bs-dropdown-animation type="button">
-              <i class="bi-bell"></i>
-              <span class="btn-status btn-sm-status btn-status-danger"></span>
-            </button>
+        {{--        <li class="nav-item d-sm-inline-block"> --}}
+        {{--          <div class="dropdown"> --}}
+        {{--            <button class="btn btn-ghost-secondary btn-icon rounded-circle" id="navbarNotificationsDropdown" data-bs-toggle="dropdown" data-bs-dropdown-animation type="button"> --}}
+        {{--              <i class="bi-bell"></i> --}}
+        {{--              <span class="btn-status btn-sm-status btn-status-danger"></span> --}}
+        {{--            </button> --}}
 
-            <div class="dropdown-menu dropdown-menu-end dropdown-card navbar-dropdown-menu navbar-dropdown-menu-borderless" style="width: 25rem;">
-              <div class="card">
-                <!-- Header -->
-                <div class="card-header card-header-content-between">
-                  <h4 class="card-title mb-0">Notifications</h4>
-                </div>
-                <!-- End Header -->
+        {{--            <div class="dropdown-menu dropdown-menu-end dropdown-card navbar-dropdown-menu navbar-dropdown-menu-borderless" style="width: 25rem;"> --}}
+        {{--              <div class="card"> --}}
+        {{--                <!-- Header --> --}}
+        {{--                <div class="card-header card-header-content-between"> --}}
+        {{--                  <h4 class="card-title mb-0">Notifications</h4> --}}
+        {{--                </div> --}}
+        {{--                <!-- End Header --> --}}
 
-                <!-- Body -->
-                <div class="card-body-height">
-                  <div class="tab-content" id="notificationTabContent">
-                    <div class="tab-pane fade show active" id="notificationNavOne">
-                      <ul class="list-group list-group-flush navbar-card-list-group">
-                        <!-- Item -->
-                        <li class="list-group-item form-check-select">
-                          <div class="row">
-                            <div class="col-auto">
-                              <div class="d-flex align-items-center">
-                                <div class="form-check">
-                                  <input class="form-check-input" id="notificationCheck1" type="checkbox" value="" checked>
-                                  <label class="form-check-label" for="notificationCheck1"></label>
-                                  <span class="form-check-stretched-bg"></span>
-                                </div>
-                                <img class="avatar avatar-sm avatar-circle" src="{{ Vite::asset('resources/img/160x160/img3.jpg') }}" alt="Image Description">
-                              </div>
-                            </div>
-                            <div class="col ms-n2">
-                              <h5 class="mb-1">Brian Warner</h5>
-                              <p class="text-body fs-5">changed an issue from "In Progress" to <span class="badge bg-success">Review</span></p>
-                            </div>
-                            <small class="col-auto text-muted text-cap">2hr</small>
-                          </div>
-                          <a class="stretched-link" href="#"></a>
-                        </li>
-                        <!-- End Item -->
+        {{--                <!-- Body --> --}}
+        {{--                <div class="card-body-height"> --}}
+        {{--                  <div class="tab-content" id="notificationTabContent"> --}}
+        {{--                    <div class="tab-pane fade show active" id="notificationNavOne"> --}}
+        {{--                      <ul class="list-group list-group-flush navbar-card-list-group"> --}}
+        {{--                        <!-- Item --> --}}
+        {{--                        <li class="list-group-item form-check-select"> --}}
+        {{--                          <div class="row"> --}}
+        {{--                            <div class="col-auto"> --}}
+        {{--                              <div class="d-flex align-items-center"> --}}
+        {{--                                <div class="form-check"> --}}
+        {{--                                  <input class="form-check-input" id="notificationCheck1" type="checkbox" value="" checked> --}}
+        {{--                                  <label class="form-check-label" for="notificationCheck1"></label> --}}
+        {{--                                  <span class="form-check-stretched-bg"></span> --}}
+        {{--                                </div> --}}
+        {{--                                <img class="avatar avatar-sm avatar-circle" src="{{ Vite::asset('resources/img/160x160/img3.jpg') }}" alt="Image Description"> --}}
+        {{--                              </div> --}}
+        {{--                            </div> --}}
+        {{--                            <div class="col ms-n2"> --}}
+        {{--                              <h5 class="mb-1">Brian Warner</h5> --}}
+        {{--                              <p class="text-body fs-5">changed an issue from "In Progress" to <span class="badge bg-success">Review</span></p> --}}
+        {{--                            </div> --}}
+        {{--                            <small class="col-auto text-muted text-cap">2hr</small> --}}
+        {{--                          </div> --}}
+        {{--                          <a class="stretched-link" href="#"></a> --}}
+        {{--                        </li> --}}
+        {{--                        <!-- End Item --> --}}
 
-                        <!-- Item -->
-                        <li class="list-group-item form-check-select">
-                          <div class="row">
-                            <div class="col-auto">
-                              <div class="d-flex align-items-center">
-                                <div class="form-check">
-                                  <input class="form-check-input" id="notificationCheck3" type="checkbox" value="" checked>
-                                  <label class="form-check-label" for="notificationCheck3"></label>
-                                  <span class="form-check-stretched-bg"></span>
-                                </div>
-                                <div class="avatar avatar-sm avatar-circle">
-                                  <img class="avatar-img" src="{{ Vite::asset('resources/img/160x160/img10.jpg') }}" alt="Image Description">
-                                </div>
-                              </div>
-                            </div>
-                            <div class="col ms-n2">
-                              <h5 class="mb-1">Ruby Walter</h5>
-                              <p class="text-body fs-5">joined the Slack group HS Team</p>
-                            </div>
-                            <small class="col-auto text-muted text-cap">3dy</small>
-                          </div>
-                          <a class="stretched-link" href="#"></a>
-                        </li>
-                        <!-- End Item -->
+        {{--                        <!-- Item --> --}}
+        {{--                        <li class="list-group-item form-check-select"> --}}
+        {{--                          <div class="row"> --}}
+        {{--                            <div class="col-auto"> --}}
+        {{--                              <div class="d-flex align-items-center"> --}}
+        {{--                                <div class="form-check"> --}}
+        {{--                                  <input class="form-check-input" id="notificationCheck3" type="checkbox" value="" checked> --}}
+        {{--                                  <label class="form-check-label" for="notificationCheck3"></label> --}}
+        {{--                                  <span class="form-check-stretched-bg"></span> --}}
+        {{--                                </div> --}}
+        {{--                                <div class="avatar avatar-sm avatar-circle"> --}}
+        {{--                                  <img class="avatar-img" src="{{ Vite::asset('resources/img/160x160/img10.jpg') }}" alt="Image Description"> --}}
+        {{--                                </div> --}}
+        {{--                              </div> --}}
+        {{--                            </div> --}}
+        {{--                            <div class="col ms-n2"> --}}
+        {{--                              <h5 class="mb-1">Ruby Walter</h5> --}}
+        {{--                              <p class="text-body fs-5">joined the Slack group HS Team</p> --}}
+        {{--                            </div> --}}
+        {{--                            <small class="col-auto text-muted text-cap">3dy</small> --}}
+        {{--                          </div> --}}
+        {{--                          <a class="stretched-link" href="#"></a> --}}
+        {{--                        </li> --}}
+        {{--                        <!-- End Item --> --}}
 
-                        <!-- Item -->
-                        <li class="list-group-item form-check-select">
-                          <div class="row">
-                            <div class="col-auto">
-                              <div class="d-flex align-items-center">
-                                <div class="form-check">
-                                  <input class="form-check-input" id="notificationCheck4" type="checkbox" value="">
-                                  <label class="form-check-label" for="notificationCheck4"></label>
-                                  <span class="form-check-stretched-bg"></span>
-                                </div>
-                                <div class="avatar avatar-sm avatar-circle">
-                                  <img class="avatar-img" src="{{ Vite::asset('resources/svg/brands/google-icon.svg') }}" alt="Image Description">
-                                </div>
-                              </div>
-                            </div>
-                            <div class="col ms-n2">
-                              <h5 class="mb-1">from Google</h5>
-                              <p class="text-body fs-5">Start using forms to capture the information of prospects visiting your Google website</p>
-                            </div>
-                            <small class="col-auto text-muted text-cap">17dy</small>
-                          </div>
-                          <a class="stretched-link" href="#"></a>
-                        </li>
-                        <!-- End Item -->
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <!-- End Body -->
+        {{--                        <!-- Item --> --}}
+        {{--                        <li class="list-group-item form-check-select"> --}}
+        {{--                          <div class="row"> --}}
+        {{--                            <div class="col-auto"> --}}
+        {{--                              <div class="d-flex align-items-center"> --}}
+        {{--                                <div class="form-check"> --}}
+        {{--                                  <input class="form-check-input" id="notificationCheck4" type="checkbox" value=""> --}}
+        {{--                                  <label class="form-check-label" for="notificationCheck4"></label> --}}
+        {{--                                  <span class="form-check-stretched-bg"></span> --}}
+        {{--                                </div> --}}
+        {{--                                <div class="avatar avatar-sm avatar-circle"> --}}
+        {{--                                  <img class="avatar-img" src="{{ Vite::asset('resources/svg/brands/google-icon.svg') }}" alt="Image Description"> --}}
+        {{--                                </div> --}}
+        {{--                              </div> --}}
+        {{--                            </div> --}}
+        {{--                            <div class="col ms-n2"> --}}
+        {{--                              <h5 class="mb-1">from Google</h5> --}}
+        {{--                              <p class="text-body fs-5">Start using forms to capture the information of prospects visiting your Google website</p> --}}
+        {{--                            </div> --}}
+        {{--                            <small class="col-auto text-muted text-cap">17dy</small> --}}
+        {{--                          </div> --}}
+        {{--                          <a class="stretched-link" href="#"></a> --}}
+        {{--                        </li> --}}
+        {{--                        <!-- End Item --> --}}
+        {{--                      </ul> --}}
+        {{--                    </div> --}}
+        {{--                  </div> --}}
+        {{--                </div> --}}
+        {{--                <!-- End Body --> --}}
 
-                <!-- Card Footer -->
-                <a class="card-footer text-center" href="#">View all notifications <i class="bi-chevron-right"></i></a>
-                <!-- End Card Footer -->
-              </div>
-            </div>
-          </div>
-        </li>
+        {{--                <!-- Card Footer --> --}}
+        {{--                <a class="card-footer text-center" href="#">View all notifications <i class="bi-chevron-right"></i></a> --}}
+        {{--                <!-- End Card Footer --> --}}
+        {{--              </div> --}}
+        {{--            </div> --}}
+        {{--          </div> --}}
+        {{--        </li> --}}
         <!-- End Notification -->
 
         <!-- Account -->
@@ -252,7 +254,7 @@
                 <button class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" id="selectThemeDropdown" data-bs-toggle="dropdown" data-bs-dropdown-animation type="button">
                   System Appearance
                 </button>
-                <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="selectThemeDropdown">
+                <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu theme-dropdown">
                   <button class="dropdown-item" data-icon="bi-moon-stars" data-value="auto" type="button">
                     <i class="bi-moon-stars me-2"></i><span class="text-truncate">Auto (system default)</span>
                   </button>
@@ -266,15 +268,15 @@
               </div>
               <!-- End System Appearance -->
 
-              <!-- Help & Support -->
+              <!-- Help Resources -->
               <div class="dropdown">
-                <button class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" id="navSubmenuPagesAccountDropdown2" data-bs-toggle="dropdown" type="button">Help & Support</button>
+                <button class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" id="navSubmenuPagesAccountDropdown2" data-bs-toggle="dropdown" type="button">Help Resources</button>
                 <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu">
                   <a class="dropdown-item" href="{{ route('help.about') }}"><i class="bi-question-circle me-2"></i>About Us</a>
                   <a class="dropdown-item" href="{{ route('help.guide') }}"><i class="bi-journal-text me-2"></i>User Guide</a>
                 </div>
               </div>
-              <!-- End Help & Support -->
+              <!-- End Help Resources -->
 
               <div class="dropdown-divider"></div>
 

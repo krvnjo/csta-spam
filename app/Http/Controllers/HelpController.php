@@ -9,7 +9,7 @@ class HelpController extends Controller
      */
     public function about()
     {
-        //
+        return view('pages.other.about-us');
     }
 
     /**
@@ -17,6 +17,6 @@ class HelpController extends Controller
      */
     public function guide()
     {
-        //
+        return view('pages.other.user-guide');
     }
 }
