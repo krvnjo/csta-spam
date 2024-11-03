@@ -1,6 +1,6 @@
 <!-- View Subcategory Modal -->
-<div class="modal fade" id="modalViewSubcategory" role="dialog" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal fade" id="modalViewSubcategory" data-bs-backdrop="static" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <!-- Header -->
       <div class="modal-header">
@@ -12,50 +12,89 @@
       <!-- Body -->
       <div class="modal-body">
         <div class="col">
+          <!-- Subcategory Name -->
           <div class="row mb-4">
-            <div class="col-5 d-flex align-items-center">
+            <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
               <p class="form-label fw-semibold mb-0">Subcategory Name:</p>
             </div>
-            <div class="col-7 d-flex align-items-center">
-              <p class="mb-0" id="lblViewSubcategory"></p>
+            <div class="col-12 col-md-7 d-flex align-items-center">
+              <p class="fw-semibold mb-0" id="lblViewSubcategory"></p>
             </div>
           </div>
+          <!-- End Subcategory Name -->
 
+          <!-- Subcategory Categories -->
           <div class="row mb-4">
-            <div class="col-5 d-flex align-items-center">
-              <p class="form-label fw-semibold mb-0">Main Category:</p>
+            <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
+              <p class="form-label fw-semibold mb-0">Subcategory Categories:</p>
             </div>
-            <div class="col-7 d-flex align-items-center">
-              <p class="mb-0" id="lblViewCategory"></p>
+            <div class="col-12 col-md-7 d-flex align-items-center">
+              <div class="btn-group w-100">
+                <button class="btn btn-sm btn-white dropdown-toggle" id="lblViewCategories" data-bs-toggle="dropdown" type="button"></button>
+                <div class="dropdown-menu w-100 scrollable-dropdown-menu" id="dropdownMenuViewCategories"></div>
+              </div>
             </div>
           </div>
+          <!-- End Subcategory Categories -->
 
+          <!-- Subcategory Brands -->
           <div class="row mb-4">
-            <div class="col-5 d-flex align-items-center">
+            <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
+              <p class="form-label fw-semibold mb-0">Subcategory Brands:</p>
+            </div>
+            <div class="col-12 col-md-7 d-flex align-items-center">
+              <div class="btn-group w-100">
+                <button class="btn btn-sm btn-white dropdown-toggle" id="lblViewBrands" data-bs-toggle="dropdown" type="button"></button>
+                <div class="dropdown-menu w-100 scrollable-dropdown-menu" id="dropdownMenuViewBrands"></div>
+              </div>
+            </div>
+          </div>
+          <!-- End Subcategory Brands -->
+
+          <!-- Status -->
+          <div class="row mb-4">
+            <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
               <p class="form-label fw-semibold mb-0">Status:</p>
             </div>
-            <div class="col-7 d-flex align-items-center">
-              <p class="mb-0" id="lblViewStatus"></p>
+            <div class="col-12 col-md-7 d-flex align-items-center">
+              <p class="mb-0" id="lblViewSetStatus"></p>
             </div>
           </div>
+          <!-- End Status -->
 
+          <!-- Created By -->
           <div class="row mb-4">
-            <div class="col-5 d-flex align-items-center">
-              <p class="form-label fw-semibold mb-0">Date Created:</p>
+            <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
+              <p class="form-label fw-semibold mb-0">Created By:</p>
             </div>
-            <div class="col-7 d-flex align-items-center">
-              <p class="mb-0" id="lblViewDateCreated"></p>
+            <div class="col-12 col-md-7 d-flex align-items-center">
+              <div class="avatar avatar-xs avatar-circle">
+                <img class="avatar-img" id="imgViewCreatedBy" src="" alt="User Image">
+              </div>
+              <div class="ms-3">
+                <span class="d-block fw-semibold mb-0" id="lblViewCreatedBy"></span>
+                <span class="d-block fs-5 text-body" id="lblViewCreatedAt"></span>
+              </div>
             </div>
           </div>
+          <!-- End Created By -->
 
+          <!-- Updated By -->
           <div class="row">
-            <div class="col-5 d-flex align-items-center">
-              <p class="form-label fw-semibold mb-0">Date Updated:</p>
+            <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
+              <p class="form-label fw-semibold mb-0">Updated By:</p>
             </div>
-            <div class="col-7 d-flex align-items-center">
-              <p class="mb-0" id="lblViewDateUpdated"></p>
+            <div class="col-12 col-md-7 d-flex align-items-center">
+              <div class="avatar avatar-xs avatar-circle">
+                <img class="avatar-img" id="imgViewUpdatedBy" src="" alt="User Image">
+              </div>
+              <div class="ms-3">
+                <span class="d-block fw-semibold mb-0" id="lblViewUpdatedBy"></span>
+                <span class="d-block fs-5 text-body" id="lblViewUpdatedAt"></span>
+              </div>
             </div>
           </div>
+          <!-- End Updated By -->
         </div>
       </div>
       <!-- End Body -->
@@ -63,11 +102,8 @@
       <!-- Footer -->
       <div class="modal-footer">
         <div class="row align-items-sm-center flex-grow-1 mx-n2">
-          <div class="col-sm mb-2 mb-sm-0"></div>
-          <div class="col-sm-auto">
-            <div class="d-flex gap-2">
-              <button class="btn btn-primary" data-bs-dismiss="modal" type="button">Close</button>
-            </div>
+          <div class="col d-flex justify-content-end">
+            <button class="btn btn-primary" data-bs-dismiss="modal" type="button">Close</button>
           </div>
         </div>
       </div>

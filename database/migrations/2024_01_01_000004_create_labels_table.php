@@ -25,7 +25,6 @@ return new class extends Migration {
             $table->id();
             $table->string('name', 50)->unique();
             $table->unsignedTinyInteger('is_active')->default(1);
-            $table->unsignedTinyInteger('is_deleted')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

@@ -15,7 +15,6 @@ class Brand extends Model
     protected $fillable = [
         'name',
         'is_active',
-        'is_deleted'
     ];
 
     public function subcategories(): BelongsToMany

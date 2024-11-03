@@ -30,8 +30,8 @@
             </div>
             <div class="col-12 col-md-7 d-flex align-items-center">
               <div class="btn-group w-100">
-                <button class="btn btn-sm btn-white dropdown-toggle" id="lblViewTotalSubcategories" data-bs-toggle="dropdown" type="button"></button>
-                <div class="dropdown-menu w-100 scrollable-dropdown-menu" id="subcategoriesDropdownMenu"></div>
+                <button class="btn btn-sm btn-white dropdown-toggle" id="lblViewSubcategories" data-bs-toggle="dropdown" type="button"></button>
+                <div class="dropdown-menu w-100 scrollable-dropdown-menu" id="dropdownMenuViewSubcategories"></div>
               </div>
             </div>
           </div>
@@ -43,7 +43,7 @@
               <p class="form-label fw-semibold mb-0">Status:</p>
             </div>
             <div class="col-12 col-md-7 d-flex align-items-center">
-              <p class="mb-0" id="lblViewStatus"></p>
+              <p class="mb-0" id="lblViewSetStatus"></p>
             </div>
           </div>
           <!-- End Status -->
@@ -55,7 +55,7 @@
             </div>
             <div class="col-12 col-md-7 d-flex align-items-center">
               <div class="avatar avatar-xs avatar-circle">
-                <img class="avatar-img" id="imgViewCreatedByImage" src="" alt="User Image">
+                <img class="avatar-img" id="imgViewCreatedBy" src="" alt="User Image">
               </div>
               <div class="ms-3">
                 <span class="d-block fw-semibold mb-0" id="lblViewCreatedBy"></span>
@@ -72,7 +72,7 @@
             </div>
             <div class="col-12 col-md-7 d-flex align-items-center">
               <div class="avatar avatar-xs avatar-circle">
-                <img class="avatar-img" id="imgViewUpdatedByImage" src="" alt="User Image">
+                <img class="avatar-img" id="imgViewUpdatedBy" src="" alt="User Image">
               </div>
               <div class="ms-3">
                 <span class="d-block fw-semibold mb-0" id="lblViewUpdatedBy"></span>
@@ -88,11 +88,8 @@
       <!-- Footer -->
       <div class="modal-footer">
         <div class="row align-items-sm-center flex-grow-1 mx-n2">
-          <div class="col-sm"></div>
-          <div class="col-sm-auto">
-            <div class="d-flex justify-content-end gap-2">
-              <button class="btn btn-primary" data-bs-dismiss="modal" type="button">Close</button>
-            </div>
+          <div class="col d-flex justify-content-end">
+            <button class="btn btn-primary" data-bs-dismiss="modal" type="button">Close</button>
           </div>
         </div>
       </div>
