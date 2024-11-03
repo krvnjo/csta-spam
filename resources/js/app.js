@@ -295,6 +295,53 @@ function handleValidationErrors(response, mode = 'Add') {
 window.handleValidationErrors = handleValidationErrors;
 // ============ End Handle Validation Errors Function ============ //
 
+// ============ Display Response Data Function ============ //
+function displayResponseData(response, config) {
+  if (config.textFields) {
+    config.textFields.forEach((field) => {
+      if (response[field.key] !== undefined) {
+        $(field.selector).text(response[field.key]);
+      }
+    });
+  }
+
+  if (config.dropdowns) {
+    config.dropdowns.forEach((dropdownConfig) => {
+      const dropdownContainer = $(dropdownConfig.container).empty();
+      const items = response[dropdownConfig.key];
+      const itemCount = items ? items.length : 0;
+      $(dropdownConfig.countSelector).text(`${itemCount} ${dropdownConfig.label}`);
+
+      if (itemCount > 0) {
+        items.forEach((item) => {
+          dropdownContainer.append($('<span>').addClass('dropdown-item').text(item));
+        });
+      } else {
+        dropdownContainer.append('<span class="dropdown-item text-muted">No items available.</span>');
+      }
+    });
+  }
+
+  if (config.status) {
+    const statusClass = response[config.status.key] === 1 ? 'success' : 'danger';
+    const statusText = response[config.status.key] === 1 ? config.status.activeText : config.status.inactiveText;
+    $(config.status.selector).html(
+      `<span class="badge bg-soft-${statusClass} text-${statusClass}"><span class="legend-indicator bg-${statusClass}"></span>${statusText}</span>`,
+    );
+  }
+
+  if (config.imageFields) {
+    config.imageFields.forEach((field) => {
+      if (response[field.key]) {
+        $(field.selector).attr('src', response[field.key]);
+      }
+    });
+  }
+}
+
+window.displayResponseData = displayResponseData;
+// ============ End Display Response Data Function ============ //
+
 // ============ Filter DataTable and Filter Count Function ============ //
 function filterDatatableAndCount(filterDatatable, filterCount) {
   const filterElements = $('.js-datatable-filter');

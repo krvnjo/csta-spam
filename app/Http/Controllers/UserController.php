@@ -21,8 +21,8 @@ class UserController extends Controller
     public function index()
     {
         $users = User::with('role', 'department')->whereNull('deleted_at')->orderBy('lname')->get();
-        $roles = Role::with('users')->whereNull('deleted_at')->where('is_active', 1)->orderBy('name')->pluck('name', 'id');
-        $depts = Department::with('users')->whereNull('deleted_at')->where('is_active', 1)->orderBy('name')->pluck('name', 'id');
+        $roles = Role::whereNull('deleted_at')->orderBy('name')->get();
+        $depts = Department::whereNull('deleted_at')->orderBy('name')->get();
 
         $totalUsers = $users->count();
 
@@ -41,41 +41,53 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $userValidationMessages = [
-            'user.required' => 'Please enter a username!',
-            'user.regex' => 'The username must follow the format ##-#####.',
-            'user.unique' => 'This username is already taken!',
-
-            'fname.required' => 'Please enter a user name!',
-            'fname.regex' => 'It must not contain numbers, special symbols, and multiple spaces.',
-            'fname.min' => 'The first name must be at least :min characters.',
-            'fname.max' => 'The first name may not be greater than :max characters.',
-
-            'mname.regex' => 'It must not contain numbers, special symbols, and multiple spaces.',
-            'mname.min' => 'The middle name must be at least :min characters.',
-            'mname.max' => 'The middle name may not be greater than :max characters.',
-
-            'lname.required' => 'Please enter a last name!',
-            'lname.regex' => 'It must not contain numbers, special symbols, and multiple spaces.',
-            'lname.min' => 'The last name must be at least :min characters.',
-            'lname.max' => 'The last name may not be greater than :max characters.',
-
-            'role.required' => 'Please select a role!',
-            'dept.required' => 'Please select a department!',
-
-            'email.required' => 'Please enter email address!',
-            'email.email' => 'This email is invalid!',
-            'email.unique' => 'This email is already taken!',
-
-            'phone.regex' => 'The phone number must follow the format: 09##-###-####.',
-            'phone.unique' => 'This phone number is already taken!',
-
-            'image.image' => 'The file must be an image.',
-            'image.mimes' => 'Only jpeg, png, jpg formats are allowed.',
-            'image.max' => 'Image size must not exceed 2MB.',
-        ];
-
         try {
+            $request->merge([
+                'user' => trim($request->input('user')),
+                'fname' => ucwords(strtolower(trim($request->input('fname')))),
+                'mname' => ucwords(strtolower(trim($request->input('mname')))),
+                'lname' => ucwords(strtolower(trim($request->input('lname')))),
+                'role' => (int)$request->input('role'),
+                'dept' => (int)$request->input('dept'),
+                'email' => trim($request->input('email')),
+                'phone' => trim($request->input('phone')),
+                'image' => $request->file('image'),
+            ]);
+
+            $userValidationMessages = [
+                'user.required' => 'Please enter a username!',
+                'user.regex' => 'The username must follow the format ##-#####.',
+                'user.unique' => 'This username is already taken!',
+
+                'fname.required' => 'Please enter a user name!',
+                'fname.regex' => 'It must not contain numbers, special symbols, and multiple spaces.',
+                'fname.min' => 'The first name must be at least :min characters.',
+                'fname.max' => 'The first name may not be greater than :max characters.',
+
+                'mname.regex' => 'It must not contain numbers, special symbols, and multiple spaces.',
+                'mname.min' => 'The middle name must be at least :min characters.',
+                'mname.max' => 'The middle name may not be greater than :max characters.',
+
+                'lname.required' => 'Please enter a last name!',
+                'lname.regex' => 'It must not contain numbers, special symbols, and multiple spaces.',
+                'lname.min' => 'The last name must be at least :min characters.',
+                'lname.max' => 'The last name may not be greater than :max characters.',
+
+                'role.required' => 'Please select a role!',
+                'dept.required' => 'Please select a department!',
+
+                'email.required' => 'Please enter email address!',
+                'email.email' => 'This email is invalid!',
+                'email.unique' => 'This email is already taken!',
+
+                'phone.regex' => 'The phone number must follow the format: 09##-###-####.',
+                'phone.unique' => 'This phone number is already taken!',
+
+                'image.image' => 'The file must be an image.',
+                'image.mimes' => 'Only jpeg, png, jpg formats are allowed.',
+                'image.max' => 'Image size must not exceed 2MB.',
+            ];
+
             $userValidator = Validator::make($request->all(), [
                 'user' => [
                     'required',

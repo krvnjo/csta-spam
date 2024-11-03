@@ -96,9 +96,9 @@ Route::middleware(['auth', 'noCache'])->group(function () {
     // User Routes
     Route::middleware('checkPermission:view user management')->prefix('user-management/users')->name('user.')->controller(UserController::class)->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::get('/show', 'show')->name('show')->middleware('expectsJson');
+        Route::post('/', 'store')->name('create')->middleware('checkPermission:create user management');
+        Route::get('/show', 'show')->name('view')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
-        Route::post('/', 'store')->name('store')->middleware('checkPermission:create user management');
         Route::patch('/', 'update')->name('update')->middleware('checkPermission:update user management');
         Route::delete('/', 'destroy')->name('delete')->middleware('checkPermission:delete user management');
     });
@@ -106,9 +106,9 @@ Route::middleware(['auth', 'noCache'])->group(function () {
     // Role Routes
     Route::middleware('checkPermission:view role management')->prefix('user-management/roles')->name('role.')->controller(RoleController::class)->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::get('/show', 'show')->name('show')->middleware('expectsJson');
+        Route::post('/', 'store')->name('create')->middleware('checkPermission:create role management');
+        Route::get('/show', 'show')->name('view')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
-        Route::post('/', 'store')->name('store')->middleware('checkPermission:create role management');
         Route::patch('/', 'update')->name('update')->middleware('checkPermission:update role management');
         Route::delete('/', 'destroy')->name('delete')->middleware('checkPermission:delete role management');
     });

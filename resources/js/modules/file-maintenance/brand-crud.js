@@ -46,33 +46,38 @@ $(document).ready(function () {
       success: function (response) {
         $('#modalViewBrand').modal('toggle');
 
-        $('#lblViewBrand').text(response.brand);
+        const brandConfig = {
+          textFields: [
+            { key: 'brand', selector: '#lblViewBrand' },
+            { key: 'created_by', selector: '#lblViewCreatedBy' },
+            { key: 'updated_by', selector: '#lblViewUpdatedBy' },
+            { key: 'created_at', selector: '#lblViewCreatedAt' },
+            { key: 'updated_at', selector: '#lblViewUpdatedAt' },
+          ],
 
-        const subcategories = response.subcategories;
-        const dropdownSubcategory = $('#dropdownMenuViewSubcategories').empty();
-        let totalSubcategories = subcategories.length;
-        $('#lblViewSubcategories').text(`${totalSubcategories} subcategories in this brand`);
+          dropdowns: [
+            {
+              key: 'subcategories',
+              container: '#dropdownMenuViewSubcategories',
+              countSelector: '#lblViewSubcategories',
+              label: 'subcategories in this brand',
+            },
+          ],
 
-        if (totalSubcategories > 0) {
-          subcategories.forEach((subcategory) => {
-            dropdownSubcategory.append($('<span>').addClass('dropdown-item').text(subcategory));
-          });
-        } else {
-          dropdownSubcategory.append('<span class="dropdown-item text-muted">No subcategories available.</span>');
-        }
+          status: {
+            key: 'status',
+            selector: '#lblViewSetStatus',
+            activeText: 'Active',
+            inactiveText: 'Inactive',
+          },
 
-        const statusClass = response.status === 1 ? 'success' : 'danger';
-        const statusText = response.status === 1 ? 'Active' : 'Inactive';
-        $('#lblViewSetStatus').html(
-          `<span class="badge bg-soft-${statusClass} text-${statusClass}"><span class="legend-indicator bg-${statusClass}"></span>${statusText}</span>`,
-        );
+          imageFields: [
+            { key: 'created_img', selector: '#imgViewCreatedBy' },
+            { key: 'updated_img', selector: '#imgViewUpdatedBy' },
+          ],
+        };
 
-        $('#imgViewCreatedBy').attr('src', response.created_img);
-        $('#lblViewCreatedBy').text(response.created_by);
-        $('#lblViewCreatedAt').text(response.created_at);
-        $('#imgViewUpdatedBy').attr('src', response.updated_img);
-        $('#lblViewUpdatedBy').text(response.updated_by);
-        $('#lblViewUpdatedAt').text(response.updated_at);
+        displayResponseData(response, brandConfig);
       },
       error: function (response) {
         showResponseAlert(response, 'error');

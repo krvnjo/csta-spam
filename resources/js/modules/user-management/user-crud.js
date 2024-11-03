@@ -4,11 +4,13 @@ $(document).ready(function () {
   // ============ Create a User ============ //
   const userAddModal = $('#modalAddUser');
   const userAddForm = $('#frmAddUser');
+  const userAddSaveBtn = $('#btnAddSaveUser');
 
-  handleUnsavedChanges(userAddModal, userAddForm, $('#btnAddSaveUser'));
+  handleUnsavedChanges(userAddModal, userAddForm, userAddSaveBtn);
 
   userAddForm.on('submit', function (e) {
     e.preventDefault();
+    toggleButtonState(userAddSaveBtn, true);
 
     const addFormData = new FormData(userAddForm[0]);
 
@@ -20,55 +22,14 @@ $(document).ready(function () {
       contentType: false,
       success: function (response) {
         if (response.success) {
-          showSuccessAlert(response, userAddModal, userAddForm);
+          showResponseAlert(response, 'success', userAddModal, userAddForm);
         } else {
-          if (response.errors.fname) {
-            $('#txtAddUserFname').addClass('is-invalid');
-            $('#valAddUserFname').text(response.errors.fname[0]);
-          }
-
-          if (response.errors.mname) {
-            $('#txtAddUserMname').addClass('is-invalid');
-            $('#valAddUserMname').text(response.errors.mname[0]);
-          }
-
-          if (response.errors.lname) {
-            $('#txtAddUserLname').addClass('is-invalid');
-            $('#valAddUserLname').text(response.errors.lname[0]);
-          }
-
-          if (response.errors.role) {
-            $('#selAddUserRole').next('.ts-wrapper').addClass('is-invalid');
-            $('#valAddUserRole').text(response.errors.role[0]);
-          }
-
-          if (response.errors.dept) {
-            $('#selAddUserDept').next('.ts-wrapper').addClass('is-invalid');
-            $('#valAddUserDept').text(response.errors.dept[0]);
-          }
-
-          if (response.errors.email) {
-            $('#txtAddUserEmail').addClass('is-invalid');
-            $('#valAddUserEmail').text(response.errors.email[0]);
-          }
-
-          if (response.errors.phone) {
-            $('#txtAddUserPhone').addClass('is-invalid');
-            $('#valAddUserPhone').text(response.errors.phone[0]);
-          }
-
-          if (response.errors.user) {
-            $('#txtAddUsername').addClass('is-invalid');
-            $('#valAddUsername').text(response.errors.user[0]);
-          }
-
-          if (response.errors.image) {
-            $('#valAddUserImage').removeClass('d-none').text(response.errors.image[0]);
-          }
+          handleValidationErrors(response, 'Add');
+          toggleButtonState(userAddSaveBtn, false);
         }
       },
       error: function (response) {
-        showErrorAlert(response.responseJSON, userAddModal, userAddForm);
+        showResponseAlert(response, 'error', userAddModal, userAddForm);
       },
     });
   });
@@ -85,35 +46,41 @@ $(document).ready(function () {
       success: function (response) {
         $('#modalViewUser').modal('toggle');
 
-        $('#lblViewUsername').text(response.user);
-        $('#lblViewUserFname').text(response.fname);
-        $('#lblViewUserMname').text(response.mname);
-        $('#lblViewUserLname').text(response.lname);
-        $('#lblViewUserRole').text(response.role);
-        $('#lblViewUserDept').text(response.dept);
-        $('#lblViewUserEmail').text(response.email);
-        $('#lblViewUserPhone').text(response.phone);
-        $('#lblViewLastLogin').text(response.login);
-        $('#imgViewUserImage').attr('src', response.image);
-        $('#lblViewDateCreated').text(response.created);
-        $('#lblViewDateUpdated').text(response.updated);
+        const userConfig = {
+          textFields: [
+            { key: 'user', selector: '#lblViewUsername' },
+            { key: 'fname', selector: '#lblViewUserFname' },
+            { key: 'mname', selector: '#lblViewUserMname' },
+            { key: 'lname', selector: '#lblViewUserLname' },
+            { key: 'role', selector: '#lblViewUserRole' },
+            { key: 'dept', selector: '#lblViewUserDept' },
+            { key: 'email', selector: '#lblViewUserEmail' },
+            { key: 'phone', selector: '#lblViewUserPhone' },
+            { key: 'login', selector: '#lblViewLastLogin' },
+            { key: 'created_by', selector: '#lblViewCreatedBy' },
+            { key: 'updated_by', selector: '#lblViewUpdatedBy' },
+            { key: 'created_at', selector: '#lblViewCreatedAt' },
+            { key: 'updated_at', selector: '#lblViewUpdatedAt' },
+          ],
 
-        if (response.status === 1) {
-          $('#lblViewStatus').html(`
-            <span class="badge bg-soft-success text-success">
-              <span class="legend-indicator bg-success"></span>Active
-            </span>
-          `);
-        } else {
-          $('#lblViewStatus').html(`
-            <span class="badge bg-soft-danger text-danger">
-              <span class="legend-indicator bg-danger"></span>Inactive
-            </span>
-          `);
-        }
+          status: {
+            key: 'status',
+            selector: '#lblViewSetStatus',
+            activeText: 'Active',
+            inactiveText: 'Inactive',
+          },
+
+          imageFields: [
+            { key: 'image', selector: '#imgViewUserImage' },
+            { key: 'created_img', selector: '#imgViewCreatedBy' },
+            { key: 'updated_img', selector: '#imgViewUpdatedBy' },
+          ],
+        };
+
+        displayResponseData(response, userConfig);
       },
       error: function (response) {
-        showErrorAlert(response.responseJSON);
+        showResponseAlert(response, 'error');
       },
     });
   });
