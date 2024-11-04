@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-  Stock Masterlist
+  Inventory Masterlist
 @endsection
 
 @push('styles')
@@ -21,23 +21,11 @@
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb breadcrumb-no-gutter">
                 <li class="breadcrumb-item"><a class="breadcrumb-link" data-route="dashboard.index" href="{{ route('dashboard.index') }}">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Stock Masterlist</li>
+                <li class="breadcrumb-item active" aria-current="page">Inventory Masterlist</li>
               </ol>
             </nav>
-            <h1 class="page-header-title">Asset Stock Management</h1>
-            <p class="page-header-text">Manage and organize stock records.</p>
-            <p class="page-header-text">
-            <span class="legend-indicator bg-danger "></span>No stock
-              <span class="ms-2"></span>
-            <span class="legend-indicator bg-info"></span>Low stock
-            </p>
-          </div>
-          <!-- End Col -->
-
-          <div class="col-sm-auto">
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPropertyModal" type="button">
-              <i class="bi bi-plus-lg me-1"></i> Add Item
-            </button>
+            <h1 class="page-header-title">Asset Inventory Management</h1>
+            <p class="page-header-text">Manage and organize inventory records.</p>
           </div>
           <!-- End Col -->
         </div>
@@ -159,7 +147,7 @@
                 <div class="input-group-prepend input-group-text">
                   <i class="bi-search"></i>
                 </div>
-                <input class="form-control" id="propertyDatatableSearch" type="search" aria-label="Search item" placeholder="Search item">
+                <input class="form-control" id="inventoryDatatableSearch" type="search" aria-label="Search item" placeholder="Search item">
               </div>
               <!-- End Search -->
             </form>
@@ -167,10 +155,10 @@
 
           <div class="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
             <!-- Datatable Info -->
-            <div id="propertyDatatableCounterInfo" style="display: none;">
+            <div id="inventoryDatatableCounterInfo" style="display: none;">
               <div class="d-flex align-items-center">
                 <span class="fs-5 me-3">
-                  <span id="propertyDatatableCounter">0</span>
+                  <span id="inventoryDatatableCounter">0</span>
                   Selected
                 </span>
                 <a class="btn btn-outline-danger btn-md" href="">
@@ -182,11 +170,11 @@
 
             <!-- Dropdown -->
             <div class="dropdown">
-              <button class="btn btn-white btn-md dropdown-toggle w-100" id="propertyExportDropdown" data-bs-toggle="dropdown" type="button" aria-expanded="false">
+              <button class="btn btn-white btn-md dropdown-toggle w-100" id="usersExportDropdown" data-bs-toggle="dropdown" type="button" aria-expanded="false">
                 <i class="bi-download me-2"></i> Export
               </button>
 
-              <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="propertyExportDropdown">
+              <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="usersExportDropdown">
                 <span class="dropdown-header">Options</span>
                 <a class="dropdown-item" id="export-copy" href="">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/copy-icon.svg') }}" alt="Image Description">
@@ -212,7 +200,7 @@
 
             <!-- Dropdown -->
             <div class="dropdown">
-              <button class="btn btn-white" data-bs-toggle="offcanvas" data-bs-target="#offcanvasPropertyFilter" type="button" aria-controls="offcanvasPropertyFilter">
+              <button class="btn btn-white" data-bs-toggle="offcanvas" data-bs-target="#offcanvasStockFilter" type="button" aria-controls="offcanvasStockFilter">
                 <i class="bi-filter me-1"></i> Filters
               </button>
             </div>
@@ -223,106 +211,102 @@
 
         <!-- Table -->
         <div class="table-responsive datatable-custom">
-          <table class="table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table table table-hover w-100" id="propertyOverviewDatatable"
-            data-hs-datatables-options='{
+          <table class="table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table table table-hover w-100" id="inventoryOverviewDatatable"
+                 data-hs-datatables-options='{
                    "columnDefs": [{
-                      "targets": [0, 7],
+                      "targets": [0, 6],
                       "orderable": false
                     }],
                    "order": [],
                    "info": {
-                     "totalQty": "#propertyDatatableWithPaginationInfoTotalQty"
+                     "totalQty": "#inventoryDatatableWithPaginationInfoTotalQty"
                    },
-                   "search": "#propertyDatatableSearch",
-                   "entries": "#propertyDatatableEntries",
+                   "search": "#inventoryDatatableSearch",
+                   "entries": "#inventoryDatatableEntries",
                    "pageLength": 5,
                    "isResponsive": false,
                    "isShowPaging": false,
-                   "pagination": "propertyDatatablePagination"
+                   "pagination": "inventoryDatatablePagination"
                  }'>
             <thead class="thead-light">
-              <tr>
-                <th class="d-none" id="PropertyId"></th>
-                <th class="text-center" style="padding: 0; padding-left: 1rem;">
-                  <span class="legend-indicator bg-danger"></span>
-                  <span class="legend-indicator bg-info"></span>
-                </th>
-                <th class="col-3">Item Name</th>
-                <th class="col-3">Description</th>
-                <th class="col-2">Category</th>
-                <th class="col-2">Brand</th>
-                <th class="col-1 text-center">Total Quantity</th>
-                <th class="col-3">Action</th>
-              </tr>
+            <tr>
+              <th class="d-none" id="PropertyId"></th>
+              <th class="col-3">Item Name</th>
+              <th class="col-3">Description</th>
+              <th class="col-2">Category</th>
+              <th class="col-2">Brand</th>
+              <th class="col-1 text-center">Inventory Quantity</th>
+              <th class="col-3">Action</th>
+            </tr>
             </thead>
 
             <tbody>
-              @foreach ($propertyParents->where('is_active', 1)->where('deleted_at', null)->sortByDesc('updated_at') as $propertyParent)
-                <tr>
-                  <td class="d-none" data-property-id="{{ Crypt::encryptString($propertyParent->id) }}"></td>
-                  <td style="text-align: center; padding: 0;">
-                    @if (!$propertyParent->propertyChildren->where('inventory_date', null)->count())
-                      <span class="legend-indicator bg-danger" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="No Stock"></span>
-                    @elseif ($propertyParent->propertyChildren->where('inventory_date', null)->count() <= 5)
-                      <span class="legend-indicator bg-info" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="Low Stock"></span>
-                    @endif
-                  </td>
-                  <td>
-                    <a class="d-flex align-items-center btnViewProperty">
-                      <div class="avatar avatar-lg">
-                        @php
-                          $imagePath = public_path('storage/img/prop-asset/' . $propertyParent->image);
-                          $defaultImagePath = public_path('storage/img/prop-asset/default.jpg');
-                          $imageUrl = file_exists($imagePath) ? asset('storage/img/prop-asset/' . $propertyParent->image) : asset('storage/img/prop-asset/default.jpg');
-                        @endphp
-                        <img class="avatar-img" src="{{ $imageUrl }}" alt="Image Description">
-                      </div>
-                      <div class="ms-3">
-                        <span class="d-block h5 mb-0 text-inherit">{{ $propertyParent->name }}</span>
-                      </div>
-                    </a>
-                  </td>
-                  <td>
+            @foreach ($propertyParents
+                ->where('is_active', 1)
+                ->where('deleted_at', null)
+                ->sortByDesc('updated_at')
+                ->map(function ($propertyParent) {
+                    $propertyParent->children_count = $propertyParent->propertyChildren
+                        ->whereNotNull('inventory_date')
+                        ->where('is_active', 1)
+                        ->count();
+                    return $propertyParent;
+                })
+            as $propertyParent)
+              <tr>
+                <td class="d-none" data-property-id="{{ Crypt::encryptString($propertyParent->id) }}"></td>
+                <td>
+                  <a class="d-flex align-items-center" href="{{ route('prop-inv.show', $propertyParent->id) }}">
+                    <div class="avatar avatar-lg">
+                      @php
+                        $imagePath = public_path('storage/img/prop-asset/' . $propertyParent->image);
+                        $defaultImagePath = public_path('storage/img/prop-asset/default.jpg');
+                        $imageUrl = file_exists($imagePath) ? asset('storage/img/prop-asset/' . $propertyParent->image) : asset('storage/img/prop-asset/default.jpg');
+                      @endphp
+                      <img class="avatar-img" src="{{ $imageUrl }}" alt="Image Description">
+                    </div>
+                    <div class="ms-3">
+                      <span class="d-block h5 mb-0 text-inherit">{{ $propertyParent->name }}</span>
+                    </div>
+                  </a>
+                </td>
+                <td>
                     <span style="color:gray"
-                      @if (!empty($propertyParent->description) && strlen($propertyParent->description) > 25) data-bs-toggle="tooltip"
-                        data-bs-html="true"
-                        data-bs-placement="bottom"
-                        title="{{ $propertyParent->description }}" @endif>
+                          @if (!empty($propertyParent->description) && strlen($propertyParent->description) > 25) data-bs-toggle="tooltip"
+                          data-bs-html="true"
+                          data-bs-placement="bottom"
+                          title="{{ $propertyParent->description }}" @endif>
                       {{ Str::limit(!empty($propertyParent->description) ? $propertyParent->description : 'No description provided', 30) }}
                     </span>
-                  </td>
-                  <td>
-                    <span class="d-block fs-5">{{ $propertyParent->subcategory->name }}</span>
-                  </td>
-                  <td>{{ $propertyParent->brand->name }}</td>
-                  <td style="text-align: center;">
-                    {{ $propertyParent->quantity }}
-                  </td>
-                  <td>
-                    <div class="btn-group position-static" role="group">
-                      <a class="btn btn-white btn-sm" href="{{ route('prop-asset.child.index', $propertyParent) }}">
-                        <i class="bi-eye me-1"></i> View All
-                      </a>
+                </td>
+                <td>
+                  <span class="d-block fs-5">{{ $propertyParent->subcategory->name }}</span>
+                </td>
+                <td>{{ $propertyParent->brand->name }}</td>
+                <td style="text-align: center;">{{ $propertyParent->children_count }}</td>
+                <td>
+                  <div class="btn-group" role="group">
+                    <a class="btn btn-white btn-sm" href="{{ route('prop-inv.show', $propertyParent->id) }}">
+                      <i class="bi-eye me-1"></i> View All
+                    </a>
 
-                      <!-- Button Group -->
-                      <div class="btn-group position-static">
-                        <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="productsEditDropdown1" data-bs-toggle="dropdown" type="button"
-                          aria-expanded="false"></button>
+                    <!-- Button Group -->
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="productsEditDropdown1"
+                              data-bs-toggle="dropdown" aria-expanded="false"></button>
 
-                        <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="productsEditDropdown1">
-                          <button class="dropdown-item btnEditPropParent" type="button">
-                            <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Item
-                          </button>
-                          <button class="dropdown-item btnViewProperty" type="button">
-                            <i class="bi bi-info-square-fill dropdown-item-icon"></i> View Details
-                          </button>
-                        </div>
+                      <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="productsEditDropdown1">
+                        <button class="dropdown-item" type="button" id="btnEditPropParent" data-prop-parent-id="{{ $propertyParent->id }}">
+                          <i class="bi-pencil-fill dropdown-item-icon"></i> Edit
+                        </button>
                       </div>
-                      <!-- End Button Group -->
                     </div>
-                  </td>
-                </tr>
-              @endforeach
+                    <!-- End Button Group -->
+
+                  </div>
+                </td>
+              </tr>
+            @endforeach
 
             </tbody>
           </table>
@@ -338,8 +322,8 @@
 
                 <!-- Select -->
                 <div class="tom-select-custom" style="width: 80px;">
-                  <select class="js-select form-select form-select-borderless" id="propertyDatatableEntries"
-                    data-hs-tom-select-options='{
+                  <select class="js-select form-select form-select-borderless" id="inventoryDatatableEntries"
+                          data-hs-tom-select-options='{
                             "searchInDropdown": false,
                             "hideSearch": true
                           }' autocomplete="off">
@@ -362,7 +346,7 @@
             <div class="col-sm-auto">
               <div class="d-flex justify-content-center justify-content-sm-end">
                 <!-- Pagination -->
-                <nav id="propertyDatatablePagination" aria-label="Activity pagination"></nav>
+                <nav id="inventoryDatatablePagination" aria-label="Activity pagination"></nav>
               </div>
             </div>
             <!-- End Col -->
@@ -378,16 +362,14 @@
 @endsection
 
 @section('sec-content')
-  <x-property-asset.add-property :brands="$brands" :subcategories="$subcategories" :conditions="$conditions" :acquisitions="$acquisitions" />
+  {{--  <x-modals.add-property :brands="$brands" :subcategories="$subcategories" :conditions="$conditions" :acquisitions="$acquisitions" /> --}}
 
-  <x-property-asset.edit-property :brands="$brands" :subcategories="$subcategories" />
-
-  <x-property-asset.view-property />
+  {{--  <x-modals.edit-property :brands="$brands" :subcategories="$subcategories" /> --}}
 
   <!-- Product Filter Modal -->
-  <div class="offcanvas offcanvas-end" id="offcanvasPropertyFilter" aria-labelledby="offcanvasPropertyFilterLabel" tabindex="-1">
+  <div class="offcanvas offcanvas-end" id="offcanvasStockFilter" aria-labelledby="offcanvasStockFilterLabel" tabindex="-1">
     <div class="offcanvas-header">
-      <h4 class="mb-0" id="offcanvasPropertyFilterLabel">Filters</h4>
+      <h4 class="mb-0" id="offcanvasEcommerceProductFilterLabel">Filters</h4>
       <button class="btn-close" data-bs-dismiss="offcanvas" type="button" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
@@ -639,6 +621,8 @@
 @endsection
 
 @push('scripts')
+  <!-- JS Modules -->
+
   <!-- JS Other Plugins -->
   <script src="{{ Vite::asset('resources/vendor/hs-toggle-password/dist/js/hs-toggle-password.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/hs-file-attach/dist/hs-file-attach.min.js') }}"></script>
@@ -660,146 +644,41 @@
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/dropzone/dist/min/dropzone.min.js') }}"></script>
 
-  <!-- JS Modules -->
-  <script src="{{ Vite::asset('resources/js/modules/properties-assets/property-stock-crud.js') }}"></script>
-
   <!-- JS Themes -->
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>
 
-  <!-- JS Plugins Init. -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-      var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl)
-      })
-    });
+  <!-- JS Plugins Initialization -->
 
-    (function() {
-      // INITIALIZATION OF DROPZONE
-      // =======================================================
-      var addDropzone, editDropzone;
-
-      HSCore.components.HSDropzone.init('.js-dropzone', {
-        maxFiles: 1,
-        maxFilesize: 1,
-        acceptedFiles: ".jpeg,.jpg,.png",
-        dictDefaultMessage: "Drag and drop your file here or click to upload",
-
-        init: function() {
-          var dropzoneInstance = this;
-
-          if (this.element.id === 'addPropertyDropzone') {
-            addDropzone = this;
-          } else if (this.element.id === 'editPropertyDropzone') {
-            editDropzone = this;
-          }
-
-          this.on("addedfile", function(file) {
-            dropzoneInstance.element.querySelector(".dz-message").style.display = "none";
-          });
-
-          this.on("removedfile", function(file) {
-            dropzoneInstance.element.querySelector(".dz-message").style.display = "block";
-          });
-
-          this.on("error", function(file, message) {
-            if (file.size > 1048576) {
-              Swal.fire({
-                icon: 'error',
-                title: 'File too large',
-                text: 'File size exceeds the limit of 1MB. Please upload a smaller file.',
-                confirmButtonText: 'OK',
-                customClass: {
-                  popup: 'bg-light rounded-3 shadow fs-4',
-                  title: 'fs-1',
-                  htmlContainer: 'text-muted text-center fs-4',
-                  confirmButton: 'btn btn-sm btn-info',
-                },
-              });
-              this.removeFile(file);
-            }
-          });
-        }
-      });
-    })();
-  </script>
   <script>
     $(document).on('ready', function() {
       // INITIALIZATION OF DATATABLES
       // =======================================================
-      HSCore.components.HSDatatables.init($('#propertyOverviewDatatable'), {
+      HSCore.components.HSDatatables.init($('#inventoryOverviewDatatable'), {
         dom: 'Bfrtip',
         buttons: [{
             extend: 'copy',
-            className: 'd-none',
-            exportOptions: {
-              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8))'
-            }
+            className: 'd-none'
           },
           {
             extend: 'excel',
-            className: 'd-none',
-            exportOptions: {
-              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8))'
-            }
+            className: 'd-none'
           },
           {
             extend: 'pdf',
-            className: 'd-none',
-            exportOptions: {
-              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8))'
-            }
+            className: 'd-none'
           },
           {
             extend: 'print',
-            className: 'd-none',
-            title: '',
-            message: '',
-            exportOptions: {
-              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8))',
-            },
-            customize: function(win) {
-
-              function formatDate(date) {
-                const options = { year: 'numeric', month: 'long', day: 'numeric' };
-                return date.toLocaleDateString(undefined, options);
-              }
-
-              const currentDate = formatDate(new Date());
-
-              $(win.document.body)
-                .css('font-size', '10pt')
-                .prepend(`
-                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                    <div style="display: flex; align-items: center;">
-                      <img src="{{ Vite::asset('resources/svg/logos/logo.svg') }}" style="width: 14rem; margin-right: 7rem;" alt="CSTA - SPAM Logo" />
-                    </div>
-                    <div style="font-size: 10px;">${currentDate}</div> <!-- Add current date without right alignment -->
-                  </div>
-                  <h2 style="font-size: 12px; margin: 5px 0;">Colegio De Sta. Teresa De Avila - Stock Masterlist</h2> <!-- Custom print title -->
-                `);
-              $(win.document.body).find('table')
-                .css({
-                  'font-size': '8pt',
-                  'width': '100%',
-                  'border-collapse': 'collapse',
-                });
-              $(win.document.body).find('table th, table td')
-                .css({
-                  'padding': '4px',
-                  'border': '1px solid #ccc',
-                });
-            }
-          }
+            className: 'd-none'
+          },
         ],
         select: {
           style: 'multi',
           selector: 'td:first-child input[type="checkbox"]',
           classMap: {
-            checkAll: '#propertyDatatableCheckAll',
-            counter: '#propertyDatatableCounter',
-            counterInfo: '#propertyDatatableCounterInfo'
+            checkAll: '#datatableCheckAll',
+            counter: '#inventoryDatatableCounter',
+            counterInfo: '#inventoryDatatableCounterInfo'
           }
         },
         language: {
@@ -844,26 +723,24 @@
       });
     });
   </script>
-
-  <!-- JS Plugins Init. -->
   <script>
     // Initialization of Other Plugins
     (function() {
       window.onload = function() {
         // INITIALIZATION OF NAVBAR VERTICAL ASIDE
         // =======================================================
-        new HSSideNav('.js-navbar-vertical-aside').init()
+        new HSSideNav('.js-navbar-vertical-aside').init();
 
 
         // INITIALIZATION OF FORM SEARCH
         // =======================================================
-        new HSFormSearch('.js-form-search')
+        new HSFormSearch('.js-form-search');
 
 
         // INITIALIZATION OF BOOTSTRAP DROPDOWN
         // =======================================================
-        HSBsDropdown.init()
-      }
-    })()
+        HSBsDropdown.init();
+      };
+    })();
   </script>
 @endpush

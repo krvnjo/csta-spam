@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Acquisition;
+use App\Models\Brand;
+use App\Models\Condition;
+use App\Models\PropertyChild;
 use App\Models\PropertyParent;
+use App\Models\Subcategory;
 use Illuminate\Http\Request;
 
 class PropertyInventoryController extends Controller
@@ -12,7 +17,24 @@ class PropertyInventoryController extends Controller
      */
     public function index()
     {
-        //
+        $propertyParents = PropertyParent::with(['brand'])
+            ->where('is_active', 1)
+            ->where('deleted_at', null)
+            ->whereHas('propertyChildren', function ($query) {
+                $query->whereNotNull('inventory_date');
+            })
+            ->get();
+
+        $propertyChildrenCount = PropertyChild::whereNotNull('inventory_date')
+            ->where('is_active', 1)
+            ->count();
+
+        $subcategories = Subcategory::query()->select('id','name')->where('is_active', 1)->get();
+        $brands = Brand::query()->select('id','name')->where('is_active', 1)->get();
+        $conditions = Condition::query()->select('id','name')->where('is_active', 1)->get();
+        $acquisitions = Acquisition::query()->select('id','name')->where('is_active', 1)->get();
+
+        return view('pages.property-asset.inventory.overview-inventory', compact('brands','subcategories','conditions','acquisitions','propertyParents','propertyChildrenCount'));
     }
 
     /**

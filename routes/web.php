@@ -11,6 +11,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\HelpController;
 use App\Http\Controllers\PropertyChildController;
+use App\Http\Controllers\PropertyInventoryController;
 use App\Http\Controllers\PropertyParentController;
 use App\Http\Controllers\RecycleController;
 use App\Http\Controllers\RoleController;
@@ -95,6 +96,20 @@ Route::middleware(['auth', 'noCache'])->group(function () {
             abort(404);
         });
     });
+
+    // Inventory Routes
+    Route::middleware('checkPermission:view item management')->prefix('properties-assets/inventory')->name('prop-inv.')->controller(PropertyInventoryController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store')->middleware('checkPermission:create item management');
+        Route::get('/show', 'show')->name('show')->middleware('expectsJson');
+        Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
+        Route::patch('/', 'update')->name('update')->middleware('checkPermission:update item management');
+        Route::delete('/', 'destroy')->name('delete')->middleware('checkPermission:delete item management');
+        Route::fallback(function () {
+            abort(404);
+        });
+    });
+
 
     // ============ End Item Inventory Management Routes ============ //
 

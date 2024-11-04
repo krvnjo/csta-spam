@@ -43,7 +43,7 @@
 
               <div class="nav-collapse collapse" id="navbarVerticalMenuPagesPropertyAssets" data-bs-parent="#navbarVerticalMenuMainMenu">
                 <a class="nav-link" data-route="prop-asset.index" href="{{ route('prop-asset.index') }}">Stock Masterlist</a>
-                <a class="nav-link" href="#">Inventory Masterlist</a>
+                <a class="nav-link" data-route="prop-inv.index" href="{{ route('prop-inv.index') }}">Inventory Masterlist</a>
               </div>
             </div>
             <!-- End Property and Assets -->
