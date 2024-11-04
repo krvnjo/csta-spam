@@ -35,6 +35,31 @@
       </div>
       <!-- End Users Header -->
 
+      <!-- Users Stats -->
+      <div class="row">
+        <!-- Total Users -->
+        <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
+          <div class="card h-100">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2">Total Users</h6>
+              <div class="row align-items-center gx-2">
+                <div class="col">
+                  <span class="js-counter display-4 text-dark">{{ $totalUsers }}</span>
+                  <span class="text-body fs-5 ms-1">from {{ $totalUsers }}</span>
+                </div>
+                <div class="col-auto">
+                  <span class="icon icon-soft-secondary icon-sm icon-circle ms-3">
+                    <i class="bi-people"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Total Users -->
+      </div>
+      <!-- End Users Stats -->
+
       <!-- Users DataTable Card -->
       <div class="card">
         <!-- Header -->
@@ -157,7 +182,7 @@
                       <div class="row">
                         <div class="col">
                           <div class="tom-select-custom">
-                            <select class="js-select js-datatable-filter form-select" data-target-column-index="7"
+                            <select class="js-select js-datatable-filter form-select" data-target-column-index="8"
                               data-hs-tom-select-options='{
                                 "allowEmptyOption": true,
                                 "hideSearch": true,
@@ -202,7 +227,7 @@
             }'>
             <thead class="thead-light">
               <tr>
-                <th class="w-th" style="width: 8%">
+                <th class="w-th">
                   @canAny('update user management, delete user management')
                     <input class="form-check-input" id="usersDatatableCheckAll" type="checkbox">
                   @else
@@ -241,8 +266,8 @@
                       </div>
                     </a>
                   </td>
-                  <td>{{ $user->user_name }}</td>
-                  <td>
+                  <td class="user-name">{{ $user->user_name }}</td>
+                  <td data-full-value="{{ implode(', ', [$user->role->name, $user->department->name]) }}">
                     <span class="d-block h5 mb-0">{{ $user->role->name }}</span>
                     <span class="d-block fs-5">{{ $user->department->name }}</span>
                   </td>
@@ -335,10 +360,11 @@
 @endsection
 
 @push('scripts')
+  <script src="{{ Vite::asset('resources/vendor/hs-counter/dist/hs-counter.min.js') }}"></script>
+  <script src="{{ Vite::asset('resources/vendor/appear/dist/appear.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/tom-select/dist/js/tom-select.complete.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/hs-file-attach/dist/hs-file-attach.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/imask/dist/imask.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/hs-toggle-password/dist/js/hs-toggle-password.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables/media/js/jquery.dataTables.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables.net.extensions/select/select.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
@@ -450,6 +476,11 @@
         HSBsDropdown.init();
 
 
+        // INITIALIZATION OF COUNTER
+        // =======================================================
+        new HSCounter('.js-counter')
+
+
         // INITIALIZATION OF SELECT
         // =======================================================
         HSCore.components.HSTomSelect.init(".js-select");
@@ -463,11 +494,6 @@
         // INITIALIZATION OF INPUT MASK
         // =======================================================
         HSCore.components.HSMask.init('.js-input-mask');
-
-
-        // INITIALIZATION OF TOGGLE PASSWORD
-        // =======================================================
-        new HSTogglePassword('.js-toggle-password');
       };
     })();
   </script>

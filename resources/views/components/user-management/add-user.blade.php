@@ -13,29 +13,28 @@
       <div class="modal-body">
         <form id="frmAddUser" method="POST" enctype="multipart/form-data" novalidate>
           @csrf
-          <!-- Profile Cover -->
-          <div class="profile-cover" style="height: 7rem;">
-            <div class="profile-cover-img-wrapper" style="height: 7rem;">
-              <img class="profile-cover-img" src="{{ Vite::asset('resources/img/1920x400/img1.jpg') }}" alt="Profile Cover" style="height: 7rem;">
-              <div class="profile-cover-content profile-cover-uploader p-3">
-                <button class="js-file-attach-reset-img profile-cover-uploader-label btn btn-sm btn-danger avatar-img-remove" id="btnRemoveUserImage" type="button">
-                  <i class="bi-trash-fill"></i>
-                  <span class="d-none d-sm-inline-block ms-1">Remove Avatar</span>
+          <!-- User Profile Cover -->
+          <div class="profile-cover cover-size">
+            <div class="profile-cover-img-wrapper cover-resize">
+              <img class="profile-cover-img cover-resize" src="{{ Vite::asset('resources/img/1920x400/img1.jpg') }}" alt="User Profile Cover">
+              <div class="profile-cover-content profile-cover-uploader p-sm-3 p-2">
+                <button class="js-file-attach-reset-img profile-cover-uploader-label btn btn-sm btn-danger avatar-img-remove" id="btnAddRemoveDisplayImage" type="button">
+                  <i class="bi-trash-fill"></i><span class="d-none d-sm-inline-block ms-1">Remove Avatar</span>
                 </button>
               </div>
             </div>
           </div>
-          <!-- End Profile Cover -->
+          <!-- End User Profile Cover -->
 
           <!-- User Image -->
           <label class="avatar avatar-xxl avatar-circle avatar-uploader profile-cover-avatar" for="imgAddImage">
-            <img class="avatar-img" id="imgDisplayImage" src="{{ asset('storage/img/user-images/default.jpg') }}" alt="User Image">
+            <img class="avatar-img" id="imgAddDisplayImage" src="{{ asset('storage/img/user-images/default.jpg') }}" alt="User Image">
             <input class="js-file-attach avatar-uploader-input avatar-img-user" id="imgAddImage" name="image"
               data-hs-file-attach-options='{
-                "textTarget": "#imgDisplayImage",
+                "textTarget": "#imgAddDisplayImage",
                 "mode": "image",
                 "targetAttr": "src",
-                "resetTarget": "#btnRemoveUserImage",
+                "resetTarget": "#btnAddRemoveDisplayImage",
                 "resetImg": "{{ asset('storage/img/user-images/default.jpg') }}",
                 "allowTypes": [".jpg", ".jpeg", ".png"]
               }'
@@ -46,10 +45,10 @@
           <!-- End User Image -->
 
           <!-- Username -->
-          <div class="row mb-4 mt-4">
+          <div class="row mb-4 mt-sm-4 mt-1">
             <label class="col-sm-3 col-form-label form-label" for="txtAddUser">Username</label>
             <div class="col-sm-9">
-              <input class="js-input-mask form-control" id="txtAddUsername" name="user" data-hs-mask-options='{
+              <input class="js-input-mask form-control" id="txtAddUser" name="user" data-hs-mask-options='{
                   "mask": "00-00000"
                 }' type="text"
                 placeholder="##-#####">
