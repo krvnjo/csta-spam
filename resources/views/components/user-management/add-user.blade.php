@@ -144,7 +144,7 @@
           <!-- End Email -->
 
           <!-- Phone -->
-          <div class="row">
+          <div class="row mb-4">
             <label class="col-sm-3 col-form-label form-label" for="txtAddPhone">Phone <span class="form-label-secondary">(Optional)</span></label>
             <div class="col-sm-9">
               <div class="input-group">
@@ -157,6 +157,46 @@
             </div>
           </div>
           <!-- End Phone -->
+
+          <!-- Password -->
+          <div class="row mb-4">
+            <label class="col-sm-3 col-form-label form-label" for="txtAddUserPass">Password</label>
+            <div class="col-sm-9">
+              <div class="input-group">
+                <input class="js-toggle-password form-control" id="txtAddUserPass" name="pass"
+                  data-hs-toggle-password-options='{
+                              "target": "#togglePassTarget",
+                              "defaultClass": "bi-eye-slash",
+                              "showClass": "bi-eye",
+                              "classChangeTarget": "#togglePassIcon"
+                            }'
+                  type="password" placeholder="Enter Password" />
+                <a class="input-group-text" id="togglePassTarget"><i class="bi-eye" id="togglePassIcon"></i></a>
+                <span class="invalid-feedback" id="valAddUserPass"></span>
+              </div>
+            </div>
+          </div>
+          <!-- End Password -->
+
+          <!-- Confirm Password -->
+          <div class="row">
+            <label class="col-sm-3 col-form-label form-label" for="txtAddUserConPass">Confirm Password</label>
+            <div class="col-sm-9">
+              <div class="input-group">
+                <input class="js-toggle-password form-control" id="txtAddUserConPass" name="confirmpass"
+                  data-hs-toggle-password-options='{
+                              "target": "#togglePassConTarget",
+                              "defaultClass": "bi-eye-slash",
+                              "showClass": "bi-eye",
+                              "classChangeTarget": "#toggleConPassIcon"
+                            }'
+                  type="password" placeholder="Confirm Password" />
+                <a class="input-group-text" id="togglePassConTarget"><i class="bi-eye" id="toggleConPassIcon"></i></a>
+                <span class="invalid-feedback" id="valAddUserConPass"></span>
+              </div>
+            </div>
+          </div>
+          <!-- End Confirm Password -->
         </form>
       </div>
       <!-- End Body -->
