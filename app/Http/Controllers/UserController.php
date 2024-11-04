@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Audit;
 use App\Models\Department;
 use App\Models\Role;
 use App\Models\User;
@@ -31,7 +32,7 @@ class UserController extends Controller
                 'users',
                 'roles',
                 'depts',
-                'totalUsers',
+                'totalUsers'
             )
         );
     }
@@ -47,8 +48,8 @@ class UserController extends Controller
                 'fname' => ucwords(strtolower(trim($request->input('fname')))),
                 'mname' => ucwords(strtolower(trim($request->input('mname')))),
                 'lname' => ucwords(strtolower(trim($request->input('lname')))),
-                'role' => (int)$request->input('role'),
-                'dept' => (int)$request->input('dept'),
+                'role' => $request->input('role'),
+                'dept' => $request->input('dept'),
                 'email' => trim($request->input('email')),
                 'phone' => trim($request->input('phone')),
                 'image' => $request->file('image'),
@@ -59,7 +60,7 @@ class UserController extends Controller
                 'user.regex' => 'The username must follow the format ##-#####.',
                 'user.unique' => 'This username is already taken!',
 
-                'fname.required' => 'Please enter a user name!',
+                'fname.required' => 'Please enter a first name!',
                 'fname.regex' => 'It must not contain numbers, special symbols, and multiple spaces.',
                 'fname.min' => 'The first name must be at least :min characters.',
                 'fname.max' => 'The first name may not be greater than :max characters.',
@@ -141,43 +142,57 @@ class UserController extends Controller
                     'success' => false,
                     'errors' => $userValidator->errors(),
                 ]);
-            } else {
-                $user = User::query()->create([
-                    'user_name' => trim($request->input('user')),
-                    'pass_hash' => bcrypt('Spampass123!'),
-                    'fname' => ucwords(trim($request->input('fname'))),
-                    'mname' => ucwords(trim($request->input('mname'))),
-                    'lname' => ucwords(trim($request->input('lname'))),
-                    'role_id' => $request->input('role'),
-                    'dept_id' => $request->input('dept'),
-                    'email' => trim($request->input('email')),
-                    'phone_num' => trim($request->input('phone')),
-                    'is_active' => 1,
-                ]);
-
-                if ($request->hasFile('image')) {
-                    if ($user->user_image && $user->user_image !== 'default.jpg' && Storage::exists('public/img/user-images/' . $user->user_image)) {
-                        Storage::delete('public/img/user-images/' . $user->user_image);
-                    }
-                    $image = $request->file('image');
-                    $filename = time() . "_" . uniqid() . '.' . $image->getClientOriginalExtension();
-
-                    $image->storeAs('public/img/user-images', $filename);
-                    $user->user_image = $filename;
-                } else {
-                    if ($request->input('avatar') === 'default.jpg' && $user->user_image !== 'default.jpg') {
-                        Storage::delete('public/img/user-images/' . $user->user_image);
-                        $user->user_image = 'default.jpg';
-                    }
-                }
-                $user->save();
-
-                return response()->json([
-                    'success' => true,
-                    'title' => 'Saved Successfully!',
-                    'text' => 'The user has been added successfully!',
-                ]);
             }
+
+            $user = User::create([
+                'user_name' => trim($request->input('user')),
+                'pass_hash' => bcrypt('Spampass123!'),
+                'fname' => ucwords(trim($request->input('fname'))),
+                'mname' => ucwords(trim($request->input('mname'))),
+                'lname' => ucwords(trim($request->input('lname'))),
+                'role_id' => $request->input('role'),
+                'dept_id' => $request->input('dept'),
+                'email' => trim($request->input('email')),
+                'phone_num' => trim($request->input('phone'))
+            ]);
+
+            if ($request->hasFile('image')) {
+                if ($user->user_image && $user->user_image !== 'default.jpg' && Storage::exists('public/img/user-images/' . $user->user_image)) {
+                    Storage::delete('public/img/user-images/' . $user->user_image);
+                }
+                $image = $request->file('image');
+                $filename = time() . "_" . uniqid() . '.' . $image->getClientOriginalExtension();
+
+                $image->storeAs('public/img/user-images', $filename);
+                $user->user_image = $filename;
+            } else {
+                if ($request->input('avatar') === 'default.jpg' && $user->user_image !== 'default.jpg') {
+                    Storage::delete('public/img/user-images/' . $user->user_image);
+                    $user->user_image = 'default.jpg';
+                }
+            }
+            $user->save();
+
+            activity()
+                ->useLog('Add User')
+                ->performedOn($user)
+                ->event('created')
+                ->withProperties([
+                    'username' => $user->user_name,
+                    'fullname' => $user->fname . ' ' . $user->lname,
+                    'role' => $user->role->name,
+                    'department' => $user->department->name,
+                    'email' => $user->email,
+                    'phone' => $user->phone_num,
+                    'user_image' => $user->user_image,
+                ])
+                ->log("A new user: '{$user->user_name}' has been created.");
+
+            return response()->json([
+                'success' => true,
+                'title' => 'Saved Successfully!',
+                'text' => 'The user has been added successfully!',
+            ]);
         } catch (Throwable) {
             return response()->json([
                 'success' => false,
@@ -193,7 +208,13 @@ class UserController extends Controller
     public function show(Request $request)
     {
         try {
-            $user = User::query()->findOrFail(Crypt::decryptString($request->input('id')));
+            $user = User::findOrFail(Crypt::decryptString($request->input('id')));
+
+            $createdBy = Audit::where('subject_type', User::class)->where('subject_id', $user->id)->where('event', 'created')->first();
+            $createdDetails = $this->getUserAuditDetails($createdBy);
+
+            $updatedBy = Audit::where('subject_type', User::class)->where('subject_id', $user->id)->where('event', 'updated')->latest()->first() ?? $createdBy;
+            $updatedDetails = $this->getUserAuditDetails($updatedBy);
 
             return response()->json([
                 'success' => true,
@@ -208,8 +229,12 @@ class UserController extends Controller
                 'login' => $user->last_login ? Carbon::parse($user->last_login)->format('D, F d, Y | h:i:s A') : 'Never',
                 'image' => asset('storage/img/user-images/' . $user->user_image),
                 'status' => $user->is_active,
-                'created' => $user->created_at->format('D, F d, Y | h:i:s A'),
-                'updated' => $user->updated_at->format('D, F d, Y | h:i:s A'),
+                'created_img' => $createdDetails['image'],
+                'created_by' => $createdDetails['name'],
+                'created_at' => $user->created_at->format('D, M d, Y | h:i A'),
+                'updated_img' => $updatedDetails['image'],
+                'updated_by' => $updatedDetails['name'],
+                'updated_at' => $user->updated_at->format('D, M d, Y | h:i A'),
             ]);
         } catch (Throwable) {
             return response()->json([
@@ -226,11 +251,11 @@ class UserController extends Controller
     public function edit(Request $request)
     {
         try {
-            $user = User::query()->findOrFail(Crypt::decryptString($request->input('id')));
+            $user = User::findOrFail(Crypt::decryptString($request->input('id')));
 
             return response()->json([
                 'success' => true,
-                'id' => $request->input('id'),
+                'id' => Crypt::encryptString($user->id),
                 'user' => $user->user_name,
                 'fname' => $user->fname,
                 'mname' => $user->mname,
@@ -255,11 +280,9 @@ class UserController extends Controller
      */
     public function update(Request $request)
     {
-        $user = User::query()->findOrFail(Crypt::decryptString($request->input('id')));
+        $user = User::findOrFail(Crypt::decryptString($request->input('id')));
         try {
-            if ($request->has('status')) {
-                $user->is_active = $request->input('status');
-            } else {
+            if (!$request->has('status')) {
                 $userValidationMessages = [
                     'user.required' => 'Please enter a username!',
                     'user.regex' => 'The username must follow the format ##-#####.',
@@ -373,6 +396,8 @@ class UserController extends Controller
                         $user->user_image = 'default.jpg';
                     }
                 }
+            } else {
+                $user->is_active = $request->input('status');
             }
             $user->save();
 

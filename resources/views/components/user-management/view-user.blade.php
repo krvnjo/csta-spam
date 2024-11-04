@@ -14,21 +14,21 @@
         <div class="col">
           <!-- User Image -->
           <div class="row">
-            <div class="profile-cover" style="height: 7.5rem;">
-              <div class="profile-cover-img-wrapper" style="height: 4.5rem;">
-                <img class="profile-cover-img" src="{{ Vite::asset('resources/img/1920x400/img1.jpg') }}" alt="Profile Cover" style="height: 4.5rem;">
+            <div class="profile-cover cover-size">
+              <div class="profile-cover-img-wrapper cover-resize">
+                <img class="profile-cover-img cover-resize" src="{{ Vite::asset('resources/img/1920x400/img1.jpg') }}" alt="Profile Cover">
               </div>
             </div>
             <div>
-              <div class="avatar avatar-xl avatar-circle avatar-uploader profile-cover-avatar">
-                <img class="avatar-img" id="imgViewUserImage" src="" alt="User Image">
+              <div class="avatar avatar-xxl avatar-circle avatar-uploader profile-cover-avatar">
+                <img class="avatar-img" id="imgViewUser" src="" alt="User Image">
               </div>
             </div>
           </div>
           <!-- End User Image -->
 
           <!-- User Name -->
-          <div class="row mb-4">
+          <div class="row mb-4 mt-3">
             <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
               <p class="form-label fw-semibold mb-0">User Name:</p>
             </div>
@@ -121,7 +121,7 @@
               <p class="form-label fw-semibold mb-0">Last Login:</p>
             </div>
             <div class="col-12 col-md-7 d-flex align-items-center">
-              <p class="fw-semibold mb-0" id="lblViewLastLogin"></p>
+              <p class="fw-semibold mb-0" id="lblViewLogin"></p>
             </div>
           </div>
           <!-- End Last Login -->

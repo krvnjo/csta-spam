@@ -48,15 +48,15 @@ $(document).ready(function () {
 
         const userConfig = {
           textFields: [
-            { key: 'user', selector: '#lblViewUsername' },
-            { key: 'fname', selector: '#lblViewUserFname' },
-            { key: 'mname', selector: '#lblViewUserMname' },
-            { key: 'lname', selector: '#lblViewUserLname' },
-            { key: 'role', selector: '#lblViewUserRole' },
-            { key: 'dept', selector: '#lblViewUserDept' },
-            { key: 'email', selector: '#lblViewUserEmail' },
-            { key: 'phone', selector: '#lblViewUserPhone' },
-            { key: 'login', selector: '#lblViewLastLogin' },
+            { key: 'user', selector: '#lblViewUser' },
+            { key: 'fname', selector: '#lblViewFname' },
+            { key: 'mname', selector: '#lblViewMname' },
+            { key: 'lname', selector: '#lblViewLname' },
+            { key: 'role', selector: '#lblViewRole' },
+            { key: 'dept', selector: '#lblViewDept' },
+            { key: 'email', selector: '#lblViewEmail' },
+            { key: 'phone', selector: '#lblViewPhone' },
+            { key: 'login', selector: '#lblViewLogin' },
             { key: 'created_by', selector: '#lblViewCreatedBy' },
             { key: 'updated_by', selector: '#lblViewUpdatedBy' },
             { key: 'created_at', selector: '#lblViewCreatedAt' },
@@ -71,12 +71,11 @@ $(document).ready(function () {
           },
 
           imageFields: [
-            { key: 'image', selector: '#imgViewUserImage' },
+            { key: 'image', selector: '#imgViewUser' },
             { key: 'created_img', selector: '#imgViewCreatedBy' },
             { key: 'updated_img', selector: '#imgViewUpdatedBy' },
           ],
         };
-
         displayResponseData(response, userConfig);
       },
       error: function (response) {
@@ -86,12 +85,7 @@ $(document).ready(function () {
   });
   // ============ End View a User ============ //
 
-  // ============ Update a User ============ //
-  const userEditModal = $('#modalEditUser');
-  const userEditForm = $('#frmEditUser');
-
-  handleUnsavedChanges(userEditModal, userEditForm, $('#btnEditSaveUser'));
-
+  // ============ Edit a User ============ //
   usersDatatable.on('click', '.btnEditUser', function () {
     const userId = $(this).closest('tr').find('td[data-user-id]').data('user-id');
 
@@ -101,30 +95,46 @@ $(document).ready(function () {
       data: { id: userId },
       success: function (response) {
         $('#txtEditUserId').val(response.id);
-        $('#txtEditUsername').val(response.user);
-        $('#txtEditUserFname').val(response.fname);
-        $('#txtEditUserMname').val(response.mname);
-        $('#txtEditUserLname').val(response.lname);
-        $('#selEditUserRole')[0].tomselect.setValue(response.role);
-        $('#selEditUserDept')[0].tomselect.setValue(response.dept);
-        $('#txtEditUserEmail').val(response.email);
-        $('#txtEditUserPhone').val(response.phone);
-        $('#imgEditDisplayUserImage').attr('src', response.image);
+        $('#txtEditUser').val(response.user);
+        $('#txtEditFname').val(response.fname);
+        $('#txtEditMname').val(response.mname);
+        $('#txtEditLname').val(response.lname);
+        $('#selEditRole')[0].tomselect.setValue(response.role);
+        $('#selEditDept')[0].tomselect.setValue(response.dept);
+        $('#txtEditEmail').val(response.email);
+        $('#txtEditPhone').val(response.phone);
+        $('#imgEditDisplayImage').attr('src', response.image);
 
         userEditModal.modal('toggle');
       },
       error: function (response) {
-        showErrorAlert(response.responseJSON, userEditModal, userEditForm);
+        showResponseAlert(response, 'error');
       },
     });
   });
+  // ============ End Edit a User ============ //
+
+  // ============ Update a User ============ //
+  const userEditModal = $('#modalEditUser');
+  const userEditForm = $('#frmEditUser');
+  const userEditSaveBtn = $('#btnEditSaveUser');
+
+  handleUnsavedChanges(userEditModal, userEditForm, userEditSaveBtn);
 
   userEditForm.on('submit', function (e) {
     e.preventDefault();
+    toggleButtonState(userEditSaveBtn, true);
 
     const editFormData = new FormData(userEditForm[0]);
+
     editFormData.append('_method', 'PATCH');
-    editFormData.append('avatar', $('#imgEditDisplayUserImage').attr('src').split('/').pop());
+    editFormData.append('id', $('#txtEditUserId').val());
+    editFormData.append('avatar', $('#imgEditDisplayImage').attr('src').split('/').pop());
+
+    // Display the FormData content
+    for (let [key, value] of editFormData.entries()) {
+      console.log(`${key}: ${value}`);
+    }
 
     $.ajax({
       url: '/user-management/users',
@@ -134,80 +144,38 @@ $(document).ready(function () {
       contentType: false,
       success: function (response) {
         if (response.success) {
-          showSuccessAlert(response, userEditModal, userEditForm);
+          showResponseAlert(response, 'success', userEditModal, userEditForm);
         } else {
-          if (response.errors.user) {
-            $('#txtEditUsername').addClass('is-invalid');
-            $('#valEditUsername').text(response.errors.user[0]);
-          }
-
-          if (response.errors.fname) {
-            $('#txtEditUserFname').addClass('is-invalid');
-            $('#valEditUserFname').text(response.errors.fname[0]);
-          }
-
-          if (response.errors.mname) {
-            $('#txtEditUserMname').addClass('is-invalid');
-            $('#valEditUserMname').text(response.errors.mname[0]);
-          }
-
-          if (response.errors.lname) {
-            $('#txtEditUserLname').addClass('is-invalid');
-            $('#valEditUserLname').text(response.errors.lname[0]);
-          }
-
-          if (response.errors.role) {
-            $('#selEditUserRole').next('.ts-wrapper').addClass('is-invalid');
-            $('#valEditUserRole').text(response.errors.role[0]);
-          }
-
-          if (response.errors.dept) {
-            $('#selEditUserDept').next('.ts-wrapper').addClass('is-invalid');
-            $('#valEditUserDept').text(response.errors.dept[0]);
-          }
-
-          if (response.errors.email) {
-            $('#txtEditUserEmail').addClass('is-invalid');
-            $('#valEditUserEmail').text(response.errors.email[0]);
-          }
-
-          if (response.errors.phone) {
-            $('#txtEditUserPhone').addClass('is-invalid');
-            $('#valEditUserPhone').text(response.errors.phone[0]);
-          }
-
-          if (response.errors.image) {
-            $('#valEditUserImage').removeClass('d-none').text(response.errors.image[0]);
-          }
+          handleValidationErrors(response, 'Edit');
+          toggleButtonState(userEditSaveBtn, false);
         }
       },
       error: function (response) {
-        showErrorAlert(response.responseJSON, userEditModal, userEditForm);
+        showResponseAlert(response, 'error', userEditModal, userEditForm);
       },
     });
   });
 
-  usersDatatable.on('click', '.btnStatusUser', function () {
+  usersDatatable.on('click', '.btnSetUser', function () {
     const userId = $(this).closest('tr').find('td[data-user-id]').data('user-id');
-    const userSetStatus = $(this).data('status');
-    let statusName;
-
-    if (userSetStatus === 1) {
-      statusName = 'active';
-    } else {
-      statusName = 'inactive';
-    }
+    const userName = $(this).closest('tr').find('.user-name').text().trim();
+    const userStatus = $(this).data('status');
+    const statusName = userStatus === 1 ? 'active' : 'inactive';
 
     Swal.fire({
-      title: 'Change status?',
-      text: 'Are you sure you want to set it to ' + statusName + '?',
+      title: 'Update user status?',
+      text: `Are you sure you want to set the user "${userName}" to ${statusName}?`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, set it to ' + statusName + '!',
+      focusCancel: true,
+      confirmButtonText: `Yes, set it to ${statusName}!`,
       cancelButtonText: 'No, cancel!',
       customClass: {
-        confirmButton: 'btn btn-primary',
-        cancelButton: 'btn btn-secondary',
+        popup: 'bg-light rounded-3 shadow fs-4',
+        title: 'fs-1',
+        htmlContainer: 'text-muted text-center fs-4',
+        confirmButton: 'btn btn-sm btn-white',
+        cancelButton: 'btn btn-sm btn-secondary',
       },
     }).then((result) => {
       if (result.isConfirmed) {
@@ -216,13 +184,13 @@ $(document).ready(function () {
           method: 'PATCH',
           data: {
             id: userId,
-            status: userSetStatus,
+            status: userStatus,
           },
           success: function (response) {
-            showSuccessAlert(response);
+            showResponseAlert(response, 'success');
           },
           error: function (response) {
-            showErrorAlert(response.responseJSON);
+            showResponseAlert(response, 'error');
           },
         });
       }

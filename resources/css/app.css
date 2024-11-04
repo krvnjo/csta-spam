@@ -96,8 +96,32 @@
   max-width: 5rem;
 }
 
+.cover-resize,
+.cover-size {
+  height: 7rem !important;
+}
+
 @media (max-width: 576px) {
   .custom-dropdown {
     width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .avatar-xxl,
+  .avatar-xxl .avatar-initials {
+    width: 6rem !important;
+    height: 6rem !important;
+  }
+
+  .avatar-xxl .avatar-uploader-icon {
+    width: 2rem !important;
+    height: 2rem !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .cover-resize {
+    height: 5.3rem !important;
   }
 }
