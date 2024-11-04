@@ -355,13 +355,21 @@ function filterDatatableAndCount(filterDatatable, filterCount) {
     const filterVal = $this.val();
     const targetColumnIndex = $this.data('target-column-index');
 
-    if (!filterVal) return;
+    if (!filterVal || (Array.isArray(filterVal) && filterVal.length === 0)) return;
 
-    selectedFilterCount++;
+    if (Array.isArray(filterVal)) {
+      selectedFilterCount += filterVal.length;
+    } else if (filterVal !== '') {
+      selectedFilterCount++;
+    }
 
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
       const cell = filterDatatable.cell(dataIndex, targetColumnIndex).node();
       const fullValue = $(cell).attr('data-full-value') || data[targetColumnIndex].trim();
+
+      if (Array.isArray(filterVal)) {
+        return filterVal.every((val) => fullValue.includes(val));
+      }
 
       return fullValue.includes(filterVal);
     });
