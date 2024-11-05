@@ -125,3 +125,9 @@
     height: 5.3rem !important;
   }
 }
+
+@media (max-width: 576px) {
+  .card-login-padding {
+    padding: 2rem !important;
+  }
+}

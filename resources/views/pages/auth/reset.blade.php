@@ -1,7 +1,7 @@
 @extends('layouts.guest')
 
 @section('title')
-  Log In
+  Reset Password
 @endsection
 
 @push('styles')
@@ -20,7 +20,7 @@
     </div>
     <!-- End Shape -->
 
-    <!-- Login Card -->
+    <!-- Reset Password Card -->
     <div class="container min-vh-100 d-flex justify-content-center align-items-center">
       <div class="row justify-content-center w-100" style="max-width: 30rem;">
         <!-- Logo -->
@@ -32,55 +32,80 @@
         <!-- Card -->
         <div class="card card-lg p-1">
           <div class="card-body card-login-padding">
-            <form id="frmLoginUser" method="POST" novalidate>
+            <form id="frmResetPassword" method="POST" novalidate>
               @csrf
+              <input name="token" type="hidden" value="{{ $token }}">
+
               <!-- Title -->
               <div class="pb-5 text-center">
-                <h1 class="display-5">Welcome!</h1>
-                <p>Kindly log in with your username and password.</p>
+                <h1 class="display-5">Reset your Password</h1>
+                <p>Kindly enter your username and new password.</p>
               </div>
               <!-- End Title -->
 
               <!-- Username -->
               <div class="form-group mb-4">
-                <label class="form-label" for="txtLoginUser">Username</label>
-                <input class="js-input-mask form-control" id="txtLoginUser" name="user" data-hs-mask-options='{
+                <label class="form-label" for="txtResetUser">Username</label>
+                <input class="js-input-mask form-control" id="txtResetUser" name="user" data-hs-mask-options='{
                     "mask": "00-00000"
                   }' type="text"
                   placeholder="Enter your username">
-                <span class="invalid-feedback" id="valLoginUser"></span>
+                <span class="invalid-feedback" id="valResetUser"></span>
               </div>
               <!-- End Username -->
 
-              <!-- Password -->
-              <div class="form-group mb-5">
-                <label class="form-label" for="txtLoginPass">Password</label>
+              <!-- Email Address -->
+              <div class="form-group mb-4">
+                <label class="form-label" for="txtResetEmail">Email Address</label>
+                <input class="form-control" id="txtResetEmail" name="email" placeholder="Enter your email address">
+                <span class="invalid-feedback" id="valResetEmail"></span>
+              </div>
+              <!-- End Email Address -->
+
+              <!-- New Password -->
+              <div class="form-group mb-4">
+                <label class="form-label" for="txtResetPass">New Password</label>
                 <div class="input-group">
-                  <input class="js-toggle-password form-control" id="txtLoginPass" name="pass"
+                  <input class="js-toggle-password form-control" id="txtResetPass" name="pass"
                     data-hs-toggle-password-options='{
-                      "target": "#togglePassTarget",
+                      "target": [".toggle-pass-1", ".toggle-pass-2"],
                       "defaultClass": "bi-eye-slash",
                       "showClass": "bi-eye",
-                      "classChangeTarget": "#togglePassIcon"
+                      "classChangeTarget": "#togglePassIcon1"
                     }'
-                    type="password" placeholder="Enter your password" />
-                  <a class="input-group-text" id="togglePassTarget"><i class="bi-eye" id="togglePassIcon"></i></a>
-                  <span class="invalid-feedback" id="valLoginPass"></span>
+                    type="password" placeholder="Enter your new password" />
+                  <a class="input-group-text toggle-pass-1"><i class="bi-eye" id="togglePassIcon1"></i></a>
+                  <span class="invalid-feedback" id="valResetPass"></span>
                 </div>
               </div>
-              <!-- End Password -->
+              <!-- End New Password -->
 
-              <!-- Login and Forgot Password Button -->
+              <!-- Confirm Password -->
+              <div class="form-group mb-5">
+                <label class="form-label" for="txtResetConfirm">Confirm Password</label>
+                <div class="input-group">
+                  <input class="js-toggle-password form-control" id="txtResetConfirm" name="confirm"
+                    data-hs-toggle-password-options='{
+                      "target": [".toggle-pass-1", ".toggle-pass-2"],
+                      "defaultClass": "bi-eye-slash",
+                      "showClass": "bi-eye",
+                      "classChangeTarget": "#togglePassIcon2"
+                    }'
+                    type="password" placeholder="Confirm your password" />
+                  <a class="input-group-text toggle-pass-2"><i class="bi-eye" id="togglePassIcon2"></i></a>
+                  <span class="invalid-feedback" id="valResetConfirm"></span>
+                </div>
+              </div>
+              <!-- End Confirm Password -->
+
+              <!-- Reset Password Button -->
               <div class="d-grid gap-2">
-                <button class="btn btn-primary btn-lg" id="btnLoginUser" type="submit">
-                  <span class="spinner-label">Log In</span>
+                <button class="btn btn-primary btn-lg" id="btnResetPassword" type="submit">
+                  <span class="spinner-label">Reset Password</span>
                   <span class="spinner-border spinner-border-sm d-none"></span>
                 </button>
-                <div class="text-center">
-                  <a class="btn btn-link" href="{{ route('password.request') }}">Forgot your password?</a>
-                </div>
               </div>
-              <!-- End Login and Forgot Password Button -->
+              <!-- End Reset Password Button -->
             </form>
           </div>
         </div>

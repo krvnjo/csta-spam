@@ -24,11 +24,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['guest', 'noCache'])->group(function () {
     // Login Routes
-    Route::name('auth.')->controller(AuthController::class)->group(function () {
-        Route::get('/login', 'index')->name('index');
-        Route::post('/login', 'login')->name('login');
-        Route::get('/forgot-password', 'forgot')->name('forgot');
-        Route::post('/forgot-password', 'reset')->name('reset');
+    Route::controller(AuthController::class)->group(function () {
+        Route::get('/login', 'index')->name('auth.index');
+        Route::post('/login', 'login')->name('auth.login');
+        Route::get('/forgot-password', 'forgot_index')->name('password.request');
+        Route::post('/forgot-password', 'forgot')->name('password.email');
+        Route::get('/reset-password/{token}', 'reset_index')->name('password.reset');
+        Route::post('/reset-password', 'reset')->name('password.update');
     });
 });
 
