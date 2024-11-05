@@ -69,6 +69,41 @@
           </div>
 
           <div class="row">
+            <div class="col-lg-4">
+              <div class="mb-3">
+                <label class="form-label" for="txtEditPurchasePrice">Purchase Price:
+                  <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text">₱</span>
+                  <input class="form-control text-end" id="txtEditPurchasePrice" name="purchasePrice" type="number" step="0.01" min="0" placeholder="Purchase Price" autocomplete="off" />
+                  <span class="invalid-feedback" id="valEditPurchasePrice"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4">
+              <div class="mb-3">
+                <label class="form-label" for="txtEditResidualValue">Residual Value:
+                  <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text">₱</span>
+                  <input class="form-control text-end" id="txtEditResidualValue" name="residualValue" type="number" step="0.01" min="0" placeholder="Residual Value" autocomplete="off" />
+                  <span class="invalid-feedback" id="valEditResidualValue"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4">
+              <div class="mb-3">
+                <label class="form-label" for="txtEditUsefulLife">Useful Life (in years):
+                  <span class="text-danger">*</span></label>
+                <input class="form-control" id="txtEditUsefulLife" name="usefulLife" type="number" placeholder="Useful Life" min="0" autocomplete="off" />
+                <span class="invalid-feedback" id="valEditUsefulLife"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
             <div class="col-lg">
               <div class="mb-3">
                 <label class="form-label" for="txtDescription">Description:</label>

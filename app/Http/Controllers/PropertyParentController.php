@@ -208,7 +208,7 @@ class PropertyParentController extends Controller
                     'image' => $imageFileName,
                     'brand_id' => (int)request('brand'),
                     'subcateg_id' => (int)request('category'),
-                    'description' => trim(request('description')),
+                    'description' => ucwords(strtolower(trim(request('description')))),
                     'quantity' => request('quantity'),
                     'purchase_price' => (float)request('purchasePrice'),
                     'residual_value' => (float)request('residualValue'),
@@ -323,6 +323,9 @@ class PropertyParentController extends Controller
                 'brand_id' => $propertyParent->brand_id,
                 'subcateg_id' => $propertyParent->subcateg_id,
                 'description' => $propertyParent->description,
+                'purchase_price' => $propertyParent->purchase_price,
+                'residual_value' => $propertyParent->residual_value,
+                'useful_life' => $propertyParent->useful_life,
             ]);
         } catch (Throwable) {
             return response()->json([
@@ -352,6 +355,20 @@ class PropertyParentController extends Controller
                 'description.regex' => 'The description may only contain letters, numbers, spaces, and some special characters.',
                 'description.min' => 'The description must be at least :min characters.',
                 'description.max' => 'The description may not be greater than :max characters.',
+
+                'purchasePrice.required' => 'Please enter the purchase price!',
+                'purchasePrice.min' => 'The purchase price must be at least :min.',
+                'purchasePrice.numeric' => 'The purchase price must be a number.',
+                'purchasePrice.regex' => 'The purchase price can only have up to 2 decimal places.',
+
+                'residualValue.required' => 'Please enter the residual value!',
+                'residualValue.numeric' => 'The residual value must be a number.',
+                'residualValue.regex' => 'The residual value can only have up to 2 decimal places.',
+
+                'usefulLife.required' => 'Please enter the useful life!',
+                'usefulLife.min' => 'The useful life must be at least :min.',
+                'usefulLife.integer' => 'The useful life must be a whole number.',
+                'usefulLife.max' => 'The useful life may not be greater than :max.',
             ];
 
             $propertyValidator = Validator::make($request->all(), [
@@ -370,6 +387,23 @@ class PropertyParentController extends Controller
                     'min:3',
                     'max:100',
                 ],
+                'purchasePrice' => [
+                    'required',
+                    'numeric',
+                    'regex:/^\d+(\.\d{1,2})?$/',
+                    'min:1'
+                ],
+                'residualValue' => [
+                    'required',
+                    'numeric',
+                    'regex:/^\d+(\.\d{1,2})?$/'
+                ],
+                'usefulLife' => [
+                    'required',
+                    'integer',
+                    'min:1',
+                    'max:500'
+                ],
             ], $propertyValidationMessages);
 
             if ($propertyValidator->fails()) {
@@ -382,6 +416,9 @@ class PropertyParentController extends Controller
                 $property->subcateg_id = $request->input('category');
                 $property->brand_id = $request->input('brand');
                 $property->description = $request->input('description');
+                $property->purchase_price = floatval($request->input('purchasePrice'));
+                $property->residual_value = floatval($request->input('residualValue'));
+                $property->useful_life = intval($request->input('usefulLife'));
             }
             if ($request->hasFile('image')) {
                 $file = $request->file('image');

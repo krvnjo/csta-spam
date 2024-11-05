@@ -23,7 +23,30 @@ class PropertyInventoryController extends Controller
             ->whereHas('propertyChildren', function ($query) {
                 $query->whereNotNull('inventory_date');
             })
-            ->get();
+            ->get()
+            ->map(function ($property) {
+                if ($property->purchase_price && $property->useful_life && isset($property->residual_value)) {
+                    $annualDepreciation = ($property->residual_value - $property->purchase_price) / $property->useful_life;
+                    $property->annualDepreciation = round($annualDepreciation, 2);
+
+                    $property->depreciationRate = round(($annualDepreciation / $property->purchase_price) * 100, 2);
+
+                    $depreciationValues = [];
+                    $currentValue = $property->purchase_price;
+
+                    for ($i = 0; $i <= $property->useful_life; $i++) {
+                        $depreciationValues[] = round($currentValue, 2);
+                        $currentValue += $annualDepreciation;
+                    }
+
+                    $property->depreciationValues = $depreciationValues;
+                } else {
+                    $property->depreciationValues = [];
+                    $property->annualDepreciation = 0;
+                    $property->depreciationRate = 0;
+                }
+                return $property;
+            });
 
         $propertyChildrenCount = PropertyChild::whereNotNull('inventory_date')
             ->where('is_active', 1)
