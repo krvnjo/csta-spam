@@ -20,6 +20,9 @@ class ItemSeeder extends Seeder
                 'image' => 'default.jpg',
                 'quantity' => 15,
                 'is_active' => 1,
+                'purchase_price' => 25000.00,
+                'residual_value' => 5000.00,
+                'useful_life' => 5,
             ],
             [
                 'name' => 'C655 QLED',
@@ -29,6 +32,9 @@ class ItemSeeder extends Seeder
                 'image' => 'default.jpg',
                 'quantity' => 20,
                 'is_active' => 1,
+                'purchase_price' => 15000.00,
+                'residual_value' => 3000.00,
+                'useful_life' => 5,
             ],
             [
                 'name' => 'Teacher\'s Table',
@@ -38,6 +44,9 @@ class ItemSeeder extends Seeder
                 'image' => 'default.jpg',
                 'quantity' => 25,
                 'is_active' => 1,
+                'purchase_price' => 1500,
+                'residual_value' => 400,
+                'useful_life' => 8,
             ],
         ];
 

@@ -13,7 +13,10 @@ $(document).ready(function () {
     quantity: $("#txtQuantity"),
     acquiredType: $("#cbxAcquiredType"),
     acquiredDate: $("#dtpAcquired"),
-    condition: $("#cbxCondition")
+    condition: $("#cbxCondition"),
+    purchasePrice: $("#txtPurchasePrice"),
+    residualValue: $("#txtResidualValue"),
+    usefulLife: $("#txtUsefulLife")
   };
 
   const nonRequiredFields = {
@@ -33,7 +36,10 @@ $(document).ready(function () {
     acquiredType: $("#valAddAcquired"),
     acquiredDate: $("#valAddDtpAcq"),
     condition: $("#valAddCondition"),
-    warranty: $("#valAddWarranty")
+    warranty: $("#valAddWarranty"),
+    purchasePrice: $("#valAddPurchasePrice"),
+    residualValue: $("#valAddResidualValue"),
+    usefulLife: $("#valAddUsefulLife")
   };
 
   handleUnsavedChanges(propertyAddModal, propertyAddForm, propertyAddSaveBtn);

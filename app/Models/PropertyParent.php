@@ -21,7 +21,9 @@ class PropertyParent extends Model
         'description',
         'quantity',
         'image',
-        'categ_id'
+        'purchase_price',
+        'residual_value',
+        'useful_life'
     ];
 
     public function brand(): BelongsTo

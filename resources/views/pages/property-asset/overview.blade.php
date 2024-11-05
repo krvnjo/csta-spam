@@ -27,9 +27,9 @@
             <h1 class="page-header-title">Item Stock Management</h1>
             <p class="page-header-text">Manage and organize stock records.</p>
             <p class="page-header-text">
-            <span class="legend-indicator bg-danger "></span>No stock
+              <span class="legend-indicator bg-danger "></span>No stock
               <span class="ms-2"></span>
-            <span class="legend-indicator bg-info"></span>Low stock
+              <span class="legend-indicator bg-info"></span>Low stock
             </p>
           </div>
           <!-- End Col -->
@@ -226,7 +226,7 @@
           <table class="table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table table table-hover w-100" id="propertyOverviewDatatable"
             data-hs-datatables-options='{
                    "columnDefs": [{
-                      "targets": [0, 7],
+                      "targets": [0, 9],
                       "orderable": false
                     }],
                    "order": [],
@@ -251,6 +251,8 @@
                 <th class="col-3">Description</th>
                 <th class="col-2">Category</th>
                 <th class="col-2">Brand</th>
+                <th class="col-2">Depreciation</th>
+                <th class="col-2">Deprecation Rate</th>
                 <th class="col-1 text-center">Total Quantity</th>
                 <th class="col-3">Action</th>
               </tr>
@@ -295,7 +297,75 @@
                     <span class="d-block fs-5">{{ $propertyParent->subcategory->name }}</span>
                   </td>
                   <td>{{ $propertyParent->brand->name }}</td>
-                  <td style="text-align: center;">
+                  <td>
+                    <div class="chartjs-custom" style="height: 2rem; width: 7rem;">
+                      <canvas class="js-chart"
+                                  data-hs-chartjs-options='{
+                          "type": "line",
+                          "data": {
+                              "labels": {{ json_encode(range(0, $propertyParent->useful_life)) }},
+                              "datasets": [{
+                                  "data": {{ json_encode($propertyParent->depreciationValues) }},
+                                  "backgroundColor": "transparent",
+                                  "borderColor": "#377dff",
+                                  "borderWidth": 2,
+                                  "pointBackgroundColor": "transparent",
+                                  "pointHoverBackgroundColor": "#377dff",
+                                  "pointBorderColor": "transparent",
+                                  "pointHoverBorderColor": "#377dff",
+                                  "pointRadius": 2,
+                                  "pointHoverRadius": 2,
+                                  "tension": 0
+                              }]
+                          },
+                          "options": {
+                           "scales": {
+                              "y": {
+                                "display": false
+                              },
+                              "x": {
+                                "grid": {
+                                  "display": false,
+                                  "drawBorder": false
+                                },
+                                "ticks": {
+                                  "labelOffset": 40,
+                                  "maxTicksLimit": 6,
+                                  "padding": 20,
+                                  "maxRotation": 0,
+                                  "minRotation": 0,
+                                  "fontSize": 12,
+                                  "fontColor": "rgba(0, 0, 0, 0.4)"
+                                }
+                              }
+                           },
+                           "hover": {
+                               "mode": "nearest",
+                               "intersect": false
+                           },
+                           "plugins": {
+                              "tooltip": {
+                                "prefix": "₱",
+                                "intersect": false
+                              }
+                           }
+                         }
+                      }'></canvas>
+                    </div>
+                  </td>
+                  <td class="text-center">
+                    @php
+                      $isAppreciated = $propertyParent->depreciationRate >= 0;
+                      $badgeClass = $isAppreciated ? 'bg-soft-success text-success' : 'bg-soft-danger text-danger';
+                      $iconClass = $isAppreciated ?  'bi-graph-up' : 'bi-graph-down';
+                      $annualDepreciation = number_format($propertyParent->annualDepreciation, 2);
+                      $formattedDepreciationRate = number_format($propertyParent->depreciationRate, 2);
+                    @endphp
+                    <span class="badge {{ $badgeClass }} p-1" data-bs-toggle="tooltip" title="₱{{ $annualDepreciation }} per year">
+                        <i class="{{ $iconClass }}"></i> {{ abs($formattedDepreciationRate) }}%
+                    </span>
+                  </td>
+                  <td class="text-center">
                     {{ $propertyParent->quantity }}
                   </td>
                   <td>
@@ -659,6 +729,8 @@
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/dropzone/dist/min/dropzone.min.js') }}"></script>
+  <script src="{{ Vite::asset('resources/vendor/chart.js/dist/chart.min.js') }}"></script>
+  <script src="{{ Vite::asset('resources/vendor/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js') }}"></script>
 
   <!-- JS Modules -->
   <script src="{{ Vite::asset('resources/js/modules/properties-assets/property-stock-crud.js') }}"></script>
@@ -762,7 +834,11 @@
             customize: function(win) {
 
               function formatDate(date) {
-                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                const options = {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                };
                 return date.toLocaleDateString(undefined, options);
               }
 
@@ -863,6 +939,10 @@
         // INITIALIZATION OF BOOTSTRAP DROPDOWN
         // =======================================================
         HSBsDropdown.init()
+
+        // INITIALIZATION OF CHARTJS
+        // =======================================================
+        HSCore.components.HSChartJS.init('.js-chart')
       }
     })()
   </script>

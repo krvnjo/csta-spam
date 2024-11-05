@@ -29,7 +29,7 @@ return new class extends Migration {
             $table->unsignedInteger('quantity')->default(1);
             $table->decimal('purchase_price', 15, 2)->nullable();
             $table->decimal('residual_value', 15, 2)->default(0);
-            $table->unsignedInteger('useful_life')->nullable();
+            $table->unsignedInteger('useful_life')->default(1);
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
             $table->softDeletes();

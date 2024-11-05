@@ -87,9 +87,9 @@
                   <span class="text-danger">*</span></label>
                 <div class="input-group">
                   <span class="input-group-text">₱</span>
-                  <input class="form-control text-end" id="txtPurchasePrice" name="purchase_price" type="number" step="0.01" placeholder="Purchase Price" autocomplete="off" required />
+                  <input class="form-control text-end" id="txtPurchasePrice" name="purchasePrice" type="number" step="0.01" min="0" placeholder="Purchase Price" autocomplete="off" required />
+                  <span class="invalid-feedback" id="valAddPurchasePrice"></span>
                 </div>
-                <span class="invalid-feedback" id="valAddPurchasePrice"></span>
               </div>
             </div>
 
@@ -99,9 +99,9 @@
                   <span class="text-danger">*</span></label>
                 <div class="input-group">
                   <span class="input-group-text">₱</span>
-                  <input class="form-control text-end" id="txtResidualValue" name="residual_value" type="number" step="0.01" placeholder="Residual Value" autocomplete="off" required />
+                  <input class="form-control text-end" id="txtResidualValue" name="residualValue" type="number" step="0.01" min="0" placeholder="Residual Value" autocomplete="off" required />
+                  <span class="invalid-feedback" id="valAddResidualValue"></span>
                 </div>
-                <span class="invalid-feedback" id="valAddResidualValue"></span>
               </div>
             </div>
 
@@ -109,7 +109,7 @@
               <div class="mb-3">
                 <label class="form-label" for="txtUsefulLife">Useful Life (in years):
                   <span class="text-danger">*</span></label>
-                <input class="form-control" id="txtUsefulLife" name="useful_life" type="number" placeholder="Useful Life" autocomplete="off" required />
+                <input class="form-control" id="txtUsefulLife" name="usefulLife" type="number" placeholder="Useful Life" min="0" autocomplete="off" required />
                 <span class="invalid-feedback" id="valAddUsefulLife"></span>
               </div>
             </div>
