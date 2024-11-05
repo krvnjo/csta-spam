@@ -24,7 +24,7 @@
                 <li class="breadcrumb-item active" aria-current="page">Inventory Masterlist</li>
               </ol>
             </nav>
-            <h1 class="page-header-title">Asset Inventory Management</h1>
+            <h1 class="page-header-title">Item Inventory Management</h1>
             <p class="page-header-text">Manage and organize inventory records.</p>
           </div>
           <!-- End Col -->

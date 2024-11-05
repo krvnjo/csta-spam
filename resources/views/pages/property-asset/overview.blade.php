@@ -24,7 +24,7 @@
                 <li class="breadcrumb-item active" aria-current="page">Stock Masterlist</li>
               </ol>
             </nav>
-            <h1 class="page-header-title">Asset Stock Management</h1>
+            <h1 class="page-header-title">Item Stock Management</h1>
             <p class="page-header-text">Manage and organize stock records.</p>
             <p class="page-header-text">
             <span class="legend-indicator bg-danger "></span>No stock
