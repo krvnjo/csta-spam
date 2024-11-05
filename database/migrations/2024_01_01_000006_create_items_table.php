@@ -27,6 +27,9 @@ return new class extends Migration {
             $table->string('description')->nullable();
             $table->string('image')->nullable()->default('default.jpg');
             $table->unsignedInteger('quantity')->default(1);
+            $table->decimal('purchase_price', 15, 2)->nullable();
+            $table->decimal('residual_value', 15, 2)->default(0);
+            $table->unsignedInteger('useful_life')->nullable();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
             $table->softDeletes();
@@ -50,6 +53,26 @@ return new class extends Migration {
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
             $table->softDeletes();
+        });
+
+        Schema::create('property_consumables', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 255)->unique();
+            $table->string('description')->nullable();
+            $table->unsignedInteger('quantity')->default(1);
+            $table->unsignedTinyInteger('is_active')->default(1);
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('consumption_logs', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(PropertyParent::class, 'prop_id')->constrained('property_parents')->cascadeOnDelete();
+            $table->unsignedInteger('quantity_consumed');
+            $table->date('consumed_at');
+            $table->string('purpose')->nullable();
+            $table->string('remarks')->nullable();
+            $table->timestamps();
         });
     }
 

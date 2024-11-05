@@ -11,6 +11,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\HelpController;
 use App\Http\Controllers\PropertyChildController;
+use App\Http\Controllers\PropertyConsumableController;
 use App\Http\Controllers\PropertyInventoryController;
 use App\Http\Controllers\PropertyParentController;
 use App\Http\Controllers\RecycleController;
@@ -110,6 +111,18 @@ Route::middleware(['auth', 'noCache'])->group(function () {
         });
     });
 
+    // Consumable Routes
+    Route::middleware('checkPermission:view item management')->prefix('properties-assets/consumable')->name('prop-consumable.')->controller(PropertyConsumableController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store')->middleware('checkPermission:create item management');
+        Route::get('/show', 'show')->name('show')->middleware('expectsJson');
+        Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
+        Route::patch('/', 'update')->name('update')->middleware('checkPermission:update item management');
+        Route::delete('/', 'destroy')->name('delete')->middleware('checkPermission:delete item management');
+        Route::fallback(function () {
+            abort(404);
+        });
+    });
 
     // ============ End Item Inventory Management Routes ============ //
 
