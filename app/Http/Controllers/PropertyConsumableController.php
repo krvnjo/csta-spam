@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PropertyConsumable;
 use App\Models\Unit;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
@@ -241,4 +242,46 @@ class PropertyConsumableController extends Controller
             ], 500);
         }
     }
+
+    public function restock(Request $request): JsonResponse
+    {
+        try {
+            $restockIds = explode(',', $request->input('id'));
+            $newQuantity = $request->input('totalQuantity');
+
+            $validator = Validator::make($request->all(), [
+                'restockQuantity' => 'required|integer|min:1|max:99999',
+            ], [
+                'restockQuantity.required' => 'Please enter the quantity!',
+                'restockQuantity.integer' => 'The quantity must be a whole number.',
+                'restockQuantity.min' => 'The quantity must be at least :min.',
+                'restockQuantity.max' => 'The quantity may not be greater than :max.',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validator->errors(),
+                ]);
+            }
+
+            PropertyConsumable::whereIn('id', $restockIds)->update([
+                'quantity' => $newQuantity,
+                'updated_at' => now(),
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'title' => 'Item Restocked Successfully!',
+                'text' => 'The item has been restocked.',
+            ]);
+        } catch (Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Oops! Something went wrong.',
+                'message' => 'An error occurred while restocking the item: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
 }

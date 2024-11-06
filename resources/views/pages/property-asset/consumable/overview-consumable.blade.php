@@ -197,9 +197,14 @@
                               aria-expanded="false"></button>
 
                       <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="consumableEditDropdown">
-                        <button class="dropdown-item" type="button">
-                          <i class="bi bi-plus-circle-fill dropdown-item-icon"></i>  Restock
+                        <button class="dropdown-item btnRestockConsumable"
+                                data-restock-id="{{ $propertyConsumable->id }}"
+                                data-consumable-name="{{ $propertyConsumable->name }}"
+                                data-past-quantity="{{ $propertyConsumable->quantity }}"
+                        type="button">
+                        <i class="bi bi-plus-circle-fill dropdown-item-icon"></i> Restock
                         </button>
+
                         <button class="dropdown-item btnEditConsumable" type="button">
                           <i class="bi bi-pencil-fill dropdown-item-icon"></i> Edit
                         </button>
@@ -275,6 +280,7 @@
 @section('sec-content')
   <x-property-asset.consumable.add-consumable  :units="$units" :propertyConsumables="$propertyConsumables"/>
   <x-property-asset.consumable.edit-consumable  :units="$units" :propertyConsumables="$propertyConsumables"/>
+  <x-property-asset.consumable.restock-consumable />
 
   <!-- Product Filter Modal -->
   <div class="offcanvas offcanvas-end" id="offcanvasPropertyFilter" aria-labelledby="offcanvasPropertyFilterLabel" tabindex="-1">

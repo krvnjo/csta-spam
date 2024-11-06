@@ -257,6 +257,62 @@ $(document).ready(function () {
     });
   });
   // ============ End Delete a Item Consumable ============ //
+
+  // ============ Restock an Item Consumable ============ //
+  const consumableRestockModal = $("#restockConsumableModal");
+  const consumableRestockForm = $("#frmRestockConsumable");
+  const consumableRestockSaveBtn = $("#btnRestockSaveConsumable");
+  let pastQuantity = 0;
+
+  handleUnsavedChanges(consumableRestockModal, consumableRestockForm, consumableRestockSaveBtn);
+
+  consumableDatatable.on('click', '.btnRestockConsumable', function () {
+    const childId = $(this).data('restock-id');
+    const consumableName = $(this).data('consumable-name');
+    pastQuantity = $(this).data('past-quantity');
+
+    $("#txtRestockConsumableId").val(childId);
+    $("#txtRestockPastQuantity").val(pastQuantity);
+    $("#txtRestockConsumableName").text(consumableName);
+
+    consumableRestockModal.modal("show");
+  });
+
+  consumableRestockForm.on("submit", function (e) {
+    e.preventDefault();
+    toggleButtonState(consumableRestockSaveBtn, true);
+
+    const restockQuantity = parseInt($("#txtRestockConsumableQuantity").val(), 10);
+    const totalQuantity = pastQuantity + restockQuantity;
+
+    const editFormData = new FormData(this);
+    editFormData.append("_method", "PATCH");
+    editFormData.append("totalQuantity", totalQuantity);
+
+    $.ajax({
+      url: "/properties-assets/consumable/restock",
+      method: "POST",
+      data: editFormData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        if (response.success) {
+          showResponseAlert(response, 'success', consumableRestockModal, consumableRestockForm);
+        } else {
+          toggleButtonState(consumableRestockSaveBtn, false);
+          if (response.errors.restockQuantity) {
+            $('#txtRestockConsumableQuantity').addClass('is-invalid');
+            $('#valRestockConsumableQty').text(response.errors.restockQuantity[0]);
+          }
+        }
+      },
+      error: function (response) {
+        showResponseAlert(response, 'error', consumableRestockModal, consumableRestockForm);
+      }
+    });
+  });
+
+  // ============ End Restock an Item Consumable ============ //
 });
 
 document.addEventListener('DOMContentLoaded', function() {
