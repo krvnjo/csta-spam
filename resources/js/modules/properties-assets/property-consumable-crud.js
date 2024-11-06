@@ -165,6 +165,98 @@ $(document).ready(function () {
     });
   });
   // ============ End Update a Item Consumable ============ //
+
+  // ============ Delete a Item Consumable ============ //
+  consumableDatatable.on('click', '.btnDeleteConsumable', function () {
+    const consumeDelId = $(this).data('consume-del-id');
+
+    Swal.fire({
+      title: 'Delete Record?',
+      text: 'Are you sure you want to delete the item?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
+      customClass: {
+        popup: 'bg-light rounded-3 shadow fs-4',
+        title: 'fs-1',
+        htmlContainer: 'text-muted text-center fs-4',
+        confirmButton: 'btn btn-sm btn-danger',
+        cancelButton: 'btn btn-sm btn-secondary',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: "/properties-assets/consumable",
+          method: 'DELETE',
+          data: { id: [consumeDelId] },
+          success: function (response) {
+            showResponseAlert(response, 'success');
+          },
+          error: function (response) {
+            showResponseAlert(response, 'error');
+          },
+        });
+      }
+    });
+  });
+
+  $('#btnMultiDeleteConsumable').on('click', function () {
+    let checkedCheckboxes = consumableDatatable.rows().nodes().to$().find('input.form-check-input:checked');
+
+    let consumeDelIds = checkedCheckboxes
+      .map(function () {
+        return $(this).closest('tr').find('[data-consume-del-id]').data('consume-del-id');
+      })
+      .get();
+
+    if (consumeDelIds.length === 0) {
+      Swal.fire({
+        title: 'No Items Selected',
+        text: 'Please select at least one item to delete.',
+        icon: 'info',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-light rounded-3 shadow fs-4',
+          title: 'fs-1',
+          htmlContainer: 'text-muted text-center fs-4',
+          confirmButton: 'btn btn-sm btn-info',
+        },
+      });
+      return;
+    }
+
+    Swal.fire({
+      title: 'Delete Records?',
+      text: 'Are you sure you want to delete all the selected items?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
+      customClass: {
+        popup: 'bg-light rounded-3 shadow fs-4',
+        title: 'fs-1',
+        htmlContainer: 'text-muted text-center fs-4',
+        confirmButton: 'btn btn-sm btn-danger',
+        cancelButton: 'btn btn-sm btn-secondary',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: '/properties-assets/consumable',
+          method: 'DELETE',
+          data: { id: consumeDelIds },
+          success: function (response) {
+            showResponseAlert(response, 'success');
+          },
+          error: function (response) {
+            showResponseAlert(response, 'error');
+          },
+        });
+      }
+    });
+  });
+  // ============ End Delete a Item Consumable ============ //
 });
 
 document.addEventListener('DOMContentLoaded', function() {

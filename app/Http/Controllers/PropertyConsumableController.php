@@ -219,8 +219,26 @@ class PropertyConsumableController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(PropertyConsumable $propertyConsumable)
+    public function destroy(Request $request)
     {
-        //
+        try {
+            $ids = $request->input('id');
+
+            PropertyConsumable::query()->whereIn('id', $ids)->update(['is_active' => 0]);
+
+            PropertyConsumable::destroy($ids);
+
+            return response()->json([
+                'success' => true,
+                'title' => 'Deleted Successfully!',
+                'text' => 'The item has been deleted and can be restored from the bin.',
+            ]);
+        } catch (Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Oops! Something went wrong.',
+                'message' => 'An error occurred while deleting the item: ',
+            ], 500);
+        }
     }
 }

@@ -69,9 +69,9 @@
                   <span id="consumableDatatableCounter">0</span>
                   Selected
                 </span>
-                <a class="btn btn-outline-danger btn-md" href="">
-                  <i class="bi-trash"></i> Delete
-                </a>
+                <button class="btn btn-outline-danger btn-md" id="btnMultiDeleteConsumable" type="button">
+                  <i class="bi-trash3-fill"></i> Delete
+                </button>
               </div>
             </div>
             <!-- End Datatable Info -->
@@ -122,7 +122,7 @@
           <table class="table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table table table-hover w-100" id="consumableOverviewDatatable"
                  data-hs-datatables-options='{
                    "columnDefs": [{
-                      "targets": [0, 8],
+                      "targets": [0, 9],
                       "orderable": false
                     }],
                    "order": [],
@@ -138,6 +138,12 @@
                  }'>
             <thead class="thead-light">
             <tr>
+              <th class="table-column-pe-0">
+                <div class="form-check">
+                  <input class="form-check-input" id="consumableDatatableCheckAll" type="checkbox" value="">
+                  <label class="form-check-label" for="consumableDatatableCheckAll"></label>
+                </div>
+              </th>
               <th class="d-none" id="PropertyId"></th>
               <th class="text-center" style="padding: 0; padding-left: 1rem; width: 3rem;">
                 <span class="legend-indicator bg-danger"></span>
@@ -155,6 +161,12 @@
             <tbody>
             @foreach ($propertyConsumables->where('deleted_at', null)->sortByDesc('updated_at') as $propertyConsumable)
               <tr>
+                <td class="table-column-pe-0">
+                  <div class="form-check">
+                    <input class="form-check-input child-checkbox" id="consumableDatatableCheck{{ $propertyConsumable->id }}" type="checkbox" value="{{ $propertyConsumable->id }}">
+                    <label class="form-check-label" for="consumableDatatableCheck{{ $propertyConsumable->id }}"></label>
+                  </div>
+                </td>
                 <td class="d-none" data-consumable-id="{{ Crypt::encryptString($propertyConsumable->id) }}"></td>
                 <td style="text-align: center; padding: 0;">
                   @if ($propertyConsumable->quantity == 0)
@@ -198,7 +210,7 @@
                           <i class="bi {{ $propertyConsumable->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
                           {{ $propertyConsumable->is_active ? 'Set to Inactive' : 'Set to Active' }}
                         </button>
-                        <button class="dropdown-item text-danger" type="button">
+                        <button class="dropdown-item text-danger btnDeleteConsumable" data-consume-del-id="{{ $propertyConsumable->id }}" type="button">
                           <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
                         </button>
                       </div>
@@ -574,7 +586,7 @@
           style: 'multi',
           selector: 'td:first-child input[type="checkbox"]',
           classMap: {
-            checkAll: '#datatableCheckAll',
+            checkAll: '#consumableDatatableCheckAll',
             counter: '#consumableDatatableCounter',
             counterInfo: '#consumableDatatableCounterInfo'
           }
