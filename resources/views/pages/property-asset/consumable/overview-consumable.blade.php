@@ -35,7 +35,7 @@
           <!-- End Col -->
 
           <div class="col-sm-auto">
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#" type="button">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addConsumableModal" type="button">
               <i class="bi bi-plus-lg me-1"></i> Add Item
             </button>
           </div>
@@ -153,19 +153,26 @@
             </tr>
             </thead>
             <tbody>
+            @foreach ($propertyConsumables->where('is_active', 1)->where('deleted_at', null)->sortByDesc('updated_at') as $propertyConsumable)
               <tr>
-                <td class="d-none">1</td>
-                <td class="text-center">
-                  <span class="legend-indicator bg-danger"></span>
+                <td class="d-none" data-consumable-id="{{ Crypt::encryptString($propertyConsumable->id) }}"></td>
+                <td style="text-align: center; padding: 0;">
+                  @if ($propertyConsumable->quantity == 0)
+                    <span class="legend-indicator bg-danger" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="No Stock"></span>
+                  @elseif ($propertyConsumable->quantity <= 10)
+                    <span class="legend-indicator bg-info" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="Low Stock"></span>
+                  @endif
                 </td>
-                <td>Short Bond Paper</td>
-                <td>8.5 x 11 inches</td>
-                <td>Ream</td>
-                <td class="text-center">13</td>
-                <td><span><i class="bi-calendar2-event me-1"></i> Updated 1 hour ago</span></td>
+                <td>{{ $propertyConsumable->name }}</td>
+                <td>{{ $propertyConsumable->description }}</td>
+                <td>{{ $propertyConsumable->unit->name }}</td>
+                <td class="text-center">{{ $propertyConsumable->quantity }}</td>
+                <td data-order="{{ $propertyConsumable->updated_at }}">
+                  <span><i class="bi-calendar2-event me-1"></i> Updated {{ $propertyConsumable->updated_at->diffForHumans() }}</span>
+                </td>
                 <td>
-                    <span class="badge bg-soft-success text-success">
-                      <span class="legend-indicator bg-success"></span>Active
+                    <span class="badge bg-soft-{{ $propertyConsumable->is_active ? 'success' : 'danger' }} text-{{ $propertyConsumable->is_active ? 'success' : 'danger' }}">
+                      <span class="legend-indicator bg-{{ $propertyConsumable->is_active ? 'success' : 'danger' }}"></span>{{ $propertyConsumable->is_active ? 'Active' : 'Inactive' }}
                     </span>
                 </td>
                 <td>
@@ -178,6 +185,9 @@
                               aria-expanded="false"></button>
 
                       <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="consumableEditDropdown">
+                        <button class="dropdown-item" type="button">
+                          <i class="bi bi-plus-circle-fill dropdown-item-icon"></i>  Restock
+                        </button>
                         <button class="dropdown-item" type="button">
                           <i class="bi bi-pencil-fill dropdown-item-icon"></i> Edit
                         </button>
@@ -195,6 +205,7 @@
                   </div>
                 </td>
               </tr>
+            @endforeach
             </tbody>
           </table>
         </div>
@@ -249,7 +260,7 @@
 @endsection
 
 @section('sec-content')
-
+  <x-property-asset.consumable.add-consumable  :units="$units" :propertyConsumables="$propertyConsumables"/>
 
   <!-- Product Filter Modal -->
   <div class="offcanvas offcanvas-end" id="offcanvasPropertyFilter" aria-labelledby="offcanvasPropertyFilterLabel" tabindex="-1">
@@ -507,6 +518,7 @@
 
 @push('scripts')
   <!-- JS Modules -->
+  <script src="{{ Vite::asset('resources/js/modules/properties-assets/property-consumable-crud.js') }}"></script>
 
   <!-- JS Other Plugins -->
   <script src="{{ Vite::asset('resources/vendor/hs-toggle-password/dist/js/hs-toggle-password.js') }}"></script>

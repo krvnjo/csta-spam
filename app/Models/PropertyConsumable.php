@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PropertyConsumable extends Model
@@ -12,17 +13,14 @@ class PropertyConsumable extends Model
     protected $table = 'property_consumables';
 
     protected $fillable = [
-        'prop_id',
-        'prop_code',
-        'serial_num',
-        'type_id',
-        'acq_date',
-        'warranty_date',
-        'stock_date',
-        'dept_id',
-        'desig_id',
-        'status_id',
-        'condi_id',
-        'remarks'
+        'name',
+        'description',
+        'unit_id',
+        'quantity',
     ];
+
+    public function unit(): BelongsTo
+    {
+        return $this->belongsTo(Unit::class, 'unit_id');
+    }
 }

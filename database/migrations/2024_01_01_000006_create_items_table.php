@@ -6,9 +6,11 @@ use App\Models\Category;
 use App\Models\Condition;
 use App\Models\Department;
 use App\Models\Designation;
+use App\Models\PropertyConsumable;
 use App\Models\PropertyParent;
 use App\Models\Status;
 use App\Models\Subcategory;
+use App\Models\Unit;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -59,6 +61,7 @@ return new class extends Migration {
             $table->id();
             $table->string('name', 255)->unique();
             $table->string('description')->nullable();
+            $table->foreignIdFor(Unit::class, 'unit_id')->constrained('units')->cascadeOnDelete();
             $table->unsignedInteger('quantity')->default(1);
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
@@ -67,7 +70,7 @@ return new class extends Migration {
 
         Schema::create('consumption_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(PropertyParent::class, 'prop_id')->constrained('property_parents')->cascadeOnDelete();
+            $table->foreignIdFor(PropertyConsumable::class, 'consume_id')->constrained('property_consumables')->cascadeOnDelete();
             $table->unsignedInteger('quantity_consumed');
             $table->date('consumed_at');
             $table->string('purpose')->nullable();
@@ -81,6 +84,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
+        Schema::dropIfExists('consumption_logs');
+        Schema::dropIfExists('property_consumables');
         Schema::dropIfExists('property_children');
         Schema::dropIfExists('property_parents');
     }
