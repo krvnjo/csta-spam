@@ -153,7 +153,7 @@
             </tr>
             </thead>
             <tbody>
-            @foreach ($propertyConsumables->where('is_active', 1)->where('deleted_at', null)->sortByDesc('updated_at') as $propertyConsumable)
+            @foreach ($propertyConsumables->where('deleted_at', null)->sortByDesc('updated_at') as $propertyConsumable)
               <tr>
                 <td class="d-none" data-consumable-id="{{ Crypt::encryptString($propertyConsumable->id) }}"></td>
                 <td style="text-align: center; padding: 0;">
@@ -188,14 +188,15 @@
                         <button class="dropdown-item" type="button">
                           <i class="bi bi-plus-circle-fill dropdown-item-icon"></i>  Restock
                         </button>
-                        <button class="dropdown-item" type="button">
+                        <button class="dropdown-item btnEditConsumable" type="button">
                           <i class="bi bi-pencil-fill dropdown-item-icon"></i> Edit
                         </button>
                         <button class="dropdown-item" type="button">
                           <i class="bi bi-info-square-fill dropdown-item-icon"></i> View Details
                         </button>
-                        <button class="dropdown-item text-danger" type="button">
-                          <i class="bi bi-x-circle-fill text-danger dropdown-item-icon"></i> Set to Inactive
+                        <button class="dropdown-item btnStatusConsumable" data-status="{{ $propertyConsumable->is_active ? 0 : 1 }}" type="button">
+                          <i class="bi {{ $propertyConsumable->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
+                          {{ $propertyConsumable->is_active ? 'Set to Inactive' : 'Set to Active' }}
                         </button>
                         <button class="dropdown-item text-danger" type="button">
                           <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
@@ -261,6 +262,7 @@
 
 @section('sec-content')
   <x-property-asset.consumable.add-consumable  :units="$units" :propertyConsumables="$propertyConsumables"/>
+  <x-property-asset.consumable.edit-consumable  :units="$units" :propertyConsumables="$propertyConsumables"/>
 
   <!-- Product Filter Modal -->
   <div class="offcanvas offcanvas-end" id="offcanvasPropertyFilter" aria-labelledby="offcanvasPropertyFilterLabel" tabindex="-1">
