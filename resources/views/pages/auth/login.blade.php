@@ -14,7 +14,7 @@
     <div class="position-fixed top-0 end-0 start-0 bg-img-start login-bg">
       <div class="shape shape-bottom zi-1">
         <svg preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 1921 273">
-          <polygon fill="#fff" points="0,273 1921,273 1921,0 " />
+          <polygon fill="#fff" points="0,273 1921,273 1921,0" />
         </svg>
       </div>
     </div>

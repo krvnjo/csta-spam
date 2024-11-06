@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\User;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Cache;
@@ -55,6 +57,10 @@ class AppServiceProvider extends ServiceProvider
 
         Blade::directive('endcanAny', function () {
             return "<?php endif; ?>";
+        });
+
+        ResetPassword::createUrlUsing(function (User $user, string $token) {
+            return url('/reset-password/' . $token);
         });
     }
 }

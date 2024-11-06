@@ -14,7 +14,7 @@
     <div class="position-fixed top-0 end-0 start-0 bg-img-start login-bg">
       <div class="shape shape-bottom zi-1">
         <svg preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 1921 273">
-          <polygon fill="#fff" points="0,273 1921,273 1921,0 " />
+          <polygon fill="#fff" points="0,273 1921,273 1921,0" />
         </svg>
       </div>
     </div>
@@ -57,7 +57,7 @@
               <!-- Email Address -->
               <div class="form-group mb-4">
                 <label class="form-label" for="txtResetEmail">Email Address</label>
-                <input class="form-control" id="txtResetEmail" name="email" placeholder="Enter your email address">
+                <input class="form-control" id="txtResetEmail" name="email" type="email" placeholder="Enter your email address">
                 <span class="invalid-feedback" id="valResetEmail"></span>
               </div>
               <!-- End Email Address -->
@@ -99,7 +99,7 @@
               <!-- End Confirm Password -->
 
               <!-- Reset Password Button -->
-              <div class="d-grid gap-2">
+              <div class="d-grid">
                 <button class="btn btn-primary btn-lg" id="btnResetPassword" type="submit">
                   <span class="spinner-label">Reset Password</span>
                   <span class="spinner-border spinner-border-sm d-none"></span>

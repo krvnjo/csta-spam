@@ -10,6 +10,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\HelpController;
+use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\PropertyChildController;
 use App\Http\Controllers\PropertyParentController;
 use App\Http\Controllers\RecycleController;
@@ -24,13 +25,17 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['guest', 'noCache'])->group(function () {
     // Login Routes
-    Route::controller(AuthController::class)->group(function () {
-        Route::get('/login', 'index')->name('auth.index');
-        Route::post('/login', 'login')->name('auth.login');
-        Route::get('/forgot-password', 'forgot_index')->name('password.request');
-        Route::post('/forgot-password', 'forgot')->name('password.email');
-        Route::get('/reset-password/{token}', 'reset_index')->name('password.reset');
-        Route::post('/reset-password', 'reset')->name('password.update');
+    Route::prefix('login')->name('auth.')->controller(AuthController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'login')->name('login');
+    });
+
+    // Password Reset Routes
+    Route::name('password.')->controller(PasswordController::class)->group(function () {
+        Route::get('/forgot-password', 'forgot_index')->name('request');
+        Route::post('/forgot-password', 'forgot')->name('email');
+        Route::get('/reset-password/{token}', 'reset_index')->name('reset');
+        Route::post('/reset-password/{token}', 'reset')->name('update');
     });
 });
 
@@ -39,16 +44,11 @@ Route::middleware(['guest', 'noCache'])->group(function () {
 // ============ Auth Routes ============ //
 
 Route::middleware(['auth', 'noCache'])->group(function () {
-    // ============ Dashboard Routes ============ //
-
-    // Main Dashboard Routes
-    Route::name('dashboard.')->controller(DashboardController::class)->group(function () {
+    // Logout Routes
+    Route::prefix('logout')->name('auth.')->controller(AuthController::class)->group(function () {
         Route::get('/', 'index')->name('index');
+        Route::post('/', 'logout')->name('logout');
     });
-
-    // ============ End Dashboard Routes ============ //
-
-    // ============ Header Routes ============ //
 
     // Account Routes
     Route::prefix('account')->name('account.')->controller(AccountController::class)->group(function () {
@@ -62,13 +62,14 @@ Route::middleware(['auth', 'noCache'])->group(function () {
         Route::get('/user-guide', 'guide')->name('guide');
     });
 
-    // Logout Routes
-    Route::name('auth.')->controller(AuthController::class)->group(function () {
-        Route::get('/logout', 'index')->name('index');
-        Route::post('/logout', 'logout')->name('logout');
+    // ============ Dashboard Routes ============ //
+
+    // Main Dashboard Routes
+    Route::name('dashboard.')->controller(DashboardController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
     });
 
-    // ============ End Header Routes ============ //
+    // ============ End Dashboard Routes ============ //
 
     // ============ Item Inventory Management Routes ============ //
 
