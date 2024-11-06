@@ -56,6 +56,14 @@ return new class extends Migration {
             $table->foreignIdFor(Category::class, 'categ_id')->constrained('categories')->cascadeOnDelete();
             $table->foreignIdFor(Subcategory::class, 'subcateg_id')->constrained('subcategories')->cascadeOnDelete();
         });
+
+        Schema::create('units', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 50)->unique();
+            $table->unsignedTinyInteger('is_active')->default(1);
+            $table->timestamps();
+            $table->softDeletes();
+        });
     }
 
     /**
@@ -63,6 +71,7 @@ return new class extends Migration {
      */
     public function down(): void
     {
+        Schema::dropIfExists('units');
         Schema::dropIfExists('category_subcategories');
         Schema::dropIfExists('brand_categories');
         Schema::dropIfExists('subcategories');
