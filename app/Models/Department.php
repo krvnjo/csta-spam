@@ -38,4 +38,10 @@ class Department extends Model
     {
         return $this->hasMany(User::class, 'dept_id', 'id');
     }
+
+    public function consumptionLogs()
+    {
+        return $this->hasMany(ConsumptionLog::class, 'dept_id');
+    }
+
 }

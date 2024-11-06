@@ -313,6 +313,10 @@ $(document).ready(function () {
   });
 
   // ============ End Restock an Item Consumable ============ //
+
+  // ============ Use an Item Consumable ============ //
+
+  // ============ End Use an Item Consumable ============ //
 });
 
 document.addEventListener('DOMContentLoaded', function() {
