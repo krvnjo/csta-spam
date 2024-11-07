@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class CheckIfUserInactive
+class CheckAuthentication
 {
     /**
      * Handle an incoming request.
@@ -21,7 +21,7 @@ class CheckIfUserInactive
 
             $request->session()->invalidate();
             $request->session()->regenerateToken();
-            
+
             return redirect()->route('auth.login');
         }
 

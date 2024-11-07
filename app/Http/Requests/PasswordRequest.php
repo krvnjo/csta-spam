@@ -18,70 +18,6 @@ class PasswordRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array|string>
-     */
-    public function rules(): array
-    {
-        return [
-            'user' => [
-                'required',
-                'min:8',
-                'regex:/^(0[7-9]|1[0-9]|2[0-' . date('y') . '])-\d{5}$/',
-                'exists:users,user_name',
-            ],
-            'email' => [
-                'required',
-                'min:8',
-                'max:50',
-                'email',
-                'exists:users,email',
-            ],
-            'pass' => [
-                'required',
-                'min:8',
-                'max:20',
-                'regex:/[A-Z]/',
-                'regex:/[a-z]/',
-                'regex:/[0-9]/',
-                'regex:/[\W_]/',
-            ],
-            'confirm' => [
-                'required',
-                'same:pass',
-            ],
-        ];
-    }
-
-    /**
-     * Get the error messages for the defined validation rules.
-     */
-    public function messages(): array
-    {
-        return [
-            'user.required' => 'Please enter a username!',
-            'user.min' => 'It must be at least :min characters.',
-            'user.regex' => 'The username is invalid.',
-            'user.exists' => 'This username does not exist.',
-
-            'email.required' => 'Please enter an email address!',
-            'email.min' => 'It must be at least :min characters.',
-            'email.max' => 'It must not exceed :max characters.',
-            'email.email' => 'Please enter a valid email address!',
-            'email.exists' => 'This email does not exist.',
-
-            'pass.required' => 'Please enter your new password!',
-            'pass.min' => 'It must be at least :min characters',
-            'pass.max' => 'It must not exceed :max characters.',
-            'pass.regex' => 'Your new password must contain at least one uppercase letter, one lowercase letter, one number, and one special character!',
-
-            'confirm.required' => 'Please confirm your new password!',
-            'confirm.same' => 'The password confirmation does not match the new password!',
-        ];
-    }
-
-    /**
      * Prepare/sanitize the data for validation.
      */
     protected function prepareForValidation(): void
@@ -92,6 +28,87 @@ class PasswordRequest extends FormRequest
             'pass' => $this->input('pass'),
             'confirm' => $this->input('confirm'),
         ]);
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, ValidationRule|array|string>
+     */
+    public function rules(): array
+    {
+        $rules = [];
+
+        if ($this->routeIs('password.email')) {
+            $rules = [
+                'email' => [
+                    'required',
+                    'min:8',
+                    'max:50',
+                    'email',
+                    'exists:users,email',
+                ],
+            ];
+        }
+
+        if ($this->routeIs('password.update')) {
+            $rules = [
+                'user' => [
+                    'required',
+                    'size:8',
+                    'regex:/^(0[7-9]|1[0-9]|2[0-' . date('y') . '])-\d{5}$/',
+                    'exists:users,user_name',
+                ],
+                'email' => [
+                    'required',
+                    'min:8',
+                    'max:50',
+                    'email',
+                    'exists:users,email',
+                ],
+                'pass' => [
+                    'required',
+                    'min:8',
+                    'max:20',
+                    'regex:/[A-Z]/',
+                    'regex:/[a-z]/',
+                    'regex:/[0-9]/',
+                    'regex:/[\W_]/',
+                ],
+                'confirm' => [
+                    'required',
+                    'same:pass',
+                ],
+            ];
+        }
+        return $rules;
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     */
+    public function messages(): array
+    {
+        return [
+            'user.required' => 'Please enter a username!',
+            'user.size' => 'The username must be exactly :size characters.',
+            'user.regex' => 'The username is invalid.',
+            'user.exists' => 'The username does not exist.',
+
+            'email.required' => 'Please enter an email address!',
+            'email.min' => 'It must be at least :min characters.',
+            'email.max' => 'It must not exceed :max characters.',
+            'email.email' => 'Please enter a valid email address!',
+            'email.exists' => 'The email address does not exist.',
+
+            'pass.required' => 'Please enter your new password!',
+            'pass.min' => 'It must be at least :min characters',
+            'pass.max' => 'It must not exceed :max characters.',
+            'pass.regex' => 'Your new password must contain at least one uppercase letter, one lowercase letter, one number, and one special character!',
+
+            'confirm.required' => 'Please confirm your new password!',
+            'confirm.same' => 'The password confirmation does not match the new password!',
+        ];
     }
 
     /**

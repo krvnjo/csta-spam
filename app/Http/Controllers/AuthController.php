@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\LoginRequest;
+use App\Http\Requests\AuthRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,12 +25,12 @@ class AuthController extends Controller
     /**
      * Authenticate the user and log the user in.
      */
-    public function login(LoginRequest $request)
+    public function login(AuthRequest $request)
     {
         try {
             $validated = $request->validated();
 
-            $user = User::where('user_name', $validated['user'])->first();
+            $user = User::firstWhere('user_name', $validated['user']);
 
             if (!$user || $user->is_active == 0) {
                 return response()->json([
@@ -47,23 +47,6 @@ class AuthController extends Controller
             }
 
             Auth::login($user);
-
-            $user->timestamps = false;
-            $user->last_login = now();
-            $user->save();
-            $user->timestamps = true;
-
-            $fullName = $this->formatFullName($user->fname, $user->lname);
-
-            activity()
-                ->useLog('User Login')
-                ->performedOn($user)
-                ->event('login')
-                ->withProperties([
-                    'username' => $user->user_name,
-                    'name' => $fullName
-                ])
-                ->log("User: '{$fullName}' has logged in to the system.");
 
             return response()->json([
                 'success' => true,

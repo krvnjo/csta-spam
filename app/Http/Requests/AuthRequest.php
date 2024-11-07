@@ -7,7 +7,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class ForgotRequest extends FormRequest
+class AuthRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -18,6 +18,17 @@ class ForgotRequest extends FormRequest
     }
 
     /**
+     * Prepare/sanitize the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'user' => $this->input('user'),
+            'pass' => $this->input('pass'),
+        ]);
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, ValidationRule|array|string>
@@ -25,12 +36,16 @@ class ForgotRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => [
+            'user' => [
+                'required',
+                'size:8',
+                'regex:/^(0[7-9]|1[0-9]|2[0-' . date('y') . '])-\d{5}$/',
+                'exists:users,user_name',
+            ],
+            'pass' => [
                 'required',
                 'min:8',
-                'max:50',
-                'email',
-                'exists:users,email',
+                'max:20',
             ],
         ];
     }
@@ -41,22 +56,15 @@ class ForgotRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'email.required' => 'Please enter an email address!',
-            'email.min' => 'It must be at least :min characters.',
-            'email.max' => 'It must not exceed :max characters.',
-            'email.email' => 'Please enter a valid email address!',
-            'email.exists' => 'This email does not exist.',
-        ];
-    }
+            'user.required' => 'Please enter a username!',
+            'user.size' => 'The username must be exactly :size characters.',
+            'user.regex' => 'The username is invalid.',
+            'user.exists' => 'The username does not exist.',
 
-    /**
-     * Prepare/sanitize the data for validation.
-     */
-    protected function prepareForValidation(): void
-    {
-        $this->merge([
-            'email' => $this->input('email'),
-        ]);
+            'pass.required' => 'Please enter a password!',
+            'pass.min' => 'It must be at least :min characters.',
+            'pass.max' => 'It must not exceed :max characters.',
+        ];
     }
 
     /**
@@ -67,7 +75,7 @@ class ForgotRequest extends FormRequest
         throw new HttpResponseException(
             response()->json([
                 'success' => false,
-                'errors' => $validator->errors(),
+                'errors' => $validator->errors()
             ])
         );
     }
