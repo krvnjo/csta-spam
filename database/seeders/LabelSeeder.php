@@ -8,6 +8,7 @@ use App\Models\BrandSubcategory;
 use App\Models\Category;
 use App\Models\CategorySubcategory;
 use App\Models\Subcategory;
+use App\Models\Unit;
 use Illuminate\Database\Seeder;
 
 class LabelSeeder extends Seeder
@@ -132,6 +133,19 @@ class LabelSeeder extends Seeder
 
         foreach ($categorySubcategories as $categorySubcategory) {
             CategorySubcategory::query()->insert($categorySubcategory);
+        }
+
+        $units = [
+            'Ream',
+            'Pc/s',
+            'Box',
+            'Gallon',
+        ];
+
+        foreach ($units as $unit) {
+            Unit::query()->create([
+                'name' => $unit,
+            ]);
         }
     }
 }

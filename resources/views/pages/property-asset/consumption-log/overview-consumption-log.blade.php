@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-  Stock Masterlist
+  Consumption Logs
 @endsection
 
 @push('styles')
@@ -21,133 +21,15 @@
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb breadcrumb-no-gutter">
                 <li class="breadcrumb-item"><a class="breadcrumb-link" data-route="dashboard.index" href="{{ route('dashboard.index') }}">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Stock Masterlist</li>
+                <li class="breadcrumb-item active" aria-current="page">Consumption Logs</li>
               </ol>
             </nav>
-            <h1 class="page-header-title">Item Stock Management</h1>
-            <p class="page-header-text">Manage and organize stock records.</p>
-            <p class="page-header-text">
-              <span class="legend-indicator bg-danger "></span>No stock
-              <span class="ms-2"></span>
-              <span class="legend-indicator bg-info"></span>Low stock
-            </p>
+            <h1 class="page-header-title">Item Consumption Logs</h1>
+            <p class="page-header-text">Manage and organize consumable items.</p>
           </div>
-          <!-- End Col -->
-
-          <div class="col-sm-auto">
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPropertyModal" type="button">
-              <i class="bi bi-plus-lg me-1"></i> Add Item
-            </button>
-          </div>
-          <!-- End Col -->
         </div>
-        <!-- End Row -->
       </div>
       <!-- End Page Header -->
-
-      {{--    <!-- Stats --> --}}
-      {{--    <div class="row"> --}}
-      {{--      <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3"> --}}
-      {{--        <!-- Card --> --}}
-      {{--        <div class="card h-100"> --}}
-      {{--          <div class="card-body"> --}}
-      {{--            <h6 class="card-subtitle mb-2">Total Stocks</h6> --}}
-
-      {{--            <div class="row align-items-center gx-2"> --}}
-      {{--              <div class="col"> --}}
-      {{--                <span class="js-counter display-4 text-dark">24</span> --}}
-      {{--                <span class="text-body fs-5 ms-1">from 22</span> --}}
-      {{--              </div> --}}
-      {{--              <!-- End Col --> --}}
-
-      {{--              <div class="col-auto"> --}}
-      {{--                <span class="badge bg-soft-success text-success p-1"> --}}
-      {{--                  <i class="bi-graph-up"></i> 5.0% --}}
-      {{--                </span> --}}
-      {{--              </div> --}}
-      {{--              <!-- End Col --> --}}
-      {{--            </div> --}}
-      {{--            <!-- End Row --> --}}
-      {{--          </div> --}}
-      {{--        </div> --}}
-      {{--        <!-- End Card --> --}}
-      {{--      </div> --}}
-
-      {{--      <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3"> --}}
-      {{--        <!-- Card --> --}}
-      {{--        <div class="card h-100"> --}}
-      {{--          <div class="card-body"> --}}
-      {{--            <h6 class="card-subtitle mb-2">Total Inventory</h6> --}}
-
-      {{--            <div class="row align-items-center gx-2"> --}}
-      {{--              <div class="col"> --}}
-      {{--                <span class="js-counter display-4 text-dark">12</span> --}}
-      {{--                <span class="text-body fs-5 ms-1">from 11</span> --}}
-      {{--              </div> --}}
-
-      {{--              <div class="col-auto"> --}}
-      {{--                <span class="badge bg-soft-success text-success p-1"> --}}
-      {{--                  <i class="bi-graph-up"></i> 1.2% --}}
-      {{--                </span> --}}
-      {{--              </div> --}}
-      {{--            </div> --}}
-      {{--            <!-- End Row --> --}}
-      {{--          </div> --}}
-      {{--        </div> --}}
-      {{--        <!-- End Card --> --}}
-      {{--      </div> --}}
-
-      {{--      <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3"> --}}
-      {{--        <!-- Card --> --}}
-      {{--        <div class="card h-100"> --}}
-      {{--          <div class="card-body"> --}}
-      {{--            <h6 class="card-subtitle mb-2">New Stocks</h6> --}}
-
-      {{--            <div class="row align-items-center gx-2"> --}}
-      {{--              <div class="col"> --}}
-      {{--                <span class="js-counter display-4 text-dark">56</span> --}}
-      {{--                <span class="display-4 text-dark">%</span> --}}
-      {{--                <span class="text-body fs-5 ms-1">from 48.7</span> --}}
-      {{--              </div> --}}
-
-      {{--              <div class="col-auto"> --}}
-      {{--                <span class="badge bg-soft-danger text-danger p-1"> --}}
-      {{--                  <i class="bi-graph-down"></i> 2.8% --}}
-      {{--                </span> --}}
-      {{--              </div> --}}
-      {{--            </div> --}}
-      {{--            <!-- End Row --> --}}
-      {{--          </div> --}}
-      {{--        </div> --}}
-      {{--        <!-- End Card --> --}}
-      {{--      </div> --}}
-
-      {{--      <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3"> --}}
-      {{--        <!-- Card --> --}}
-      {{--        <div class="card h-100"> --}}
-      {{--          <div class="card-body"> --}}
-      {{--            <h6 class="card-subtitle mb-2">In Maintenance</h6> --}}
-
-      {{--            <div class="row align-items-center gx-2"> --}}
-      {{--              <div class="col"> --}}
-      {{--                <span class="js-counter display-4 text-dark">28.6</span> --}}
-      {{--                <span class="display-4 text-dark">%</span> --}}
-      {{--                <span class="text-body fs-5 ms-1">from 28.6%</span> --}}
-      {{--              </div> --}}
-
-      {{--              <div class="col-auto"> --}}
-      {{--                <span class="badge bg-soft-secondary text-secondary p-1">0.0%</span> --}}
-      {{--              </div> --}}
-      {{--            </div> --}}
-      {{--            <!-- End Row --> --}}
-      {{--          </div> --}}
-      {{--        </div> --}}
-      {{--        <!-- End Card --> --}}
-      {{--      </div> --}}
-      {{--    </div> --}}
-      {{--    <!-- End Stats --> --}}
-
-      <!-- Card -->
 
       <div class="card">
         <!-- Header -->
@@ -159,7 +41,7 @@
                 <div class="input-group-prepend input-group-text">
                   <i class="bi-search"></i>
                 </div>
-                <input class="form-control" id="propertyDatatableSearch" type="search" aria-label="Search item" placeholder="Search item">
+                <input class="form-control" id="consumptionDatatableSearch" type="search" aria-label="Search log" placeholder="Search log">
               </div>
               <!-- End Search -->
             </form>
@@ -167,15 +49,15 @@
 
           <div class="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
             <!-- Datatable Info -->
-            <div id="propertyDatatableCounterInfo" style="display: none;">
+            <div id="consumptionDatatableCounterInfo" style="display: none;">
               <div class="d-flex align-items-center">
                 <span class="fs-5 me-3">
-                  <span id="propertyDatatableCounter">0</span>
+                  <span id="consumptionDatatableCounter">0</span>
                   Selected
                 </span>
-                <a class="btn btn-outline-danger btn-md" href="">
-                  <i class="bi-trash"></i> Delete
-                </a>
+                <button class="btn btn-outline-danger btn-md" id="" type="button">
+                  <i class="bi-trash3-fill"></i> Delete
+                </button>
               </div>
             </div>
             <!-- End Datatable Info -->
@@ -223,177 +105,52 @@
 
         <!-- Table -->
         <div class="table-responsive datatable-custom">
-          <table class="table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table table table-hover w-100" id="propertyOverviewDatatable"
-            data-hs-datatables-options='{
+          <table class="table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table table table-hover w-100" id="consumptionOverviewDatatable"
+                 data-hs-datatables-options='{
                    "columnDefs": [{
-                      "targets": [0, 9],
+                      "targets": [0, 7],
                       "orderable": false
                     }],
                    "order": [],
                    "info": {
-                     "totalQty": "#propertyDatatableWithPaginationInfoTotalQty"
+                     "totalQty": "#consumptionDatatableWithPaginationInfoTotalQty"
                    },
-                   "search": "#propertyDatatableSearch",
-                   "entries": "#propertyDatatableEntries",
+                   "search": "#consumptionDatatableSearch",
+                   "entries": "#consumptionDatatableEntries",
                    "pageLength": 5,
                    "isResponsive": false,
                    "isShowPaging": false,
-                   "pagination": "propertyDatatablePagination"
+                   "pagination": "consumptionDatatablePagination"
                  }'>
             <thead class="thead-light">
-              <tr>
-                <th class="d-none" id="PropertyId"></th>
-                <th class="text-center" style="padding: 0; padding-left: 1rem;">
-                  <span class="legend-indicator bg-danger"></span>
-                  <span class="legend-indicator bg-info"></span>
-                </th>
-                <th class="col-3">Item Name</th>
-                <th class="col-3">Description</th>
-                <th class="col-2">Category</th>
-                <th class="col-2">Brand</th>
-                <th class="col-2">Depreciation</th>
-                <th class="col-2">Deprecation Rate</th>
-                <th class="col-1 text-center">Total Quantity</th>
-                <th class="col-3">Action</th>
-              </tr>
+            <tr>
+              <th class="table-column-pe-0"></th>
+              <th class="col-3">Item Name</th>
+              <th class="col-1 text-center">QuantityConsumed</th>
+              <th class="col-1">Unit</th>
+              <th class="col-2">Consumer Name</th>
+              <th class="col-2">Department</th>
+              <th class="col-3">Purpose</th>
+              <th class="col-3">Remarks</th>
+              <th class="col-2">Date Consumed</th>
+            </tr>
             </thead>
-
             <tbody>
-              @foreach ($propertyParents->where('is_active', 1)->where('deleted_at', null)->sortByDesc('updated_at') as $propertyParent)
-                <tr>
-                  <td class="d-none" data-property-id="{{ Crypt::encryptString($propertyParent->id) }}"></td>
-                  <td style="text-align: center; padding: 0;">
-                    @if (!$propertyParent->propertyChildren->where('inventory_date', null)->count())
-                      <span class="legend-indicator bg-danger" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="No Stock"></span>
-                    @elseif ($propertyParent->propertyChildren->where('inventory_date', null)->count() <= 5)
-                      <span class="legend-indicator bg-info" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="Low Stock"></span>
-                    @endif
-                  </td>
-                  <td>
-                    <a class="d-flex align-items-center btnViewProperty">
-                      <div class="avatar avatar-lg">
-                        @php
-                          $imagePath = public_path('storage/img/prop-asset/' . $propertyParent->image);
-                          $defaultImagePath = public_path('storage/img/prop-asset/default.jpg');
-                          $imageUrl = file_exists($imagePath) ? asset('storage/img/prop-asset/' . $propertyParent->image) : asset('storage/img/prop-asset/default.jpg');
-                        @endphp
-                        <img class="avatar-img" src="{{ $imageUrl }}" alt="Image Description">
-                      </div>
-                      <div class="ms-3">
-                        <span class="d-block h5 mb-0 text-inherit">{{ $propertyParent->name }}</span>
-                      </div>
-                    </a>
-                  </td>
-                  <td>
-                    <span style="color:gray"
-                      @if (!empty($propertyParent->description) && strlen($propertyParent->description) > 25) data-bs-toggle="tooltip"
-                        data-bs-html="true"
-                        data-bs-placement="bottom"
-                        title="{{ $propertyParent->description }}" @endif>
-                      {{ Str::limit(!empty($propertyParent->description) ? $propertyParent->description : 'No description provided', 30) }}
-                    </span>
-                  </td>
-                  <td>
-                    <span class="d-block fs-5">{{ $propertyParent->subcategory->name }}</span>
-                  </td>
-                  <td>{{ $propertyParent->brand->name }}</td>
-                  <td>
-                    <div class="chartjs-custom" style="height: 2rem; width: 7rem;">
-                      <canvas class="js-chart"
-                                  data-hs-chartjs-options='{
-                          "type": "line",
-                          "data": {
-                              "labels": {{ json_encode(range(0, $propertyParent->useful_life)) }},
-                              "datasets": [{
-                                  "data": {{ json_encode($propertyParent->depreciationValues) }},
-                                  "backgroundColor": "transparent",
-                                  "borderColor": "#377dff",
-                                  "borderWidth": 2,
-                                  "pointBackgroundColor": "transparent",
-                                  "pointHoverBackgroundColor": "#377dff",
-                                  "pointBorderColor": "transparent",
-                                  "pointHoverBorderColor": "#377dff",
-                                  "pointRadius": 2,
-                                  "pointHoverRadius": 2,
-                                  "tension": 0
-                              }]
-                          },
-                          "options": {
-                           "scales": {
-                              "y": {
-                                "display": false
-                              },
-                              "x": {
-                                "grid": {
-                                  "display": false,
-                                  "drawBorder": false
-                                },
-                                "ticks": {
-                                  "labelOffset": 40,
-                                  "maxTicksLimit": 6,
-                                  "padding": 20,
-                                  "maxRotation": 0,
-                                  "minRotation": 0,
-                                  "fontSize": 12,
-                                  "fontColor": "rgba(0, 0, 0, 0.4)"
-                                }
-                              }
-                           },
-                           "hover": {
-                               "mode": "nearest",
-                               "intersect": false
-                           },
-                           "plugins": {
-                              "tooltip": {
-                                "prefix": "₱",
-                                "intersect": false
-                              }
-                           }
-                         }
-                      }'></canvas>
-                    </div>
-                  </td>
-                  <td class="text-center">
-                    @php
-                      $isAppreciated = $propertyParent->depreciationRate >= 0;
-                      $badgeClass = $isAppreciated ? 'bg-soft-success text-success' : 'bg-soft-danger text-danger';
-                      $iconClass = $isAppreciated ?  'bi-graph-up' : 'bi-graph-down';
-                      $annualDepreciation = number_format($propertyParent->annualDepreciation, 2);
-                      $formattedDepreciationRate = number_format($propertyParent->depreciationRate, 2);
-                    @endphp
-                    <span class="badge {{ $badgeClass }} p-1" data-bs-toggle="tooltip" title="₱{{ $annualDepreciation }} per year">
-                        <i class="{{ $iconClass }}"></i> {{ abs($formattedDepreciationRate) }}%
-                    </span>
-                  </td>
-                  <td class="text-center">
-                    {{ $propertyParent->quantity }}
-                  </td>
-                  <td>
-                    <div class="btn-group position-static" role="group">
-                      <a class="btn btn-white btn-sm" href="{{ route('prop-asset.child.index', $propertyParent) }}">
-                        <i class="bi-eye me-1"></i> View All
-                      </a>
-
-                      <!-- Button Group -->
-                      <div class="btn-group position-static">
-                        <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="productsEditDropdown1" data-bs-toggle="dropdown" type="button"
-                          aria-expanded="false"></button>
-
-                        <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="productsEditDropdown1">
-                          <button class="dropdown-item btnEditPropParent" type="button">
-                            <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Item
-                          </button>
-                          <button class="dropdown-item btnViewProperty" type="button">
-                            <i class="bi bi-info-square-fill dropdown-item-icon"></i> View Details
-                          </button>
-                        </div>
-                      </div>
-                      <!-- End Button Group -->
-                    </div>
-                  </td>
-                </tr>
-              @endforeach
-
+            @foreach ($consumptionLogs->sortByDesc('updated_at') as $consumptionLog)
+              <tr>
+                <th class="table-column-ps-0"></th>
+                <td>{{ $consumptionLog->consumable->name }}</td>
+                <td class="text-center">{{ $consumptionLog->quantity_consumed }}</td>
+                <td>{{ $consumptionLog->consumable->unit->name }}</td>
+                <td>{{ $consumptionLog->consumed_by }}</td>
+                <td>{{ $consumptionLog->department->name }}</td>
+                <td>{{ $consumptionLog->purpose }}</td>
+                <td>{{ $consumptionLog->remarks }}</td>
+                <td>
+                  <span><i class="bi-calendar2-event me-1"></i> {{ \Carbon\Carbon::parse($consumptionLog->created_at)->format('F j, Y') }}</span>
+                </td>
+              </tr>
+            @endforeach
             </tbody>
           </table>
         </div>
@@ -408,8 +165,8 @@
 
                 <!-- Select -->
                 <div class="tom-select-custom" style="width: 80px;">
-                  <select class="js-select form-select form-select-borderless" id="propertyDatatableEntries"
-                    data-hs-tom-select-options='{
+                  <select class="js-select form-select form-select-borderless" id="consumptionDatatableEntries"
+                          data-hs-tom-select-options='{
                             "searchInDropdown": false,
                             "hideSearch": true
                           }' autocomplete="off">
@@ -423,7 +180,7 @@
                 <span class="text-secondary me-2">of</span>
 
                 <!-- Pagination Quantity -->
-                <span id="propertyDatatableWithPaginationInfoTotalQty"></span>
+                <span id="consumptionDatatableWithPaginationInfoTotalQty"></span>
                 <span class="text-secondary ms-2">records</span>
               </div>
             </div>
@@ -432,7 +189,7 @@
             <div class="col-sm-auto">
               <div class="d-flex justify-content-center justify-content-sm-end">
                 <!-- Pagination -->
-                <nav id="propertyDatatablePagination" aria-label="Activity pagination"></nav>
+                <nav id="consumptionDatatablePagination" aria-label="Activity pagination"></nav>
               </div>
             </div>
             <!-- End Col -->
@@ -448,11 +205,6 @@
 @endsection
 
 @section('sec-content')
-  <x-property-asset.add-property :brands="$brands" :subcategories="$subcategories" :conditions="$conditions" :acquisitions="$acquisitions" />
-
-  <x-property-asset.edit-property :brands="$brands" :subcategories="$subcategories" />
-
-  <x-property-asset.view-property />
 
   <!-- Product Filter Modal -->
   <div class="offcanvas offcanvas-end" id="offcanvasPropertyFilter" aria-labelledby="offcanvasPropertyFilterLabel" tabindex="-1">
@@ -709,6 +461,8 @@
 @endsection
 
 @push('scripts')
+  <!-- JS Modules -->
+
   <!-- JS Other Plugins -->
   <script src="{{ Vite::asset('resources/vendor/hs-toggle-password/dist/js/hs-toggle-password.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/hs-file-attach/dist/hs-file-attach.min.js') }}"></script>
@@ -729,153 +483,41 @@
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/dropzone/dist/min/dropzone.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/chart.js/dist/chart.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js') }}"></script>
-
-  <!-- JS Modules -->
-  <script src="{{ Vite::asset('resources/js/modules/properties-assets/property-stock-crud.js') }}"></script>
 
   <!-- JS Themes -->
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>
 
   <!-- JS Plugins Init. -->
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-      var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl)
-      })
-    });
-
-    (function() {
-      // INITIALIZATION OF DROPZONE
-      // =======================================================
-      var addDropzone, editDropzone;
-
-      HSCore.components.HSDropzone.init('.js-dropzone', {
-        maxFiles: 1,
-        maxFilesize: 1,
-        acceptedFiles: ".jpeg,.jpg,.png",
-        dictDefaultMessage: "Drag and drop your file here or click to upload",
-
-        init: function() {
-          var dropzoneInstance = this;
-
-          if (this.element.id === 'addPropertyDropzone') {
-            addDropzone = this;
-          } else if (this.element.id === 'editPropertyDropzone') {
-            editDropzone = this;
-          }
-
-          this.on("addedfile", function(file) {
-            dropzoneInstance.element.querySelector(".dz-message").style.display = "none";
-          });
-
-          this.on("removedfile", function(file) {
-            dropzoneInstance.element.querySelector(".dz-message").style.display = "block";
-          });
-
-          this.on("error", function(file, message) {
-            if (file.size > 1048576) {
-              Swal.fire({
-                icon: 'error',
-                title: 'File too large',
-                text: 'File size exceeds the limit of 1MB. Please upload a smaller file.',
-                confirmButtonText: 'OK',
-                customClass: {
-                  popup: 'bg-light rounded-3 shadow fs-4',
-                  title: 'fs-1',
-                  htmlContainer: 'text-muted text-center fs-4',
-                  confirmButton: 'btn btn-sm btn-info',
-                },
-              });
-              this.removeFile(file);
-            }
-          });
-        }
-      });
-    })();
-  </script>
-  <script>
     $(document).on('ready', function() {
       // INITIALIZATION OF DATATABLES
       // =======================================================
-      HSCore.components.HSDatatables.init($('#propertyOverviewDatatable'), {
+      HSCore.components.HSDatatables.init($('#consumptionOverviewDatatable'), {
         dom: 'Bfrtip',
         buttons: [{
-            extend: 'copy',
-            className: 'd-none',
-            exportOptions: {
-              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8))'
-            }
-          },
+          extend: 'copy',
+          className: 'd-none'
+        },
           {
             extend: 'excel',
-            className: 'd-none',
-            exportOptions: {
-              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8))'
-            }
+            className: 'd-none'
           },
           {
             extend: 'pdf',
-            className: 'd-none',
-            exportOptions: {
-              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8))'
-            }
+            className: 'd-none'
           },
           {
             extend: 'print',
-            className: 'd-none',
-            title: '',
-            message: '',
-            exportOptions: {
-              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8))',
-            },
-            customize: function(win) {
-
-              function formatDate(date) {
-                const options = {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                };
-                return date.toLocaleDateString(undefined, options);
-              }
-
-              const currentDate = formatDate(new Date());
-
-              $(win.document.body)
-                .css('font-size', '10pt')
-                .prepend(`
-                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                    <div style="display: flex; align-items: center;">
-                      <img src="{{ Vite::asset('resources/svg/logos/logo.svg') }}" style="width: 14rem; margin-right: 7rem;" alt="CSTA - SPAM Logo" />
-                    </div>
-                    <div style="font-size: 10px;">${currentDate}</div> <!-- Add current date without right alignment -->
-                  </div>
-                  <h2 style="font-size: 12px; margin: 5px 0;">Colegio De Sta. Teresa De Avila - Stock Masterlist</h2> <!-- Custom print title -->
-                `);
-              $(win.document.body).find('table')
-                .css({
-                  'font-size': '8pt',
-                  'width': '100%',
-                  'border-collapse': 'collapse',
-                });
-              $(win.document.body).find('table th, table td')
-                .css({
-                  'padding': '4px',
-                  'border': '1px solid #ccc',
-                });
-            }
-          }
+            className: 'd-none'
+          },
         ],
         select: {
           style: 'multi',
           selector: 'td:first-child input[type="checkbox"]',
           classMap: {
-            checkAll: '#propertyDatatableCheckAll',
-            counter: '#propertyDatatableCounter',
-            counterInfo: '#propertyDatatableCounterInfo'
+            checkAll: '#consumptionDatatableCheckAll',
+            counter: '#consumptionDatatableCounter',
+            counterInfo: '#consumptionDatatableCounterInfo'
           }
         },
         language: {
@@ -939,10 +581,6 @@
         // INITIALIZATION OF BOOTSTRAP DROPDOWN
         // =======================================================
         HSBsDropdown.init()
-
-        // INITIALIZATION OF CHARTJS
-        // =======================================================
-        HSCore.components.HSChartJS.init('.js-chart')
       }
     })()
   </script>

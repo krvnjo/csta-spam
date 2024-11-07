@@ -23,7 +23,7 @@
               <div class="mb-3">
                 <label class="form-label" for="txtPropertyName">Item Name:
                   <span class="text-danger">*</span></label>
-                <input class="form-control" id="txtPropertyName" name="propertyName" type="text" placeholder="Stock Name" autocomplete="off" />
+                <input class="form-control" id="txtPropertyName" name="propertyName" type="text" placeholder="Item Name" autocomplete="off" />
                 <span class="invalid-feedback" id="valAddName"></span>
               </div>
             </div>
@@ -80,6 +80,41 @@
               </div>
             </div>
           </div>
+          <div class="row">
+            <div class="col-lg-4">
+              <div class="mb-3">
+                <label class="form-label" for="txtPurchasePrice">Purchase Price:
+                  <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text">₱</span>
+                  <input class="form-control text-end" id="txtPurchasePrice" name="purchasePrice" type="number" step="0.01" min="0" placeholder="Purchase Price" autocomplete="off" required />
+                  <span class="invalid-feedback" id="valAddPurchasePrice"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4">
+              <div class="mb-3">
+                <label class="form-label" for="txtResidualValue">Residual Value:
+                  <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text">₱</span>
+                  <input class="form-control text-end" id="txtResidualValue" name="residualValue" type="number" step="0.01" min="0" placeholder="Residual Value" autocomplete="off" required />
+                  <span class="invalid-feedback" id="valAddResidualValue"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4">
+              <div class="mb-3">
+                <label class="form-label" for="txtUsefulLife">Useful Life (in years):
+                  <span class="text-danger">*</span></label>
+                <input class="form-control" id="txtUsefulLife" name="usefulLife" type="number" placeholder="Useful Life" min="0" autocomplete="off" required />
+                <span class="invalid-feedback" id="valAddUsefulLife"></span>
+              </div>
+            </div>
+          </div>
+
           <div class="row">
             <div class="col-lg">
               <div class="mb-3">

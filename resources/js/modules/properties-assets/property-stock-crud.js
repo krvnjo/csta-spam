@@ -13,7 +13,10 @@ $(document).ready(function () {
     quantity: $("#txtQuantity"),
     acquiredType: $("#cbxAcquiredType"),
     acquiredDate: $("#dtpAcquired"),
-    condition: $("#cbxCondition")
+    condition: $("#cbxCondition"),
+    purchasePrice: $("#txtPurchasePrice"),
+    residualValue: $("#txtResidualValue"),
+    usefulLife: $("#txtUsefulLife")
   };
 
   const nonRequiredFields = {
@@ -33,7 +36,10 @@ $(document).ready(function () {
     acquiredType: $("#valAddAcquired"),
     acquiredDate: $("#valAddDtpAcq"),
     condition: $("#valAddCondition"),
-    warranty: $("#valAddWarranty")
+    warranty: $("#valAddWarranty"),
+    purchasePrice: $("#valAddPurchasePrice"),
+    residualValue: $("#valAddResidualValue"),
+    usefulLife: $("#valAddUsefulLife")
   };
 
   handleUnsavedChanges(propertyAddModal, propertyAddForm, propertyAddSaveBtn);
@@ -115,6 +121,9 @@ $(document).ready(function () {
         $("#cbxEditCategory")[0].tomselect.setValue(response.subcateg_id);
         $("#cbxEditBrand")[0].tomselect.setValue(response.brand_id);
         $("#txtEditDescription").val(response.description);
+        $("#txtEditPurchasePrice").val(response.purchase_price);
+        $("#txtEditResidualValue").val(response.residual_value);
+        $("#txtEditUsefulLife").val(response.useful_life);
       },
       error: function (response) {
         showResponseAlert(response,'error' );
@@ -134,6 +143,9 @@ $(document).ready(function () {
     editFormData.append("category", $("#cbxEditCategory").val());
     editFormData.append("brand", $("#cbxEditBrand").val());
     editFormData.append("description", $("#txtEditDescription").val());
+    editFormData.append("purchasePrice", $("#txtEditPurchasePrice").val());
+    editFormData.append("residualValue", $("#txtEditResidualValue").val());
+    editFormData.append("usefulLife", $("#txtEditUsefulLife").val());
 
     if (propertyDropzoneEdit.files.length > 0) {
       editFormData.append("image", propertyDropzoneEdit.files[0]);
@@ -165,6 +177,18 @@ $(document).ready(function () {
           if (response.errors.description) {
             $("#txtEditDescription").addClass("is-invalid");
             $("#valEditDescription").text(response.errors.description[0]);
+          }
+          if (response.errors.purchasePrice) {
+            $("#txtEditPurchasePrice").addClass("is-invalid");
+            $("#valEditPurchasePrice").text(response.errors.purchasePrice[0]);
+          }
+          if (response.errors.residualValue) {
+            $("#txtEditResidualValue").addClass("is-invalid");
+            $("#valEditResidualValue").text(response.errors.residualValue[0]);
+          }
+          if (response.errors.usefulLife) {
+            $("#txtEditUsefulLife").addClass("is-invalid");
+            $("#valEditUsefulLife").text(response.errors.usefulLife[0]);
           }
         }
       },

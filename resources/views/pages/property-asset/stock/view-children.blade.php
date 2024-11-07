@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-  P & A Masterlist | CSTA - SPAM
+  P & A Masterlist
 @endsection
 
 @push('styles')
@@ -20,7 +20,8 @@
           <div class="col-sm mb-sm-0 mb-2">
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb breadcrumb-no-gutter">
-                <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ route('prop-asset.index') }}">Property & Assets</a></li>
+                <li class="breadcrumb-item"><a class="breadcrumb-link" data-route="dashboard.index" href="{{ route('dashboard.index') }}">Home</a></li>
+                <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ route('prop-asset.index') }}">Stock Masterlist</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ $propertyParents->name }}</li>
               </ol>
             </nav>
@@ -47,6 +48,7 @@
                 <p>{{ $propertyParents->description }}</p>
               </div>
             </div>
+            <p class="page-header-text">Manage and organize stock item records.</p>
 
           </div>
           <!-- End Col -->

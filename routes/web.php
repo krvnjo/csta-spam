@@ -6,12 +6,15 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ConditionController;
+use App\Http\Controllers\ConsumptionLogsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\HelpController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\PropertyChildController;
+use App\Http\Controllers\PropertyConsumableController;
+use App\Http\Controllers\PropertyInventoryController;
 use App\Http\Controllers\PropertyParentController;
 use App\Http\Controllers\RecycleController;
 use App\Http\Controllers\RoleController;
@@ -94,6 +97,47 @@ Route::middleware(['auth', 'noCache', 'checkInactive'])->group(function () {
         Route::patch('/', 'update')->name('update')->middleware('checkPermission:update item management');
         Route::delete('/', 'destroy')->name('delete')->middleware('checkPermission:delete item management');
         Route::patch('/move', 'move')->name('move')->middleware('checkPermission:update item management');
+        Route::fallback(function () {
+            abort(404);
+        });
+    });
+
+    // Inventory Routes
+    Route::middleware('checkPermission:view item management')->prefix('properties-assets/inventory')->name('prop-inv.')->controller(PropertyInventoryController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store')->middleware('checkPermission:create item management');
+        Route::get('/show', 'show')->name('show')->middleware('expectsJson');
+        Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
+        Route::patch('/', 'update')->name('update')->middleware('checkPermission:update item management');
+        Route::delete('/', 'destroy')->name('delete')->middleware('checkPermission:delete item management');
+        Route::fallback(function () {
+            abort(404);
+        });
+    });
+
+    // Consumable Routes
+    Route::middleware('checkPermission:view item management')->prefix('properties-assets/consumable')->name('prop-consumable.')->controller(PropertyConsumableController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store')->middleware('checkPermission:create item management');
+        Route::get('/show', 'show')->name('show')->middleware('expectsJson');
+        Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
+        Route::patch('/', 'update')->name('update')->middleware('checkPermission:update item management');
+        Route::delete('/', 'destroy')->name('delete')->middleware('checkPermission:delete item management');
+        Route::patch('/restock', 'restock')->name('restock')->middleware('checkPermission:update item management');
+        Route::patch('/use', 'use')->name('use')->middleware('checkPermission:update item management');
+        Route::fallback(function () {
+            abort(404);
+        });
+    });
+
+    // Consumption Routes
+    Route::middleware('checkPermission:view item management')->prefix('properties-assets/consumption-logs')->name('prop-consumption.')->controller(ConsumptionLogsController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store')->middleware('checkPermission:create item management');
+        Route::get('/show', 'show')->name('show')->middleware('expectsJson');
+        Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
+        Route::patch('/', 'update')->name('update')->middleware('checkPermission:update item management');
+        Route::delete('/', 'destroy')->name('delete')->middleware('checkPermission:delete item management');
         Route::fallback(function () {
             abort(404);
         });
