@@ -45,6 +45,7 @@
                 <a class="nav-link" data-route="prop-asset.index" href="{{ route('prop-asset.index') }}">Stock Masterlist</a>
                 <a class="nav-link" data-route="prop-inv.index" href="{{ route('prop-inv.index') }}">Inventory Masterlist</a>
                 <a class="nav-link" data-route="prop-consumable.index" href="{{ route('prop-consumable.index') }}">Consumable Masterlist</a>
+                <a class="nav-link" data-route="prop-consumption.index" href="{{ route('prop-consumption.index') }}">Consumption Logs</a>
               </div>
             </div>
             <!-- End Property and Assets -->

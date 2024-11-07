@@ -78,6 +78,7 @@ return new class extends Migration {
             $table->string('purpose', 255)->nullable();
             $table->string('remarks', 255)->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

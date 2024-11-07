@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ConditionController;
+use App\Http\Controllers\ConsumptionLogsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
@@ -121,6 +122,19 @@ Route::middleware(['auth', 'noCache'])->group(function () {
         Route::delete('/', 'destroy')->name('delete')->middleware('checkPermission:delete item management');
         Route::patch('/restock', 'restock')->name('restock')->middleware('checkPermission:update item management');
         Route::patch('/use', 'use')->name('use')->middleware('checkPermission:update item management');
+        Route::fallback(function () {
+            abort(404);
+        });
+    });
+
+    // Consumption Routes
+    Route::middleware('checkPermission:view item management')->prefix('properties-assets/consumption-logs')->name('prop-consumption.')->controller(ConsumptionLogsController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store')->middleware('checkPermission:create item management');
+        Route::get('/show', 'show')->name('show')->middleware('expectsJson');
+        Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
+        Route::patch('/', 'update')->name('update')->middleware('checkPermission:update item management');
+        Route::delete('/', 'destroy')->name('delete')->middleware('checkPermission:delete item management');
         Route::fallback(function () {
             abort(404);
         });

@@ -12,9 +12,13 @@ class ConsumptionLogsController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $consumptionLogs = ConsumptionLog::with('consumable')
+            ->whereNotNull('created_at')
+            ->get();
 
+
+        return view('pages.property-asset.consumption-log.overview-consumption-log', compact('consumptionLogs'));
+    }
     /**
      * Show the form for creating a new resource.
      */
