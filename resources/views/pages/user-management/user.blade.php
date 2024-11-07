@@ -35,31 +35,6 @@
       </div>
       <!-- End Users Header -->
 
-      <!-- Users Stats -->
-      <div class="row">
-        <!-- Total Users -->
-        <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
-          <div class="card h-100">
-            <div class="card-body">
-              <h6 class="card-subtitle mb-2">Total Users</h6>
-              <div class="row align-items-center gx-2">
-                <div class="col">
-                  <span class="js-counter display-4 text-dark">{{ $totalUsers }}</span>
-                  <span class="text-body fs-5 ms-1">from {{ $totalUsers }}</span>
-                </div>
-                <div class="col-auto">
-                  <span class="icon icon-soft-secondary icon-sm icon-circle ms-3">
-                    <i class="bi-people"></i>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- End Total Users -->
-      </div>
-      <!-- End Users Stats -->
-
       <!-- Users DataTable Card -->
       <div class="card">
         <!-- Header -->
@@ -72,26 +47,6 @@
           </div>
 
           <div class="d-grid d-sm-flex justify-content-sm-center justify-content-md-end align-items-sm-center gap-2">
-            @canAny('update user management, delete user management')
-              <!-- DataTable Counter -->
-              <div class="w-100 w-sm-auto" id="usersDatatableCounterInfo" style="display: none;">
-                <div class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-2">
-                  @can('update user management')
-                    <button class="btn btn-sm btn-outline-secondary w-100 w-sm-auto" id="btnMultiSetUser" type="button">
-                      <i class="bi-toggles me-1"></i> Set Status (<span class="fs-5"><span class="usersDatatableCounter"></span></span>)
-                    </button>
-                  @endcan
-
-                  @can('delete user maintenance')
-                    <button class="btn btn-sm btn-outline-danger w-100 w-sm-auto" id="btnMultiDeleteUser" type="button">
-                      <i class="bi-trash3-fill"></i> Delete (<span class="fs-5"><span class="usersDatatableCounter"></span></span>)
-                    </button>
-                  @endcan
-                </div>
-              </div>
-              <!-- End DataTable Counter -->
-            @endcanAny
-
             <!-- Export Dropdown -->
             <div class="dropdown">
               <button class="btn btn-white btn-sm dropdown-toggle w-100" data-bs-toggle="dropdown" data-bs-auto-close="outside" type="button">
@@ -227,13 +182,7 @@
             }'>
             <thead class="thead-light">
               <tr>
-                <th class="w-th">
-                  @canAny('update user management, delete user management')
-                    <input class="form-check-input" id="usersDatatableCheckAll" type="checkbox">
-                  @else
-                    #
-                  @endcanAny
-                </th>
+                <th class="w-th">#</th>
                 <th class="d-none"></th>
                 <th>Name</th>
                 <th>Username</th>
@@ -249,13 +198,7 @@
             <tbody>
               @foreach ($users as $index => $user)
                 <tr>
-                  <td>
-                    @canAny('update user management, delete user management')
-                      <input class="form-check-input" id="userCheck{{ $index + 1 }}" type="checkbox">
-                    @else
-                      {{ $index + 1 }}
-                    @endcanAny
-                  </td>
+                  <td>{{ $index + 1 }}</td>
                   <td class="d-none" data-user-id="{{ Crypt::encryptString($user->id) }}"></td>
                   <td>
                     <a class="d-flex align-items-center btnViewUser">
@@ -290,20 +233,19 @@
                               <button class="dropdown-item btnEditUser" type="button">
                                 <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
                               </button>
+                            @endcan
+                            @if (auth()->id() !== $user->id)
                               <button class="dropdown-item btnSetUser" data-status="{{ $user->is_active ? 0 : 1 }}" type="button">
                                 <i class="bi {{ $user->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
                                 {{ $user->is_active ? 'Set to Inactive' : 'Set to Active' }}
                               </button>
                               @can('delete user management')
                                 <div class="dropdown-divider"></div>
+                                <button class="dropdown-item text-danger btnDeleteUser" type="button">
+                                  <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
+                                </button>
                               @endcan
-                            @endcan
-
-                            @can('delete user management')
-                              <button class="dropdown-item text-danger btnDeleteUser" type="button">
-                                <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
-                              </button>
-                            @endcan
+                            @endif
                           </div>
                         </div>
                       @endcanAny

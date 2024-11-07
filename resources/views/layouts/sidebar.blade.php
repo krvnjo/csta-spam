@@ -105,9 +105,7 @@
                 </a>
 
                 <div class="nav-collapse collapse" id="navbarVerticalMenuFileMaintenance" data-bs-parent="#navbarVerticalMenuOthersMenu">
-                  @can('view brand maintenance')
-                    <a class="nav-link" data-route="brand.index" href="{{ route('brand.index') }}">Brands</a>
-                  @endcan
+                  <a class="nav-link" data-route="brand.index" href="{{ route('brand.index') }}">Brands</a>
                   <a class="nav-link" data-route="category.index" href="{{ route('category.index') }}">Categories</a>
                   <a class="nav-link" data-route="condition.index" href="{{ route('condition.index') }}">Conditions</a>
                   <a class="nav-link" data-route="department.index" href="{{ route('department.index') }}">Departments</a>
@@ -128,14 +126,14 @@
             </div>
             <!-- End Audit History -->
 
-            <!-- System Settings -->
-            <div class="nav-item">
-              <a class="nav-link" data-placement="left" data-route="system.index" href="{{ route('system.index') }}">
-                <i class="bi-gear nav-icon"></i>
-                <span class="nav-link-title">System Settings</span>
-              </a>
-            </div>
-            <!-- End System Settings -->
+            {{--            <!-- System Settings --> --}}
+            {{--            <div class="nav-item"> --}}
+            {{--              <a class="nav-link" data-placement="left" data-route="system.index" href="{{ route('system.index') }}"> --}}
+            {{--                <i class="bi-gear nav-icon"></i> --}}
+            {{--                <span class="nav-link-title">System Settings</span> --}}
+            {{--              </a> --}}
+            {{--            </div> --}}
+            {{--            <!-- End System Settings --> --}}
           </div>
           <!-- End Others -->
         </div>

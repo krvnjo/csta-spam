@@ -1,6 +1,6 @@
 <!-- Add User Modal -->
 <div class="modal fade" id="modalAddUser" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
     <div class="modal-content">
       <!-- Header -->
       <div class="modal-header">
@@ -44,21 +44,8 @@
           <div class="alert alert-soft-danger avatar-img-val d-none" id="valAddImage"></div>
           <!-- End User Image -->
 
-          <!-- Username -->
-          <div class="row mb-4 mt-sm-4 mt-1">
-            <label class="col-sm-3 col-form-label form-label" for="txtAddUser">Username</label>
-            <div class="col-sm-9">
-              <input class="js-input-mask form-control" id="txtAddUser" name="user" data-hs-mask-options='{
-                  "mask": "00-00000"
-                }' type="text"
-                placeholder="##-#####">
-              <span class="invalid-feedback" id="valAddUser"></span>
-            </div>
-          </div>
-          <!-- End Username -->
-
           <!-- First Name -->
-          <div class="row mb-4">
+          <div class="row mb-4 mt-sm-4 mt-1">
             <label class="col-sm-3 col-form-label form-label" for="txtAddFname">First Name</label>
             <div class="col-sm-9">
               <input class="form-control" id="txtAddFname" name="fname" type="text" placeholder="Enter first name">
@@ -144,7 +131,7 @@
           <!-- End Email -->
 
           <!-- Phone -->
-          <div class="row mb-4">
+          <div class="row">
             <label class="col-sm-3 col-form-label form-label" for="txtAddPhone">Phone <span class="form-label-secondary">(Optional)</span></label>
             <div class="col-sm-9">
               <div class="input-group">
@@ -158,21 +145,36 @@
           </div>
           <!-- End Phone -->
 
+          <hr>
+
+          <!-- Username -->
+          <div class="row mb-4">
+            <label class="col-sm-3 col-form-label form-label" for="txtAddUser">Username</label>
+            <div class="col-sm-9">
+              <input class="js-input-mask form-control" id="txtAddUser" name="user" data-hs-mask-options='{
+                  "mask": "00-00000"
+                }' type="text"
+                placeholder="##-#####">
+              <span class="invalid-feedback" id="valAddUser"></span>
+            </div>
+          </div>
+          <!-- End Username -->
+
           <!-- Password -->
           <div class="row mb-4">
-            <label class="col-sm-3 col-form-label form-label" for="txtAddUserPass">Password</label>
+            <label class="col-sm-3 col-form-label form-label" for="txtAddPass">Password</label>
             <div class="col-sm-9">
               <div class="input-group">
-                <input class="js-toggle-password form-control" id="txtAddUserPass" name="pass"
+                <input class="js-toggle-password form-control" id="txtAddPass" name="pass"
                   data-hs-toggle-password-options='{
-                              "target": "#togglePassTarget",
-                              "defaultClass": "bi-eye-slash",
-                              "showClass": "bi-eye",
-                              "classChangeTarget": "#togglePassIcon"
-                            }'
-                  type="password" placeholder="Enter Password" />
+                    "target": "#togglePassTarget",
+                    "defaultClass": "bi-eye-slash",
+                    "showClass": "bi-eye",
+                    "classChangeTarget": "#togglePassIcon"
+                  }'
+                  type="password" placeholder="Enter your password" />
                 <a class="input-group-text" id="togglePassTarget"><i class="bi-eye" id="togglePassIcon"></i></a>
-                <span class="invalid-feedback" id="valAddUserPass"></span>
+                <span class="invalid-feedback" id="valAddPass"></span>
               </div>
             </div>
           </div>
@@ -180,19 +182,19 @@
 
           <!-- Confirm Password -->
           <div class="row">
-            <label class="col-sm-3 col-form-label form-label" for="txtAddUserConPass">Confirm Password</label>
+            <label class="col-sm-3 col-form-label form-label" for="txtAddConfirm">Confirm Password</label>
             <div class="col-sm-9">
               <div class="input-group">
-                <input class="js-toggle-password form-control" id="txtAddUserConPass" name="confirmpass"
+                <input class="js-toggle-password form-control" id="txtAddConfirm" name="confirm"
                   data-hs-toggle-password-options='{
-                              "target": "#togglePassConTarget",
-                              "defaultClass": "bi-eye-slash",
-                              "showClass": "bi-eye",
-                              "classChangeTarget": "#toggleConPassIcon"
-                            }'
-                  type="password" placeholder="Confirm Password" />
+                    "target": "#togglePassConTarget",
+                    "defaultClass": "bi-eye-slash",
+                    "showClass": "bi-eye",
+                    "classChangeTarget": "#toggleConPassIcon"
+                  }'
+                  type="password" placeholder="Confirm your password" />
                 <a class="input-group-text" id="togglePassConTarget"><i class="bi-eye" id="toggleConPassIcon"></i></a>
-                <span class="invalid-feedback" id="valAddUserConPass"></span>
+                <span class="invalid-feedback" id="valAddConfirm"></span>
               </div>
             </div>
           </div>

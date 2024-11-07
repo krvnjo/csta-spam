@@ -1,6 +1,6 @@
 <!-- Edit User Modal -->
 <div class="modal fade" id="modalEditUser" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
     <div class="modal-content">
       <!-- Header -->
       <div class="modal-header">
@@ -44,21 +44,8 @@
           <div class="alert alert-soft-danger avatar-img-val d-none" id="valEditImage"></div>
           <!-- End User Image -->
 
-          <!-- Username -->
-          <div class="row mb-4 mt-sm-4 mt-1">
-            <label class="col-sm-3 col-form-label form-label" for="txtEditUser">Username</label>
-            <div class="col-sm-9">
-              <input class="js-input-mask form-control" id="txtEditUser" name="user" data-hs-mask-options='{
-                  "mask": "00-00000"
-                }' type="text"
-                placeholder="##-#####">
-              <span class="invalid-feedback" id="valEditUser"></span>
-            </div>
-          </div>
-          <!-- End Username -->
-
           <!-- First Name -->
-          <div class="row mb-4">
+          <div class="row mb-4 mt-sm-4 mt-1">
             <label class="col-sm-3 col-form-label form-label" for="txtEditFname">First Name</label>
             <div class="col-sm-9">
               <input class="form-control" id="txtEditFname" name="fname" type="text" placeholder="Enter first name">
@@ -157,6 +144,61 @@
             </div>
           </div>
           <!-- End Phone -->
+
+          <hr>
+
+          <!-- Username -->
+          <div class="row mb-4">
+            <label class="col-sm-3 col-form-label form-label" for="txtEditUser">Username</label>
+            <div class="col-sm-9">
+              <input class="js-input-mask form-control" id="txtEditUser" name="user" data-hs-mask-options='{
+                  "mask": "00-00000"
+                }' type="text"
+                placeholder="##-#####">
+              <span class="invalid-feedback" id="valEditUser"></span>
+            </div>
+          </div>
+          <!-- End Username -->
+
+          <!-- New Password -->
+          <div class="row mb-4">
+            <label class="col-sm-3 col-form-label form-label" for="txtEditPass">New Password</label>
+            <div class="col-sm-9">
+              <div class="input-group">
+                <input class="js-toggle-password form-control" id="txtEditPass" name="pass"
+                  data-hs-toggle-password-options='{
+                    "target": "#toggleEditPass",
+                    "defaultClass": "bi-eye-slash",
+                    "showClass": "bi-eye",
+                    "classChangeTarget": "#toggleEditPassIcon"
+                  }'
+                  type="password" placeholder="Enter your new password" />
+                <a class="input-group-text" id="toggleEditPass"><i class="bi-eye" id="toggleEditPassIcon"></i></a>
+                <span class="invalid-feedback" id="valEditPass"></span>
+              </div>
+            </div>
+          </div>
+          <!-- End New Password -->
+
+          <!-- Confirm Password -->
+          <div class="row">
+            <label class="col-sm-3 col-form-label form-label" for="txtEditConfirm">Confirm Password</label>
+            <div class="col-sm-9">
+              <div class="input-group">
+                <input class="js-toggle-password form-control" id="txtEditConfirm" name="confirm"
+                  data-hs-toggle-password-options='{
+                    "target": "#toggleEditConfirm",
+                    "defaultClass": "bi-eye-slash",
+                    "showClass": "bi-eye",
+                    "classChangeTarget": "#toggleEditConfirmIcon"
+                  }'
+                  type="password" placeholder="Confirm your new password" />
+                <a class="input-group-text" id="toggleEditConfirm"><i class="bi-eye" id="toggleEditConfirmIcon"></i></a>
+                <span class="invalid-feedback" id="valEditConfirm"></span>
+              </div>
+            </div>
+          </div>
+          <!-- End Confirm Password -->
         </form>
       </div>
       <!-- End Body -->

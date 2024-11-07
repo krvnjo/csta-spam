@@ -4,9 +4,11 @@ $(document).ready(function () {
   // ============ Update a User Account Information ============ //
   const accountImageForm = $('#frmAccountImage');
   const accountBasicInfoForm = $('#frmAccountBasicInfo');
+  const accountBasicInfoBtn = $('#btnAccountSave');
 
-  $('#btnAccountSave').on('click', function (e) {
+  accountBasicInfoBtn.on('click', function (e) {
     e.preventDefault();
+    toggleButtonState(accountBasicInfoBtn, true);
 
     const accountImageFormData = new FormData(accountImageForm[0]);
     accountImageFormData.append('_method', 'PATCH');
@@ -22,64 +24,45 @@ $(document).ready(function () {
       contentType: false,
       success: function (response) {
         if (response.success) {
-          showSuccessAlert(response);
+          showResponseAlert(response, 'success');
         } else {
-          if (response.errors.email) {
-            $('#txtAccountEmail').addClass('is-invalid');
-            $('#valAccountEmail').text(response.errors.email[0]);
-          }
-
-          if (response.errors.phone) {
-            $('#txtAccountPhone').addClass('is-invalid');
-            $('#valAccountPhone').text(response.errors.phone[0]);
-          }
+          handleValidationErrors(response, 'Account');
+          toggleButtonState(accountBasicInfoBtn, false);
         }
       },
       error: function (response) {
-        showErrorAlert(response.responseJSON);
+        showResponseAlert(response, 'error');
       },
     });
   });
   // ============ End Update a User Account Information ============ //
 
   // ============ Update Account Password ============ //
-  const accountPasswordForm = $('#frmAccountChangePass');
+  const accountPasswordForm = $('#frmAccountPass');
+  const accountPasswordSaveBtn = $('#btnAccountSavePass');
 
   accountPasswordForm.on('submit', function (e) {
     e.preventDefault();
+    toggleButtonState(accountPasswordSaveBtn, true);
 
     const accountPasswordFormData = new FormData(accountPasswordForm[0]);
-    accountPasswordFormData.append('_method', 'PATCH');
 
     $.ajax({
       url: '/account/' + accountUsername,
       method: 'POST',
       data: accountPasswordFormData,
-      dataType: 'json',
       processData: false,
       contentType: false,
       success: function (response) {
         if (response.success) {
-          showSuccessAlert(response);
+          showResponseAlert(response, 'success');
         } else {
-          if (response.errors.currentpass) {
-            $('#txtAccountCurrentPass').addClass('is-invalid');
-            $('#valAccountCurrentPass').text(response.errors.currentpass[0]);
-          }
-
-          if (response.errors.newpass) {
-            $('#txtAccountNewPass').addClass('is-invalid');
-            $('#valAccountNewPass').text(response.errors.newpass[0]);
-          }
-
-          if (response.errors.confirmpass) {
-            $('#txtAccountConfirmPass').addClass('is-invalid');
-            $('#valAccountConfirmPass').text(response.errors.confirmpass[0]);
-          }
+          handleValidationErrors(response, 'Account');
+          toggleButtonState(accountPasswordSaveBtn, false);
         }
       },
       error: function (response) {
-        showErrorAlert(response.responseJSON);
+        showResponseAlert(response, 'error');
       },
     });
   });

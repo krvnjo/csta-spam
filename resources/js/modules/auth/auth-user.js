@@ -116,7 +116,6 @@ $(document).ready(function () {
           });
         } else {
           handleValidationErrors(response, 'Reset');
-          toggleButtonState(resetPasswordBtn, false);
         }
       },
       error: function (response) {

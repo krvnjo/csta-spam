@@ -29,10 +29,10 @@
 
           <!-- User Name -->
           <div class="row mb-4 mt-3">
-            <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
+            <div class="col-12 col-sm-5 d-flex align-items-center mb-2 mb-sm-0">
               <p class="form-label fw-semibold mb-0">User Name:</p>
             </div>
-            <div class="col-12 col-md-7 d-flex align-items-center">
+            <div class="col-12 col-sm-7 d-flex align-items-center">
               <p class="fw-semibold mb-0" id="lblViewUser"></p>
             </div>
           </div>
@@ -40,10 +40,10 @@
 
           <!-- First Name -->
           <div class="row mb-4">
-            <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
+            <div class="col-12 col-sm-5 d-flex align-items-center mb-2 mb-sm-0">
               <p class="form-label fw-semibold mb-0">First Name:</p>
             </div>
-            <div class="col-12 col-md-7 d-flex align-items-center">
+            <div class="col-12 col-sm-7 d-flex align-items-center">
               <p class="fw-semibold mb-0" id="lblViewFname"></p>
             </div>
           </div>
@@ -51,10 +51,10 @@
 
           <!-- Middle Name -->
           <div class="row mb-4">
-            <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
+            <div class="col-12 col-sm-5 d-flex align-items-center mb-2 mb-sm-0">
               <p class="form-label fw-semibold mb-0">Middle Name:</p>
             </div>
-            <div class="col-12 col-md-7 d-flex align-items-center">
+            <div class="col-12 col-sm-7 d-flex align-items-center">
               <p class="fw-semibold mb-0" id="lblViewMname"></p>
             </div>
           </div>
@@ -62,10 +62,10 @@
 
           <!-- Last Name -->
           <div class="row mb-4">
-            <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
+            <div class="col-12 col-sm-5 d-flex align-items-center mb-2 mb-sm-0">
               <p class="form-label fw-semibold mb-0">Last Name:</p>
             </div>
-            <div class="col-12 col-md-7 d-flex align-items-center">
+            <div class="col-12 col-sm-7 d-flex align-items-center">
               <p class="fw-semibold mb-0" id="lblViewLname"></p>
             </div>
           </div>
@@ -73,10 +73,10 @@
 
           <!-- Role -->
           <div class="row mb-4">
-            <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
+            <div class="col-12 col-sm-5 d-flex align-items-center mb-2 mb-sm-0">
               <p class="form-label fw-semibold mb-0">Role:</p>
             </div>
-            <div class="col-12 col-md-7 d-flex align-items-center">
+            <div class="col-12 col-sm-7 d-flex align-items-center">
               <p class="fw-semibold mb-0" id="lblViewRole"></p>
             </div>
           </div>
@@ -84,10 +84,10 @@
 
           <!-- Department -->
           <div class="row mb-4">
-            <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
+            <div class="col-12 col-sm-5 d-flex align-items-center mb-2 mb-sm-0">
               <p class="form-label fw-semibold mb-0">Department:</p>
             </div>
-            <div class="col-12 col-md-7 d-flex align-items-center">
+            <div class="col-12 col-sm-7 d-flex align-items-center">
               <p class="fw-semibold mb-0" id="lblViewDept"></p>
             </div>
           </div>
@@ -95,10 +95,10 @@
 
           <!-- Email Address -->
           <div class="row mb-4">
-            <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
+            <div class="col-12 col-sm-5 d-flex align-items-center mb-2 mb-sm-0">
               <p class="form-label fw-semibold mb-0">Email:</p>
             </div>
-            <div class="col-12 col-md-7 d-flex align-items-center">
+            <div class="col-12 col-sm-7 d-flex align-items-center">
               <p class="fw-semibold mb-0" id="lblViewEmail"></p>
             </div>
           </div>
@@ -106,10 +106,10 @@
 
           <!-- Phone Number -->
           <div class="row mb-4">
-            <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
+            <div class="col-12 col-sm-5 d-flex align-items-center mb-2 mb-sm-0">
               <p class="form-label fw-semibold mb-0">Phone:</p>
             </div>
-            <div class="col-12 col-md-7 d-flex align-items-center">
+            <div class="col-12 col-sm-7 d-flex align-items-center">
               <p class="fw-semibold mb-0" id="lblViewPhone"></p>
             </div>
           </div>
@@ -117,10 +117,10 @@
 
           <!-- Last Login -->
           <div class="row mb-4">
-            <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
+            <div class="col-12 col-sm-5 d-flex align-items-center mb-2 mb-sm-0">
               <p class="form-label fw-semibold mb-0">Last Login:</p>
             </div>
-            <div class="col-12 col-md-7 d-flex align-items-center">
+            <div class="col-12 col-sm-7 d-flex align-items-center">
               <p class="fw-semibold mb-0" id="lblViewLogin"></p>
             </div>
           </div>
@@ -128,10 +128,10 @@
 
           <!-- Status -->
           <div class="row mb-4">
-            <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
+            <div class="col-12 col-sm-5 d-flex align-items-center mb-2 mb-sm-0">
               <p class="form-label fw-semibold mb-0">Status:</p>
             </div>
-            <div class="col-12 col-md-7 d-flex align-items-center">
+            <div class="col-12 col-sm-7 d-flex align-items-center">
               <p class="mb-0" id="lblViewSetStatus"></p>
             </div>
           </div>
@@ -139,10 +139,10 @@
 
           <!-- Created By -->
           <div class="row mb-4">
-            <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
+            <div class="col-12 col-sm-5 d-flex align-items-center mb-2 mb-sm-0">
               <p class="form-label fw-semibold mb-0">Created By:</p>
             </div>
-            <div class="col-12 col-md-7 d-flex align-items-center">
+            <div class="col-12 col-sm-7 d-flex align-items-center">
               <div class="avatar avatar-xs avatar-circle">
                 <img class="avatar-img" id="imgViewCreatedBy" src="" alt="User Image">
               </div>
@@ -156,10 +156,10 @@
 
           <!-- Updated By -->
           <div class="row">
-            <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
+            <div class="col-12 col-sm-5 d-flex align-items-center mb-2 mb-sm-0">
               <p class="form-label fw-semibold mb-0">Updated By:</p>
             </div>
-            <div class="col-12 col-md-7 d-flex align-items-center">
+            <div class="col-12 col-sm-7 d-flex align-items-center">
               <div class="avatar avatar-xs avatar-circle">
                 <img class="avatar-img" id="imgViewUpdatedBy" src="" alt="User Image">
               </div>

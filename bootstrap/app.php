@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\CheckIfUserInactive;
 use App\Http\Middleware\CheckPermission;
 use App\Http\Middleware\ExpectsJson;
 use App\Http\Middleware\NoCache;
@@ -16,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->redirectGuestsTo('/login');
         $middleware->alias([
+            'checkInactive' => CheckIfUserInactive::class,
             'checkPermission' => CheckPermission::class,
             'expectsJson' => ExpectsJson::class,
             'noCache' => NoCache::class,

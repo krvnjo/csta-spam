@@ -30,8 +30,9 @@ class AccountController extends Controller
      */
     public function update(Request $request)
     {
-        $user = User::query()->findOrFail(Crypt::decryptString($request->input('id')));
         try {
+            $user = User::findOrFail(Crypt::decryptString($request->input('id')));
+
             if ($request->has(['id', 'email', 'phone']) || $request->hasFile('image')) {
                 $accountValidationMessages = [
                     'email.required' => 'Please enter an email address!',
@@ -88,21 +89,21 @@ class AccountController extends Controller
                         $user->user_image = 'default.jpg';
                     }
                 }
-            } elseif ($request->has('currentpass', 'newpass', 'confirmpass')) {
+            } elseif ($request->has('current', 'new', 'confirm')) {
                 $passwordValidationMessages = [
-                    'currentpass.required' => 'Please enter your current password!',
-                    'currentpass.incorrect' => 'Incorrect password!',
+                    'current.required' => 'Please enter your current password!',
+                    'current.incorrect' => 'Incorrect password!',
 
-                    'newpass.required' => 'Please enter your new password!',
-                    'newpass.min' => 'It must be at least :min characters long!',
-                    'newpass.max' => 'It must not exceed :max characters.',
-                    'newpass.regex' => 'Your new password must contain at least one uppercase letter, one lowercase letter, one number, and one special character!',
+                    'new.required' => 'Please enter your new password!',
+                    'new.min' => 'It must be at least :min characters long!',
+                    'new.max' => 'It must not exceed :max characters.',
+                    'new.regex' => 'Your new password must contain at least one uppercase letter, one lowercase letter, one number, and one special character!',
 
-                    'confirmpass.required' => 'Please confirm your new password!',
-                    'confirmpass.same' => 'The confirmation password does not match the new password!',
+                    'confirm.required' => 'Please confirm your new password!',
+                    'confirm.same' => 'The confirmation password does not match the new password!',
                 ];
                 $passwordValidator = Validator::make($request->all(), [
-                    'currentpass' => [
+                    'current' => [
                         'required',
                         function ($attribute, $value, $fail) use ($user) {
                             if ($user && !Hash::check($value, $user->pass_hash)) {
@@ -110,7 +111,7 @@ class AccountController extends Controller
                             }
                         },
                     ],
-                    'newpass' => [
+                    'new' => [
                         'required',
                         'min:8',
                         'max:20',
@@ -119,9 +120,9 @@ class AccountController extends Controller
                         'regex:/[0-9]/',
                         'regex:/[\W_]/',
                     ],
-                    'confirmpass' => [
+                    'confirm' => [
                         'required',
-                        'same:newpass',
+                        'same:new',
                     ],
                 ], $passwordValidationMessages);
 
@@ -131,9 +132,8 @@ class AccountController extends Controller
                         'errors' => $passwordValidator->errors(),
                     ]);
                 }
-                $user->pass_hash = Hash::make($request->newpass);
+                $user->pass_hash = Hash::make($request->new);
             }
-            $user->updated_at = now();
             $user->save();
 
             return response()->json([

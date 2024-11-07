@@ -43,7 +43,7 @@ Route::middleware(['guest', 'noCache'])->group(function () {
 
 // ============ Auth Routes ============ //
 
-Route::middleware(['auth', 'noCache'])->group(function () {
+Route::middleware(['auth', 'noCache', 'checkInactive'])->group(function () {
     // Logout Routes
     Route::prefix('logout')->name('auth.')->controller(AuthController::class)->group(function () {
         Route::get('/', 'index')->name('index');
