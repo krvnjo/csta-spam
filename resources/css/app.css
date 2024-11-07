@@ -131,3 +131,11 @@
     padding: 2rem !important;
   }
 }
+
+.login-card {
+  max-width: 30rem;
+}
+
+.login-logo {
+  width: 18rem;
+}

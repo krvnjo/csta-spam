@@ -49,7 +49,8 @@ return new class extends Migration {
             $table->string('email')->unique();
             $table->string('phone_num', 25)->unique()->nullable();
             $table->string('user_image')->default('default.jpg');
-            $table->timestamp('last_login')->nullable();
+            $table->timestamp('login_at')->nullable();
+            $table->timestamp('logout_at')->nullable();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
             $table->softDeletes();

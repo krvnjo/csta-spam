@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ForgotRequest;
 use App\Http\Requests\PasswordRequest;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
@@ -25,17 +24,17 @@ class PasswordController extends Controller
     /**
      * Send a forgot password link.
      */
-    public function forgot(ForgotRequest $request)
+    public function forgot(PasswordRequest $request)
     {
         try {
             $validated = $request->validated();
 
-            $user = User::where('email', $validated['email'])->first();
+            $user = User::firstWhere('email', $validated['email']);
 
             if (!$user || $user->is_active == 0) {
                 return response()->json([
                     'success' => false,
-                    'errors' => ['email' => ['The email is inactive.']],
+                    'errors' => ['email' => ['The email address is inactive.']],
                 ]);
             }
 
@@ -46,11 +45,12 @@ class PasswordController extends Controller
                 'title' => 'Password Reset Link Sent',
                 'text' => "We've sent a password reset link to {$validated['email']}. Please check your inbox and follow the link to reset your password.",
             ]);
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            \Log::error($e->getMessage());
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
-                'text' => 'An error occurred while requesting password reset. Please try again later.',
+                'text' => 'An error occurred while requesting for password reset. Please try again later.',
             ], 500);
         }
     }
@@ -61,13 +61,11 @@ class PasswordController extends Controller
     public function reset_index(string $token)
     {
         $passwordReset = DB::table('password_reset_tokens')->first();
-
         if (!$passwordReset || !Hash::check($token, $passwordReset->token)) {
             abort(404);
         }
 
         $expirationTime = Carbon::parse($passwordReset->created_at)->addMinutes(5);
-
         if (Carbon::now()->greaterThan($expirationTime)) {
             abort(419);
         }
@@ -78,14 +76,14 @@ class PasswordController extends Controller
     /**
      * Reset the user password.
      */
-    public function reset(PasswordRequest $request, string $token)
+    public function reset(PasswordRequest $request)
     {
         try {
             $validated = $request->validated();
 
-            $user = User::where('user_name', $validated['user'])->first();
-            $passwordEmail = DB::table('password_reset_tokens')->first();
+            $user = User::firstWhere('user_name', $validated['user']);
 
+            $passwordEmail = DB::table('password_reset_tokens')->first();
             if ($user->email != $passwordEmail->email) {
                 return response()->json([
                     'success' => false,
@@ -96,7 +94,7 @@ class PasswordController extends Controller
             if ($validated['email'] != $passwordEmail->email) {
                 return response()->json([
                     'success' => false,
-                    'errors' => ['email' => ['The email does not match with the reset email.']],
+                    'errors' => ['email' => ['The email address does not match with the reset email.']],
                 ]);
             }
 

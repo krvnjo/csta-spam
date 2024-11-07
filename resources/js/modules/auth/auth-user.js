@@ -2,7 +2,6 @@ $(document).ready(function () {
   // ============ Login a User ============ //
   const userLoginForm = $('#frmLoginUser');
   const userLoginBtn = $('#btnLoginUser');
-
   userLoginForm.find('input[type="text"]').first().focus();
 
   userLoginForm.on('submit', function (e) {
@@ -35,7 +34,6 @@ $(document).ready(function () {
   // ============ Forgot Password ============ //
   const forgotPasswordForm = $('#frmForgotPassword');
   const forgotPasswordBtn = $('#btnForgotPassword');
-
   forgotPasswordForm.find('input[type="email"]').first().focus();
 
   forgotPasswordForm.on('submit', function (e) {
@@ -52,17 +50,17 @@ $(document).ready(function () {
       contentType: false,
       success: function (response) {
         if (response.success) {
-          $('#forgotPasswordContainer').html(`
-          <div class="pb-5 text-center">
-            <h1 class="display-5">${response.title}</h1>
-            <p class="mt-5">${response.text}</p>
-          </div>
-          <div class="d-grid">
-            <a class="btn btn-primary btn-lg" href="/login">
-              <i class="bi-chevron-left"></i> Back to log in
-            </a>
-          </div>
-        `);
+          $('#cardForgotPassword').html(`
+            <div class="pb-5 text-center">
+              <h1 class="display-5">${response.title}</h1>
+              <p class="mt-5">${response.text}</p>
+            </div>
+            <div class="d-grid">
+              <a class="btn btn-primary btn-lg" href="/login">
+                <i class="bi-chevron-left"></i> Back to log in
+              </a>
+            </div>
+          `);
         } else {
           handleValidationErrors(response, 'Forgot');
           toggleButtonState(forgotPasswordBtn, false);
@@ -78,7 +76,6 @@ $(document).ready(function () {
   // ============ Reset Password ============ //
   const resetPasswordForm = $('#frmResetPassword');
   const resetPasswordBtn = $('#btnResetPassword');
-
   resetPasswordForm.find('input[type="text"]').first().focus();
 
   resetPasswordForm.on('submit', function (e) {
@@ -86,10 +83,9 @@ $(document).ready(function () {
     toggleButtonState(resetPasswordBtn, true);
 
     const resetPasswordFormData = new FormData(resetPasswordForm[0]);
-    const token = resetPasswordFormData.get('token');
 
     $.ajax({
-      url: '/reset-password/' + token,
+      url: '/reset-password/' + resetPasswordFormData.get('token'),
       method: 'POST',
       data: resetPasswordFormData,
       processData: false,
@@ -97,6 +93,7 @@ $(document).ready(function () {
       success: function (response) {
         if (response.success) {
           toggleButtonState(resetPasswordBtn, false);
+
           Swal.fire({
             title: response.title,
             text: response.text,
