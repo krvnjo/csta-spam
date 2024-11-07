@@ -17,6 +17,7 @@ class ConsumptionLog extends Model
         'consumed_by',
         'dept_id',
         'quantity_consumed',
+        'consumed_at',
         'purpose',
         'remarks',
     ];
@@ -29,5 +30,10 @@ class ConsumptionLog extends Model
     public function department()
     {
         return $this->belongsTo(Department::class, 'dept_id');
+    }
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class, 'unit_id');
     }
 }

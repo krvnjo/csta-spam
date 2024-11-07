@@ -316,6 +316,80 @@ $(document).ready(function () {
 
   // ============ Use an Item Consumable ============ //
 
+  const consumableUseModal = $("#useConsumableModal");
+  const consumableUseForm = $("#frmUseConsumable");
+  const consumableUseSaveBtn = $("#btnUseSaveConsumable");
+  let availableQuantity = 0;
+  let useId = 0;
+
+  handleUnsavedChanges(consumableUseModal, consumableUseForm, consumableUseSaveBtn);
+
+  consumableDatatable.on('click', '.btnUseConsumable', function () {
+    useId = $(this).data('use-id');
+    const consumableName = $(this).data('consumable-name');
+    const unitName = $(this).data('unit-name');
+    availableQuantity = $(this).data('available-quantity');
+
+    // Set values in the modal
+    $("#txtUseConsumableId").val(useId);
+    $("#txtUseAvailableQty").text(availableQuantity);
+    $("#txtUseConsumableName").text(consumableName);
+    $("#txtUseUnit").text(unitName);
+
+    $("#txtUseQuantity").attr("max", availableQuantity);
+
+    consumableUseModal.modal("show");
+  });
+
+  consumableUseForm.on("submit", function (e) {
+    e.preventDefault();
+    toggleButtonState(consumableUseSaveBtn, true);
+
+    const editFormData = new FormData(this);
+    editFormData.append("_method", "PATCH");
+    editFormData.append("totalQuantity", availableQuantity);
+    editFormData.append('consumableId', useId);
+
+    $.ajax({
+      url: "/properties-assets/consumable/use",
+      method: "POST",
+      data: editFormData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        if (response.success) {
+          showResponseAlert(response, 'success', consumableUseModal, consumableUseForm);
+        } else {
+          toggleButtonState(consumableUseSaveBtn, false);
+          // Display validation errors next to the form fields
+          if (response.errors.useConsumedBy) {
+            $('#txtUseConsumedBy').addClass('is-invalid');
+            $('#valUseConsumedBy').text(response.errors.useConsumedBy[0]);
+          }
+          if (response.errors.useDepartment) {
+            $('#cbxUseDepartment').addClass('is-invalid');
+            $('#valUseDepartment').text(response.errors.useDepartment[0]);
+          }
+          if (response.errors.useQuantity) {
+            $('#txtUseQuantity').addClass('is-invalid');
+            $('#valUseQuantity').text(response.errors.useQuantity[0]);
+          }
+          if (response.errors.usePurpose) {
+            $('#txtUsePurpose').addClass('is-invalid');
+            $('#valUsePurpose').text(response.errors.usePurpose[0]);
+          }
+          if (response.errors.useRemarks) {
+            $('#txtUseRemarks').addClass('is-invalid');
+            $('#valUseRemarks').text(response.errors.useRemarks[0]);
+          }
+        }
+      },
+      error: function (response) {
+        showResponseAlert(response, 'error', consumableUseModal, consumableUseForm);
+      }
+    });
+  });
+
   // ============ End Use an Item Consumable ============ //
 });
 
@@ -333,6 +407,12 @@ document.addEventListener('DOMContentLoaded', function() {
     hideSearch: true,
     allowEmptyOption: true,
     dropdownParent: 'body',
+  });
+
+  new TomSelect('#cbxUseDepartment', {
+    controlInput: false,
+    hideSearch: true,
+    allowEmptyOption: true,
   });
 
   document.querySelectorAll('.tom-select input[type="text"]').forEach(function(input) {

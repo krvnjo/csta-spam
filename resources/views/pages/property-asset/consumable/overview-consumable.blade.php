@@ -189,7 +189,12 @@
                 </td>
                 <td>
                   <div class="btn-group position-static">
-                    <button class="btn btn-white btn-sm" type="button">
+                    <button class="btn btn-white btn-sm btnUseConsumable"
+                            data-use-id="{{ $propertyConsumable->id }}"
+                            data-unit-name="{{ $propertyConsumable->unit->name }}"
+                            data-consumable-name="{{ $propertyConsumable->name }}"
+                            data-available-quantity="{{ $propertyConsumable->quantity }}"
+                            type="button">
                       <i class="bi bi-check-circle-fill me-1"></i> Use
                     </button>
                     <div class="btn-group position-static">
@@ -281,6 +286,7 @@
   <x-property-asset.consumable.add-consumable  :units="$units" :propertyConsumables="$propertyConsumables"/>
   <x-property-asset.consumable.edit-consumable  :units="$units" :propertyConsumables="$propertyConsumables"/>
   <x-property-asset.consumable.restock-consumable />
+  <x-property-asset.consumable.use-consumable :departments="$departments" />
 
   <!-- Product Filter Modal -->
   <div class="offcanvas offcanvas-end" id="offcanvasPropertyFilter" aria-labelledby="offcanvasPropertyFilterLabel" tabindex="-1">

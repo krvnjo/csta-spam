@@ -120,6 +120,7 @@ Route::middleware(['auth', 'noCache'])->group(function () {
         Route::patch('/', 'update')->name('update')->middleware('checkPermission:update item management');
         Route::delete('/', 'destroy')->name('delete')->middleware('checkPermission:delete item management');
         Route::patch('/restock', 'restock')->name('restock')->middleware('checkPermission:update item management');
+        Route::patch('/use', 'use')->name('use')->middleware('checkPermission:update item management');
         Route::fallback(function () {
             abort(404);
         });

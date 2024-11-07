@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ConsumptionLog;
+use App\Models\Department;
 use App\Models\PropertyConsumable;
 use App\Models\Unit;
 use Illuminate\Http\JsonResponse;
@@ -22,8 +24,9 @@ class PropertyConsumableController extends Controller
             ->get();
 
         $units = Unit::where('is_active', 1)->get();
+        $departments = Department::where('is_active', 1)->get();
 
-        return view('pages.property-asset.consumable.overview-consumable', compact('units', 'propertyConsumables'));
+        return view('pages.property-asset.consumable.overview-consumable', compact('units', 'propertyConsumables', 'departments'));
     }
 
     /**
@@ -270,6 +273,7 @@ class PropertyConsumableController extends Controller
                 'updated_at' => now(),
             ]);
 
+
             return response()->json([
                 'success' => true,
                 'title' => 'Item Restocked Successfully!',
@@ -283,5 +287,71 @@ class PropertyConsumableController extends Controller
             ], 500);
         }
     }
+
+    public function use(Request $request): JsonResponse
+    {
+        try {
+            $useId = $request->input('consumableId');
+            $consumable = PropertyConsumable::findOrFail($useId);
+            $availableQuantity = $consumable->quantity;
+
+            // Laravel validator with max rule based on available quantity
+            $validator = Validator::make($request->all(), [
+                'useQuantity' => "required|integer|min:1|max:$availableQuantity",
+                'useConsumedBy' => 'required|regex:/^[A-Za-z0-9%,\- ×".]+$/|min:1|max:100',
+                'useDepartment' => 'required|exists:departments,id',
+                'usePurpose' => 'required|regex:/^[A-Za-z0-9%,\- ×".]+$/|min:1|max:100',
+                'useRemarks' => 'nullable|regex:/^[A-Za-z0-9%,\- ×".]+$/|min:1|max:100',
+            ], [
+                'useQuantity.required' => 'Please enter the quantity!',
+                'useQuantity.integer' => 'The quantity must be a whole number.',
+                'useQuantity.min' => 'The quantity must be at least :min.',
+                'useQuantity.max' => "The quantity may not exceed the available quantity of {$availableQuantity}.",
+                'useConsumedBy.required' => 'Please enter the consumer name!',
+                'useConsumedBy.regex' => 'The consumer name may only contain letters, spaces, and period.',
+                'useConsumedBy.min' => 'The consumer name must be at least :min characters.',
+                'useConsumedBy.max' => 'The consumer name may not be greater than :max characters.',
+                'useDepartment.required' => 'Please choose a department!',
+                'usePurpose.required' => 'Please enter the purpose!',
+                'usePurpose.regex' => 'The purpose may only contain letters, spaces, and period.',
+                'useRemarks.regex' => 'The remarks may only contain letters, spaces, and period.',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validator->errors(),
+                ]);
+            }
+
+            // Process the request if validation passes
+            $useQuantity = (int) $request->input('useQuantity');
+            $consumable->decrement('quantity', $useQuantity);
+
+            // Create consumption log
+            ConsumptionLog::create([
+                'consume_id' => $useId,
+                'consumed_by' => ucwords(strtolower(trim($request->input('useConsumedBy')))),
+                'dept_id' => (int) $request->input('useDepartment'),
+                'quantity_consumed' => $useQuantity,
+                'consumed_at' => now(),
+                'purpose' => ucwords(strtolower(trim($request->input('usePurpose')))),
+                'remarks' => ucwords(strtolower(trim($request->input('useRemarks')))),
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'title' => 'Item Used Successfully!',
+                'text' => 'The item has been used.',
+            ]);
+        } catch (Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Oops! Something went wrong.',
+                'message' => 'An error occurred while using the item: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
 
 }
