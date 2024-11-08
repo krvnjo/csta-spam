@@ -14,6 +14,7 @@ use App\Http\Controllers\HelpController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\PropertyChildController;
 use App\Http\Controllers\PropertyConsumableController;
+use App\Http\Controllers\PropertyInvChildController;
 use App\Http\Controllers\PropertyInventoryController;
 use App\Http\Controllers\PropertyParentController;
 use App\Http\Controllers\RecycleController;
@@ -110,6 +111,19 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
         Route::patch('/', 'update')->name('update')->middleware('checkPermission:update item management');
         Route::delete('/', 'destroy')->name('delete')->middleware('checkPermission:delete item management');
+        Route::fallback(function () {
+            abort(404);
+        });
+    });
+
+    Route::middleware('checkPermission:view item management')->prefix('properties-assets/{propertyParent}/child-inventory')->name('prop-inv.child.')->controller(PropertyInvChildController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store')->middleware('checkPermission:create item management');
+        Route::get('/show', 'show')->name('show')->middleware('expectsJson');
+        Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
+        Route::patch('/', 'update')->name('update')->middleware('checkPermission:update item management');
+        Route::delete('/', 'destroy')->name('delete')->middleware('checkPermission:delete item management');
+        Route::patch('/move', 'move')->name('move')->middleware('checkPermission:update item management');
         Route::fallback(function () {
             abort(404);
         });

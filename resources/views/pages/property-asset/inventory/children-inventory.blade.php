@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-  Inventory Masterlist
+  P & A Masterlist
 @endsection
 
 @push('styles')
@@ -21,11 +21,35 @@
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb breadcrumb-no-gutter">
                 <li class="breadcrumb-item"><a class="breadcrumb-link" data-route="dashboard.index" href="{{ route('dashboard.index') }}">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Inventory Masterlist</li>
+                <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ route('prop-inv.index') }}">Inventory Masterlist</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ $propertyParents->name }}</li>
               </ol>
             </nav>
-            <h1 class="page-header-title">Item Inventory Management</h1>
-            <p class="page-header-text">Manage and organize inventory records.</p>
+            <div class="row">
+              <div class="col-auto">
+                <div class="avatar avatar-xl">
+                  @php
+                    $imagePath = public_path('storage/img/prop-asset/' . $propertyParents->image);
+                    $defaultImagePath = public_path('storage/img/prop-asset/default.jpg');
+                    $imageUrl = file_exists($imagePath) ? asset('storage/img/prop-asset/' . $propertyParents->image) : asset('storage/img-uploads/prop-asset/default.jpg');
+                  @endphp
+                  <img class="avatar-img" src="{{ $imageUrl }}" alt="Image Description">
+                </div>
+              </div>
+              <div class="col">
+                <h1 class="page-header-title position-relative">
+                  {{ $propertyParents->name }}
+                  <span class="d-none">{{ $propertyParents->id }}</span>
+                </h1>
+                <h3>
+                  <span class="badge bg-primary">{{ $propertyParents->brand->name }}</span>
+                  <span class="badge bg-secondary">{{ $propertyParents->subcategory->name }}</span>
+                </h3>
+                <p>{{ $propertyParents->description }}</p>
+              </div>
+            </div>
+            <p class="page-header-text">Manage and organize inventory item records.</p>
+
           </div>
           <!-- End Col -->
         </div>
@@ -33,110 +57,86 @@
       </div>
       <!-- End Page Header -->
 
-      {{--    <!-- Stats --> --}}
-      {{--    <div class="row"> --}}
-      {{--      <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3"> --}}
-      {{--        <!-- Card --> --}}
-      {{--        <div class="card h-100"> --}}
-      {{--          <div class="card-body"> --}}
-      {{--            <h6 class="card-subtitle mb-2">Total Stocks</h6> --}}
+      <!-- Stats -->
+      <div class="row">
+        <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3">
+          <!-- Card -->
+          <div class="card h-100">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2">Total Quantity</h6>
 
-      {{--            <div class="row align-items-center gx-2"> --}}
-      {{--              <div class="col"> --}}
-      {{--                <span class="js-counter display-4 text-dark">24</span> --}}
-      {{--                <span class="text-body fs-5 ms-1">from 22</span> --}}
-      {{--              </div> --}}
-      {{--              <!-- End Col --> --}}
+              <div class="row align-items-center gx-2">
+                <div class="col">
+                  <span class="js-counter display-4 text-dark">{{ $propertyQuantity }}</span>
+                  {{--                <span class="text-body fs-5 ms-1">from 22</span> --}}
+                </div>
+                <!-- End Col -->
+              </div>
+              <!-- End Row -->
+            </div>
+          </div>
+          <!-- End Card -->
+        </div>
 
-      {{--              <div class="col-auto"> --}}
-      {{--                <span class="badge bg-soft-success text-success p-1"> --}}
-      {{--                  <i class="bi-graph-up"></i> 5.0% --}}
-      {{--                </span> --}}
-      {{--              </div> --}}
-      {{--              <!-- End Col --> --}}
-      {{--            </div> --}}
-      {{--            <!-- End Row --> --}}
-      {{--          </div> --}}
-      {{--        </div> --}}
-      {{--        <!-- End Card --> --}}
-      {{--      </div> --}}
+        <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3">
+          <!-- Card -->
+          <div class="card h-100">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2">In Stock</h6>
 
-      {{--      <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3"> --}}
-      {{--        <!-- Card --> --}}
-      {{--        <div class="card h-100"> --}}
-      {{--          <div class="card-body"> --}}
-      {{--            <h6 class="card-subtitle mb-2">Total Inventory</h6> --}}
+              <div class="row align-items-center gx-2">
+                <div class="col">
+                  <span class="js-counter display-4 text-dark">{{ $propertyActiveStock }}</span>
+                  {{--                <span class="text-body fs-5 ms-1">from 11</span> --}}
+                </div>
+              </div>
+              <!-- End Row -->
+            </div>
+          </div>
+          <!-- End Card -->
+        </div>
 
-      {{--            <div class="row align-items-center gx-2"> --}}
-      {{--              <div class="col"> --}}
-      {{--                <span class="js-counter display-4 text-dark">12</span> --}}
-      {{--                <span class="text-body fs-5 ms-1">from 11</span> --}}
-      {{--              </div> --}}
+        <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3">
+          <!-- Card -->
+          <div class="card h-100">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2">In Inventory</h6>
 
-      {{--              <div class="col-auto"> --}}
-      {{--                <span class="badge bg-soft-success text-success p-1"> --}}
-      {{--                  <i class="bi-graph-up"></i> 1.2% --}}
-      {{--                </span> --}}
-      {{--              </div> --}}
-      {{--            </div> --}}
-      {{--            <!-- End Row --> --}}
-      {{--          </div> --}}
-      {{--        </div> --}}
-      {{--        <!-- End Card --> --}}
-      {{--      </div> --}}
+              <div class="row align-items-center gx-2">
+                <div class="col">
+                  <span class="js-counter display-4 text-dark">{{ $propertyInInventory }}</span>
+                  {{--                <span class="text-body fs-5 ms-1">from 48.7</span> --}}
+                </div>
+              </div>
+              <!-- End Row -->
+            </div>
+          </div>
+          <!-- End Card -->
+        </div>
 
-      {{--      <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3"> --}}
-      {{--        <!-- Card --> --}}
-      {{--        <div class="card h-100"> --}}
-      {{--          <div class="card-body"> --}}
-      {{--            <h6 class="card-subtitle mb-2">New Stocks</h6> --}}
+        <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3">
+          <!-- Card -->
+          <div class="card h-100">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2">Active / Inactive (Inventory)</h6>
+              <span class="js-counter display-4">
+                <span class="text-success">{{ $propertyInInventory }}</span> /
+                <span class="text-danger">{{ $propertyInactiveInventory }}</span>
+              </span>
+              <div class="row align-items-center gx-2">
+                <div class="col">
+                </div>
 
-      {{--            <div class="row align-items-center gx-2"> --}}
-      {{--              <div class="col"> --}}
-      {{--                <span class="js-counter display-4 text-dark">56</span> --}}
-      {{--                <span class="display-4 text-dark">%</span> --}}
-      {{--                <span class="text-body fs-5 ms-1">from 48.7</span> --}}
-      {{--              </div> --}}
-
-      {{--              <div class="col-auto"> --}}
-      {{--                <span class="badge bg-soft-danger text-danger p-1"> --}}
-      {{--                  <i class="bi-graph-down"></i> 2.8% --}}
-      {{--                </span> --}}
-      {{--              </div> --}}
-      {{--            </div> --}}
-      {{--            <!-- End Row --> --}}
-      {{--          </div> --}}
-      {{--        </div> --}}
-      {{--        <!-- End Card --> --}}
-      {{--      </div> --}}
-
-      {{--      <div class="col-sm-6 col-lg-3 mb-lg-5 mb-3"> --}}
-      {{--        <!-- Card --> --}}
-      {{--        <div class="card h-100"> --}}
-      {{--          <div class="card-body"> --}}
-      {{--            <h6 class="card-subtitle mb-2">In Maintenance</h6> --}}
-
-      {{--            <div class="row align-items-center gx-2"> --}}
-      {{--              <div class="col"> --}}
-      {{--                <span class="js-counter display-4 text-dark">28.6</span> --}}
-      {{--                <span class="display-4 text-dark">%</span> --}}
-      {{--                <span class="text-body fs-5 ms-1">from 28.6%</span> --}}
-      {{--              </div> --}}
-
-      {{--              <div class="col-auto"> --}}
-      {{--                <span class="badge bg-soft-secondary text-secondary p-1">0.0%</span> --}}
-      {{--              </div> --}}
-      {{--            </div> --}}
-      {{--            <!-- End Row --> --}}
-      {{--          </div> --}}
-      {{--        </div> --}}
-      {{--        <!-- End Card --> --}}
-      {{--      </div> --}}
-      {{--    </div> --}}
-      {{--    <!-- End Stats --> --}}
+              </div>
+              <!-- End Row -->
+            </div>
+          </div>
+          <!-- End Card -->
+        </div>
+      </div>
+      <!-- End Stats -->
 
       <!-- Card -->
-
       <div class="card">
         <!-- Header -->
         <div class="card-header card-header-content-md-between">
@@ -147,7 +147,7 @@
                 <div class="input-group-prepend input-group-text">
                   <i class="bi-search"></i>
                 </div>
-                <input class="form-control" id="inventoryDatatableSearch" type="search" aria-label="Search item" placeholder="Search item">
+                <input class="form-control" id="inventoryChildDatatableSearch" type="search" aria-label="Search item" placeholder="Search item">
               </div>
               <!-- End Search -->
             </form>
@@ -155,15 +155,18 @@
 
           <div class="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
             <!-- Datatable Info -->
-            <div id="inventoryDatatableCounterInfo" style="display: none;">
+            <div id="inventoryChildDatatableCounterInfo" style="display: none;">
               <div class="d-flex align-items-center">
                 <span class="fs-5 me-3">
-                  <span id="inventoryDatatableCounter">0</span>
+                  <span id="inventoryChildDatatableCounter">0</span>
                   Selected
                 </span>
-                <a class="btn btn-outline-danger btn-md" href="">
-                  <i class="bi-trash"></i> Delete
-                </a>
+                <button class="btn btn-outline-info btn-md me-2" id="" type="button">
+                  <i class="bi bi-arrow-left-right"></i> Move to Stock
+                </button>
+                <button class="btn btn-outline-danger btn-md" id="" type="button">
+                  <i class="bi-trash3-fill"></i> Delete
+                </button>
               </div>
             </div>
             <!-- End Datatable Info -->
@@ -190,6 +193,10 @@
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/excel-icon.svg') }}" alt="Image Description">
                   Excel
                 </a>
+                <a class="dropdown-item" id="export-csv" href="">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/components/placeholder-csv-format.svg') }}" alt="Image Description">
+                  .CSV
+                </a>
                 <a class="dropdown-item" id="export-pdf" href="">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/pdf-icon.svg') }}" alt="Image Description">
                   PDF
@@ -200,7 +207,7 @@
 
             <!-- Dropdown -->
             <div class="dropdown">
-              <button class="btn btn-white" data-bs-toggle="offcanvas" data-bs-target="#offcanvasStockFilter" type="button" aria-controls="offcanvasStockFilter">
+              <button class="btn btn-white" data-bs-toggle="offcanvas" data-bs-target="#propertyStockFilter" type="button" aria-controls="propertyStockFilter">
                 <i class="bi-filter me-1"></i> Filters
               </button>
             </div>
@@ -211,174 +218,114 @@
 
         <!-- Table -->
         <div class="table-responsive datatable-custom">
-          <table class="table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table table table-hover w-100" id="inventoryOverviewDatatable"
+          <table class="table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table table table-hover w-100" id="inventoryChildDatatable"
                  data-hs-datatables-options='{
                    "columnDefs": [{
-                      "targets": [0, 6],
+                      "targets": [0, 10],
                       "orderable": false
                     }],
                    "order": [],
                    "info": {
-                     "totalQty": "#inventoryDatatableWithPaginationInfoTotalQty"
+                     "totalQty": "#inventoryChildDatatableWithPaginationInfoTotalQty"
                    },
-                   "search": "#inventoryDatatableSearch",
-                   "entries": "#inventoryDatatableEntries",
-                   "pageLength": 5,
+                   "search": "#inventoryChildDatatableSearch",
+                   "entries": "#inventoryChildDatatableEntries",
+                   "pageLength": 10,
                    "isResponsive": false,
                    "isShowPaging": false,
-                   "pagination": "inventoryDatatablePagination"
+                   "pagination": "inventoryChildDatatablePagination"
                  }'>
             <thead class="thead-light">
             <tr>
-              <th class="d-none" id="PropertyId"></th>
-              <th class="col-3">Item Name</th>
-              <th class="col-3">Description</th>
-              <th class="col-2">Category</th>
-              <th class="col-2">Brand</th>
-              <th class="col-2">Depreciation</th>
-              <th class="col-2">Deprecation Rate</th>
-              <th class="col-1 text-center">Inventory Quantity</th>
-              <th class="col-3">Action</th>
+              <th class="table-column-pe-0">
+                <div class="form-check">
+                  <input class="form-check-input" id="inventoryChildDatatableCheckAll" type="checkbox" value="">
+                  <label class="form-check-label" for="inventoryChildDatatableCheckAll"></label>
+                </div>
+              </th>
+              <th class="d-none w-auto">Child Id</th>
+              <th class="table-column-ps-0">Item Code</th>
+              <th>Serial #</th>
+              <th>Acquired Type</th>
+              <th>Designation</th>
+              <th>Department</th>
+              <th>Condition</th>
+              <th>Status</th>
+              <th>Date Added</th>
+              <th>Active</th>
+              <th>Action</th>
             </tr>
             </thead>
 
             <tbody>
-            @foreach ($propertyParents
-                ->where('is_active', 1)
-                ->where('deleted_at', null)
-                ->sortByDesc('updated_at')
-                ->map(function ($propertyParent) {
-                    $propertyParent->children_count = $propertyParent->propertyChildren
-                        ->whereNotNull('inventory_date')
-                        ->where('is_active', 1)
-                        ->count();
-                    return $propertyParent;
-                })
-            as $propertyParent)
+            @foreach ($propertyChildren->whereNotNull('inventory_date')->sortByDesc('updated_at') as $propertyChild)
               <tr>
-                <td class="d-none" data-property-id="{{ Crypt::encryptString($propertyParent->id) }}"></td>
-                <td>
-                  <a class="d-flex align-items-center" href="{{ route('prop-inv.show', $propertyParent->id) }}">
-                    <div class="avatar avatar-lg">
-                      @php
-                        $imagePath = public_path('storage/img/prop-asset/' . $propertyParent->image);
-                        $defaultImagePath = public_path('storage/img/prop-asset/default.jpg');
-                        $imageUrl = file_exists($imagePath) ? asset('storage/img/prop-asset/' . $propertyParent->image) : asset('storage/img/prop-asset/default.jpg');
-                      @endphp
-                      <img class="avatar-img" src="{{ $imageUrl }}" alt="Image Description">
-                    </div>
-                    <div class="ms-3">
-                      <span class="d-block h5 mb-0 text-inherit">{{ $propertyParent->name }}</span>
-                    </div>
-                  </a>
-                </td>
-                <td>
-                    <span style="color:gray"
-                          @if (!empty($propertyParent->description) && strlen($propertyParent->description) > 25) data-bs-toggle="tooltip"
-                          data-bs-html="true"
-                          data-bs-placement="bottom"
-                          title="{{ $propertyParent->description }}" @endif>
-                      {{ Str::limit(!empty($propertyParent->description) ? $propertyParent->description : 'No description provided', 30) }}
-                    </span>
-                </td>
-                <td>
-                  <span class="d-block fs-5">{{ $propertyParent->subcategory->name }}</span>
-                </td>
-                <td>{{ $propertyParent->brand->name }}</td>
-                <td>
-                  <div class="chartjs-custom" style="height: 2rem; width: 7rem;">
-                    <canvas class="js-chart"
-                            data-hs-chartjs-options='{
-                          "type": "line",
-                          "data": {
-                              "labels": {{ json_encode(range(0, $propertyParent->useful_life)) }},
-                              "datasets": [{
-                                  "data": {{ json_encode($propertyParent->depreciationValues) }},
-                                  "backgroundColor": "transparent",
-                                  "borderColor": "#377dff",
-                                  "borderWidth": 2,
-                                  "pointBackgroundColor": "transparent",
-                                  "pointHoverBackgroundColor": "#377dff",
-                                  "pointBorderColor": "transparent",
-                                  "pointHoverBorderColor": "#377dff",
-                                  "pointRadius": 2,
-                                  "pointHoverRadius": 2,
-                                  "tension": 0
-                              }]
-                          },
-                          "options": {
-                           "scales": {
-                              "y": {
-                                "display": false
-                              },
-                              "x": {
-                                "grid": {
-                                  "display": false,
-                                  "drawBorder": false
-                                },
-                                "ticks": {
-                                  "labelOffset": 40,
-                                  "maxTicksLimit": 6,
-                                  "padding": 20,
-                                  "maxRotation": 0,
-                                  "minRotation": 0,
-                                  "fontSize": 12,
-                                  "fontColor": "rgba(0, 0, 0, 0.4)"
-                                }
-                              }
-                           },
-                           "hover": {
-                               "mode": "nearest",
-                               "intersect": false
-                           },
-                           "plugins": {
-                              "tooltip": {
-                                "prefix": "₱",
-                                "intersect": false
-                              }
-                           }
-                         }
-                      }'></canvas>
+                <td class="table-column-pe-0">
+                  <div class="form-check">
+                    <input class="form-check-input child-checkbox" id="inventoryChildDatatableCheck{{ $propertyChild->id }}" type="checkbox" value="{{ $propertyChild->id }}">
+                    <label class="form-check-label" for="inventoryChildDatatableCheck{{ $propertyChild->id }}"></label>
                   </div>
                 </td>
-                <td class="text-center">
-                  @php
-                    $isAppreciated = $propertyParent->depreciationRate >= 0;
-                    $badgeClass = $isAppreciated ? 'bg-soft-success text-success' : 'bg-soft-danger text-danger';
-                    $iconClass = $isAppreciated ?  'bi-graph-up' : 'bi-graph-down';
-                    $annualDepreciation = number_format($propertyParent->annualDepreciation, 2);
-                    $formattedDepreciationRate = number_format($propertyParent->depreciationRate, 2);
-                  @endphp
-                  <span class="badge {{ $badgeClass }} p-1" data-bs-toggle="tooltip" title="₱{{ $annualDepreciation }} per year">
-                        <i class="{{ $iconClass }}"></i> {{ abs($formattedDepreciationRate) }}%
+                <td class="d-none" data-child-id="{{ Crypt::encryptString($propertyChild->id) }}"></td>
+                <td>
+                  @if ($propertyChild->created_at == $propertyChild->updated_at)
+                    <span class="badge bg-success">New</span>
+                    {{ $propertyChild->prop_code }}
+                  @elseif ($propertyChild->created_at->diffInDays(\Carbon\Carbon::now()) >= 7)
+                    {{ $propertyChild->prop_code }}
+                  @else
+                    {{ $propertyChild->prop_code }}
+                  @endif
+                </td>
+                <td>{{ $propertyChild->serial_num ?? '-' }}</td>
+                <td>{{ $propertyChild->acquisition->name }}</td>
+                <td>{{ $propertyChild->designation->name }}</td>
+                <td>{{ $propertyChild->department->dept_code }}</td>
+                <td><span class="{{ $propertyChild->condition->color->class }}"></span>{{ $propertyChild->condition->name }}</td>
+                <td><span class="{{ $propertyChild->status->color->class }} fs-6">{{ $propertyChild->status->name }}</span></td>
+                <td data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom"
+                    title="Date Acquired: {{ \Carbon\Carbon::parse($propertyChild->acq_date)->format('F j, Y') }}, Warranty Date: {{ $propertyChild->warranty_date ? \Carbon\Carbon::parse($propertyChild->warranty_date)->format('F j, Y') : '-' }}">
+                  <i class="bi-calendar-event me-1"></i>
+                  {{ \Carbon\Carbon::parse($propertyChild->stock_date)->format('F j, Y') }}
+                </td>
+                <td @if ($propertyChild->remarks) data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="Remarks: {{ $propertyChild->remarks }}" @endif>
+                    <span class="badge bg-soft-{{ $propertyChild->is_active ? 'success' : 'danger' }} text-{{ $propertyChild->is_active ? 'success' : 'danger' }}">
+                      <span class="legend-indicator bg-{{ $propertyChild->is_active ? 'success' : 'danger' }}"></span>{{ $propertyChild->is_active ? 'Active' : 'Inactive' }}
                     </span>
                 </td>
-                <td style="text-align: center;">{{ $propertyParent->children_count }}</td>
                 <td>
-                  <div class="btn-group" role="group">
-                    <a class="btn btn-white btn-sm" href="{{ route('prop-inv.child.index', $propertyParent) }}">
-                      <i class="bi-eye me-1"></i> View All
-                    </a>
-
+                  <div class="btn-group position-static">
+                    <button class="btn btn-white btn-sm btnEditPropChild" type="button">
+                      <i class="bi-pencil-fill me-1"></i> Edit
+                    </button>
                     <!-- Button Group -->
-                    <div class="btn-group">
-                      <button type="button" class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="productsEditDropdown1"
-                              data-bs-toggle="dropdown" aria-expanded="false"></button>
+                    <div class="btn-group position-static">
+                      <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="childEditDropdown" data-bs-toggle="dropdown" type="button"
+                              aria-expanded="false"></button>
 
-                      <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="productsEditDropdown1">
-                        <button class="dropdown-item" type="button" id="btnEditPropParent" data-prop-parent-id="{{ $propertyParent->id }}">
-                          <i class="bi-pencil-fill dropdown-item-icon"></i> Edit
+                      <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="childEditDropdown">
+                        <button class="dropdown-item" type="button">
+                          <i class="bi bi-info-square-fill dropdown-item-icon"></i> View Details
                         </button>
+{{--                        <button class="dropdown-item btnMoveToInventory"  data-childmove-id="{{ $propertyChild->id }}" type="button">--}}
+{{--                          <i class="bi bi-arrow-left-right dropdown-item-icon text-info"></i> Move to Inventory--}}
+{{--                        </button>--}}
+{{--                        <button class="dropdown-item btnStatusChild" data-status="{{ $propertyChild->is_active ? 0 : 1 }}" type="button">--}}
+{{--                          <i class="bi {{ $propertyChild->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>--}}
+{{--                          {{ $propertyChild->is_active ? 'Set to Inactive' : 'Set to Active' }}--}}
+{{--                        </button>--}}
+{{--                        <button class="dropdown-item text-danger btnDeleteChild" data-childdel-id="{{ $propertyChild->id }}" type="button">--}}
+{{--                          <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete--}}
+{{--                        </button>--}}
                       </div>
                     </div>
                     <!-- End Button Group -->
-
                   </div>
                 </td>
               </tr>
             @endforeach
-
             </tbody>
+
           </table>
         </div>
         <!-- End Table -->
@@ -392,14 +339,14 @@
 
                 <!-- Select -->
                 <div class="tom-select-custom" style="width: 80px;">
-                  <select class="js-select form-select form-select-borderless" id="inventoryDatatableEntries"
+                  <select class="js-select form-select form-select-borderless" id="inventoryChildDatatableEntries"
                           data-hs-tom-select-options='{
                             "searchInDropdown": false,
                             "hideSearch": true
                           }' autocomplete="off">
-                    <option value="5" selected>5</option>
-                    <option value="10">10</option>
+                    <option value="10" selected>10</option>
                     <option value="15">15</option>
+                    <option value="20">20</option>
                   </select>
                 </div>
                 <!-- End Select -->
@@ -407,7 +354,7 @@
                 <span class="text-secondary me-2">of</span>
 
                 <!-- Pagination Quantity -->
-                <span id="propertyDatatableWithPaginationInfoTotalQty"></span>
+                <span id="inventoryChildDatatableWithPaginationInfoTotalQty"></span>
                 <span class="text-secondary ms-2">records</span>
               </div>
             </div>
@@ -416,7 +363,7 @@
             <div class="col-sm-auto">
               <div class="d-flex justify-content-center justify-content-sm-end">
                 <!-- Pagination -->
-                <nav id="inventoryDatatablePagination" aria-label="Activity pagination"></nav>
+                <nav id="inventoryChildDatatablePagination" aria-label="Activity pagination"></nav>
               </div>
             </div>
             <!-- End Col -->
@@ -432,12 +379,11 @@
 @endsection
 
 @section('sec-content')
-  {{--  <x-modals.add-property :brands="$brands" :subcategories="$subcategories" :conditions="$conditions" :acquisitions="$acquisitions" /> --}}
-
-  {{--  <x-modals.edit-property :brands="$brands" :subcategories="$subcategories" /> --}}
+  {{--  <x-modals.edit-property-child :propertyParents="$propertyParents" :conditions="$conditions" :acquisitions="$acquisitions" :propertyChildren="$propertyChildren" /> --}}
+  {{--  <x-modals.move-property :designations="$designations" :departments="$departments" :statuses="$statuses"/> --}}
 
   <!-- Product Filter Modal -->
-  <div class="offcanvas offcanvas-end" id="offcanvasStockFilter" aria-labelledby="offcanvasStockFilterLabel" tabindex="-1">
+  <div class="offcanvas offcanvas-end" id="propertyStockFilter" aria-labelledby="propertyStockFilterLabel" tabindex="-1">
     <div class="offcanvas-header">
       <h4 class="mb-0" id="offcanvasEcommerceProductFilterLabel">Filters</h4>
       <button class="btn-close" data-bs-dismiss="offcanvas" type="button" aria-label="Close"></button>
@@ -691,9 +637,8 @@
 @endsection
 
 @push('scripts')
-  <!-- JS Modules -->
-
   <!-- JS Other Plugins -->
+
   <script src="{{ Vite::asset('resources/vendor/hs-toggle-password/dist/js/hs-toggle-password.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/hs-file-attach/dist/hs-file-attach.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/hs-nav-scroller/dist/hs-nav-scroller.min.js') }}"></script>
@@ -712,27 +657,26 @@
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/dropzone/dist/min/dropzone.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/chart.js/dist/chart.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js') }}"></script>
 
   <!-- JS Themes -->
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>
-
-  <!-- JS Plugins Initialization -->
 
   <script>
     $(document).on('ready', function() {
       // INITIALIZATION OF DATATABLES
       // =======================================================
-      HSCore.components.HSDatatables.init($('#inventoryOverviewDatatable'), {
+      HSCore.components.HSDatatables.init($('#inventoryChildDatatable'), {
         dom: 'Bfrtip',
         buttons: [{
-            extend: 'copy',
+          extend: 'copy',
+          className: 'd-none'
+        },
+          {
+            extend: 'excel',
             className: 'd-none'
           },
           {
-            extend: 'excel',
+            extend: 'csv',
             className: 'd-none'
           },
           {
@@ -748,9 +692,9 @@
           style: 'multi',
           selector: 'td:first-child input[type="checkbox"]',
           classMap: {
-            checkAll: '#datatableCheckAll',
-            counter: '#inventoryDatatableCounter',
-            counterInfo: '#inventoryDatatableCounterInfo'
+            checkAll: '#inventoryChildDatatableCheckAll',
+            counter: '#inventoryChildDatatableCounter',
+            counterInfo: '#inventoryChildDatatableCounterInfo'
           }
         },
         language: {
@@ -795,6 +739,8 @@
       });
     });
   </script>
+
+  <!-- JS Plugins Init. -->
   <script>
     // Initialization of Other Plugins
     (function() {
@@ -807,16 +753,7 @@
         // INITIALIZATION OF FORM SEARCH
         // =======================================================
         new HSFormSearch('.js-form-search');
-
-
-        // INITIALIZATION OF BOOTSTRAP DROPDOWN
-        // =======================================================
-        HSBsDropdown.init();
-
-        // INITIALIZATION OF CHARTJS
-        // =======================================================
-        HSCore.components.HSChartJS.init('.js-chart')
-      };
-    })();
+      }
+    })()
   </script>
 @endpush

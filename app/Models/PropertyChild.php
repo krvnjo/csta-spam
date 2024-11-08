@@ -21,6 +21,7 @@ class PropertyChild extends Model
         'acq_date',
         'warranty_date',
         'stock_date',
+        'inventory_date',
         'dept_id',
         'desig_id',
         'status_id',
