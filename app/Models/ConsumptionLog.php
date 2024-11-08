@@ -13,6 +13,7 @@ class ConsumptionLog extends Model
     protected $table = 'consumption_logs';
 
     protected $fillable = [
+        'transaction_number',
         'consume_id',
         'consumed_by',
         'dept_id',

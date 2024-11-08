@@ -67,7 +67,7 @@
               </div>
             </div>
           </div>
-
+          <hr style="color: #020249">
           <div class="row">
             <div class="col-lg-4">
               <div class="mb-3">
@@ -102,7 +102,7 @@
               </div>
             </div>
           </div>
-
+          <hr style="color: #020249">
           <div class="row">
             <div class="col-lg">
               <div class="mb-3">

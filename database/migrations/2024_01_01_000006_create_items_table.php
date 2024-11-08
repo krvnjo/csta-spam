@@ -70,6 +70,7 @@ return new class extends Migration {
 
         Schema::create('consumption_logs', function (Blueprint $table) {
             $table->id();
+            $table->string('transaction_number')->unique();
             $table->foreignIdFor(PropertyConsumable::class, 'consume_id')->constrained('property_consumables')->cascadeOnDelete();
             $table->string('consumed_by', 255);
             $table->foreignIdFor(Department::class, 'dept_id')->constrained('departments')->cascadeOnDelete();

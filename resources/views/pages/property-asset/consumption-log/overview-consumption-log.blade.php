@@ -106,7 +106,7 @@
         <!-- Table -->
         <div class="table-responsive datatable-custom">
           <table class="table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table table table-hover w-100" id="consumptionOverviewDatatable"
-                 data-hs-datatables-options='{
+            data-hs-datatables-options='{
                    "columnDefs": [{
                       "targets": [0, 7],
                       "orderable": false
@@ -123,35 +123,38 @@
                    "pagination": "consumptionDatatablePagination"
                  }'>
             <thead class="thead-light">
-            <tr>
-              <th class="table-column-pe-0"></th>
-              <th class="col-3">Item Name</th>
-              <th class="col-1 text-center">QuantityConsumed</th>
-              <th class="col-1">Unit</th>
-              <th class="col-2">Consumer Name</th>
-              <th class="col-2">Department</th>
-              <th class="col-3">Purpose</th>
-              <th class="col-3">Remarks</th>
-              <th class="col-2">Date Consumed</th>
-            </tr>
+              <tr>
+                <th class="col-2">Transaction Number</th>
+                <th class="col-2">Consumer Name</th>
+                <th class="col-2">Department</th>
+                <th class="col-3">Item Name</th>
+                <th class="col-1 text-center">Quantity Consumed</th>
+                <th class="col-1">Unit</th>
+                <th class="col-3">Purpose</th>
+                <th class="col-3">Remarks</th>
+                <th class="col-2">Date Consumed</th>
+              </tr>
             </thead>
             <tbody>
-            @foreach ($consumptionLogs->sortByDesc('updated_at') as $consumptionLog)
-              <tr>
-                <th class="table-column-ps-0"></th>
-                <td>{{ $consumptionLog->consumable->name }}</td>
-                <td class="text-center">{{ $consumptionLog->quantity_consumed }}</td>
-                <td>{{ $consumptionLog->consumable->unit->name }}</td>
-                <td>{{ $consumptionLog->consumed_by }}</td>
-                <td>{{ $consumptionLog->department->name }}</td>
-                <td>{{ $consumptionLog->purpose }}</td>
-                <td>{{ $consumptionLog->remarks }}</td>
-                <td>
-                  <span><i class="bi-calendar2-event me-1"></i> {{ \Carbon\Carbon::parse($consumptionLog->created_at)->format('F j, Y') }}</span>
-                </td>
-              </tr>
-            @endforeach
+              @foreach ($consumptionLogs->sortByDesc('updated_at') as $consumptionLog)
+                <tr>
+                  <td>{{ $consumptionLog->transaction_number }}</td>
+                  <td>{{ $consumptionLog->consumed_by }}</td>
+                  <td>{{ $consumptionLog->department->name }}</td>
+                  <td>{{ $consumptionLog->consumable->name }}</td>
+                  <td class="text-center">{{ $consumptionLog->quantity_consumed }}</td>
+                  <td>{{ $consumptionLog->consumable->unit->name }}</td>
+                  <td>{{ $consumptionLog->purpose }}</td>
+                  <td>{{ $consumptionLog->remarks }}</td>
+                  <td>
+                    <span><i class="bi-calendar2-event me-1"></i>
+                      {{ \Carbon\Carbon::parse($consumptionLog->created_at)->format('F j, Y') }}
+                    </span>
+                  </td>
+                </tr>
+              @endforeach
             </tbody>
+
           </table>
         </div>
         <!-- End Table -->
@@ -166,7 +169,7 @@
                 <!-- Select -->
                 <div class="tom-select-custom" style="width: 80px;">
                   <select class="js-select form-select form-select-borderless" id="consumptionDatatableEntries"
-                          data-hs-tom-select-options='{
+                    data-hs-tom-select-options='{
                             "searchInDropdown": false,
                             "hideSearch": true
                           }' autocomplete="off">
@@ -205,7 +208,6 @@
 @endsection
 
 @section('sec-content')
-
   <!-- Product Filter Modal -->
   <div class="offcanvas offcanvas-end" id="offcanvasPropertyFilter" aria-labelledby="offcanvasPropertyFilterLabel" tabindex="-1">
     <div class="offcanvas-header">
@@ -495,9 +497,9 @@
       HSCore.components.HSDatatables.init($('#consumptionOverviewDatatable'), {
         dom: 'Bfrtip',
         buttons: [{
-          extend: 'copy',
-          className: 'd-none'
-        },
+            extend: 'copy',
+            className: 'd-none'
+          },
           {
             extend: 'excel',
             className: 'd-none'

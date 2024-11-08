@@ -9,6 +9,7 @@ use App\Models\Unit;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
 
@@ -295,7 +296,6 @@ class PropertyConsumableController extends Controller
             $consumable = PropertyConsumable::findOrFail($useId);
             $availableQuantity = $consumable->quantity;
 
-            // Laravel validator with max rule based on available quantity
             $validator = Validator::make($request->all(), [
                 'useQuantity' => "required|integer|min:1|max:$availableQuantity",
                 'useConsumedBy' => 'required|regex:/^[A-Za-z0-9%,\- ×".]+$/|min:1|max:100',
@@ -324,12 +324,12 @@ class PropertyConsumableController extends Controller
                 ]);
             }
 
-            // Process the request if validation passes
             $useQuantity = (int) $request->input('useQuantity');
             $consumable->decrement('quantity', $useQuantity);
 
-            // Create consumption log
+            $transactionNumber = 'T-' . str_pad(DB::table('consumption_logs')->count() + 1, 5, '0', STR_PAD_LEFT);
             ConsumptionLog::create([
+                'transaction_number' => $transactionNumber,
                 'consume_id' => $useId,
                 'consumed_by' => ucwords(strtolower(trim($request->input('useConsumedBy')))),
                 'dept_id' => (int) $request->input('useDepartment'),
