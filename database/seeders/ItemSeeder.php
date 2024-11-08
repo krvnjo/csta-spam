@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use App\Models\PropertyParent;
 use App\Models\PropertyChild;
 use Carbon\Carbon;
+use Illuminate\Support\Arr;
 
 class ItemSeeder extends Seeder
 {
@@ -63,9 +64,11 @@ class ItemSeeder extends Seeder
 
                 $isStock = rand(0, 1) === 1;
 
+                $excluded = [1, 6, 8, 9];
+                $options = array_diff(range(2, 9), $excluded);
                 $deptId = $isStock ? 1 : rand(2, 5);
                 $desigId = $isStock ? 1 : rand(2, 11);
-                $statusId = $isStock ? 1 : rand(2, 9);
+                $statusId = $isStock ? 1 : Arr::random($options);
                 $inventoryDate = $isStock ? null : $this->randomDate();
                 $stockDate = Carbon::now();
 
