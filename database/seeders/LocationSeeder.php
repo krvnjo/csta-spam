@@ -42,10 +42,10 @@ class LocationSeeder extends Seeder
             'Gym IT Hallway' => '2',
         ];
 
-        foreach ($designations as $designation => $deptId) {
-            Designation::query()->create([
+        foreach ($designations as $designation => $id) {
+            Designation::create([
                 'name' => $designation,
-                'dept_id' => $deptId,
+                'dept_id' => $id,
             ]);
         }
     }
