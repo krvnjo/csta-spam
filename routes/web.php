@@ -218,9 +218,9 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
     // Department Routes
     Route::middleware('checkPermission:view department maintenance')->prefix('file-maintenance/departments')->name('department.')->controller(DepartmentController::class)->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::get('/show', 'show')->name('show')->middleware('expectsJson');
+        Route::post('/', 'store')->name('create')->middleware('checkPermission:create department maintenance');
+        Route::get('/show', 'show')->name('view')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
-        Route::post('/', 'store')->name('store')->middleware('checkPermission:create department maintenance');
         Route::patch('/', 'update')->name('update')->middleware('checkPermission:update department maintenance');
         Route::delete('/', 'destroy')->name('delete')->middleware('checkPermission:delete department maintenance');
     });

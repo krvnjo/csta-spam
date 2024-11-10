@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Department;
 use App\Models\User;
+use App\Observers\DepartmentObserver;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
@@ -62,5 +64,7 @@ class AppServiceProvider extends ServiceProvider
         ResetPassword::createUrlUsing(function (User $user, string $token) {
             return url('/reset-password/' . $token);
         });
+
+        Department::observe(DepartmentObserver::class);
     }
 }
