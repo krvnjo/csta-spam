@@ -9,7 +9,6 @@ use App\Models\Designation;
 use App\Models\PropertyConsumable;
 use App\Models\PropertyParent;
 use App\Models\Status;
-use App\Models\Subcategory;
 use App\Models\Unit;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -25,7 +24,7 @@ return new class extends Migration {
             $table->id();
             $table->string('name', 255)->unique();
             $table->foreignIdFor(Brand::class, 'brand_id')->constrained('brands')->cascadeOnDelete();
-            $table->foreignIdFor(Subcategory::class, 'subcateg_id')->constrained('subcategories')->cascadeOnDelete();
+            $table->foreignIdFor(Category::class, 'categ_id')->constrained('categories')->cascadeOnDelete();
             $table->string('description')->nullable();
             $table->string('image')->nullable()->default('default.jpg');
             $table->unsignedInteger('quantity')->default(1);

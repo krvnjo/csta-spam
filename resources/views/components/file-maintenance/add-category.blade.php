@@ -13,6 +13,7 @@
       <div class="modal-body">
         <form id="frmAddCategory" method="POST" novalidate>
           @csrf
+
           <!-- Category Name -->
           <div class="form-group">
             <label class="col col-form-label form-label" for="txtAddCategory">Category Name</label>
@@ -20,26 +21,6 @@
             <span class="invalid-feedback" id="valAddCategory"></span>
           </div>
           <!-- End Category Name -->
-
-          <!-- Category Subcategories -->
-          <div class="form-group">
-            <label class="col col-form-label form-label mt-2" for="selAddSubcategories">Category Subcategories</label>
-            <div class="tom-select-custom">
-              <select class="js-select form-select" id="selAddSubcategories" name="subcategories[]"
-                data-hs-tom-select-options='{
-                  "placeholder": "Select a subcategory",
-                  "singleMultiple": true
-                }' autocomplete="off" multiple>
-                @foreach ($subcategories as $subcategory)
-                  @if ($subcategory->is_active)
-                    <option value="{{ $subcategory->id }}">{{ $subcategory->name }}</option>
-                  @endif
-                @endforeach
-              </select>
-              <span class="invalid-feedback" id="valAddSubcategories"></span>
-            </div>
-          </div>
-          <!-- End Category Subcategories -->
         </form>
       </div>
       <!-- End Body -->

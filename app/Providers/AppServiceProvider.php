@@ -3,10 +3,12 @@
 namespace App\Providers;
 
 use App\Models\Brand;
+use App\Models\Category;
 use App\Models\Department;
 use App\Models\Designation;
 use App\Models\User;
 use App\Observers\BrandObserver;
+use App\Observers\CategoryObserver;
 use App\Observers\DepartmentObserver;
 use App\Observers\DesignationObserver;
 use Illuminate\Auth\Notifications\ResetPassword;
@@ -70,6 +72,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Brand::observe(BrandObserver::class);
+        Category::observe(CategoryObserver::class);
         Department::observe(DepartmentObserver::class);
         Designation::observe(DesignationObserver::class);
     }

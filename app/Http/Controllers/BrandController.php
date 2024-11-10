@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BrandRequest;
 use App\Models\Audit;
 use App\Models\Brand;
+use App\Observers\BrandObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Support\Facades\Crypt;
 use Throwable;
 
+#[ObservedBy([BrandObserver::class])]
 class BrandController extends Controller
 {
     /**
@@ -91,7 +94,8 @@ class BrandController extends Controller
                 'updated_by' => $updatedDetails['name'],
                 'updated_at' => $brand->updated_at->format('D, M d, Y | h:i A'),
             ]);
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            \Log::error($e->getMessage());
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
