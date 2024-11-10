@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Models\Department;
+use App\Models\Designation;
 use App\Models\User;
 use App\Observers\DepartmentObserver;
+use App\Observers\DesignationObserver;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
@@ -66,5 +68,6 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Department::observe(DepartmentObserver::class);
+        Designation::observe(DesignationObserver::class);
     }
 }

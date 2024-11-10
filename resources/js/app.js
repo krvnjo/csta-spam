@@ -355,11 +355,7 @@ function populateEditForm(response) {
     if ($(inputSelector).length) {
       $(inputSelector).val(value);
     } else if ($(selectWrapperSelector).length) {
-      if ($(selectWrapperSelector).hasClass('tomselect')) {
-        $(selectWrapperSelector)[0].tomselect.setValue(value);
-      } else {
-        $(selectWrapperSelector).val(value);
-      }
+      $(selectWrapperSelector)[0].tomselect.setValue(value);
     }
   });
 

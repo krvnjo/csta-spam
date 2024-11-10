@@ -25,7 +25,6 @@ return new class extends Migration {
             $table->foreignIdFor(Department::class, 'dept_id')->constrained('departments')->cascadeOnDelete();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
