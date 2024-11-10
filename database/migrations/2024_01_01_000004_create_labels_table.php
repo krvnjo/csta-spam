@@ -26,7 +26,6 @@ return new class extends Migration {
             $table->string('name', 50)->unique();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
-            $table->softDeletes();
         });
 
         Schema::create('categories', function (Blueprint $table) {

@@ -3,13 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Brand extends Model
 {
-    use SoftDeletes;
-
     protected $table = 'brands';
 
     protected $fillable = [
@@ -17,8 +14,8 @@ class Brand extends Model
         'is_active',
     ];
 
-    public function subcategories(): BelongsToMany
+    public function propertyParent(): HasMany
     {
-        return $this->belongsToMany(Subcategory::class, 'brand_subcategories', 'brand_id', 'subcateg_id');
+        return $this->hasMany(PropertyParent::class, 'brand_id', 'id');
     }
 }

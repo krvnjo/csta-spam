@@ -23,27 +23,13 @@
           </div>
           <!-- End Brand Name -->
 
-          <!-- Brand Subcategories -->
-          <div class="row mb-4">
-            <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
-              <p class="form-label fw-semibold mb-0">Brand Subcategories:</p>
-            </div>
-            <div class="col-12 col-md-7 d-flex align-items-center">
-              <div class="btn-group w-100">
-                <button class="btn btn-sm btn-white dropdown-toggle" id="lblViewSubcategories" data-bs-toggle="dropdown" type="button"></button>
-                <div class="dropdown-menu w-100 scrollable-dropdown-menu" id="dropdownMenuViewSubcategories"></div>
-              </div>
-            </div>
-          </div>
-          <!-- End Brand Subcategories -->
-
           <!-- Status -->
           <div class="row mb-4">
             <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
               <p class="form-label fw-semibold mb-0">Status:</p>
             </div>
             <div class="col-12 col-md-7 d-flex align-items-center">
-              <p class="mb-0" id="lblViewSetStatus"></p>
+              <p class="mb-0" id="lblViewStatus"></p>
             </div>
           </div>
           <!-- End Status -->
