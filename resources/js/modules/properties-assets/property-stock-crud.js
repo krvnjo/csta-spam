@@ -233,60 +233,32 @@ $(document).ready(function () {
 
 
 document.addEventListener('DOMContentLoaded', function() {
-  let categorySelect = new TomSelect('#cbxCategory', {
+  new TomSelect('#cbxItemType', {
     controlInput: false,
     hideSearch: true,
     allowEmptyOption: true,
-    onChange: function(value) {
-      if (value) {
-        $.ajax({
-          url: subcategoryBrandsUrl,
-          type: 'GET',
-          data: {
-            subcategory_id: value
-          },
-          success: function(data) {
-            brandSelect.clear();
-            brandSelect.clearOptions();
-            brandSelect.addOption({
-              value: '',
-              text: 'Select Brand...'
-            });
-            data.forEach(function(item) {
-              brandSelect.addOption({
-                value: item.id,
-                text: item.name
-              });
-            });
-            brandSelect.refreshOptions();
-          }
-        });
-      } else {
-        brandSelect.clear();
-        brandSelect.clearOptions();
-        brandSelect.addOption({
-          value: '',
-          text: 'Select Brand...'
-        });
-        brandSelect.refreshOptions();
-      }
-    }
   });
 
-  let selectedCategory = categorySelect.getValue();
-  console.log(selectedCategory);
-
-  let brandSelect = new TomSelect('#cbxBrand', {
+  new TomSelect('#cbxCategory', {
     controlInput: false,
     hideSearch: true,
-    allowEmptyOption: true
+    allowEmptyOption: true,
+    dropdownParent: 'body'
+  });
+
+  new TomSelect('#cbxBrand', {
+    controlInput: false,
+    hideSearch: true,
+    allowEmptyOption: true,
+    dropdownParent: 'body'
   });
 
 
   new TomSelect('#cbxCondition', {
     controlInput: false,
     hideSearch: true,
-    allowEmptyOption: true
+    allowEmptyOption: true,
+    dropdownParent: 'body'
   });
 
   new TomSelect('#propertyDatatableEntries', {
@@ -299,6 +271,7 @@ document.addEventListener('DOMContentLoaded', function() {
     controlInput: false,
     hideSearch: true,
     allowEmptyOption: true,
+    dropdownParent: 'body',
     onChange: function(value) {
       const warrantyDateInput = document.getElementById('dtpWarranty');
 
