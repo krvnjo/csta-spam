@@ -40,8 +40,8 @@ abstract class Controller
     public function getUserAuditDetails($audit)
     {
         return [
-            'image' => asset('storage/img/user-images/' . ($audit ? $audit->causer->user_image : 'system.jpg')),
-            'name' => $audit ? $this->formatFullName($audit->causer->fname, $audit->causer->lname) : 'CSTA-SPAM System',
+            'image' => asset('storage/img/user-images/' . ($audit ? ($audit->causer->user_image ?? 'system.jpg') : 'system.jpg')),
+            'name' => $audit?->causer ? $this->formatFullName($audit->causer->fname, $audit->causer->lname) : 'CSTA-SPAM System',
         ];
     }
 }

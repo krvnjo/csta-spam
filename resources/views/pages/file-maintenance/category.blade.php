@@ -20,12 +20,12 @@
               <li class="breadcrumb-item"><a class="breadcrumb-link">File Maintenance</a></li>
               <li class="breadcrumb-item active">Categories</li>
             </ol>
-            <h1 class="page-header-title mt-2">Categories</h1>
+            <h1 class="page-header-title">Categories</h1>
             <p class="page-header-text">Manage and organize category records.</p>
           </div>
 
           @can('create category maintenance')
-            <div class="col-sm-auto mt-sm-0 mt-3">
+            <div class="col-sm-auto mt-2 mt-sm-0">
               <button class="btn btn-primary w-100 w-sm-auto" id="btnAddCategoryModal" data-bs-toggle="modal" data-bs-target="#modalAddCategory">
                 <i class="bi-plus-lg me-1"></i> Add Category
               </button>
@@ -45,8 +45,8 @@
                 <div class="col-lg-3 col-md-4 col-sm-5">
                   <span class="d-block">Total Categories</span>
                   <span class="badge bg-soft-primary text-primary rounded-pill p-1">
-                    <i class="bi-{{ $deletedCategories == 0 ? 'check-circle-fill' : 'arrow-counterclockwise' }} me-1"></i>
-                    {{ $deletedCategories == 0 ? 'Everything looks great!' : "$deletedCategories record(s) can be restored." }}
+                    <i class="bi-{{ $unusedCategories == 0 ? 'check-circle-fill' : 'trash-fill' }} me-1"></i>
+                    {{ $unusedCategories == 0 ? 'Everything looks great!' : "$unusedCategories unused record(s) can be deleted." }}
                   </span>
                 </div>
 
@@ -79,26 +79,6 @@
           </div>
 
           <div class="d-grid d-sm-flex justify-content-sm-center justify-content-md-end align-items-sm-center gap-2">
-            @canAny('update category maintenance, delete category maintenance')
-              <!-- DataTable Counter -->
-              <div class="w-100 w-sm-auto" id="categoriesDatatableCounterInfo" style="display: none;">
-                <div class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-2">
-                  @can('update category maintenance')
-                    <button class="btn btn-sm btn-outline-secondary w-100 w-sm-auto" id="btnMultiSetCategory" type="button">
-                      <i class="bi-toggles me-1"></i> Set Status (<span class="fs-5"><span class="categoriesDatatableCounter"></span></span>)
-                    </button>
-                  @endcan
-
-                  @can('delete category maintenance')
-                    <button class="btn btn-sm btn-outline-danger w-100 w-sm-auto" id="btnMultiDeleteCategory" type="button">
-                      <i class="bi-trash3-fill"></i> Delete (<span class="fs-5"><span class="categoriesDatatableCounter"></span></span>)
-                    </button>
-                  @endcan
-                </div>
-              </div>
-              <!-- End DataTable Counter -->
-            @endcanAny
-
             <!-- Export Dropdown -->
             <div class="dropdown">
               <button class="btn btn-white btn-sm dropdown-toggle w-100" data-bs-toggle="dropdown" data-bs-auto-close="outside" type="button">
@@ -116,10 +96,10 @@
                 <div class="dropdown-divider"></div>
                 <span class="dropdown-header">Download</span>
                 <button class="dropdown-item" id="categoryExportExcel" type="button">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/excel-icon.svg') }}" alt="Excel Icon"> Excel
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/categories/excel-icon.svg') }}" alt="Excel Icon"> Excel
                 </button>
                 <button class="dropdown-item" id="categoryExportPdf" type="button">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/pdf-icon.svg') }}" alt="PDF Icon"> PDF
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/categories/pdf-icon.svg') }}" alt="PDF Icon"> PDF
                 </button>
               </div>
             </div>
@@ -137,35 +117,13 @@
                     <h5 class="card-header-title">Category Filters</h5>
                   </div>
                   <div class="card-body">
-                    <!-- Subcategories Filter -->
-                    <div class="mb-4">
-                      <small class="text-cap text-body">Subcategories</small>
-                      <div class="row">
-                        <div class="col">
-                          <div class="tom-select-custom">
-                            <select class="js-select js-datatable-filter form-select" data-target-column-index="3"
-                              data-hs-tom-select-options='{
-                                "placeholder": "All Subcategories",
-                                "singleMultiple": true
-                              }'
-                              autocomplete="off" multiple>
-                              @foreach ($subcategories as $subcategory)
-                                <option value="{{ $subcategory->name }}">{{ $subcategory->name }}</option>
-                              @endforeach
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- End Subcategories Filter -->
-
                     <!-- Status Filter -->
-                    <div class="mb-4">
+                    <div class="mb-2">
                       <small class="text-cap text-body">Status</small>
                       <div class="row">
                         <div class="col">
                           <div class="tom-select-custom">
-                            <select class="js-select js-datatable-filter form-select" data-target-column-index="6"
+                            <select class="js-select js-datatable-filter form-select" data-target-column-index="5"
                               data-hs-tom-select-options='{
                                 "allowEmptyOption": true,
                                 "hideSearch": true,
@@ -194,10 +152,10 @@
           <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100" id="categoriesDatatable"
             data-hs-datatables-options='{
               "columnDefs": [{
-                "targets": [0, 7],
+                "targets": [0, 6],
                 "orderable": false
               }],
-              "order": [5, "desc"],
+              "order": [4, "desc"],
               "info": {
                 "totalQty": "#categoriesDatatableWithPagination"
               },
@@ -210,38 +168,22 @@
             }'>
             <thead class="thead-light">
               <tr>
-                <th class="w-th" style="width: 8%">
-                  @canAny('update category maintenance, delete category maintenance')
-                    <input class="form-check-input" id="categoriesDatatableCheckAll" type="checkbox">
-                  @else
-                    #
-                  @endcanAny
-                </th>
+                <th class="w-th" style="width: 8%">#</th>
                 <th class="d-none"></th>
                 <th>Category Name</th>
-                <th>Category Subcategories</th>
-                <th>Date Created</th>
-                <th>Last Updated</th>
+                <th>Created At</th>
+                <th>Updated At</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
             </thead>
 
             <tbody>
-              @foreach ($categories as $index => $category)
+              @foreach ($categories as $category)
                 <tr>
-                  <td>
-                    @canAny('update category maintenance, delete category maintenance')
-                      <input class="form-check-input" id="categoryCheck{{ $index + 1 }}" type="checkbox">
-                    @else
-                      {{ $index + 1 }}
-                    @endcanAny
-                  </td>
+                  <td>{{ $loop->iteration }}</td>
                   <td class="d-none" data-category-id="{{ Crypt::encryptString($category->id) }}"></td>
-                  <td><a class="d-block h5 mb-0 btnViewCategory">{{ $category->name }}</a></td>
-                  <td data-full-value="{{ $subcategoryNames = $category->subcategories->sortBy('name')->pluck('name')->implode(', ') }}">
-                    {{ $subcategoryNames ? Str::limit($subcategoryNames, 30, '...') : 'No subcategories available.' }}
-                  </td>
+                  <td><a class="h5 btnViewCategory">{{ $category->name }}</a></td>
                   <td data-order="{{ $category->created_at }}"><span><i class="bi-calendar-plus me-1"></i> {{ $category->created_at->format('F d, Y') }}</span></td>
                   <td data-order="{{ $category->updated_at }}"><span><i class="bi-calendar2-event me-1"></i> Updated {{ $category->updated_at->diffForHumans() }}</span></td>
                   <td>
@@ -252,6 +194,7 @@
                   <td>
                     <div class="btn-group position-static">
                       <button class="btn btn-white btn-sm btnViewCategory" type="button"><i class="bi-eye"></i> View</button>
+
                       @canAny('update category maintenance, delete category maintenance')
                         <div class="btn-group position-static">
                           <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" data-bs-toggle="dropdown" type="button"></button>
@@ -324,9 +267,9 @@
 @endsection
 
 @section('sec-content')
-  <x-file-maintenance.add-category :subcategories="$subcategories" />
+  <x-file-maintenance.add-category />
   <x-file-maintenance.view-category />
-  <x-file-maintenance.edit-category :subcategories="$subcategories" />
+  <x-file-maintenance.edit-category />
 @endsection
 
 @push('scripts')
@@ -350,7 +293,7 @@
 
   <!-- JS Plugins Initialization -->
   <script>
-    // Initialization of Datatables
+    // Initialization of Datatable
     $(document).on("ready", function() {
       HSCore.components.HSDatatables.init($("#categoriesDatatable"), {
         dom: "Bfrtip",
@@ -358,40 +301,31 @@
             extend: "copy",
             className: "d-none",
             exportOptions: {
-              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8))'
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(5)):not(:nth-child(7))'
             }
           },
           {
             extend: "print",
             className: "d-none",
             exportOptions: {
-              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8))'
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(5)):not(:nth-child(7))'
             }
           },
           {
             extend: "excel",
             className: "d-none",
             exportOptions: {
-              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8))'
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(5)):not(:nth-child(7))'
             }
           },
           {
             extend: "pdf",
             className: "d-none",
             exportOptions: {
-              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8))'
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(5)):not(:nth-child(7))'
             }
           }
         ],
-        select: {
-          style: "multi",
-          selector: "td:first-child input[type=\"checkbox\"]",
-          classMap: {
-            checkAll: "#categoriesDatatableCheckAll",
-            counter: ".categoriesDatatableCounter",
-            counterInfo: "#categoriesDatatableCounterInfo"
-          }
-        },
         language: {
           zeroRecords: `<div class="text-center p-4">
               <img class="mb-3" src="{{ Vite::asset('resources/svg/illustrations/oc-error.svg') }}" alt="No records to display." style="width: 10rem;" data-hs-theme-appearance="default">
@@ -401,26 +335,23 @@
         }
       });
 
-      const datatable = HSCore.components.HSDatatables.getItem(0);
+      const categoriesDatatable = HSCore.components.HSDatatables.getItem(0);
 
-      $("#categoryExportCopy").click(function() {
-        datatable.button(".buttons-copy").trigger();
-      });
+      const exportButtons = {
+        "#categoryExportCopy": ".buttons-copy",
+        "#categoryExportPrint": ".buttons-print",
+        "#categoryExportExcel": ".buttons-excel",
+        "#categoryExportPdf": ".buttons-pdf"
+      };
 
-      $("#categoryExportPrint").click(function() {
-        datatable.button(".buttons-print").trigger();
-      });
-
-      $("#categoryExportExcel").click(function() {
-        datatable.button(".buttons-excel").trigger();
-      });
-
-      $("#categoryExportPdf").click(function() {
-        datatable.button(".buttons-pdf").trigger();
+      $.each(exportButtons, function(exportId, exportClass) {
+        $(exportId).click(function() {
+          categoriesDatatable.button(exportClass).trigger();
+        });
       });
 
       $(".js-datatable-filter").on("change", function() {
-        filterDatatableAndCount(datatable, "#categoriesFilterCount");
+        filterDatatableAndCount(categoriesDatatable, "#categoriesFilterCount");
       });
     });
 

@@ -2,21 +2,21 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\PropertyParent;
 use App\Models\PropertyChild;
+use App\Models\PropertyParent;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Arr;
 
 class ItemSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         $Parent = [
             [
                 'name' => 'S-Inverter AR09TYHYEWKNTC',
                 'brand_id' => 6,
-                'subcateg_id' => 5,
+                'categ_id' => 5,
                 'description' => '1.5HP Window Type Air Conditioner',
                 'image' => 'default.jpg',
                 'quantity' => 15,
@@ -28,7 +28,7 @@ class ItemSeeder extends Seeder
             [
                 'name' => 'C655 QLED',
                 'brand_id' => 5,
-                'subcateg_id' => 4,
+                'categ_id' => 4,
                 'description' => '55 inch QLED 4K UHD Smart TV',
                 'image' => 'default.jpg',
                 'quantity' => 20,
@@ -40,7 +40,7 @@ class ItemSeeder extends Seeder
             [
                 'name' => 'Teacher\'s Table',
                 'brand_id' => 1,
-                'subcateg_id' => 7,
+                'categ_id' => 7,
                 'description' => 'Wooden Table with 2 drawers',
                 'image' => 'default.jpg',
                 'quantity' => 25,
@@ -92,7 +92,7 @@ class ItemSeeder extends Seeder
         }
     }
 
-    private function generateUniquePropCode()
+    private function generateUniquePropCode(): string
     {
         $lastCode = PropertyChild::orderBy('prop_code', 'desc')->pluck('prop_code')->first();
 
@@ -107,7 +107,7 @@ class ItemSeeder extends Seeder
     }
 
 
-    private function generateUniqueSerial()
+    private function generateUniqueSerial(): int
     {
         do {
             $serial = mt_rand(10000000, 99999999);
@@ -116,23 +116,28 @@ class ItemSeeder extends Seeder
         return $serial;
     }
 
-    private function randomDate($startDate = null, $endDate = null)
+    private function randomDate(): string
     {
-        if (!$startDate) {
+        $endDate = null;
+        $startDate = null;
+
+        if (!(null)) {
             $startDate = strtotime('-3 years');
         }
-        if (!$endDate) {
+        if (!(null)) {
             $endDate = strtotime('now');
         }
         return date('Y-m-d', mt_rand($startDate, $endDate));
     }
-    private function randomPastDate()
+
+    private function randomPastDate(): string
     {
         $startDate = strtotime('-3 years');
         $endDate = strtotime('now');
         return date('Y-m-d', mt_rand($startDate, $endDate));
     }
-    private function randomFutureDate()
+
+    private function randomFutureDate(): string
     {
         $startDate = strtotime('now');
         $endDate = strtotime('+5 years');

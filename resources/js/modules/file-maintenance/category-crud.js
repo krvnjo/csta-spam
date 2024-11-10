@@ -22,6 +22,7 @@ $(document).ready(function () {
       contentType: false,
       success: function (response) {
         if (response.success) {
+          toggleButtonState(categoryAddSaveBtn, false);
           showResponseAlert(response, 'success', categoryAddModal, categoryAddForm);
         } else {
           handleValidationErrors(response, 'Add');
@@ -46,33 +47,24 @@ $(document).ready(function () {
       success: function (response) {
         $('#modalViewCategory').modal('toggle');
 
-        $('#lblViewCategory').text(response.category);
+        const categoryConfig = {
+          textFields: [
+            { key: 'category', selector: '#lblViewCategory' },
+            { key: 'created_by', selector: '#lblViewCreatedBy' },
+            { key: 'updated_by', selector: '#lblViewUpdatedBy' },
+            { key: 'created_at', selector: '#lblViewCreatedAt' },
+            { key: 'updated_at', selector: '#lblViewUpdatedAt' },
+          ],
 
-        const subcategories = response.subcategories;
-        const dropdownSubcategory = $('#dropdownMenuViewSubcategories').empty();
-        let totalSubcategories = subcategories.length;
-        $('#lblViewSubcategories').text(`${totalSubcategories} subcategories in this category`);
+          statusFields: { key: 'status', selector: '#lblViewStatus' },
 
-        if (totalSubcategories > 0) {
-          subcategories.forEach((subcategory) => {
-            dropdownSubcategory.append($('<span>').addClass('dropdown-item').text(subcategory));
-          });
-        } else {
-          dropdownSubcategory.append('<span class="dropdown-item text-muted">No subcategories available.</span>');
-        }
+          imageFields: [
+            { key: 'created_img', selector: '#imgViewCreatedBy' },
+            { key: 'updated_img', selector: '#imgViewUpdatedBy' },
+          ],
+        };
 
-        const statusClass = response.status === 1 ? 'success' : 'danger';
-        const statusText = response.status === 1 ? 'Active' : 'Inactive';
-        $('#lblViewSetStatus').html(
-          `<span class="badge bg-soft-${statusClass} text-${statusClass}"><span class="legend-indicator bg-${statusClass}"></span>${statusText}</span>`,
-        );
-
-        $('#imgViewCreatedBy').attr('src', response.created_img);
-        $('#lblViewCreatedBy').text(response.created_by);
-        $('#lblViewCreatedAt').text(response.created_at);
-        $('#imgViewUpdatedBy').attr('src', response.updated_img);
-        $('#lblViewUpdatedBy').text(response.updated_by);
-        $('#lblViewUpdatedAt').text(response.updated_at);
+        displayViewResponseData(response, categoryConfig);
       },
       error: function (response) {
         showResponseAlert(response, 'error');
@@ -91,10 +83,7 @@ $(document).ready(function () {
       data: { id: categoryId },
       success: function (response) {
         categoryEditModal.modal('toggle');
-
-        $('#txtEditCategoryId').val(response.id);
-        $('#txtEditCategory').val(response.category);
-        $('#selEditSubcategories')[0].tomselect.setValue(response.subcategories);
+        populateEditForm(response);
       },
       error: function (response) {
         showResponseAlert(response, 'error');
@@ -116,12 +105,6 @@ $(document).ready(function () {
 
     const editFormData = new FormData(categoryEditForm[0]);
 
-    editFormData.append('_method', 'PATCH');
-    editFormData.append('id', $('#txtEditCategoryId').val());
-    editFormData.append('category', $('#txtEditCategory').val());
-    editFormData.append('subcategories', $('#selEditSubcategories').val());
-    editFormData.append('action', 'update');
-
     $.ajax({
       url: '/file-maintenance/categories',
       method: 'POST',
@@ -130,6 +113,7 @@ $(document).ready(function () {
       contentType: false,
       success: function (response) {
         if (response.success) {
+          toggleButtonState(categoryEditSaveBtn, false);
           showResponseAlert(response, 'success', categoryEditModal, categoryEditForm);
         } else {
           handleValidationErrors(response, 'Edit');
@@ -158,9 +142,9 @@ $(document).ready(function () {
       cancelButtonText: 'No, cancel!',
       customClass: {
         popup: 'bg-light rounded-3 shadow fs-4',
-        title: 'fs-1',
-        htmlContainer: 'text-muted text-center fs-4',
-        confirmButton: 'btn btn-sm btn-white',
+        title: 'text-dark fs-1',
+        htmlContainer: 'text-body text-center fs-4',
+        confirmButton: `btn btn-sm ${categoryName === 1 ? 'btn-success' : 'btn-danger'}`,
         cancelButton: 'btn btn-sm btn-secondary',
       },
     }).then((result) => {
@@ -182,67 +166,6 @@ $(document).ready(function () {
       }
     });
   });
-
-  $('#btnMultiSetCategory').on('click', function () {
-    let categoryIds = categoriesDatatable
-      .rows()
-      .nodes()
-      .to$()
-      .find('input.form-check-input:checked')
-      .map(function () {
-        return $(this).closest('tr').find('[data-category-id]').data('category-id');
-      })
-      .get();
-
-    if (categoryIds.length === 0) {
-      showResponseAlert(
-        {
-          title: 'No record selected!',
-          text: 'Please select at least one category to change status.',
-        },
-        'info',
-      );
-    } else {
-      Swal.fire({
-        title: 'Update categories status?',
-        text: 'Are you sure you want to change the status of the selected categories?',
-        icon: 'warning',
-        showDenyButton: true,
-        showCancelButton: true,
-        focusCancel: true,
-        confirmButtonText: 'Set to Active!',
-        denyButtonText: 'Set to Inactive!',
-        cancelButtonText: 'No, cancel!',
-        customClass: {
-          popup: 'bg-light rounded-3 shadow fs-4',
-          title: 'fs-1',
-          htmlContainer: 'text-muted text-center fs-4',
-          confirmButton: 'btn btn-sm btn-soft-success',
-          denyButton: 'btn btn-sm btn-soft-danger',
-          cancelButton: 'btn btn-sm btn-secondary',
-        },
-      }).then((result) => {
-        const status = result.isConfirmed ? 1 : result.isDenied ? 0 : undefined;
-
-        if (status !== undefined) {
-          $.ajax({
-            url: '/file-maintenance/categories',
-            method: 'PATCH',
-            data: {
-              id: categoryIds,
-              status: status,
-            },
-            success: function (response) {
-              showResponseAlert(response, response.type ?? 'success');
-            },
-            error: function (response) {
-              showResponseAlert(response, 'error');
-            },
-          });
-        }
-      });
-    }
-  });
   // ============ End Update a Category ============ //
 
   // ============ Delete a Category ============ //
@@ -252,7 +175,7 @@ $(document).ready(function () {
 
     Swal.fire({
       title: 'Delete Record?',
-      text: `Are you sure you want to delete the category "${categoryName}"?`,
+      text: `Are you sure you want to permanently delete the brand "${categoryName}"? This action cannot be undone.`,
       icon: 'warning',
       showCancelButton: true,
       focusCancel: true,
@@ -260,8 +183,8 @@ $(document).ready(function () {
       cancelButtonText: 'No, cancel!',
       customClass: {
         popup: 'bg-light rounded-3 shadow fs-4',
-        title: 'fs-1',
-        htmlContainer: 'text-muted text-center fs-4',
+        title: 'text-dark fs-1',
+        htmlContainer: 'text-body text-center fs-4',
         confirmButton: 'btn btn-sm btn-danger',
         cancelButton: 'btn btn-sm btn-secondary',
       },
@@ -280,59 +203,6 @@ $(document).ready(function () {
         });
       }
     });
-  });
-
-  $('#btnMultiDeleteCategory').on('click', function () {
-    let categoryIds = categoriesDatatable
-      .rows()
-      .nodes()
-      .to$()
-      .find('input.form-check-input:checked')
-      .map(function () {
-        return $(this).closest('tr').find('[data-category-id]').data('category-id');
-      })
-      .get();
-
-    if (categoryIds.length === 0) {
-      showResponseAlert(
-        {
-          title: 'No record selected!',
-          text: 'Please select at least one category to delete.',
-        },
-        'info',
-      );
-    } else {
-      Swal.fire({
-        title: 'Delete Records?',
-        text: 'Are you sure you want to delete all the selected categories?',
-        icon: 'warning',
-        showCancelButton: true,
-        focusCancel: true,
-        confirmButtonText: 'Yes, delete it!',
-        cancelButtonText: 'No, cancel!',
-        customClass: {
-          popup: 'bg-light rounded-3 shadow fs-4',
-          title: 'fs-1',
-          htmlContainer: 'text-muted text-center fs-4',
-          confirmButton: 'btn btn-sm btn-danger',
-          cancelButton: 'btn btn-sm btn-secondary',
-        },
-      }).then((result) => {
-        if (result.isConfirmed) {
-          $.ajax({
-            url: '/file-maintenance/categories',
-            method: 'DELETE',
-            data: { id: categoryIds },
-            success: function (response) {
-              showResponseAlert(response, 'success');
-            },
-            error: function (response) {
-              showResponseAlert(response, 'error');
-            },
-          });
-        }
-      });
-    }
   });
   // ============ End Delete a Category ============ //
 });
