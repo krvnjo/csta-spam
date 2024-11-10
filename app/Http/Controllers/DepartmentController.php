@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DepartmentRequest;
+use App\Models\Audit;
 use App\Models\Department;
-use Illuminate\Http\Request;
+use App\Observers\DepartmentObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use Throwable;
 
+#[ObservedBy([DepartmentObserver::class])]
 class DepartmentController extends Controller
 {
     /**
@@ -16,10 +18,10 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        $departments = Department::whereNull('deleted_at')->get();
+        $departments = Department::orderBy('name')->get();
 
         $totalDepartments = $departments->count();
-        $deletedDepartments = Department::onlyTrashed()->count();
+        $unusedDepartments = Department::doesntHave('designations')->doesntHave('users')->count();
         $activeDepartments = $departments->where('is_active', 1)->count();
         $inactiveDepartments = $totalDepartments - $activeDepartments;
 
@@ -30,7 +32,7 @@ class DepartmentController extends Controller
             compact(
                 'departments',
                 'totalDepartments',
-                'deletedDepartments',
+                'unusedDepartments',
                 'activeDepartments',
                 'inactiveDepartments',
                 'activePercentage',
@@ -42,57 +44,21 @@ class DepartmentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(DepartmentRequest $request)
     {
-        $departmentValidationMessages = [
-            'department.required' => 'Please enter a department name!',
-            'department.regex' => 'It must not contain special symbols and multiple spaces.',
-            'department.min' => 'The department name must be at least :min characters.',
-            'department.max' => 'The department name may not be greater than :max characters.',
-            'department.unique' => 'This department name already exists.',
-
-            'deptcode.required' => 'Please enter a department code!',
-            'deptcode.regex' => 'It must not contain special symbols and multiple spaces.',
-            'deptcode.min' => 'The department code must be at least :min characters.',
-            'deptcode.max' => 'The department code may not be greater than :max characters.',
-            'deptcode.unique' => 'This department code already exists.',
-        ];
-
         try {
-            $departmentValidator = Validator::make($request->all(), [
-                'department' => [
-                    'required',
-                    'regex:/^(?!.*([ -])\1)[a-zA-Z0-9]+(?:[ -][a-zA-Z0-9]+)*$/',
-                    'min:5',
-                    'max:75',
-                    'unique:departments,name'
-                ],
-                'deptcode' => [
-                    'required',
-                    'regex:/^(?!.*([ -])\1)[a-zA-Z0-9]+(?:[ -][a-zA-Z0-9]+)*$/',
-                    'min:3',
-                    'max:15',
-                    'unique:departments,dept_code'
-                ],
-            ], $departmentValidationMessages);
+            $validated = $request->validated();
 
-            if ($departmentValidator->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'errors' => $departmentValidator->errors(),
-                ]);
-            } else {
-                Department::query()->create([
-                    'name' => $this->formatInput($request->input('department')),
-                    'is_active' => 1,
-                ]);
+            Department::create([
+                'name' => $this->formatInput($validated['department']),
+                'code' => strtoupper(trim($validated['code'])),
+            ]);
 
-                return response()->json([
-                    'success' => true,
-                    'title' => 'Saved Successfully!',
-                    'text' => 'The department has been added successfully!',
-                ]);
-            }
+            return response()->json([
+                'success' => true,
+                'title' => 'Saved Successfully!',
+                'text' => 'A new department has been added successfully!',
+            ]);
         } catch (Throwable) {
             return response()->json([
                 'success' => false,
@@ -105,20 +71,32 @@ class DepartmentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request)
+    public function show(DepartmentRequest $request)
     {
         try {
-            $department = Department::query()->findOrFail(Crypt::decryptString($request->input('id')));
-            $designations = $department->designations->whereNull('deleted_at')->pluck('name');
+            $validated = $request->validated();
+
+            $department = Department::with('designations')->findOrFail($validated['id']);
+            $designations = $department->designations()->orderBy('name')->pluck('name')->toArray();
+
+            $createdBy = Audit::where('subject_type', Department::class)->where('subject_id', $department->id)->where('event', 'created')->first();
+            $createdDetails = $this->getUserAuditDetails($createdBy);
+
+            $updatedBy = Audit::where('subject_type', Department::class)->where('subject_id', $department->id)->where('event', 'updated')->latest()->first() ?? $createdBy;
+            $updatedDetails = $this->getUserAuditDetails($updatedBy);
 
             return response()->json([
                 'success' => true,
                 'department' => $department->name,
-                'deptcode' => $department->dept_code,
+                'code' => $department->code,
                 'designations' => $designations,
                 'status' => $department->is_active,
-                'created' => $department->created_at->format('D, F d, Y | h:i:s A'),
-                'updated' => $department->updated_at->format('D, F d, Y | h:i:s A'),
+                'created_img' => $createdDetails['image'],
+                'created_by' => $createdDetails['name'],
+                'created_at' => $department->created_at->format('D, M d, Y | h:i A'),
+                'updated_img' => $updatedDetails['image'],
+                'updated_by' => $updatedDetails['name'],
+                'updated_at' => $department->updated_at->format('D, M d, Y | h:i A'),
             ]);
         } catch (Throwable) {
             return response()->json([
@@ -132,16 +110,18 @@ class DepartmentController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Request $request)
+    public function edit(DepartmentRequest $request)
     {
         try {
-            $department = Department::query()->findOrFail(Crypt::decryptString($request->input('id')));
+            $validated = $request->validated();
+
+            $department = Department::findOrFail($validated['id']);
 
             return response()->json([
                 'success' => true,
-                'id' => $request->input('id'),
+                'id' => Crypt::encryptString($department->id),
                 'department' => $department->name,
-                'deptcode' => $department->dept_code,
+                'code' => $department->code,
             ]);
         } catch (Throwable) {
             return response()->json([
@@ -155,70 +135,23 @@ class DepartmentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+    public function update(DepartmentRequest $request)
     {
         try {
-            $department = Department::query()->findOrFail(Crypt::decryptString($request->input('id')));
-            $designations = $department->designations->whereNull('deleted_at');
+            $validated = $request->validated();
 
-            if ($request->has(['id', 'department', 'deptcode'])) {
-                $departmentValidationMessages = [
-                    'department.required' => 'Please enter a department name!',
-                    'department.regex' => 'It must not contain special symbols and multiple spaces.',
-                    'department.min' => 'The department name must be at least :min characters.',
-                    'department.max' => 'The department name may not be greater than :max characters.',
-                    'department.unique' => 'This department name already exists.',
+            $department = Department::findOrFail($validated['id']);
 
-                    'deptcode.required' => 'Please enter a department code!',
-                    'deptcode.regex' => 'It must not contain special symbols and multiple spaces.',
-                    'deptcode.min' => 'The department code must be at least :min characters.',
-                    'deptcode.max' => 'The department code may not be greater than :max characters.',
-                    'deptcode.unique' => 'This department code already exists.',
-                ];
-
-                $departmentValidator = Validator::make($request->all(), [
-                    'department' => [
-                        'required',
-                        'regex:/^(?!.*([ -])\1)[a-zA-Z0-9]+(?:[ -][a-zA-Z0-9]+)*$/',
-                        'min:5',
-                        'max:75',
-                        Rule::unique('departments', 'name')->ignore($department->id)
-                    ],
-                    'deptcode' => [
-                        'required',
-                        'regex:/^(?!.*([ -])\1)[a-zA-Z0-9]+(?:[ -][a-zA-Z0-9]+)*$/',
-                        'min:3',
-                        'max:15',
-                        Rule::unique('departments', 'dept_code')->ignore($department->id)
-                    ],
-                ], $departmentValidationMessages);
-
-                if ($departmentValidator->fails()) {
-                    return response()->json([
-                        'success' => false,
-                        'errors' => $departmentValidator->errors(),
-                    ]);
-                } else {
-                    $department->name = $this->formatInput($request->input('department'));
-                    $department->dept_code = strtoupper(trim($request->input('deptcode')));
-                }
-            } elseif ($request->has('status')) {
-                $department->is_active = $request->input('status');
-
-                if ($department->is_active == 0) {
-                    foreach ($designations as $designation) {
-                        $designation->is_active = 0;
-                        $designation->save();
-                    }
-                } else {
-                    foreach ($designations as $designation) {
-                        $designation->is_active = 1;
-                        $designation->save();
-                    }
-                }
+            if (!isset($validated['status'])) {
+                $department->update([
+                    'name' => $this->formatInput($validated['department']),
+                    'code' => strtoupper(trim($validated['code'])),
+                ]);
+            } else {
+                $department->update([
+                    'is_active' => $validated['status'],
+                ]);
             }
-            $department->updated_at = now();
-            $department->save();
 
             return response()->json([
                 'success' => true,
@@ -229,7 +162,7 @@ class DepartmentController extends Controller
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
-                'text' => 'An error occurred while updating the department.',
+                'text' => 'An error occurred while updating the department. Please try again later.',
             ], 500);
         }
     }
@@ -237,44 +170,33 @@ class DepartmentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request)
+    public function destroy(DepartmentRequest $request)
     {
         try {
-            $ids = $request->input('id');
+            $validated = $request->validated();
 
-            if (!is_array($ids)) {
-                $ids = [$ids];
+            $department = Department::findOrFail($validated['id']);
+
+            if ($department->designations->count() > 0 || $department->users->count() > 0) {
+                return response()->json([
+                    'success' => false,
+                    'title' => 'Deletion Failed!',
+                    'text' => 'The department cannot be deleted because it is still being used by other records.',
+                ], 400);
             }
 
-            $ids = array_map(function ($id) {
-                return Crypt::decryptString($id);
-            }, $ids);
-
-            $departments = Department::query()->whereIn('id', $ids)->get();
-
-            foreach ($departments as $department) {
-                if ($department->designations->count() > 0) {
-                    return response()->json([
-                        'success' => false,
-                        'title' => 'Deletion Failed!',
-                        'text' => 'The department cannot be deleted because it has associated designations.',
-                    ], 400);
-                }
-                $department->is_active = 0;
-                $department->save();
-                $department->delete();
-            }
+            $department->forceDelete();
 
             return response()->json([
                 'success' => true,
                 'title' => 'Deleted Successfully!',
-                'text' => count($departments) > 1 ? 'The departments have been deleted and can be restored from the bin.' : 'The department has been deleted and can be restored from the bin.',
+                'text' => 'The department has been deleted permanently.',
             ]);
         } catch (Throwable) {
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
-                'message' => 'An error occurred while deleting the department.',
+                'message' => 'An error occurred while deleting the department. Please try again later.',
             ], 500);
         }
     }

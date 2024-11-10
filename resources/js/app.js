@@ -92,8 +92,8 @@ function showResponseAlert(response, type, modal = null, form = null) {
     focusCancel: true,
     customClass: {
       popup: 'bg-light rounded-3 shadow fs-4',
-      title: 'fs-1',
-      htmlContainer: 'text-muted text-center fs-4',
+      title: 'text-dark fs-1',
+      htmlContainer: 'text-body text-center fs-4',
       confirmButton: 'btn btn-sm btn-secondary',
     },
   }).then((result) => {
@@ -204,11 +204,15 @@ function handleUnsavedChanges(modal, form, saveButton) {
         text: 'You have unsaved changes. Are you sure you want to close the modal?',
         icon: 'warning',
         showCancelButton: true,
+        focusCancel: true,
         confirmButtonText: 'Yes, close it!',
         cancelButtonText: 'No, keep editing',
         customClass: {
-          confirmButton: 'btn btn-danger',
-          cancelButton: 'btn btn-secondary',
+          popup: 'bg-light rounded-3 shadow fs-4',
+          title: 'text-dark fs-1',
+          htmlContainer: 'text-body text-center fs-4',
+          confirmButton: 'btn btn-sm btn-danger',
+          cancelButton: 'btn btn-sm btn-secondary',
         },
       }).then((result) => {
         if (result.isConfirmed) {
@@ -295,8 +299,8 @@ function handleValidationErrors(response, mode = 'Add') {
 window.handleValidationErrors = handleValidationErrors;
 // ============ End Handle Validation Errors Function ============ //
 
-// ============ Display Response Data Function ============ //
-function displayResponseData(response, config) {
+// ============ Display View Response Data Function ============ //
+function displayViewResponseData(response, config) {
   if (config.textFields) {
     config.textFields.forEach((field) => {
       if (response[field.key] !== undefined) {
@@ -305,8 +309,8 @@ function displayResponseData(response, config) {
     });
   }
 
-  if (config.dropdowns) {
-    config.dropdowns.forEach((dropdownConfig) => {
+  if (config.dropdownFields) {
+    config.dropdownFields.forEach((dropdownConfig) => {
       const dropdownContainer = $(dropdownConfig.container).empty();
       const items = response[dropdownConfig.key];
       const itemCount = items ? items.length : 0;
@@ -317,15 +321,15 @@ function displayResponseData(response, config) {
           dropdownContainer.append($('<span>').addClass('dropdown-item').text(item));
         });
       } else {
-        dropdownContainer.append('<span class="dropdown-item text-muted">No items available.</span>');
+        dropdownContainer.append('<span class="dropdown-item text-body">No records available.</span>');
       }
     });
   }
 
-  if (config.status) {
-    const statusClass = response[config.status.key] === 1 ? 'success' : 'danger';
-    const statusText = response[config.status.key] === 1 ? config.status.activeText : config.status.inactiveText;
-    $(config.status.selector).html(
+  if (config.statusFields) {
+    const statusClass = response[config.statusFields.key] === 1 ? 'success' : 'danger';
+    const statusText = response[config.statusFields.key] === 1 ? 'Active' : 'Inactive';
+    $(config.statusFields.selector).html(
       `<span class="badge bg-soft-${statusClass} text-${statusClass}"><span class="legend-indicator bg-${statusClass}"></span>${statusText}</span>`,
     );
   }
@@ -339,8 +343,33 @@ function displayResponseData(response, config) {
   }
 }
 
-window.displayResponseData = displayResponseData;
-// ============ End Display Response Data Function ============ //
+window.displayViewResponseData = displayViewResponseData;
+// ============ End Display View Response Data Function ============ //
+
+// ============ Populate Edit Form Data Function ============ //
+function populateEditForm(response) {
+  $.each(response, function (key, value) {
+    const inputSelector = '#txtEdit' + capitalizeFirstLetter(key);
+    const selectWrapperSelector = '#selEdit' + capitalizeFirstLetter(key);
+
+    if ($(inputSelector).length) {
+      $(inputSelector).val(value);
+    } else if ($(selectWrapperSelector).length) {
+      if ($(selectWrapperSelector).hasClass('tomselect')) {
+        $(selectWrapperSelector)[0].tomselect.setValue(value);
+      } else {
+        $(selectWrapperSelector).val(value);
+      }
+    }
+  });
+
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+}
+
+window.populateEditForm = populateEditForm;
+// ============ End Populate Edit Form Data Function ============ //
 
 // ============ Filter DataTable and Filter Count Function ============ //
 function filterDatatableAndCount(filterDatatable, filterCount) {

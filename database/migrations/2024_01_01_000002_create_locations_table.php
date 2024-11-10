@@ -14,10 +14,9 @@ return new class extends Migration {
         Schema::create('departments', function (Blueprint $table) {
             $table->id();
             $table->string('name', 75)->unique();
-            $table->string('dept_code', 20)->unique();
+            $table->string('code', 25)->unique();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
-            $table->softDeletes();
         });
 
         Schema::create('designations', function (Blueprint $table) {
