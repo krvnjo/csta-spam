@@ -70,7 +70,7 @@ class LabelSeeder extends Seeder
         ];
 
         foreach ($units as $unit) {
-            Unit::query()->create([
+            Unit::create([
                 'name' => $unit,
             ]);
         }

@@ -10,8 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::connection(config('activitylog.database_connection'))->create(
-            config('activitylog.table_name'),
+        Schema::connection(config('activitylog.database_connection'))->create(config('activitylog.table_name'),
             function (Blueprint $table) {
                 $table->bigIncrements('id');
                 $table->string('log_name')->nullable();
@@ -24,15 +23,13 @@ return new class extends Migration {
             },
         );
 
-        Schema::connection(config('activitylog.database_connection'))->table(
-            config('activitylog.table_name'),
+        Schema::connection(config('activitylog.database_connection'))->table(config('activitylog.table_name'),
             function (Blueprint $table) {
                 $table->string('event')->nullable()->after('subject_type');
             },
         );
 
-        Schema::connection(config('activitylog.database_connection'))->table(
-            config('activitylog.table_name'),
+        Schema::connection(config('activitylog.database_connection'))->table(config('activitylog.table_name'),
             function (Blueprint $table) {
                 $table->string('batch_uuid')->nullable()->after('properties');
             },
@@ -45,14 +42,12 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::connection(config('activitylog.database_connection'))->dropIfExists(config('activitylog.table_name'));
-        Schema::connection(config('activitylog.database_connection'))->table(
-            config('activitylog.table_name'),
+        Schema::connection(config('activitylog.database_connection'))->table(config('activitylog.table_name'),
             function (Blueprint $table) {
                 $table->dropColumn('batch_uuid');
             },
         );
-        Schema::connection(config('activitylog.database_connection'))->table(
-            config('activitylog.table_name'),
+        Schema::connection(config('activitylog.database_connection'))->table(config('activitylog.table_name'),
             function (Blueprint $table) {
                 $table->dropColumn('event');
             },

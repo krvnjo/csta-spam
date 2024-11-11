@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Dashboard;
 use App\Models\Department;
 use App\Models\Permission;
 use App\Models\Role;
@@ -25,6 +26,24 @@ return new class extends Migration {
             $table->id();
             $table->string('name', 50)->unique();
             $table->string('description', 100)->unique();
+            $table->foreignIdFor(Dashboard::class, 'dash_id')->constrained('dashboards')->cascadeOnDelete();
+            $table->unsignedTinyInteger('is_active')->default(1);
+            $table->timestamps();
+        });
+
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('user_name', 25)->unique();
+            $table->string('pass_hash');
+            $table->string('name', 100);
+            $table->string('lname', 75);
+            $table->string('fname', 75);
+            $table->string('mname', 75)->nullable();
+            $table->foreignIdFor(Role::class, 'role_id')->constrained('roles')->cascadeOnDelete();
+            $table->foreignIdFor(Department::class, 'dept_id')->constrained('departments')->cascadeOnDelete();
+            $table->string('email', 75)->unique();
+            $table->string('phone_num', 25)->unique()->nullable();
+            $table->string('user_image', 25)->default('default.jpg');
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
         });
@@ -33,22 +52,6 @@ return new class extends Migration {
             $table->id();
             $table->foreignIdFor(Role::class, 'role_id')->constrained('roles')->cascadeOnDelete();
             $table->foreignIdFor(Permission::class, 'perm_id')->constrained('permissions')->cascadeOnDelete();
-        });
-
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('user_name', 25)->unique();
-            $table->string('pass_hash');
-            $table->string('lname', 75);
-            $table->string('fname', 75);
-            $table->string('mname', 75)->nullable();
-            $table->foreignIdFor(Role::class, 'role_id')->constrained('roles')->cascadeOnDelete();
-            $table->foreignIdFor(Department::class, 'dept_id')->constrained('departments')->cascadeOnDelete();
-            $table->string('email')->unique();
-            $table->string('phone_num', 25)->unique()->nullable();
-            $table->string('user_image')->default('default.jpg');
-            $table->unsignedTinyInteger('is_active')->default(1);
-            $table->timestamps();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
@@ -73,8 +76,9 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::dropIfExists('sessions');
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('role_permissions');
+        Schema::dropIfExists('users');
         Schema::dropIfExists('roles');
         Schema::dropIfExists('permissions');
     }

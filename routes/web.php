@@ -16,7 +16,6 @@ use App\Http\Controllers\PropertyConsumableController;
 use App\Http\Controllers\PropertyInvChildController;
 use App\Http\Controllers\PropertyInventoryController;
 use App\Http\Controllers\PropertyParentController;
-use App\Http\Controllers\RecycleController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SystemController;
 use App\Http\Controllers\UserController;
@@ -234,13 +233,7 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
     // System Settings Routes
     Route::middleware('checkPermission:view system settings')->prefix('system-settings')->name('system.')->controller(SystemController::class)->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::patch('/', 'update')->name('update')->middleware('checkPermission:update system settings');
-    });
-
-    // Recycle Bin Routes
-    Route::middleware('checkPermission:view recycle bin')->prefix('recycle-bin')->name('recycle.')->controller(RecycleController::class)->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::patch('/', 'update')->name('update')->middleware('checkPermission:update recycle bin');
+        Route::patch('/', 'update')->name('update');
     });
 
     // ============ End Other Routes ============ //

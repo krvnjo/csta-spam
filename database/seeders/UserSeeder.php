@@ -16,7 +16,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $groups = [
-            'Inventory Management' => [
+            'Property & Asset Management' => [
                 'item management',
             ],
             'User Management' => [
@@ -57,15 +57,29 @@ class UserSeeder extends Seeder
         }
 
         $roles = [
-            'Administrator' => 'Oversees the system with full access to all settings.',
-            'Property Custodian' => 'Manages and maintains all property and equipment.',
-            'Student Assistant' => 'Aids the Property Custodian in daily asset management.',
+            'Super Admin' => [
+                'description' => 'Full control over all of the system features.',
+                'dashboard' => 1,
+            ],
+            'Administrator' => [
+                'description' => 'Oversees and manage the system with all access to the system.',
+                'dashboard' => 1,
+            ],
+            'Property Custodian' => [
+                'description' => 'Manages and maintains all property and equipment.',
+                'dashboard' => 2,
+            ],
+            'Student Assistant' => [
+                'description' => 'Aids the Property Custodian in daily asset management.',
+                'dashboard' => 3,
+            ],
         ];
 
-        foreach ($roles as $role => $description) {
+        foreach ($roles as $role => $data) {
             Role::create([
                 'name' => $role,
-                'description' => $description,
+                'description' => $data['description'],
+                'dash_id' => $data['dashboard'],
             ]);
         }
 
@@ -73,6 +87,7 @@ class UserSeeder extends Seeder
         $permissions = Permission::all();
 
         $rolePermissionMap = [
+            'Super Admin' => $permissions,
             'Administrator' => $permissions,
             'Property Custodian' => $permissions->filter(function ($permission) {
                 return !str_contains($permission->name, 'delete') &&
@@ -90,7 +105,6 @@ class UserSeeder extends Seeder
 
         foreach ($roles as $role) {
             $roleName = $role->name;
-
             if (isset($rolePermissionMap[$roleName])) {
                 foreach ($rolePermissionMap[$roleName] as $permission) {
                     RolePermission::insert([
@@ -103,12 +117,26 @@ class UserSeeder extends Seeder
 
         $users = [
             [
+                'user_name' => '07-00001',
+                'pass_hash' => bcrypt('Cstaspam24!'),
+                'name' => 'CSTA SPAM System',
+                'fname' => 'CSTA',
+                'mname' => 'SPAMs',
+                'lname' => 'System',
+                'role_id' => 1,
+                'dept_id' => 1,
+                'email' => 'cstaspam@gmail.com',
+                'phone_num' => '0912-345-1234',
+                'user_image' => 'system.jpg',
+            ],
+            [
                 'user_name' => '21-00017',
                 'pass_hash' => bcrypt('JtAchondo05!'),
+                'name' => 'Joshua Trazen Achondo',
                 'fname' => 'Joshua Trazen',
                 'mname' => 'Delos Santos',
                 'lname' => 'Achondo',
-                'role_id' => 1,
+                'role_id' => 2,
                 'dept_id' => 2,
                 'email' => 'dev.jt1005@gmail.com',
                 'phone_num' => '0934-221-6405',
@@ -117,10 +145,11 @@ class UserSeeder extends Seeder
             [
                 'user_name' => '21-00155',
                 'pass_hash' => bcrypt('RobBunag22!'),
+                'name' => 'Rob Meynard Bunag',
                 'fname' => 'Rob Meynard',
                 'mname' => 'Pumento',
                 'lname' => 'Bunag',
-                'role_id' => 1,
+                'role_id' => 2,
                 'dept_id' => 2,
                 'email' => 'rm.bunag2202@gmail.com',
                 'phone_num' => '0916-437-4284',
@@ -129,10 +158,11 @@ class UserSeeder extends Seeder
             [
                 'user_name' => '21-00132',
                 'pass_hash' => bcrypt('KjQuimora24!'),
+                'name' => 'Khervin John Quimora',
                 'fname' => 'Khervin John',
                 'mname' => 'Pastoral',
                 'lname' => 'Quimora',
-                'role_id' => 1,
+                'role_id' => 2,
                 'dept_id' => 2,
                 'email' => 'khervinjohnquimora@gmail.com',
                 'phone_num' => '0976-216-2403',
@@ -144,6 +174,7 @@ class UserSeeder extends Seeder
             User::create([
                 'user_name' => $data['user_name'],
                 'pass_hash' => $data['pass_hash'],
+                'name' => $data['name'],
                 'fname' => $data['fname'],
                 'mname' => $data['mname'],
                 'lname' => $data['lname'],

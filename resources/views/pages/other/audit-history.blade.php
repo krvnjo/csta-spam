@@ -113,7 +113,7 @@
           <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100" id="auditsDatatable"
             data-hs-datatables-options='{
               "columnDefs": [{
-                 "targets": [0],
+                 "targets": [0, 3],
                  "orderable": false
                }],
               "order": [6, "desc"],
@@ -129,34 +129,24 @@
             }'>
             <thead class="thead-light">
               <tr>
-                <th class="table-column-pe-0 w-auto">
-                  <div class="form-check">
-                    <input class="form-check-input" id="auditsDatatableCheckAll" type="checkbox">
-                    <label class="form-check-label" for="auditsDatatableCheckAll"></label>
-                  </div>
-                </th>
-                <th class="d-none w-auto">Audit Id</th>
-                <th class="w-auto">Log Name</th>
-                <th class="w-auto">Description</th>
-                <th class="w-auto">Subject & Event</th>
-                <th class="w-auto">Performed By</th>
-                <th class="w-auto">Date Logged</th>
+                <th class="w-th" style="width: 7%;">#</th>
+                <th class="d-none"></th>
+                <th>Log Name</th>
+                <th>Description</th>
+                <th>Subject & Event</th>
+                <th>Performed By</th>
+                <th>Date Logged</th>
               </tr>
             </thead>
 
             <tbody>
-              @foreach ($audits as $index => $audit)
+              @foreach ($audits as $audit)
                 <tr>
-                  <td class="table-column-pe-0">
-                    <div class="form-check">
-                      <input class="form-check-input" id="auditCheck{{ $index + 1 }}" type="checkbox">
-                      <label class="form-check-label" for="auditCheck{{ $index + 1 }}"></label>
-                    </div>
-                  </td>
+                  <td>{{ $loop->iteration }}</td>
                   <td class="d-none" data-audit-id="{{ Crypt::encryptString($audit->id) }}"></td>
                   <td><a class="d-block h5 mb-0 btnViewAudit">{{ $audit->log_name }}</a></td>
-                  <td>{{ \Illuminate\Support\Str::limit($audit->description, 50, '...') }}</td>
-                  <td>
+                  <td>{{ \Illuminate\Support\Str::limit($audit->description, 70, '...') }}</td>
+                  <td data-order="{{ $audit->event }}">
                     <span class="d-block h5 mb-0">{{ $audit->subject->name }}</span>
                     <span class="d-block fs-5">{{ $audit->event }}</span>
                   </td>

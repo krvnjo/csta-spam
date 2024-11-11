@@ -3,10 +3,11 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\PropertyParent;
-use App\Models\PropertyChild;
-use Carbon\Carbon;
-use Illuminate\Support\Arr;
+
+//use App\Models\PropertyParent;
+//use App\Models\PropertyChild;
+//use Carbon\Carbon;
+//use Illuminate\Support\Arr;
 
 class ItemSeeder extends Seeder
 {

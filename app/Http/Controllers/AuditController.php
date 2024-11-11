@@ -13,7 +13,7 @@ class AuditController extends Controller
      */
     public function index()
     {
-        $audits = Audit::orderBy('created_at')->get();
+        $audits = Audit::orderBy('log_name')->get();
         $users = User::orderBy('lname')->get();
 
         return view('pages.other.audit-history',

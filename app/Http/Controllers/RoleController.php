@@ -21,7 +21,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::with('permissions')->orderBy('name')->get();
+        $roles = Role::with('permissions')->where('id', '!=', 1)->orderBy('name')->get();
         $permissions = Cache::remember('permissions_all', now()->addMinutes(10), function () {
             return Permission::get();
         });
