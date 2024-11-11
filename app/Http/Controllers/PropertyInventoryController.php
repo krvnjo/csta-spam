@@ -8,7 +8,6 @@ use App\Models\Category;
 use App\Models\Condition;
 use App\Models\PropertyChild;
 use App\Models\PropertyParent;
-use App\Models\Subcategory;
 use Illuminate\Http\Request;
 
 class PropertyInventoryController extends Controller

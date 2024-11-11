@@ -25,7 +25,7 @@ class PropertyParentController extends Controller
      */
     public function index()
     {
-        $propertyParents = PropertyParent::with(['subcategory', 'brand', 'propertyChildren'])
+        $propertyParents = PropertyParent::with(['category', 'brand', 'propertyChildren'])
             ->where('is_active', 1)
             ->whereNull('deleted_at')
             ->get()
@@ -271,8 +271,7 @@ class PropertyParentController extends Controller
                 'name' => $propertyParent->name,
                 'description' => $propertyParent->description,
                 'brand' => $propertyParent->brand->name,
-                'category' => $propertyParent->subcategory->categories->pluck('name')->join(', '),
-                'subcategory' => $propertyParent->subcategory->name,
+                'category' => $propertyParent->category->name,
                 'status' => $propertyParent->is_active,
                 'inStock' => $propertyInStock,
                 'inventory' => $propertyInInventory,
