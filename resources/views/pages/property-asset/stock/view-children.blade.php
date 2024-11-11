@@ -41,11 +41,11 @@
                   {{ $propertyParents->name }}
                   <span class="d-none">{{ $propertyParents->id }}</span>
                 </h1>
-                <h3>
+                <h4>
                   <span class="badge bg-primary">{{ $propertyParents->brand->name ?? '' }}</span>
-                  <span class="badge bg-secondary">{{ $propertyParents->subcategory->name ?? '' }}</span>
-                </h3>
-                <p>{{ $propertyParents->description }}</p>
+                  <span class="badge bg-secondary">{{ $propertyParents->category->name ?? '' }}</span>
+                </h4>
+                <p>{{ $propertyParents->specification }}</p>
               </div>
             </div>
             <p class="page-header-text">Manage and organize stock item records.</p>
