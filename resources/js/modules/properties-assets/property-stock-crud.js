@@ -144,7 +144,7 @@ $(document).ready(function () {
         propertyEditModal.modal('toggle');
         $('#txtEditPropertyId').val(response.id);
         $('#txtEditPropertyName').val(response.name);
-        $('#cbxEditCategory')[0].tomselect.setValue(response.subcateg_id);
+        $('#cbxEditCategory')[0].tomselect.setValue(response.categ_id);
         $('#cbxEditBrand')[0].tomselect.setValue(response.brand_id);
         $('#txtEditDescription').val(response.description);
         $('#txtEditPurchasePrice').val(response.purchase_price);

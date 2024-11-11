@@ -21,7 +21,7 @@ class PropertyParent extends Model
         'image',
         'quantity',
         'brand_id',
-        'subcateg_id',
+        'categ_id',
         'purchase_price',
         'residual_value',
         'useful_life',
@@ -43,11 +43,6 @@ class PropertyParent extends Model
     public function propertyChildren(): HasMany
     {
         return $this->hasMany(PropertyChild::class, 'prop_id', 'id');
-    }
-
-    public function subcategory(): BelongsTo
-    {
-        return $this->belongsTo(Subcategory::class, 'subcateg_id');
     }
 
     public function unit(): BelongsTo

@@ -29,7 +29,7 @@ return new class extends Migration {
             $table->string('image')->nullable()->default('default.jpg');
             $table->unsignedInteger('quantity')->default(1);
             $table->foreignIdFor(Brand::class, 'brand_id')->nullable()->constrained('brands')->cascadeOnDelete();
-            $table->foreignIdFor(Subcategory::class, 'subcateg_id')->nullable()->constrained('subcategories')->cascadeOnDelete();
+            $table->foreignIdFor(Category::class, 'categ_id')->nullable()->constrained('subcategories')->cascadeOnDelete();
             $table->decimal('purchase_price', 15, 2)->nullable();
             $table->decimal('residual_value', 15, 2)->nullable();
             $table->unsignedInteger('useful_life')->nullable();

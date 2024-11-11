@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Acquisition;
 use App\Models\Brand;
+use App\Models\Category;
 use App\Models\Condition;
 use App\Models\PropertyChild;
 use App\Models\PropertyParent;
-use App\Models\Subcategory;
 use App\Models\Unit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -61,13 +61,13 @@ class PropertyParentController extends Controller
             });
 
 
-        $subcategories = Subcategory::where('is_active', 1)->get();
+        $categories = Category::where('is_active', 1)->get();
         $brands = Brand::where('is_active', 1)->get();
         $conditions = Condition::where('is_active', 1)->get();
         $acquisitions = Acquisition::where('is_active', 1)->get();
         $units = Unit::where('is_active', 1)->get();
 
-        return view('pages.property-asset.overview', compact('brands', 'subcategories', 'conditions', 'acquisitions', 'propertyParents', 'units'));
+        return view('pages.property-asset.overview', compact('brands', 'categories', 'conditions', 'acquisitions', 'propertyParents', 'units'));
     }
 
 
@@ -201,7 +201,7 @@ class PropertyParentController extends Controller
                     'image' => $imageFileName,
                     'unit_id' => (int)$request->input('unit'),
                     'brand_id' => (int)$request->input('brand'),
-                    'subcateg_id' => (int)$request->input('category'),
+                    'categ_id' => (int)$request->input('category'),
                     'specification' => ucwords(strtolower(trim($request->input('specification')))),
                     'description' => ucwords(strtolower(trim($request->input('description')))),
                     'quantity' => $request->input('quantity'),
@@ -303,7 +303,7 @@ class PropertyParentController extends Controller
                 'image' => $propertyParent->image,
                 'name' => $propertyParent->name,
                 'brand_id' => $propertyParent->brand_id,
-                'subcateg_id' => $propertyParent->subcateg_id,
+                'categ_id' => $propertyParent->categ_id,
                 'description' => $propertyParent->description,
                 'purchase_price' => $propertyParent->purchase_price,
                 'residual_value' => $propertyParent->residual_value,
@@ -395,7 +395,7 @@ class PropertyParentController extends Controller
                 ]);
             } else {
                 $property->name = $this->formatInput($request->input('propertyName'));
-                $property->subcateg_id = $request->input('category');
+                $property->categ_id = $request->input('category');
                 $property->brand_id = $request->input('brand');
                 $property->description = $request->input('description');
                 $property->purchase_price = floatval($request->input('purchasePrice'));
