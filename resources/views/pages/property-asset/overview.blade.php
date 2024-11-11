@@ -411,7 +411,7 @@
 @endsection
 
 @section('sec-content')
-  <x-property-asset.add-property :brands="$brands" :subcategories="$subcategories" :conditions="$conditions" :acquisitions="$acquisitions" :units="$units" />
+  <x-property-asset.add-property :brands="$brands" :categories="$categories" :conditions="$conditions" :acquisitions="$acquisitions" :units="$units" />
 
   <x-property-asset.edit-property :brands="$brands" :subcategories="$subcategories" />
 

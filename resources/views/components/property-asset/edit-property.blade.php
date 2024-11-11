@@ -44,7 +44,7 @@
                 </label>
                 <select class="js-select form-select" id="cbxEditCategory" name="category" autocomplete="off">
                   <option value="" disabled selected>Select Category...</option>
-                  @foreach ($subcategories as $category)
+                  @foreach ($categories as $category)
                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                   @endforeach
                 </select>

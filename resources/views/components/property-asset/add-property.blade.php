@@ -174,7 +174,7 @@
                     <div class="tom-select-custom mb-3 form-floating">
                       <select class="js-select form-select" id="cbxCategory" name="category" required>
                         <option value="" disabled selected>Select Category...</option>
-                        @foreach ($subcategories as $category)
+                        @foreach ($categories as $category)
                           <option value="{{ $category->id }}">{{ $category->name }}</option>
                         @endforeach
                       </select>

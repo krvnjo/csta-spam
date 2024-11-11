@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Acquisition;
 use App\Models\Brand;
+use App\Models\Category;
 use App\Models\Condition;
 use App\Models\PropertyChild;
 use App\Models\PropertyParent;
@@ -52,12 +53,12 @@ class PropertyInventoryController extends Controller
             ->where('is_active', 1)
             ->count();
 
-        $subcategories = Subcategory::query()->select('id','name')->where('is_active', 1)->get();
+        $categories = Category::query()->select('id','name')->where('is_active', 1)->get();
         $brands = Brand::query()->select('id','name')->where('is_active', 1)->get();
         $conditions = Condition::query()->select('id','name')->where('is_active', 1)->get();
         $acquisitions = Acquisition::query()->select('id','name')->where('is_active', 1)->get();
 
-        return view('pages.property-asset.inventory.overview-inventory', compact('brands','subcategories','conditions','acquisitions','propertyParents','propertyChildrenCount'));
+        return view('pages.property-asset.inventory.overview-inventory', compact('brands','categories','conditions','acquisitions','propertyParents','propertyChildrenCount'));
     }
 
     /**
