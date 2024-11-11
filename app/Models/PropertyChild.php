@@ -26,7 +26,8 @@ class PropertyChild extends Model
         'desig_id',
         'status_id',
         'condi_id',
-        'remarks'
+        'remarks',
+        'is_active'
     ];
 
     public function acquisition(): BelongsTo

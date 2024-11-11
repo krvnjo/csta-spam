@@ -82,17 +82,20 @@
                   <div class="row g-3">
                     <div class="col-md-4">
                       <div class="form-floating">
-                        <input class="form-control" id="txtQuantityConsumable" name="quantity" type="number" min="1" max="500" placeholder=""/>
+                        <input class="form-control" id="txtQuantity" name="quantity" type="number" min="1" max="500" placeholder=""/>
                         <label for="txtQuantityConsumable">Quantity</label>
-                        <span class="invalid-feedback" id="valAddQtyConsumable"></span>
+                        <span class="invalid-feedback" id="valAddQuantity"></span>
                       </div>
                     </div>
                     <div class="col-md-4">
                       <div class="tom-select-custom mb-3 form-floating">
-                        <select class="js-select form-select" id="cbxUnitsConsumable" name="units">
+                        <select class="js-select form-select" id="cbxUnit" name="units">
                           <option value="" disabled selected>Select Unit...</option>
+                          @foreach ($units as $unit)
+                            <option value="{{ $unit->id }}">{{ $unit->name }}</option>
+                          @endforeach
                         </select>
-                        <label for="cbxUnitsConsumable">Units</label>
+                        <label for="cbxUnit">Units</label>
                       </div>
                     </div>
                     <div class="col-md-4">
@@ -291,35 +294,30 @@
     const nonConsumableFields1 = document.getElementById('nonConsumableFields1');
     const nonConsumableFields2 = document.getElementById('nonConsumableFields2');
     const alertContainer = document.getElementById('alertContainer');
-    let alertTimeout; // Declare alertTimeout here so it can be cleared
+    let alertTimeout;
 
     itemTypeSelect.addEventListener('change', function() {
-      // Clear any active timeout when the selection changes
       clearTimeout(alertTimeout);
 
       if (this.value === 'non-consumable') {
-        // Show non-consumable fields
         nonConsumableFields1.style.display = 'block';
         nonConsumableFields2.style.display = 'block';
 
-        // Show the alert
         alertContainer.style.display = 'block';
-        alertContainer.classList.remove('fade'); // Remove fade class to reset
+        alertContainer.classList.remove('fade');
 
-        // Fade out the alert after 5 seconds
         alertTimeout = setTimeout(function() {
-          alertContainer.classList.add('fade'); // Add the fade class to trigger fade-out
+          alertContainer.classList.add('fade');
           alertContainer.addEventListener('transitionend', function() {
-            alertContainer.style.display = 'none'; // Hide the alert after fade-out
-            alertContainer.classList.remove('fade'); // Reset fade class for future use
+            alertContainer.style.display = 'none';
+            alertContainer.classList.remove('fade');
           });
-        }, 5000); // Set the fade-out to happen after 5 seconds
+        }, 5000);
 
       } else {
-        // Hide non-consumable fields and alert when not selected
         nonConsumableFields1.style.display = 'none';
         nonConsumableFields2.style.display = 'none';
-        alertContainer.style.display = 'none'; // Hide the alert immediately
+        alertContainer.style.display = 'none';
       }
 
       checkFormValidity();

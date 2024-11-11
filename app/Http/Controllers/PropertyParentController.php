@@ -8,6 +8,7 @@ use App\Models\Condition;
 use App\Models\PropertyChild;
 use App\Models\PropertyParent;
 use App\Models\Subcategory;
+use App\Models\Unit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -56,8 +57,9 @@ class PropertyParentController extends Controller
         $brands = Brand::where('is_active', 1)->get();
         $conditions = Condition::where('is_active', 1)->get();
         $acquisitions = Acquisition::where('is_active', 1)->get();
+        $units = Unit::where('is_active', 1)->get();
 
-        return view('pages.property-asset.overview', compact('brands', 'subcategories', 'conditions', 'acquisitions', 'propertyParents'));
+        return view('pages.property-asset.overview', compact('brands', 'subcategories', 'conditions', 'acquisitions', 'propertyParents', 'units'));
     }
 
 

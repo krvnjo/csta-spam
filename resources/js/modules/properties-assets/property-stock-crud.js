@@ -239,6 +239,13 @@ document.addEventListener('DOMContentLoaded', function() {
     allowEmptyOption: true,
   });
 
+  new TomSelect('#cbxUnit', {
+    controlInput: false,
+    hideSearch: true,
+    allowEmptyOption: true,
+    dropdownParent: 'body'
+  });
+
   new TomSelect('#cbxCategory', {
     controlInput: false,
     hideSearch: true,
