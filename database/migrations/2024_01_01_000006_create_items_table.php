@@ -6,10 +6,8 @@ use App\Models\Category;
 use App\Models\Condition;
 use App\Models\Department;
 use App\Models\Designation;
-use App\Models\PropertyConsumable;
 use App\Models\PropertyParent;
 use App\Models\Status;
-use App\Models\Subcategory;
 use App\Models\Unit;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -80,8 +78,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('consumption_logs');
-        Schema::dropIfExists('property_consumables');
         Schema::dropIfExists('property_children');
         Schema::dropIfExists('property_parents');
     }
