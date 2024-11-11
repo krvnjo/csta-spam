@@ -18,7 +18,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::with('permissions')->whereNull('deleted_at')->where('is_active', 1)->get();
+        $roles = Role::with('permissions')->where('is_active', 1)->get();
         $permissions = Permission::with('roles')->whereNull('deleted_at')->get();
 
         return view('pages.user-management.role',

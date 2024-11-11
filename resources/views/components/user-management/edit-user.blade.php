@@ -13,6 +13,9 @@
       <div class="modal-body">
         <form id="frmEditUser" method="POST" enctype="multipart/form-data" novalidate>
           @csrf
+          @method('PATCH')
+          <input id="txtEditId" name="id" type="hidden">
+
           <!-- User Profile Cover -->
           <div class="profile-cover cover-size">
             <div class="profile-cover-img-wrapper cover-resize">
@@ -75,7 +78,7 @@
           <!-- End Last Name -->
 
           <!-- Role -->
-          <div class="row mb-4">
+          <div class="row mb-4" id="rowEditRole">
             <label class="col-sm-3 col-form-label form-label" for="selEditRole">Role</label>
             <div class="col-sm-9">
               <div class="tom-select-custom">
@@ -99,22 +102,22 @@
 
           <!-- Department -->
           <div class="row mb-4">
-            <label class="col-sm-3 col-form-label form-label" for="selEditDept">Department</label>
+            <label class="col-sm-3 col-form-label form-label" for="selEditDepartment">Department</label>
             <div class="col-sm-9">
               <div class="tom-select-custom">
-                <select class="js-select form-select" id="selEditDept" name="dept"
+                <select class="js-select form-select" id="selEditDepartment" name="department"
                   data-hs-tom-select-options='{
                     "hideSearch": "true",
                     "placeholder": "Select a department"
                   }'>
                   <option value=""></option>
-                  @foreach ($depts as $dept)
-                    @if ($dept->is_active)
-                      <option value="{{ $dept->id }}">{{ $dept->name }}</option>
+                  @foreach ($departments as $department)
+                    @if ($department->is_active)
+                      <option value="{{ $department->id }}">{{ $department->name }}</option>
                     @endif
                   @endforeach
                 </select>
-                <span class="invalid-feedback" id="valEditDept"></span>
+                <span class="invalid-feedback" id="valEditDepartment"></span>
               </div>
             </div>
           </div>

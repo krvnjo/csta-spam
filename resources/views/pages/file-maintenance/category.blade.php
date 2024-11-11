@@ -96,10 +96,10 @@
                 <div class="dropdown-divider"></div>
                 <span class="dropdown-header">Download</span>
                 <button class="dropdown-item" id="categoryExportExcel" type="button">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/categories/excel-icon.svg') }}" alt="Excel Icon"> Excel
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/excel-icon.svg') }}" alt="Excel Icon"> Excel
                 </button>
                 <button class="dropdown-item" id="categoryExportPdf" type="button">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/categories/pdf-icon.svg') }}" alt="PDF Icon"> PDF
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/pdf-icon.svg') }}" alt="PDF Icon"> PDF
                 </button>
               </div>
             </div>

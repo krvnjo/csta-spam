@@ -11,6 +11,7 @@ use App\Observers\BrandObserver;
 use App\Observers\CategoryObserver;
 use App\Observers\DepartmentObserver;
 use App\Observers\DesignationObserver;
+use App\Observers\UserObserver;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
@@ -71,6 +72,7 @@ class AppServiceProvider extends ServiceProvider
             return url('/reset-password/' . $token);
         });
 
+        User::observe(UserObserver::class);
         Brand::observe(BrandObserver::class);
         Category::observe(CategoryObserver::class);
         Department::observe(DepartmentObserver::class);
