@@ -88,7 +88,7 @@
               <p class="form-label fw-semibold mb-0">Department:</p>
             </div>
             <div class="col-12 col-sm-7 d-flex align-items-center">
-              <p class="fw-semibold mb-0" id="lblViewDept"></p>
+              <p class="fw-semibold mb-0" id="lblViewDepartment"></p>
             </div>
           </div>
           <!-- End Department -->
@@ -132,7 +132,7 @@
               <p class="form-label fw-semibold mb-0">Status:</p>
             </div>
             <div class="col-12 col-sm-7 d-flex align-items-center">
-              <p class="mb-0" id="lblViewSetStatus"></p>
+              <p class="mb-0" id="lblViewStatus"></p>
             </div>
           </div>
           <!-- End Status -->

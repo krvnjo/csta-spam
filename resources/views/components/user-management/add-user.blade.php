@@ -13,6 +13,7 @@
       <div class="modal-body">
         <form id="frmAddUser" method="POST" enctype="multipart/form-data" novalidate>
           @csrf
+
           <!-- User Profile Cover -->
           <div class="profile-cover cover-size">
             <div class="profile-cover-img-wrapper cover-resize">
@@ -99,22 +100,22 @@
 
           <!-- Department -->
           <div class="row mb-4">
-            <label class="col-sm-3 col-form-label form-label" for="selAddDept">Department</label>
+            <label class="col-sm-3 col-form-label form-label" for="selAddDepartment">Department</label>
             <div class="col-sm-9">
               <div class="tom-select-custom">
-                <select class="js-select form-select" id="selAddDept" name="dept"
+                <select class="js-select form-select" id="selAddDepartment" name="department"
                   data-hs-tom-select-options='{
                     "hideSearch": "true",
                     "placeholder": "Select a department"
                   }'>
                   <option value=""></option>
-                  @foreach ($depts as $dept)
-                    @if ($dept->is_active)
-                      <option value="{{ $dept->id }}">{{ $dept->name }}</option>
+                  @foreach ($departments as $department)
+                    @if ($department->is_active)
+                      <option value="{{ $department->id }}">{{ $department->name }}</option>
                     @endif
                   @endforeach
                 </select>
-                <span class="invalid-feedback" id="valAddDept"></span>
+                <span class="invalid-feedback" id="valAddDepartment"></span>
               </div>
             </div>
           </div>

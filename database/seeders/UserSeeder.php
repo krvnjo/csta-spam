@@ -16,18 +16,23 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $permissionGroups = [
-            'Inventory Management' => ['item management'],
-            'User Management' => ['user management', 'role management'],
+            'Inventory Management' => [
+                'item management',
+            ],
+            'User Management' => [
+                'user management',
+                'role management',
+            ],
             'File Maintenance' => [
                 'brand maintenance',
                 'category maintenance',
-                'condition maintenance',
                 'department maintenance',
                 'designation maintenance',
-                'status maintenance',
-                'subcategory maintenance',
             ],
-            'Administrative Permissions' => ['audit history', 'system settings', 'recycle bin'],
+            'Administrative Permissions' => [
+                'audit history',
+                'system settings',
+            ],
         ];
 
         $actions = ['view', 'create', 'update', 'delete'];
@@ -43,7 +48,7 @@ class UserSeeder extends Seeder
                         continue;
                     }
 
-                    Permission::query()->create([
+                    Permission::create([
                         'name' => "$action $base",
                         'group_name' => $group,
                     ]);
@@ -58,7 +63,7 @@ class UserSeeder extends Seeder
         ];
 
         foreach ($roles as $role => $description) {
-            Role::query()->create([
+            Role::create([
                 'name' => $role,
                 'description' => $description,
             ]);
@@ -88,7 +93,7 @@ class UserSeeder extends Seeder
 
             if (isset($rolePermissionMap[$roleName])) {
                 foreach ($rolePermissionMap[$roleName] as $permission) {
-                    RolePermission::query()->insert([
+                    RolePermission::insert([
                         'role_id' => $role->id,
                         'perm_id' => $permission->id,
                     ]);
@@ -108,7 +113,6 @@ class UserSeeder extends Seeder
                 'email' => 'dev.jt1005@gmail.com',
                 'phone_num' => '0934-221-6405',
                 'user_image' => 'jt.jpg',
-                'is_active' => 1,
             ],
             [
                 'user_name' => '21-00155',
@@ -121,7 +125,6 @@ class UserSeeder extends Seeder
                 'email' => 'rm.bunag2202@gmail.com',
                 'phone_num' => '0916-437-4284',
                 'user_image' => 'rob.jpg',
-                'is_active' => 1,
             ],
             [
                 'user_name' => '21-00132',
@@ -134,7 +137,6 @@ class UserSeeder extends Seeder
                 'email' => 'khervinjohnquimora@gmail.com',
                 'phone_num' => '0976-216-2403',
                 'user_image' => 'kj.jpg',
-                'is_active' => 1,
             ],
         ];
 
@@ -150,7 +152,6 @@ class UserSeeder extends Seeder
                 'email' => $data['email'],
                 'phone_num' => $data['phone_num'],
                 'user_image' => $data['user_image'],
-                'is_active' => $data['is_active'],
             ]);
         }
     }
