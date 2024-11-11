@@ -2,11 +2,13 @@ $(document).ready(function () {
   // ============ Create a Role ============ //
   const roleAddModal = $('#modalAddRole');
   const roleAddForm = $('#frmAddRole');
+  const roleAddSaveBtn = $('#btnAddSaveRole');
 
-  handleUnsavedChanges(roleAddModal, roleAddForm, $('#btnAddSaveRole'));
+  handleUnsavedChanges(roleAddModal, roleAddForm, roleAddSaveBtn);
 
   roleAddForm.on('submit', function (e) {
     e.preventDefault();
+    toggleButtonState(roleAddSaveBtn, true);
 
     const addFormData = new FormData(roleAddForm[0]);
 
@@ -14,32 +16,26 @@ $(document).ready(function () {
       url: '/user-management/roles',
       method: 'POST',
       data: addFormData,
-      dataType: 'json',
       processData: false,
       contentType: false,
       success: function (response) {
         if (response.success) {
-          showSuccessAlert(response, roleAddModal, roleAddForm);
+          toggleButtonState(roleAddSaveBtn, false);
+          showResponseAlert(response, 'success', roleAddModal, roleAddForm);
         } else {
-          if (response.errors.role) {
-            $('#txtAddRole').addClass('is-invalid');
-            $('#valAddRole').text(response.errors.role[0]);
-          }
-
-          if (response.errors.description) {
-            $('#txtAddDescription').addClass('is-invalid');
-            $('#valAddDescription').text(response.errors.description[0]);
-          }
+          handleValidationErrors(response, 'Add');
 
           if (response.errors.can_view) {
             const valPerm = $('#valAddPermission');
             valPerm.text(response.errors.can_view[0]);
             valPerm.show();
           }
+
+          toggleButtonState(roleAddSaveBtn, false);
         }
       },
       error: function (response) {
-        showErrorAlert(response.responseJSON, roleAddModal, roleAddForm);
+        showResponseAlert(response, 'error', roleAddModal, roleAddForm);
       },
     });
   });
@@ -56,44 +52,43 @@ $(document).ready(function () {
       success: function (response) {
         $('#modalViewRole').modal('toggle');
 
-        $('#lblViewRole').text(response.role);
-        $('#lblViewDescription').text(response.description);
+        const roleConfig = {
+          textFields: [
+            { key: 'role', selector: '#lblViewRole' },
+            { key: 'description', selector: '#lblViewDescription' },
+            { key: 'created_by', selector: '#lblViewCreatedBy' },
+            { key: 'updated_by', selector: '#lblViewUpdatedBy' },
+            { key: 'created_at', selector: '#lblViewCreatedAt' },
+            { key: 'updated_at', selector: '#lblViewUpdatedAt' },
+          ],
 
-        console.log(response.permissions);
+          dropdownFields: [
+            {
+              key: 'permissions',
+              container: '#dropdownMenuViewPermissions',
+              countSelector: '#lblViewPermissions',
+              label: 'permissions in this role',
+            },
+          ],
 
-        let permissionsHtml = '';
-        response.permissions.forEach(function (permission) {
-          const actions = [];
-          if (permission.can_view) actions.push('View');
-          if (permission.can_create) actions.push('Create');
-          if (permission.can_edit) actions.push('Edit');
-          if (permission.can_delete) actions.push('Delete');
-          permissionsHtml += `<li class="list-pointer-item">${permission.name}: ${actions.join(', ')}</li>`;
-        });
-        $('#lblViewPermission').html(`<ul class="list-pointer list-pointer-primary">${permissionsHtml}</ul>`);
+          statusFields: { key: 'status', selector: '#lblViewStatus' },
 
-        const roleStatus =
-          response.status === 1
-            ? `<span class="badge bg-soft-success text-success"><span class="legend-indicator bg-success"></span>Active</span>`
-            : `<span class="badge bg-soft-danger text-danger"><span class="legend-indicator bg-danger"></span>Inactive</span>`;
+          imageFields: [
+            { key: 'created_img', selector: '#imgViewCreatedBy' },
+            { key: 'updated_img', selector: '#imgViewUpdatedBy' },
+          ],
+        };
 
-        $('#lblViewStatus').html(roleStatus);
-        $('#lblViewDateCreated').text(response.created);
-        $('#lblViewDateUpdated').text(response.updated);
+        displayViewResponseData(response, roleConfig);
       },
       error: function (response) {
-        showErrorAlert(response.responseJSON);
+        showResponseAlert(response, 'error');
       },
     });
   });
   // ============ End View a Role ============ //
 
-  // ============ Update a Role ============ //
-  const roleEditModal = $('#modalEditRole');
-  const roleEditForm = $('#frmEditRole');
-
-  handleUnsavedChanges(roleEditModal, roleEditForm, $('#btnEditSaveRole'));
-
+  // ============ Edit a Role ============ //
   $('.btnEditRole').on('click', function () {
     const roleId = $(this).closest('.row').find('span[data-role-id]').data('role-id');
 
@@ -107,7 +102,7 @@ $(document).ready(function () {
         $('#txtEditRoleId').val(response.id);
         $('#txtEditRole').val(response.role);
         $('#txtEditDescription').val(response.description);
-        $('#countCharactersRoleDesc').text(response.description.length + ' / 120');
+        $('#countCharactersRoleDesc').text(response.description.length + ' / 80');
 
         $('.form-check-input').prop('checked', false);
         response.permissions.forEach(function (permission) {
@@ -127,20 +122,24 @@ $(document).ready(function () {
         });
       },
       error: function (response) {
-        showErrorAlert(response.responseJSON, roleEditModal, roleEditForm);
+        showResponseAlert(response, 'error');
       },
     });
   });
+  // ============ End Edit a Role ============ //
+
+  // ============ Update a Role ============ //
+  const roleEditModal = $('#modalEditRole');
+  const roleEditForm = $('#frmEditRole');
+  const roleEditSaveBtn = $('#btnEditSaveRole');
+
+  handleUnsavedChanges(roleEditModal, roleEditForm, roleEditSaveBtn);
 
   roleEditForm.on('submit', function (e) {
     e.preventDefault();
+    toggleButtonState(roleEditSaveBtn, true);
 
     const editFormData = new FormData(roleEditForm[0]);
-
-    editFormData.append('_method', 'PATCH');
-    editFormData.append('id', $('#txtEditRoleId').val());
-    editFormData.append('role', $('#txtEditRole').val());
-    editFormData.append('description', $('#txtEditDescription').val());
 
     $.ajax({
       url: '/user-management/roles',
@@ -150,7 +149,8 @@ $(document).ready(function () {
       contentType: false,
       success: function (response) {
         if (response.success) {
-          showSuccessAlert(response, roleEditModal, roleEditForm);
+          toggleButtonState(roleEditSaveBtn, false);
+          showResponseAlert(response, 'success', roleEditModal, roleEditForm);
         } else {
           if (response.errors.role) {
             $('#txtEditRole').addClass('is-invalid');
@@ -170,32 +170,31 @@ $(document).ready(function () {
         }
       },
       error: function (response) {
-        showErrorAlert(response.responseJSON, roleEditModal, roleEditForm);
+        showResponseAlert(response, 'error', roleEditModal, roleEditForm);
       },
     });
   });
 
-  $('.btnStatusRole').on('click', function () {
+  $('.btnSetRole').on('click', function () {
     const roleId = $(this).closest('.row').find('span[data-role-id]').data('role-id');
-    const roleSetStatus = $(this).data('status');
-    let statusName;
-
-    if (roleSetStatus === 1) {
-      statusName = 'active';
-    } else {
-      statusName = 'inactive';
-    }
+    const roleName = $(this).closest('.row').find('h3 .btnViewRole').text().trim();
+    const roleStatus = $(this).data('status');
+    const statusName = roleStatus === 1 ? 'active' : 'inactive';
 
     Swal.fire({
-      title: 'Change status?',
-      text: 'Are you sure you want to set it to ' + statusName + '?',
+      title: 'Update role status?',
+      text: `Are you sure you want to set the role "${roleName}" to ${statusName}?`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, set it to ' + statusName + '!',
+      focusCancel: true,
+      confirmButtonText: `Yes, set it to ${statusName}!`,
       cancelButtonText: 'No, cancel!',
       customClass: {
-        confirmButton: 'btn btn-primary',
-        cancelButton: 'btn btn-secondary',
+        popup: 'bg-light rounded-3 shadow fs-4',
+        title: 'text-dark fs-1',
+        htmlContainer: 'text-body text-center fs-4',
+        confirmButton: `btn btn-sm ${roleStatus === 1 ? 'btn-success' : 'btn-danger'}`,
+        cancelButton: 'btn btn-sm btn-secondary',
       },
     }).then((result) => {
       if (result.isConfirmed) {
@@ -204,13 +203,13 @@ $(document).ready(function () {
           method: 'PATCH',
           data: {
             id: roleId,
-            status: roleSetStatus,
+            status: roleStatus,
           },
           success: function (response) {
-            showSuccessAlert(response);
+            showResponseAlert(response, 'success');
           },
           error: function (response) {
-            showErrorAlert(response.responseJSON);
+            showResponseAlert(response, 'error');
           },
         });
       }
@@ -221,17 +220,22 @@ $(document).ready(function () {
   // ============ Delete a Role ============ //
   $('.btnDeleteRole').on('click', function () {
     const roleId = $(this).closest('.row').find('span[data-role-id]').data('role-id');
+    const roleName = $(this).closest('.row').find('h3 .btnViewRole').text().trim();
 
     Swal.fire({
       title: 'Delete Record?',
-      text: 'Are you sure you want to delete the role?',
+      text: `Are you sure you want to permanently delete the role "${roleName}"? This action cannot be undone.`,
       icon: 'warning',
       showCancelButton: true,
+      focusCancel: true,
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'No, cancel!',
       customClass: {
-        confirmButton: 'btn btn-danger',
-        cancelButton: 'btn btn-secondary',
+        popup: 'bg-light rounded-3 shadow fs-4',
+        title: 'text-dark fs-1',
+        htmlContainer: 'text-body text-center fs-4',
+        confirmButton: 'btn btn-sm btn-danger',
+        cancelButton: 'btn btn-sm btn-secondary',
       },
     }).then((result) => {
       if (result.isConfirmed) {
@@ -240,10 +244,10 @@ $(document).ready(function () {
           method: 'DELETE',
           data: { id: roleId },
           success: function (response) {
-            showSuccessAlert(response);
+            showResponseAlert(response, 'success');
           },
           error: function (response) {
-            showErrorAlert(response.responseJSON);
+            showResponseAlert(response, 'error');
           },
         });
       }

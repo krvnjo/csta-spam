@@ -5,41 +5,39 @@
 @endsection
 
 @push('styles')
-  {{-- Styles --}}
+  <link href="{{ Vite::asset('resources/vendor/tom-select/dist/css/tom-select.bootstrap5.css') }}" rel="stylesheet">
 @endpush
 
 @section('main-content')
-  <main class="main" id="content" role="main">
-    <!-- Content -->
+  <main class="main" id="content">
     <div class="content container-fluid">
-      <!-- Page Header -->
+      <!-- Roles Header -->
       <div class="page-header">
-        <div class="row align-items-end">
+        <div class="row align-items-center">
           <div class="col-sm mb-2 mb-sm-0">
-            <nav aria-label="breadcrumb">
-              <ol class="breadcrumb breadcrumb-no-gutter">
-                <li class="breadcrumb-item"><a class="breadcrumb-link" data-route="dashboard.index" href="{{ route('dashboard.index') }}">Home</a></li>
-                <li class="breadcrumb-item"><a class="breadcrumb-link">User Management</a></li>
-                <li class="breadcrumb-item active">Roles</li>
-              </ol>
-            </nav>
-            <h1 class="page-header-title mt-2">Roles</h1>
+            <ol class="breadcrumb breadcrumb-no-gutter">
+              <li class="breadcrumb-item"><a class="breadcrumb-link" data-route="dashboard.index" href="{{ route('dashboard.index') }}">Home</a></li>
+              <li class="breadcrumb-item"><a class="breadcrumb-link">User Management</a></li>
+              <li class="breadcrumb-item active">Roles</li>
+            </ol>
+            <h1 class="page-header-title">Roles</h1>
+            <p class="page-header-text">Manage and control user roles and permissions.</p>
           </div>
 
-          <div class="col-sm-auto mt-sm-0 mt-3">
-            <div class="d-grid gap-2 d-sm-flex justify-content-sm-end">
-              <button class="btn btn-primary w-100 w-sm-auto" data-bs-toggle="modal" data-bs-target="#modalAddRole">
-                <i class="bi-plus me-1"></i> Add Role
+          @can('create role management')
+            <div class="col-sm-auto mt-2 mt-sm-0">
+              <button class="btn btn-primary w-100 w-sm-auto" id="btnAddRoleModal" data-bs-toggle="modal" data-bs-target="#modalAddRole">
+                <i class="bi-plus-lg me-1"></i> Add Role
               </button>
             </div>
-          </div>
+          @endcan
         </div>
       </div>
-      <!-- End Page Header -->
+      <!-- End Roles Header -->
 
       <!-- Roles -->
       <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3">
-        @foreach ($roles as $index => $role)
+        @foreach ($roles as $role)
           <div class="col mb-3 mb-lg-5">
             <!-- Card -->
             <div class="card h-100">
@@ -54,51 +52,83 @@
                 <div class="row align-items-center mb-2">
                   <div class="col-9">
                     <span class="d-none" data-role-id="{{ Crypt::encryptString($role->id) }}"></span>
-                    <h3 class="mb-1"><a class="text-dark btnViewRole" href="#">{{ $role->name }}</a></h3>
+                    <h3 class="mb-1"><a class="text-dark btnViewRole">{{ $role->name }}</a></h3>
                   </div>
+                  @canAny('update role management, delete role management')
+                    <div class="col-3 text-end">
+                      <div class="dropdown">
+                        <button class="btn btn-ghost-secondary btn-icon btn-sm rounded-circle" id="roleDropdown{{ $loop->iteration }}" data-bs-toggle="dropdown" type="button"><i
+                            class="bi-three-dots-vertical"></i>
+                        </button>
 
-                  <div class="col-3 text-end">
-                    <div class="dropdown">
-                      <button class="btn btn-ghost-secondary btn-icon btn-sm rounded-circle" id="roleDropdown{{ $index + 1 }}" data-bs-toggle="dropdown" type="button"><i
-                          class="bi-three-dots-vertical"></i>
-                      </button>
+                        <div class="dropdown-menu dropdown-menu-sm dropdown-menu-end">
+                          <button class="dropdown-item btnViewRole" type="button">
+                            <i class="bi-eye-fill dropdown-item-icon"></i> View Record
+                          </button>
+                          @can('update role management')
+                            <button class="dropdown-item btnEditRole" type="button">
+                              <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
+                            </button>
+                          @endcan
+                          @if (Auth::user()->role_id !== $role->id)
+                            @can('update role management')
+                              <button class="dropdown-item btnSetRole" data-status="{{ $role->is_active ? 0 : 1 }}" type="button">
+                                <i class="bi {{ $role->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
+                                {{ $role->is_active ? 'Set to Inactive' : 'Set to Active' }}
+                              </button>
+                              @can('delete role management')
+                                <div class="dropdown-divider"></div>
+                              @endcan
+                            @endcan
 
-                      <div class="dropdown-menu dropdown-menu-sm dropdown-menu-end">
-                        <button class="dropdown-item btnViewRole" type="button">
-                          <i class="bi-eye-fill dropdown-item-icon"></i> View Record
-                        </button>
-                        <button class="dropdown-item btnEditRole" type="button">
-                          <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
-                        </button>
-                        @if ($role->is_active)
-                          <button class="dropdown-item btnStatusRole" data-status="0" type="button">
-                            <i class="bi-x-circle-fill dropdown-item-icon text-danger fs-7"></i> Set to Inactive
-                          </button>
-                        @else
-                          <button class="dropdown-item btnStatusRole" data-status="1" type="button">
-                            <i class="bi-check-circle-fill dropdown-item-icon text-success"></i> Set to Active
-                          </button>
-                        @endif
-                        <div class="dropdown-divider"></div>
-                        <button class="dropdown-item text-danger btnDeleteRole" type="button">
-                          <i class="bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
-                        </button>
+                            @can('delete role management')
+                              <button class="dropdown-item text-danger btnDeleteRole" type="button">
+                                <i class="bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
+                              </button>
+                            @endcan
+                          @endif
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  @endcanAny
                 </div>
                 <p>{{ $role->description }}</p>
-
                 @php
-                  $permissionsToShow = $role->permissions->take(5);
-                  $remainingPermissionsCount = $role->permissions->count() - 5;
+                  $actionLabels = [
+                      'view' => 'View',
+                      'create' => 'Create',
+                      'update' => 'Edit',
+                      'delete' => 'Delete',
+                  ];
+
+                  $groupedPermissions = [];
+                  foreach ($role->permissions as $permission) {
+                      $parts = explode(' ', $permission->name, 2);
+                      $action = $parts[0];
+                      $baseName = $parts[1] ?? '';
+
+                      $displayAction = $actionLabels[$action] ?? ucfirst($action);
+                      $groupedPermissions[$baseName][] = $displayAction;
+                  }
+
+                  $groupedPermissions = array_slice($groupedPermissions, 0, 5, true);
+
+                  $remainingPermissionsCount =
+                      count(
+                          $role->permissions->groupBy(function ($perm) {
+                              return explode(' ', $perm->name, 2)[1] ?? '';
+                          }),
+                      ) - 5;
                 @endphp
 
                 <ul class="list-pointer list-pointer-primary">
-                  @foreach ($permissionsToShow as $permission)
-                    <li class="list-pointer-item">
-                      {{ $permission->name }}:
-                    </li>
+                  @foreach ($groupedPermissions as $baseName => $actions)
+                    @php
+                      $formattedBaseName = ucwords(strtolower($baseName));
+                      $uniqueActions = array_unique($actions);
+                      $actionsText = implode(', ', array_slice($uniqueActions, 0, -1)) . (count($uniqueActions) > 1 ? ', and ' : '') . end($uniqueActions);
+                    @endphp
+                    <li class="list-pointer-item">{{ $formattedBaseName }}: {{ $actionsText }}</li>
                   @endforeach
 
                   @if ($remainingPermissionsCount > 0)
@@ -170,7 +200,6 @@
       </div>
       <!-- End Roles -->
     </div>
-    <!-- End Content -->
   </main>
 @endsection
 
@@ -182,6 +211,7 @@
 
 @push('scripts')
   <script src="{{ Vite::asset('resources/vendor/hs-count-characters/dist/js/hs-count-characters.js') }}"></script>
+  <script src="{{ Vite::asset('resources/vendor/tom-select/dist/js/tom-select.complete.min.js') }}"></script>
 
   <!-- JS Modules -->
   <script src="{{ Vite::asset('resources/js/modules/user-management/role-crud.js') }}"></script>
@@ -189,7 +219,7 @@
   <!-- JS Themes -->
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>
 
-  <!-- JS Plugins Init. -->
+  <!-- JS Plugins Initialization -->
   <script>
     // Initialization of Other Plugins
     (function() {

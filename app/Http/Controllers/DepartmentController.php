@@ -102,7 +102,7 @@ class DepartmentController extends Controller
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
-                'message' => 'An error occurred while fetching the department.',
+                'message' => 'An error occurred while fetching the department. Please try again later.',
             ], 500);
         }
     }
@@ -127,7 +127,7 @@ class DepartmentController extends Controller
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
-                'message' => 'An error occurred while fetching the department.',
+                'message' => 'An error occurred while fetching the department. Please try again later.',
             ], 500);
         }
     }

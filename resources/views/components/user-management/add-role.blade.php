@@ -11,14 +11,18 @@
 
       <!-- Body -->
       <div class="modal-body">
-        <form id="frmAddRole" method="post" novalidate>
+        <form id="frmAddRole" method="POST" novalidate>
           @csrf
+
+          <!-- Role Name -->
           <div class="form-group">
             <label class="col col-form-label form-label" for="txtAddRole">Role Name</label>
-            <input class="form-control" id="txtAddRole" name="role" type="text" placeholder="Enter role name">
+            <input class="form-control" id="txtAddRole" name="role" type="text" placeholder="Enter a role name">
             <span class="invalid-feedback" id="valAddRole"></span>
           </div>
+          <!-- End Role Name -->
 
+          <!-- Role Description -->
           <div class="form-group mb-4">
             <div class="d-flex justify-content-between">
               <label class="col col-form-label form-label" for="txtAddDescription">Description</label>
@@ -27,9 +31,10 @@
             <textarea class="js-count-characters form-control" id="txtAddDescription" name="description" data-hs-count-characters-options='{
                 "output": "#maxLengthCountCharacters"
               }'
-              style="resize: none;" placeholder="Enter role description" rows="2" maxlength="120"></textarea>
+              style="resize: none;" placeholder="Enter role description" rows="2" maxlength="80"></textarea>
             <span class="invalid-feedback" id="valAddDescription"></span>
           </div>
+          <!-- End Role Description -->
 
           <!-- Table -->
           <div class="table-responsive datatable-custom">
@@ -54,6 +59,7 @@
 
               @php
                 $groupedPermissions = $permissions->groupBy('group_name');
+                $displayedBasePermissions = [];
               @endphp
 
               <tbody>
@@ -61,10 +67,6 @@
                   <tr>
                     <th colspan="5">{{ ucwords($groupName) }}</th>
                   </tr>
-
-                  @php
-                    $displayedBasePermissions = [];
-                  @endphp
 
                   @foreach ($permissions as $permission)
                     @php
@@ -74,7 +76,6 @@
                     @if (!in_array($basePermission, $displayedBasePermissions))
                       <tr>
                         <td>{{ ucwords($basePermission) }}</td>
-
                         <td class="text-center">
                           <div class="form-check form-check-inline">
                             <input class="form-check-input" id="cbxViewRole{{ $loop->parent->index }}-{{ $loop->index }}" name="can_view[{{ $permission->id }}]" type="checkbox">
@@ -114,12 +115,12 @@
       <!-- Footer -->
       <div class="modal-footer">
         <div class="row align-items-sm-center flex-grow-1 mx-n2">
-          <div class="col-sm mb-2 mb-sm-0"></div>
-          <div class="col-sm-auto">
-            <div class="d-flex gap-2">
-              <button class="btn btn-white" data-bs-dismiss="modal" type="button">Cancel</button>
-              <button class="btn btn-primary" id="btnAddSaveRole" form="frmAddRole" type="submit">Save</button>
-            </div>
+          <div class="col d-flex justify-content-end gap-2">
+            <button class="btn btn-white" data-bs-dismiss="modal" type="button">Cancel</button>
+            <button class="btn btn-primary" id="btnAddSaveRole" form="frmAddRole" type="submit" disabled>
+              <span class="spinner-label">Save</span>
+              <span class="spinner-border spinner-border-sm d-none"></span>
+            </button>
           </div>
         </div>
       </div>
