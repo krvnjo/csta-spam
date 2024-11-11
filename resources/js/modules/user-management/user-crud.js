@@ -192,6 +192,7 @@ $(document).ready(function () {
       text: `Are you sure you want to permanently delete the user "${userName}"? This action cannot be undone.`,
       icon: 'warning',
       showCancelButton: true,
+      focusCancel: true,
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'No, cancel!',
       customClass: {

@@ -11,29 +11,32 @@
 
       <!-- Body -->
       <div class="modal-body">
-        <form id="frmEditRole" method="post" novalidate>
+        <form id="frmEditRole" method="POST" novalidate>
           @csrf
           @method('PATCH')
-          <input id="txtEditRoleId" name="id" type="hidden">
+          <input id="txtEditId" name="id" type="hidden">
 
+          <!-- Role Name -->
           <div class="form-group">
             <label class="col col-form-label form-label" for="txtEditRole">Role Name</label>
-            <input class="form-control" id="txtEditRole" name="role" type="text" placeholder="Enter role name">
+            <input class="form-control" id="txtEditRole" name="role" type="text" placeholder="Enter a role name">
             <span class="invalid-feedback" id="valEditRole"></span>
           </div>
+          <!-- End Role Name -->
 
+          <!-- Role Description -->
           <div class="form-group mb-4">
             <div class="d-flex justify-content-between">
               <label class="col col-form-label form-label" for="txtEditDescription">Description</label>
-              <span class="col-form-label text-muted" id="countCharactersRoleDesc"></span>
+              <span class="col-form-label text-muted" id="maxLengthCountCharacters"></span>
             </div>
-            <textarea class="js-count-characters form-control" id="txtEditDescription" name="description"
-              data-hs-count-characters-options='{
-                "output": "#countCharactersRoleDesc"
-              }' style="resize: none;"
-              placeholder="Enter role description" rows="2" maxlength="120"></textarea>
+            <textarea class="js-count-characters form-control" id="txtEditDescription" name="description" data-hs-count-characters-options='{
+                "output": "#maxLengthCountCharacters"
+              }'
+              style="resize: none;" placeholder="Enter role description" rows="2" maxlength="80"></textarea>
             <span class="invalid-feedback" id="valEditDescription"></span>
           </div>
+          <!-- End Role Description -->
 
           <!-- Table -->
           <div class="table-responsive datatable-custom">
@@ -56,36 +59,51 @@
                 </tr>
               </thead>
 
+              @php
+                $groupedPermissions = $permissions->groupBy('group_name');
+                $displayedBasePermissions = [];
+              @endphp
+
               <tbody>
-                @foreach ($permissions as $index => $permission)
+                @foreach ($groupedPermissions as $groupName => $permissions)
                   <tr>
-                    <td class="d-none" data-permission-id="{{ $permission->id }}"></td>
-                    <td>{{ $permission->name }}</td>
-                    <td class="text-center">
-                      <div class="form-check form-check-inline">
-                        <input class="form-check-input cbx-view" id="cbxEditViewRole{{ $permission->id }}" name="can_view[{{ $permission->id }}]"
-                          type="checkbox">
-                      </div>
-                    </td>
-                    <td class="text-center">
-                      <div class="form-check form-check-inline">
-                        <input class="form-check-input cbx-action" id="cbxEditCreateRole{{ $permission->id }}"
-                          name="can_create[{{ $permission->id }}]" type="checkbox">
-                      </div>
-                    </td>
-                    <td class="text-center">
-                      <div class="form-check form-check-inline">
-                        <input class="form-check-input cbx-action" id="cbxEditEditRole{{ $permission->id }}" name="can_edit[{{ $permission->id }}]"
-                          type="checkbox">
-                      </div>
-                    </td>
-                    <td class="text-center">
-                      <div class="form-check form-check-inline">
-                        <input class="form-check-input cbx-action" id="cbxEditDeleteRole{{ $permission->id }}"
-                          name="can_delete[{{ $permission->id }}]" type="checkbox">
-                      </div>
-                    </td>
+                    <th colspan="5">{{ ucwords($groupName) }}</th>
                   </tr>
+
+                  @foreach ($permissions as $permission)
+                    @php
+                      $basePermission = preg_replace('/^(view|create|update|delete)\s+/', '', $permission->name);
+                    @endphp
+
+                    @if (!in_array($basePermission, $displayedBasePermissions))
+                      <tr>
+                        <td>{{ ucwords($basePermission) }}</td>
+                        <td class="text-center">
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" id="cbxViewRole{{ $loop->parent->index }}-{{ $loop->index }}" name="can_view[{{ $permission->id }}]" type="checkbox">
+                          </div>
+                        </td>
+                        <td class="text-center">
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" id="cbxCreateRole{{ $loop->parent->index }}-{{ $loop->index }}" name="can_create[{{ $permission->id }}]" type="checkbox">
+                          </div>
+                        </td>
+                        <td class="text-center">
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" id="cbxEditRole{{ $loop->parent->index }}-{{ $loop->index }}" name="can_edit[{{ $permission->id }}]" type="checkbox">
+                          </div>
+                        </td>
+                        <td class="text-center">
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" id="cbxDeleteRole{{ $loop->parent->index }}-{{ $loop->index }}" name="can_delete[{{ $permission->id }}]" type="checkbox">
+                          </div>
+                        </td>
+                      </tr>
+                      @php
+                        $displayedBasePermissions[] = $basePermission;
+                      @endphp
+                    @endif
+                  @endforeach
                 @endforeach
               </tbody>
             </table>
@@ -99,12 +117,12 @@
       <!-- Footer -->
       <div class="modal-footer">
         <div class="row align-items-sm-center flex-grow-1 mx-n2">
-          <div class="col-sm mb-2 mb-sm-0"></div>
-          <div class="col-sm-auto">
-            <div class="d-flex gap-2">
-              <button class="btn btn-white" data-bs-dismiss="modal" type="button">Cancel</button>
-              <button class="btn btn-primary" id="btnEditSaveRole" form="frmEditRole" type="submit">Save</button>
-            </div>
+          <div class="col d-flex justify-content-end gap-2">
+            <button class="btn btn-white" data-bs-dismiss="modal" type="button">Cancel</button>
+            <button class="btn btn-primary" id="btnEditSaveRole" form="frmEditRole" type="submit" disabled>
+              <span class="spinner-label">Save</span>
+              <span class="spinner-border spinner-border-sm d-none"></span>
+            </button>
           </div>
         </div>
       </div>

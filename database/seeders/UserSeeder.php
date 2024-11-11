@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $permissionGroups = [
+        $groups = [
             'Inventory Management' => [
                 'item management',
             ],
@@ -37,7 +37,7 @@ class UserSeeder extends Seeder
 
         $actions = ['view', 'create', 'update', 'delete'];
 
-        foreach ($permissionGroups as $group => $basePermissions) {
+        foreach ($groups as $group => $basePermissions) {
             foreach ($basePermissions as $base) {
                 foreach ($actions as $action) {
                     if ($group === 'Administrative Permissions' && !in_array($action, ['view', 'update'])) {
