@@ -229,7 +229,6 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
     Route::middleware('checkPermission:view audit history')->prefix('audit-history')->name('audit.')->controller(AuditController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/show', 'show')->name('show')->middleware('expectsJson');
-        Route::patch('/', 'update')->name('update')->middleware('checkPermission:update audit history');
     });
 
     // System Settings Routes
