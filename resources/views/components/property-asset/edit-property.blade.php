@@ -149,83 +149,83 @@
   </div>
 </div>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    let categoryEditSelect, brandEditSelect;
+{{--<script>--}}
+{{--  document.addEventListener('DOMContentLoaded', function() {--}}
+{{--    let categoryEditSelect, brandEditSelect;--}}
 
-    function initializeSelects() {
-      categoryEditSelect = new TomSelect('#cbxEditCategory', {
-        controlInput: false,
-        hideSearch: true,
-        allowEmptyOption: true,
-        onChange: function(value) {
-          if (value) {
-            fetchBrands(value);
-          } else {
-            resetBrandSelect();
-          }
-        }
-      });
+{{--    function initializeSelects() {--}}
+{{--      categoryEditSelect = new TomSelect('#cbxEditCategory', {--}}
+{{--        controlInput: false,--}}
+{{--        hideSearch: true,--}}
+{{--        allowEmptyOption: true,--}}
+{{--        onChange: function(value) {--}}
+{{--          if (value) {--}}
+{{--            fetchBrands(value);--}}
+{{--          } else {--}}
+{{--            resetBrandSelect();--}}
+{{--          }--}}
+{{--        }--}}
+{{--      });--}}
 
-      brandEditSelect = new TomSelect('#cbxEditBrand', {
-        controlInput: false,
-        hideSearch: true,
-        allowEmptyOption: true
-      });
-    }
+{{--      brandEditSelect = new TomSelect('#cbxEditBrand', {--}}
+{{--        controlInput: false,--}}
+{{--        hideSearch: true,--}}
+{{--        allowEmptyOption: true--}}
+{{--      });--}}
+{{--    }--}}
 
-    function fetchBrands(categoryId) {
-      $.ajax({
-        url: '{{ route("prop-asset.getSubcategoryBrands") }}',
-        type: 'GET',
-        data: { subcategory_id: categoryId },
-        success: function(data) {
-          updateBrandOptions(data);
-        }
-      });
-    }
+{{--    function fetchBrands(categoryId) {--}}
+{{--      $.ajax({--}}
+{{--        url: '{{ route("prop-asset.getSubcategoryBrands") }}',--}}
+{{--        type: 'GET',--}}
+{{--        data: { subcategory_id: categoryId },--}}
+{{--        success: function(data) {--}}
+{{--          updateBrandOptions(data);--}}
+{{--        }--}}
+{{--      });--}}
+{{--    }--}}
 
-    function updateBrandOptions(data) {
-      let currentValue = brandEditSelect.getValue();
-      brandEditSelect.clear(true);
-      brandEditSelect.clearOptions();
-      data.forEach(function(item) {
-        brandEditSelect.addOption({ value: item.id, text: item.name });
-      });
-      brandEditSelect.refreshOptions(false);
-      if (currentValue && data.some(item => item.id == currentValue)) {
-        brandEditSelect.setValue(currentValue, true);
-      }
-    }
+{{--    function updateBrandOptions(data) {--}}
+{{--      let currentValue = brandEditSelect.getValue();--}}
+{{--      brandEditSelect.clear(true);--}}
+{{--      brandEditSelect.clearOptions();--}}
+{{--      data.forEach(function(item) {--}}
+{{--        brandEditSelect.addOption({ value: item.id, text: item.name });--}}
+{{--      });--}}
+{{--      brandEditSelect.refreshOptions(false);--}}
+{{--      if (currentValue && data.some(item => item.id == currentValue)) {--}}
+{{--        brandEditSelect.setValue(currentValue, true);--}}
+{{--      }--}}
+{{--    }--}}
 
-    function resetBrandSelect() {
-      brandEditSelect.clear(true);
-      brandEditSelect.clearOptions();
-      brandEditSelect.refreshOptions(false);
-    }
+{{--    function resetBrandSelect() {--}}
+{{--      brandEditSelect.clear(true);--}}
+{{--      brandEditSelect.clearOptions();--}}
+{{--      brandEditSelect.refreshOptions(false);--}}
+{{--    }--}}
 
-    initializeSelects();
+{{--    initializeSelects();--}}
 
-    $('#editPropertyModal').on('show.bs.modal', function (e) {
-      let existingCategoryId = $('#cbxEditCategory').val();
-      let existingBrandId = $('#cbxEditBrand').val();
+{{--    $('#editPropertyModal').on('show.bs.modal', function (e) {--}}
+{{--      let existingCategoryId = $('#cbxEditCategory').val();--}}
+{{--      let existingBrandId = $('#cbxEditBrand').val();--}}
 
-      if (existingCategoryId) {
-        categoryEditSelect.setValue(existingCategoryId, true);
-        fetchBrands(existingCategoryId);
+{{--      if (existingCategoryId) {--}}
+{{--        categoryEditSelect.setValue(existingCategoryId, true);--}}
+{{--        fetchBrands(existingCategoryId);--}}
 
-        setTimeout(() => {
-          if (existingBrandId) {
-            brandEditSelect.setValue(existingBrandId, true);
-            brandEditSelect.refreshOptions(false);
-          }
-        }, 200);
-      }
-    });
+{{--        setTimeout(() => {--}}
+{{--          if (existingBrandId) {--}}
+{{--            brandEditSelect.setValue(existingBrandId, true);--}}
+{{--            brandEditSelect.refreshOptions(false);--}}
+{{--          }--}}
+{{--        }, 200);--}}
+{{--      }--}}
+{{--    });--}}
 
-    $(document).on('keydown', '.tom-select input[type="text"]', function(event) {
-      event.preventDefault();
-    });
-  });
-</script>
+{{--    $(document).on('keydown', '.tom-select input[type="text"]', function(event) {--}}
+{{--      event.preventDefault();--}}
+{{--    });--}}
+{{--  });--}}
+{{--</script>--}}
 

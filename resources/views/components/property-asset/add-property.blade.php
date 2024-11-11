@@ -89,23 +89,24 @@
                     </div>
                     <div class="col-md-4">
                       <div class="tom-select-custom mb-3 form-floating">
-                        <select class="js-select form-select" id="cbxUnit" name="units">
+                        <select class="js-select form-select" id="cbxUnit" name="unit">
                           <option value="" disabled selected>Select Unit...</option>
                           @foreach ($units as $unit)
                             <option value="{{ $unit->id }}">{{ $unit->name }}</option>
                           @endforeach
                         </select>
                         <label for="cbxUnit">Units</label>
+                        <span class="invalid-feedback" id="valAddUnit"></span>
                       </div>
                     </div>
                     <div class="col-md-4">
                       <div class="input-group">
                         <span class="input-group-text">₱</span>
                         <div class="form-floating">
-                          <input class="form-control text-end" id="txtPurchasePriceConsumable" name="purchasePrice" type="number" step="0.01" min="0" placeholder="Purchase Price" />
-                          <label for="txtPurchasePriceConsumable">Purchase Price</label>
+                          <input class="form-control text-end" id="txtPurchasePrice" name="purchasePrice" type="number" step="0.01" min="0" placeholder="Purchase Price" />
+                          <label for="txtPurchasePrice">Purchase Price</label>
                         </div>
-                        <span class="invalid-feedback" id="valAddPurchasePriceConsumable"></span>
+                        <span class="invalid-feedback" id="valAddPurchasePrice"></span>
                       </div>
                     </div>
                   </div>
@@ -142,6 +143,7 @@
                           <input class="form-control text-end" id="txtResidualValue" name="residualValue" type="number" step="0.01" min="0" placeholder="Residual Value"
                                  data-bs-toggle="tooltip" title="The residual value is the estimated value of the asset at the end of its useful life."/>
                           <label for="txtResidualValue">Residual Value</label>
+                          <span class="invalid-feedback" id="valAddResidualValue"></span>
                         </div>
                       </div>
                     </div>
@@ -150,6 +152,7 @@
                         <input class="form-control" id="txtUsefulLife" name="usefulLife" type="number" min="0" placeholder="Useful Life"
                                data-bs-toggle="tooltip" title="The useful life refers to the expected number of years an asset will be in use."/>
                         <label for="txtUsefulLife">Useful Life (years)</label>
+                        <span class="invalid-feedback" id="valAddUsefulLife"></span>
                       </div>
                     </div>
                   </div>
@@ -176,6 +179,7 @@
                         @endforeach
                       </select>
                       <label for="cbxCategory">Category <span class="text-danger">*</span></label>
+                      <span class="invalid-feedback" id="valAddCategory"></span>
                     </div>
                   </div>
                   <div class="col-md-4">
@@ -187,6 +191,7 @@
                         @endforeach
                       </select>
                       <label for="cbxCondition">Condition <span class="text-danger">*</span></label>
+                      <span class="invalid-feedback" id="valAddCondition"></span>
                     </div>
                   </div>
                   <div class="col-md-4">
@@ -198,6 +203,7 @@
                         @endforeach
                       </select>
                       <label for="cbxBrand">Brand <span class="text-danger">*</span></label>
+                      <span class="invalid-feedback" id="valAddBrand"></span>
                     </div>
                   </div>
                   <div class="col-md-4">
@@ -209,18 +215,21 @@
                         @endforeach
                       </select>
                       <label for="cbxAcquiredType">Acquired Type</label>
+                      <span class="invalid-feedback" id="valAddAcquiredType"></span>
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class="form-floating">
                       <input class="form-control" id="dtpAcquired" name="dateAcquired" type="date" max="{{ now()->toDateString() }}" />
                       <label for="dtpAcquired">Date Acquired</label>
+                      <span class="invalid-feedback" id="valAddDateAcq"></span>
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class="form-floating">
                       <input class="form-control" id="dtpWarranty" name="warranty" type="date" min="{{ now()->toDateString() }}" />
                       <label for="dtpWarranty">Warranty Date</label>
+                      <span class="invalid-feedback" id="valAddWarranty"></span>
                     </div>
                   </div>
                 </div>
@@ -240,6 +249,75 @@
     </div>
   </div>
 </div>
+{{--<script>--}}
+{{--  document.addEventListener('DOMContentLoaded', function() {--}}
+{{--    const itemTypeSelect = document.getElementById('cbxItemType');--}}
+{{--    const nonConsumableFields1 = document.getElementById('nonConsumableFields1');--}}
+{{--    const nonConsumableFields2 = document.getElementById('nonConsumableFields2');--}}
+{{--    const alertContainer = document.getElementById('alertContainer');--}}
+{{--    let alertTimeout;--}}
+
+{{--    const tomSelect1 = new TomSelect('#cbxCategory');--}}
+{{--    const tomSelect2 = new TomSelect('#cbxCondition');--}}
+{{--    const tomSelect3 = new TomSelect('#cbxBrand');--}}
+{{--    const tomSelect4 = new TomSelect('#cbxAcquiredType');--}}
+
+{{--    function resetNonConsumableFields() {--}}
+
+{{--      const inputs1 = nonConsumableFields1.querySelectorAll('input');--}}
+{{--      const inputs2 = nonConsumableFields2.querySelectorAll('input');--}}
+
+{{--      // Clear all regular inputs--}}
+{{--      inputs1.forEach(input => input.value = '');--}}
+{{--      inputs2.forEach(input => input.value = '');--}}
+
+{{--      if (tomSelect1) {--}}
+{{--        tomSelect1.clear()--}}
+{{--      }--}}
+{{--      if (tomSelect2) {--}}
+{{--        tomSelect2.clear();--}}
+{{--      }--}}
+{{--      if (tomSelect3) {--}}
+{{--        tomSelect3.clear();--}}
+{{--      }--}}
+{{--      if (tomSelect4) {--}}
+{{--        tomSelect4.clear();--}}
+{{--      }--}}
+{{--      --}}
+{{--    }--}}
+
+{{--    itemTypeSelect.addEventListener('change', function() {--}}
+{{--      clearTimeout(alertTimeout);--}}
+
+{{--      if (this.value === 'non-consumable') {--}}
+{{--        nonConsumableFields1.style.display = 'block';--}}
+{{--        nonConsumableFields2.style.display = 'block';--}}
+
+{{--        alertContainer.style.display = 'block';--}}
+{{--        alertContainer.classList.remove('fade');--}}
+
+{{--        alertTimeout = setTimeout(function() {--}}
+{{--          alertContainer.classList.add('fade');--}}
+{{--          alertContainer.addEventListener('transitionend', function() {--}}
+{{--            alertContainer.style.display = 'none';--}}
+{{--            alertContainer.classList.remove('fade');--}}
+{{--          });--}}
+{{--        }, 5000);--}}
+
+{{--        resetNonConsumableFields();--}}
+
+{{--      } else {--}}
+{{--        nonConsumableFields1.style.display = 'none';--}}
+{{--        nonConsumableFields2.style.display = 'none';--}}
+{{--        alertContainer.style.display = 'none';--}}
+
+{{--        resetNonConsumableFields();--}}
+{{--      }--}}
+
+{{--    });--}}
+{{--  });--}}
+{{--</script>--}}
+
 
 <style>
   .modal-xl {
@@ -288,41 +366,5 @@
     }
   }
 </style>
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const itemTypeSelect = document.getElementById('cbxItemType');
-    const nonConsumableFields1 = document.getElementById('nonConsumableFields1');
-    const nonConsumableFields2 = document.getElementById('nonConsumableFields2');
-    const alertContainer = document.getElementById('alertContainer');
-    let alertTimeout;
-
-    itemTypeSelect.addEventListener('change', function() {
-      clearTimeout(alertTimeout);
-
-      if (this.value === 'non-consumable') {
-        nonConsumableFields1.style.display = 'block';
-        nonConsumableFields2.style.display = 'block';
-
-        alertContainer.style.display = 'block';
-        alertContainer.classList.remove('fade');
-
-        alertTimeout = setTimeout(function() {
-          alertContainer.classList.add('fade');
-          alertContainer.addEventListener('transitionend', function() {
-            alertContainer.style.display = 'none';
-            alertContainer.classList.remove('fade');
-          });
-        }, 5000);
-
-      } else {
-        nonConsumableFields1.style.display = 'none';
-        nonConsumableFields2.style.display = 'none';
-        alertContainer.style.display = 'none';
-      }
-
-      checkFormValidity();
-    });
-  });
-</script>
 
 
