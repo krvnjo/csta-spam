@@ -16,14 +16,18 @@ class PropertyParent extends Model
 
     protected $fillable = [
         'name',
+        'specification',
+        'description',
+        'image',
+        'quantity',
         'brand_id',
         'subcateg_id',
-        'description',
-        'quantity',
-        'image',
         'purchase_price',
         'residual_value',
-        'useful_life'
+        'useful_life',
+        'unit_id',
+        'is_consumable',
+        'is_active'
     ];
 
     public function brand(): BelongsTo
@@ -44,5 +48,10 @@ class PropertyParent extends Model
     public function subcategory(): BelongsTo
     {
         return $this->belongsTo(Subcategory::class, 'subcateg_id');
+    }
+
+    public function unit(): BelongsTo
+    {
+        return $this->belongsTo(Unit::class, 'unit_id');
     }
 }

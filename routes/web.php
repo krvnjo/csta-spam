@@ -82,7 +82,6 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
         Route::patch('/', 'update')->name('update')->middleware('checkPermission:update item management');
         Route::delete('/', 'destroy')->name('delete')->middleware('checkPermission:delete item management');
-        Route::get('/get-subcategory-brands', 'getSubcategoryBrands')->name('getSubcategoryBrands')->middleware('expectsJson');
         Route::fallback(function () {
             abort(404);
         });

@@ -9,6 +9,7 @@ use App\Models\Designation;
 use App\Models\PropertyConsumable;
 use App\Models\PropertyParent;
 use App\Models\Status;
+use App\Models\Subcategory;
 use App\Models\Unit;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -23,14 +24,17 @@ return new class extends Migration {
         Schema::create('property_parents', function (Blueprint $table) {
             $table->id();
             $table->string('name', 255)->unique();
-            $table->foreignIdFor(Brand::class, 'brand_id')->constrained('brands')->cascadeOnDelete();
-            $table->foreignIdFor(Category::class, 'categ_id')->constrained('categories')->cascadeOnDelete();
+            $table->string('specification')->nullable();
             $table->string('description')->nullable();
             $table->string('image')->nullable()->default('default.jpg');
             $table->unsignedInteger('quantity')->default(1);
+            $table->foreignIdFor(Brand::class, 'brand_id')->nullable()->constrained('brands')->cascadeOnDelete();
+            $table->foreignIdFor(Subcategory::class, 'subcateg_id')->nullable()->constrained('subcategories')->cascadeOnDelete();
             $table->decimal('purchase_price', 15, 2)->nullable();
-            $table->decimal('residual_value', 15, 2)->default(0);
-            $table->unsignedInteger('useful_life')->default(1);
+            $table->decimal('residual_value', 15, 2)->nullable();
+            $table->unsignedInteger('useful_life')->nullable();
+            $table->foreignIdFor(Unit::class, 'unit_id')->nullable()->constrained('units')->cascadeOnDelete();
+            $table->boolean('is_consumable')->default(0);
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
             $table->softDeletes();
@@ -41,45 +45,34 @@ return new class extends Migration {
             $table->foreignIdFor(PropertyParent::class, 'prop_id')->constrained('property_parents')->cascadeOnDelete();
             $table->string('prop_code', 100)->unique();
             $table->string('serial_num', 100)->nullable()->unique();
-            $table->foreignIdFor(Acquisition::class, 'type_id')->constrained('acquisitions')->cascadeOnDelete();
+            $table->foreignIdFor(Acquisition::class, 'type_id')->nullable()->constrained('acquisitions')->cascadeOnDelete();
             $table->date('acq_date')->nullable();
             $table->date('warranty_date')->nullable();
-            $table->date('stock_date');
+            $table->date('stock_date')->nullable();
             $table->date('inventory_date')->nullable();
-            $table->foreignIdFor(Department::class, 'dept_id')->constrained('departments')->cascadeOnDelete();
-            $table->foreignIdFor(Designation::class, 'desig_id')->constrained('designations')->cascadeOnDelete();
-            $table->foreignIdFor(Condition::class, 'condi_id')->constrained('conditions')->cascadeOnDelete();
-            $table->foreignIdFor(Status::class, 'status_id')->constrained('statuses')->cascadeOnDelete();
+            $table->foreignIdFor(Department::class, 'dept_id')->nullable()->constrained('departments')->cascadeOnDelete();
+            $table->foreignIdFor(Designation::class, 'desig_id')->nullable()->constrained('designations')->cascadeOnDelete();
+            $table->foreignIdFor(Condition::class, 'condi_id')->nullable()->constrained('conditions')->cascadeOnDelete();
+            $table->foreignIdFor(Status::class, 'status_id')->nullable()->constrained('statuses')->cascadeOnDelete();
             $table->string('remarks')->nullable();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
             $table->softDeletes();
         });
 
-        Schema::create('property_consumables', function (Blueprint $table) {
-            $table->id();
-            $table->string('name', 255)->unique();
-            $table->string('description')->nullable();
-            $table->foreignIdFor(Unit::class, 'unit_id')->constrained('units')->cascadeOnDelete();
-            $table->unsignedInteger('quantity')->default(1);
-            $table->unsignedTinyInteger('is_active')->default(1);
-            $table->timestamps();
-            $table->softDeletes();
-        });
-
-        Schema::create('consumption_logs', function (Blueprint $table) {
-            $table->id();
-            $table->string('transaction_number')->unique();
-            $table->foreignIdFor(PropertyConsumable::class, 'consume_id')->constrained('property_consumables')->cascadeOnDelete();
-            $table->string('consumed_by', 255);
-            $table->foreignIdFor(Department::class, 'dept_id')->constrained('departments')->cascadeOnDelete();
-            $table->unsignedInteger('quantity_consumed');
-            $table->date('consumed_at');
-            $table->string('purpose', 255)->nullable();
-            $table->string('remarks', 255)->nullable();
-            $table->timestamps();
-            $table->softDeletes();
-        });
+//        Schema::create('consumption_logs', function (Blueprint $table) {
+//            $table->id();
+//            $table->string('transaction_number')->unique();
+//            $table->foreignIdFor(PropertyConsumable::class, 'consume_id')->constrained('property_consumables')->cascadeOnDelete();
+//            $table->string('consumed_by', 255);
+//            $table->foreignIdFor(Department::class, 'dept_id')->constrained('departments')->cascadeOnDelete();
+//            $table->unsignedInteger('quantity_consumed');
+//            $table->date('consumed_at');
+//            $table->string('purpose', 255)->nullable();
+//            $table->string('remarks', 255)->nullable();
+//            $table->timestamps();
+//            $table->softDeletes();
+//        });
     }
 
     /**

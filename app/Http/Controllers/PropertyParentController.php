@@ -8,6 +8,7 @@ use App\Models\Condition;
 use App\Models\PropertyChild;
 use App\Models\PropertyParent;
 use App\Models\Subcategory;
+use App\Models\Unit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -30,194 +31,188 @@ class PropertyParentController extends Controller
             ->get()
             ->map(function ($property) {
                 if ($property->purchase_price && $property->useful_life && isset($property->residual_value)) {
-                    $annualDepreciation = ($property->residual_value - $property->purchase_price) / $property->useful_life;
+                    $annualDepreciation = ($property->purchase_price - $property->residual_value) / $property->useful_life;
                     $property->annualDepreciation = round($annualDepreciation, 2);
 
                     $property->depreciationRate = round(($annualDepreciation / $property->purchase_price) * 100, 2);
 
-                    $depreciationValues = [];
                     $currentValue = $property->purchase_price;
+                    $totalDepreciationSoFar = 0;
+                    $depreciatedValueThisYear = $property->purchase_price;
 
-                    for ($i = 0; $i <= $property->useful_life; $i++) {
-                        $depreciationValues[] = round($currentValue, 2);
-                        $currentValue += $annualDepreciation;
+                    for ($i = 1; $i <= $property->current_year; $i++) {
+                        $totalDepreciationSoFar += $annualDepreciation;
+                        $currentValue -= $annualDepreciation;
                     }
 
-                    $property->depreciationValues = $depreciationValues;
+                    $depreciatedValueThisYear = round($currentValue, 2);
+                    $property->depreciatedValueThisYear = $depreciatedValueThisYear;
+                    $property->totalDepreciationSoFar = $totalDepreciationSoFar;
+                    $property->combinedDepreciationPercentage = round(($totalDepreciationSoFar / $property->purchase_price) * 100, 2);
+
                 } else {
-                    $property->depreciationValues = [];
+                    $property->depreciatedValueThisYear = $property->purchase_price;
+                    $property->totalDepreciationSoFar = 0;
                     $property->annualDepreciation = 0;
                     $property->depreciationRate = 0;
+                    $property->combinedDepreciationPercentage = 0;
                 }
                 return $property;
             });
+
 
         $subcategories = Subcategory::where('is_active', 1)->get();
         $brands = Brand::where('is_active', 1)->get();
         $conditions = Condition::where('is_active', 1)->get();
         $acquisitions = Acquisition::where('is_active', 1)->get();
+        $units = Unit::where('is_active', 1)->get();
 
-        return view('pages.property-asset.overview', compact('brands', 'subcategories', 'conditions', 'acquisitions', 'propertyParents'));
+        return view('pages.property-asset.overview', compact('brands', 'subcategories', 'conditions', 'acquisitions', 'propertyParents', 'units'));
     }
 
-
-    public function getSubcategoryBrands(Request $request)
-    {
-        $subcategoryId = $request->input('subcategory_id');
-        $brands = Brand::whereHas('subcategories', function ($query) use ($subcategoryId) {
-            $query->where('subcateg_id', $subcategoryId);
-        })->where('is_active', 1)->get();
-
-        return response()->json($brands);
-    }
 
     /**
      * Store a newly created resource in storage.
      */
+
     public function store(Request $request)
     {
+        $rules = [
+            'propertyName' => [
+                'required',
+                'regex:/^(?=.*[A-Za-z0-9])[A-Za-z0-9 ]+$/',
+                'min:3',
+                'max:50',
+                'unique:property_parents,name',
+            ],
+            'itemType' => ['required'],
+            'quantity' => ['required', 'integer', 'min:1', 'max:500'],
+            'unit' => ['required'],
+            'specification' => ['required', 'regex:/^[A-Za-z0-9%,\- ×"]+$/', 'min:3', 'max:100'],
+            'description' => ['nullable', 'regex:/^[A-Za-z0-9%,\- ×"]+$/', 'min:3', 'max:100'],
+            'purchasePrice' => ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/', 'min:1'],
+        ];
+
         $propertyValidationMessages = [
             'propertyName.required' => 'Please enter an item name!',
             'propertyName.regex' => 'The item name may only contain letters, spaces, and hyphens.',
             'propertyName.min' => 'The item name must be at least :min characters.',
             'propertyName.max' => 'The item name may not be greater than :max characters.',
             'propertyName.unique' => 'This item name already exists.',
-
-            'category.required' => 'Please choose a category!',
-
-            'brand.required' => 'Please choose a brand!',
-
+            'itemType.required' => 'Please choose an item type!',
             'quantity.required' => 'Please enter the quantity!',
             'quantity.min' => 'The quantity must be at least :min.',
-            'quantity.integer' => 'The quantity must be a whole number',
+            'quantity.integer' => 'The quantity must be a whole number.',
             'quantity.max' => 'The quantity may not be greater than :max.',
-
+            'unit.required' => 'Please choose a unit type!',
+            'specification.required' => 'Please enter a specification!',
+            'specification.regex' => 'The specification may only contain letters, spaces, and hyphens.',
+            'specification.min' => 'The specification must be at least :min characters.',
+            'specification.max' => 'The specification may not be greater than :max characters.',
             'description.regex' => 'The description may only contain letters, spaces, and hyphens.',
             'description.min' => 'The description must be at least :min characters.',
             'description.max' => 'The description may not be greater than :max characters.',
-
-            'acquiredType.required' => 'Please choose a acquisition type!',
-
-            'acquiredDate.required' => 'Please choose date acquired!',
-            'acquiredDate.before_or_equal' => 'The acquired date cannot be later than today.',
-            'acquiredDate.after_or_equal' => 'The acquired date must be on or after January 1, 2007.',
-
-            'condition.required' => 'Please choose a condition!',
-
-            'warranty.after_or_equal' => 'The warranty date must be today or a future date.',
-            'warranty.before_or_equal' => 'The warranty date cannot be later than December 31, 2100.',
-
             'purchasePrice.required' => 'Please enter the purchase price!',
-            'purchasePrice.min' => 'The purchase price must be at least :min.',
             'purchasePrice.numeric' => 'The purchase price must be a number.',
-            'purchasePrice.regex' => 'The purchase price can only have up to 2 decimal places.',
-
-            'residualValue.required' => 'Please enter the residual value!',
-            'residualValue.numeric' => 'The residual value must be a number.',
-            'residualValue.regex' => 'The residual value can only have up to 2 decimal places.',
-
-            'usefulLife.required' => 'Please enter the useful life!',
-            'usefulLife.min' => 'The useful life must be at least :min.',
-            'usefulLife.integer' => 'The useful life must be a whole number.',
-            'usefulLife.max' => 'The useful life may not be greater than :max.',
+            'purchasePrice.min' => 'The purchase price must be at least :min.',
         ];
+
+        if ($request->itemType !== 'consumable') {
+            $rules = array_merge($rules, [
+                'category' => ['required'],
+                'brand' => ['required'],
+                'acquiredType' => ['required'],
+                'acquiredDate' => ['required', 'date', 'before_or_equal:today', 'after_or_equal:2007-01-01'],
+                'condition' => ['required'],
+                'residualValue' => ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/'],
+                'usefulLife' => ['required', 'integer', 'min:1', 'max:500'],
+            ]);
+
+            $propertyValidationMessages = array_merge($propertyValidationMessages, [
+                'category.required' => 'Please choose a category!',
+                'brand.required' => 'Please choose a brand!',
+                'acquiredType.required' => 'Please choose an acquisition type!',
+                'acquiredDate.required' => 'Please choose the acquired date!',
+                'acquiredDate.before_or_equal' => 'The acquired date cannot be later than today.',
+                'acquiredDate.after_or_equal' => 'The acquired date must be on or after January 1, 2007.',
+                'condition.required' => 'Please choose a condition!',
+                'residualValue.required' => 'Please enter the residual value!',
+                'residualValue.numeric' => 'The residual value must be a number.',
+                'usefulLife.required' => 'Please enter the useful life!',
+                'usefulLife.min' => 'The useful life must be at least :min.',
+                'usefulLife.integer' => 'The useful life must be a whole number.',
+            ]);
+        }
+
+        $propertyValidator = Validator::make($request->all(), $rules, $propertyValidationMessages);
+
+        if ($propertyValidator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $propertyValidator->errors(),
+            ]);
+        }
+
+        $imageFileName = 'default.jpg';
+        if ($request->hasFile('propertyImage')) {
+            $file = $request->file('propertyImage');
+            if ($file !== null && $file->isValid()) {
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('storage/img/prop-asset/'), $filename);
+                $imageFileName = $filename;
+            }
+        }
+
         try {
-            $propertyValidator = Validator::make($request->all(), [
-                'propertyName' => [
-                    'required',
-                    'regex:/^(?=.*[A-Za-z0-9])[A-Za-z0-9 ]+$/',
-                    'min:3',
-                    'max:50',
-                    'unique:property_parents,name'
-                ],
-                'category' => [
-                    'required'
-                ],
-                'brand' => [
-                    'required'
-                ],
-                'quantity' => [
-                    'required',
-                    'integer',
-                    'min:1',
-                    'max:500'
-                ],
-                'description' => [
-                    'nullable',
-                    'regex:/^[A-Za-z0-9%,\- ×"]+$/',
-                    'min:3',
-                    'max:100'
-                ],
-                'acquiredType' => [
-                    'required'
-                ],
-                'acquiredDate' => [
-                    'required',
-                    'date',
-                    'after_or_equal:2007-01-01',
-                    'before_or_equal:today'
-                ],
-                'warranty' => [
-                    'nullable',
-                    'date',
-                    'after_or_equal:today',
-                    'before_or_equal:2100-12-31'
-                ],
-                'condition' => [
-                    'required'
-                ],
-                'purchasePrice' => [
-                    'required',
-                    'numeric',
-                    'regex:/^\d+(\.\d{1,2})?$/',
-                    'min:1'
-                ],
-                'residualValue' => [
-                    'required',
-                    'numeric',
-                    'regex:/^\d+(\.\d{1,2})?$/'
-                ],
-                'usefulLife' => [
-                    'required',
-                    'integer',
-                    'min:1',
-                    'max:500'
-                ],
-            ], $propertyValidationMessages);
-            if ($propertyValidator->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'errors' => $propertyValidator->errors(),
+            if ($request->itemType === 'consumable') {
+                $parentProperty = PropertyParent::query()->create([
+                    'name' => ucwords(strtolower(trim($request->input('propertyName')))),
+                    'image' => $imageFileName,
+                    'specification' => ucwords(strtolower(trim($request->input('specification')))),
+                    'description' => ucwords(strtolower(trim($request->input('description')))),
+                    'quantity' => $request->input('quantity'),
+                    'unit_id' => (int)$request->input('unit'),
+                    'purchase_price' => (float)$request->input('purchasePrice'),
+                    'is_consumable' => 1,
+                ]);
+
+                $currentYear = Carbon::now()->year;
+                $lastCode = PropertyChild::query()
+                    ->where('prop_code', 'LIKE', "$currentYear%")
+                    ->orderBy('prop_code', 'desc')
+                    ->value('prop_code');
+
+                $nextNumber = $lastCode ? (int)substr($lastCode, 4) + 1 : 1;
+
+                $code = $currentYear . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
+                PropertyChild::create([
+                    'prop_id' => $parentProperty->id,
+                    'prop_code' => $code,
+                    'stock_date' => now(),
+                    'type_id' => 1,
+                    'dept_id' => 1,
+                    'acq_date' => now(),
+                    'desig_id' => 1,
+                    'condi_id' => 1,
                 ]);
             } else {
-                if ($request->hasFile('propertyImage')) {
-                    $file = $request->file('propertyImage');
-                    if ($file !== null && $file->isValid()) {
-                        $filename = time() . '_' . $file->getClientOriginalName();
-                        $file->move(public_path('storage/img/prop-asset/'), $filename);
-                        $imageFileName = $filename;
-                    } else {
-                        $imageFileName = 'default.jpg';
-                    }
-                } else {
-                    $imageFileName = 'default.jpg';
-                }
-
                 $parentProperty = PropertyParent::query()->create([
-                    'name' => ucwords(strtolower(trim(request('propertyName')))),
+                    'name' => ucwords(strtolower(trim($request->input('propertyName')))),
                     'image' => $imageFileName,
-                    'brand_id' => (int)request('brand'),
-                    'subcateg_id' => (int)request('category'),
-                    'description' => ucwords(strtolower(trim(request('description')))),
-                    'quantity' => request('quantity'),
-                    'purchase_price' => (float)request('purchasePrice'),
-                    'residual_value' => (float)request('residualValue'),
-                    'useful_life' => (int)request('usefulLife')
+                    'unit_id' => (int)$request->input('unit'),
+                    'brand_id' => (int)$request->input('brand'),
+                    'subcateg_id' => (int)$request->input('category'),
+                    'specification' => ucwords(strtolower(trim($request->input('specification')))),
+                    'description' => ucwords(strtolower(trim($request->input('description')))),
+                    'quantity' => $request->input('quantity'),
+                    'purchase_price' => (float)$request->input('purchasePrice'),
+                    'residual_value' => (float)$request->input('residualValue'),
+                    'useful_life' => (int)$request->input('usefulLife'),
+                    'is_consumable' => 0,
                 ]);
 
                 $propertyQuantity = $request->input('quantity');
                 $currentYear = Carbon::now()->year;
-
                 $lastCode = PropertyChild::query()
                     ->where('prop_code', 'LIKE', "$currentYear%")
                     ->orderBy('prop_code', 'desc')
@@ -229,46 +224,33 @@ class PropertyParentController extends Controller
                     $code = $currentYear . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
                     $nextNumber++;
 
-                    try {
-                        PropertyChild::query()->create([
-                            'prop_id' => $parentProperty->id,
-                            'prop_code' => $code,
-                            'type_id' => (int)request('acquiredType'),
-                            'acq_date' => Carbon::parse(request('dateAcquired')),
-                            'warranty_date' => Carbon::parse(request('warranty')),
-                            'stock_date' => now(),
-                            'status_id' => 1,
-                            'dept_id' => 1,
-                            'desig_id' => 1,
-                            'condi_id' => 1,
-                        ]);
-                    } catch (\Exception) {
-                        return response()->json([
-                            'success' => false,
-                            'title' => 'Oops! Something went wrong.',
-                            'text' => 'An error occurred while adding item. Please try again later.',
-                        ], 500);
-
-                    }
+                    PropertyChild::query()->create([
+                        'prop_id' => $parentProperty->id,
+                        'prop_code' => $code,
+                        'type_id' => (int)$request->input('acquiredType'),
+                        'acq_date' => Carbon::parse($request->input('acquiredDate')),
+                        'warranty_date' => $request->input('warranty') ? Carbon::parse($request->input('warranty')) : null,
+                        'stock_date' => now(),
+                        'status_id' => 1,
+                        'dept_id' => 1,
+                        'desig_id' => 1,
+                        'condi_id' => 1,
+                    ]);
                 }
-
-                return response()->json([
-                    'success' => true,
-                    'title' => 'Saved Successfully!',
-                    'text' => 'The item has been added successfully!'
-                ]);
-
-
             }
+
+            return response()->json([
+                'success' => true,
+                'title' => 'Saved Successfully!',
+                'text' => 'The item has been added successfully!',
+            ]);
         } catch (Throwable) {
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
-                'text' => 'An error occurred while adding item. Please try again later.',
+                'text' => 'An error occurred while adding the item. Please try again later.',
             ], 500);
-
         }
-
     }
 
     /**

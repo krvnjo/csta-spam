@@ -226,7 +226,7 @@
           <table class="table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table table table-hover w-100" id="propertyOverviewDatatable"
             data-hs-datatables-options='{
                    "columnDefs": [{
-                      "targets": [0, 9],
+                      "targets": [0, 8],
                       "orderable": false
                     }],
                    "order": [],
@@ -243,15 +243,14 @@
             <thead class="thead-light">
               <tr>
                 <th class="d-none" id="PropertyId"></th>
-                <th class="text-center" style="padding: 0; padding-left: 1rem;">
+                <th class="text-center" style="padding: 0 0 0 1rem;">
                   <span class="legend-indicator bg-danger"></span>
                   <span class="legend-indicator bg-info"></span>
                 </th>
                 <th class="col-3">Item Name</th>
-                <th class="col-3">Description</th>
-                <th class="col-2">Category</th>
-                <th class="col-2">Brand</th>
-                <th class="col-2">Depreciation</th>
+                <th class="col-3">Specification</th>
+                <th class="col-2">Description</th>
+                <th class="col-2">Price</th>
                 <th class="col-2">Deprecation Rate</th>
                 <th class="col-1 text-center">Total Quantity</th>
                 <th class="col-3">Action</th>
@@ -286,6 +285,15 @@
                   </td>
                   <td>
                     <span style="color:gray"
+                      @if (!empty($propertyParent->specification) && strlen($propertyParent->specification) > 25) data-bs-toggle="tooltip"
+                          data-bs-html="true"
+                          data-bs-placement="bottom"
+                          title="{{ $propertyParent->specification }}" @endif>
+                      {{ Str::limit(!empty($propertyParent->specification) ? $propertyParent->specification : 'No specification provided', 30) }}
+                    </span>
+                  </td>
+                  <td>
+                    <span style="color:gray"
                       @if (!empty($propertyParent->description) && strlen($propertyParent->description) > 25) data-bs-toggle="tooltip"
                         data-bs-html="true"
                         data-bs-placement="bottom"
@@ -293,77 +301,32 @@
                       {{ Str::limit(!empty($propertyParent->description) ? $propertyParent->description : 'No description provided', 30) }}
                     </span>
                   </td>
-                  <td>
-                    <span class="d-block fs-5">{{ $propertyParent->subcategory->name }}</span>
-                  </td>
-                  <td>{{ $propertyParent->brand->name }}</td>
-                  <td>
-                    <div class="chartjs-custom" style="height: 2rem; width: 7rem;">
-                      <canvas class="js-chart"
-                                  data-hs-chartjs-options='{
-                          "type": "line",
-                          "data": {
-                              "labels": {{ json_encode(range(0, $propertyParent->useful_life)) }},
-                              "datasets": [{
-                                  "data": {{ json_encode($propertyParent->depreciationValues) }},
-                                  "backgroundColor": "transparent",
-                                  "borderColor": "#377dff",
-                                  "borderWidth": 2,
-                                  "pointBackgroundColor": "transparent",
-                                  "pointHoverBackgroundColor": "#377dff",
-                                  "pointBorderColor": "transparent",
-                                  "pointHoverBorderColor": "#377dff",
-                                  "pointRadius": 2,
-                                  "pointHoverRadius": 2,
-                                  "tension": 0
-                              }]
-                          },
-                          "options": {
-                           "scales": {
-                              "y": {
-                                "display": false
-                              },
-                              "x": {
-                                "grid": {
-                                  "display": false,
-                                  "drawBorder": false
-                                },
-                                "ticks": {
-                                  "labelOffset": 40,
-                                  "maxTicksLimit": 6,
-                                  "padding": 20,
-                                  "maxRotation": 0,
-                                  "minRotation": 0,
-                                  "fontSize": 12,
-                                  "fontColor": "rgba(0, 0, 0, 0.4)"
-                                }
-                              }
-                           },
-                           "hover": {
-                               "mode": "nearest",
-                               "intersect": false
-                           },
-                           "plugins": {
-                              "tooltip": {
-                                "prefix": "₱",
-                                "intersect": false
-                              }
-                           }
-                         }
-                      }'></canvas>
-                    </div>
+                  <td class="text-end">
+                    @php
+                      $depreciatedValue = number_format($propertyParent->depreciatedValueThisYear, 2);
+                      $purchasePrice = number_format($propertyParent->purchase_price, 2);
+                    @endphp
+                    <strong
+                      data-bs-toggle="tooltip"
+                      title="{{ $propertyParent->depreciatedValueThisYear < $propertyParent->purchase_price ? '₱' . $purchasePrice . ' Purchase Price' : '' }}"
+                    >
+                      ₱{{ $depreciatedValue }}
+                    </strong>
                   </td>
                   <td class="text-center">
-                    @php
-                      $isAppreciated = $propertyParent->depreciationRate >= 0;
-                      $badgeClass = $isAppreciated ? 'bg-soft-success text-success' : 'bg-soft-danger text-danger';
-                      $iconClass = $isAppreciated ?  'bi-graph-up' : 'bi-graph-down';
-                      $annualDepreciation = number_format($propertyParent->annualDepreciation, 2);
-                      $formattedDepreciationRate = number_format($propertyParent->depreciationRate, 2);
-                    @endphp
-                    <span class="badge {{ $badgeClass }} p-1" data-bs-toggle="tooltip" title="₱{{ $annualDepreciation }} per year">
-                        <i class="{{ $iconClass }}"></i> {{ abs($formattedDepreciationRate) }}%
-                    </span>
+                    @if ($propertyParent->depreciationRate > 0)
+                      @php
+                        $combinedDepreciationPercentage = number_format($propertyParent->combinedDepreciationPercentage, 2);
+                        $deductedValueSoFar = number_format($propertyParent->totalDepreciationSoFar, 2);
+                      @endphp
+                      <span class="badge bg-soft-danger text-danger p-1" data-bs-toggle="tooltip" title="₱-{{ $deductedValueSoFar }} in total">
+                        <i class="bi-graph-down"></i> -{{ $combinedDepreciationPercentage }}%
+                      </span>
+                    @else
+                      <span class="badge bg-soft-secondary text-secondary p-1">
+                        No Depreciation
+                      </span>
+                    @endif
                   </td>
                   <td class="text-center">
                     {{ $propertyParent->quantity }}
@@ -448,7 +411,7 @@
 @endsection
 
 @section('sec-content')
-  <x-property-asset.add-property :brands="$brands" :subcategories="$subcategories" :conditions="$conditions" :acquisitions="$acquisitions" />
+  <x-property-asset.add-property :brands="$brands" :subcategories="$subcategories" :conditions="$conditions" :acquisitions="$acquisitions" :units="$units" />
 
   <x-property-asset.edit-property :brands="$brands" :subcategories="$subcategories" />
 
@@ -742,7 +705,7 @@
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-      var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+      tooltipTriggerList.map(function(tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl)
       })
     });
@@ -767,15 +730,15 @@
             editDropzone = this;
           }
 
-          this.on("addedfile", function(file) {
+          this.on("addedfile", function() {
             dropzoneInstance.element.querySelector(".dz-message").style.display = "none";
           });
 
-          this.on("removedfile", function(file) {
+          this.on("removedfile", function() {
             dropzoneInstance.element.querySelector(".dz-message").style.display = "block";
           });
 
-          this.on("error", function(file, message) {
+          this.on("error", function(file) {
             if (file.size > 1048576) {
               Swal.fire({
                 icon: 'error',
@@ -791,11 +754,28 @@
               });
               this.removeFile(file);
             }
+
+            if (!file.name.match(/\.(jpeg|jpg|png)$/i)) {
+              Swal.fire({
+                icon: 'error',
+                title: 'Invalid file type',
+                text: 'Only JPEG, JPG, and PNG files are allowed. Please upload a valid file.',
+                confirmButtonText: 'OK',
+                customClass: {
+                  popup: 'bg-light rounded-3 shadow fs-4',
+                  title: 'fs-1',
+                  htmlContainer: 'text-muted text-center fs-4',
+                  confirmButton: 'btn btn-sm btn-info',
+                },
+              });
+              this.removeFile(file);
+            }
           });
         }
       });
     })();
   </script>
+
   <script>
     $(document).on('ready', function() {
       // INITIALIZATION OF DATATABLES
