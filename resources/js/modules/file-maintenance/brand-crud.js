@@ -22,6 +22,7 @@ $(document).ready(function () {
       contentType: false,
       success: function (response) {
         if (response.success) {
+          toggleButtonState(brandAddSaveBtn, false);
           showResponseAlert(response, 'success', brandAddModal, brandAddForm);
         } else {
           handleValidationErrors(response, 'Add');
@@ -55,21 +56,7 @@ $(document).ready(function () {
             { key: 'updated_at', selector: '#lblViewUpdatedAt' },
           ],
 
-          dropdowns: [
-            {
-              key: 'subcategories',
-              container: '#dropdownMenuViewSubcategories',
-              countSelector: '#lblViewSubcategories',
-              label: 'subcategories in this brand',
-            },
-          ],
-
-          status: {
-            key: 'status',
-            selector: '#lblViewSetStatus',
-            activeText: 'Active',
-            inactiveText: 'Inactive',
-          },
+          statusFields: { key: 'status', selector: '#lblViewStatus' },
 
           imageFields: [
             { key: 'created_img', selector: '#imgViewCreatedBy' },
@@ -77,7 +64,7 @@ $(document).ready(function () {
           ],
         };
 
-        displayResponseData(response, brandConfig);
+        displayViewResponseData(response, brandConfig);
       },
       error: function (response) {
         showResponseAlert(response, 'error');
@@ -96,10 +83,7 @@ $(document).ready(function () {
       data: { id: brandId },
       success: function (response) {
         brandEditModal.modal('toggle');
-
-        $('#txtEditBrandId').val(response.id);
-        $('#txtEditBrand').val(response.brand);
-        $('#selEditSubcategories')[0].tomselect.setValue(response.subcategories);
+        populateEditForm(response);
       },
       error: function (response) {
         showResponseAlert(response, 'error');
@@ -121,12 +105,6 @@ $(document).ready(function () {
 
     const editFormData = new FormData(brandEditForm[0]);
 
-    editFormData.append('_method', 'PATCH');
-    editFormData.append('id', $('#txtEditBrandId').val());
-    editFormData.append('brand', $('#txtEditBrand').val());
-    editFormData.append('subcategories', $('#selEditSubcategories').val());
-    editFormData.append('action', 'update');
-
     $.ajax({
       url: '/file-maintenance/brands',
       method: 'POST',
@@ -135,6 +113,7 @@ $(document).ready(function () {
       contentType: false,
       success: function (response) {
         if (response.success) {
+          toggleButtonState(brandEditSaveBtn, false);
           showResponseAlert(response, 'success', brandEditModal, brandEditForm);
         } else {
           handleValidationErrors(response, 'Edit');
@@ -163,9 +142,9 @@ $(document).ready(function () {
       cancelButtonText: 'No, cancel!',
       customClass: {
         popup: 'bg-light rounded-3 shadow fs-4',
-        title: 'fs-1',
-        htmlContainer: 'text-muted text-center fs-4',
-        confirmButton: 'btn btn-sm btn-white',
+        title: 'text-dark fs-1',
+        htmlContainer: 'text-body text-center fs-4',
+        confirmButton: `btn btn-sm ${brandName === 1 ? 'btn-success' : 'btn-danger'}`,
         cancelButton: 'btn btn-sm btn-secondary',
       },
     }).then((result) => {
@@ -187,67 +166,6 @@ $(document).ready(function () {
       }
     });
   });
-
-  $('#btnMultiSetBrand').on('click', function () {
-    let brandIds = brandsDatatable
-      .rows()
-      .nodes()
-      .to$()
-      .find('input.form-check-input:checked')
-      .map(function () {
-        return $(this).closest('tr').find('[data-brand-id]').data('brand-id');
-      })
-      .get();
-
-    if (brandIds.length === 0) {
-      showResponseAlert(
-        {
-          title: 'No record selected!',
-          text: 'Please select at least one brand to change status.',
-        },
-        'info',
-      );
-    } else {
-      Swal.fire({
-        title: 'Update brands status?',
-        text: 'Are you sure you want to change the status of the selected brands?',
-        icon: 'warning',
-        showDenyButton: true,
-        showCancelButton: true,
-        focusCancel: true,
-        confirmButtonText: 'Set to Active!',
-        denyButtonText: 'Set to Inactive!',
-        cancelButtonText: 'No, cancel!',
-        customClass: {
-          popup: 'bg-light rounded-3 shadow fs-4',
-          title: 'fs-1',
-          htmlContainer: 'text-muted text-center fs-4',
-          confirmButton: 'btn btn-sm btn-soft-success',
-          denyButton: 'btn btn-sm btn-soft-danger',
-          cancelButton: 'btn btn-sm btn-secondary',
-        },
-      }).then((result) => {
-        const status = result.isConfirmed ? 1 : result.isDenied ? 0 : undefined;
-
-        if (status !== undefined) {
-          $.ajax({
-            url: '/file-maintenance/brands',
-            method: 'PATCH',
-            data: {
-              id: brandIds,
-              status: status,
-            },
-            success: function (response) {
-              showResponseAlert(response, response.type ?? 'success');
-            },
-            error: function (response) {
-              showResponseAlert(response, 'error');
-            },
-          });
-        }
-      });
-    }
-  });
   // ============ End Update a Brand ============ //
 
   // ============ Delete a Brand ============ //
@@ -257,7 +175,7 @@ $(document).ready(function () {
 
     Swal.fire({
       title: 'Delete Record?',
-      text: `Are you sure you want to delete the brand "${brandName}"?`,
+      text: `Are you sure you want to permanently delete the brand "${brandName}"? This action cannot be undone.`,
       icon: 'warning',
       showCancelButton: true,
       focusCancel: true,
@@ -265,8 +183,8 @@ $(document).ready(function () {
       cancelButtonText: 'No, cancel!',
       customClass: {
         popup: 'bg-light rounded-3 shadow fs-4',
-        title: 'fs-1',
-        htmlContainer: 'text-muted text-center fs-4',
+        title: 'text-dark fs-1',
+        htmlContainer: 'text-body text-center fs-4',
         confirmButton: 'btn btn-sm btn-danger',
         cancelButton: 'btn btn-sm btn-secondary',
       },
@@ -285,59 +203,6 @@ $(document).ready(function () {
         });
       }
     });
-  });
-
-  $('#btnMultiDeleteBrand').on('click', function () {
-    let brandIds = brandsDatatable
-      .rows()
-      .nodes()
-      .to$()
-      .find('input.form-check-input:checked')
-      .map(function () {
-        return $(this).closest('tr').find('[data-brand-id]').data('brand-id');
-      })
-      .get();
-
-    if (brandIds.length === 0) {
-      showResponseAlert(
-        {
-          title: 'No record selected!',
-          text: 'Please select at least one brand to delete.',
-        },
-        'info',
-      );
-    } else {
-      Swal.fire({
-        title: 'Delete Records?',
-        text: 'Are you sure you want to delete all the selected brands?',
-        icon: 'warning',
-        showCancelButton: true,
-        focusCancel: true,
-        confirmButtonText: 'Yes, delete it!',
-        cancelButtonText: 'No, cancel!',
-        customClass: {
-          popup: 'bg-light rounded-3 shadow fs-4',
-          title: 'fs-1',
-          htmlContainer: 'text-muted text-center fs-4',
-          confirmButton: 'btn btn-sm btn-danger',
-          cancelButton: 'btn btn-sm btn-secondary',
-        },
-      }).then((result) => {
-        if (result.isConfirmed) {
-          $.ajax({
-            url: '/file-maintenance/brands',
-            method: 'DELETE',
-            data: { id: brandIds },
-            success: function (response) {
-              showResponseAlert(response, 'success');
-            },
-            error: function (response) {
-              showResponseAlert(response, 'error');
-            },
-          });
-        }
-      });
-    }
   });
   // ============ End Delete a Brand ============ //
 });

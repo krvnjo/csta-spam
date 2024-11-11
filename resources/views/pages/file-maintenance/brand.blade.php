@@ -20,12 +20,12 @@
               <li class="breadcrumb-item"><a class="breadcrumb-link">File Maintenance</a></li>
               <li class="breadcrumb-item active">Brands</li>
             </ol>
-            <h1 class="page-header-title mt-2">Brands</h1>
+            <h1 class="page-header-title">Brands</h1>
             <p class="page-header-text">Manage and organize brand records.</p>
           </div>
 
           @can('create brand maintenance')
-            <div class="col-sm-auto mt-sm-0 mt-3">
+            <div class="col-sm-auto mt-2 mt-sm-0">
               <button class="btn btn-primary w-100 w-sm-auto" id="btnAddBrandModal" data-bs-toggle="modal" data-bs-target="#modalAddBrand">
                 <i class="bi-plus-lg me-1"></i> Add Brand
               </button>
@@ -45,8 +45,8 @@
                 <div class="col-lg-3 col-md-4 col-sm-5">
                   <span class="d-block">Total Brands</span>
                   <span class="badge bg-soft-primary text-primary rounded-pill p-1">
-                    <i class="bi-{{ $deletedBrands == 0 ? 'check-circle-fill' : 'arrow-counterclockwise' }} me-1"></i>
-                    {{ $deletedBrands == 0 ? 'Everything looks great!' : "$deletedBrands record(s) can be restored." }}
+                    <i class="bi-{{ $unusedBrands == 0 ? 'check-circle-fill' : 'trash-fill' }} me-1"></i>
+                    {{ $unusedBrands == 0 ? 'Everything looks great!' : "$unusedBrands unused record(s) can be deleted." }}
                   </span>
                 </div>
 
@@ -79,26 +79,6 @@
           </div>
 
           <div class="d-grid d-sm-flex justify-content-sm-center justify-content-md-end align-items-sm-center gap-2">
-            @canAny('update brand maintenance, delete brand maintenance')
-              <!-- DataTable Counter -->
-              <div class="w-100 w-sm-auto" id="brandsDatatableCounterInfo" style="display: none;">
-                <div class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-2">
-                  @can('update brand maintenance')
-                    <button class="btn btn-sm btn-outline-secondary w-100 w-sm-auto" id="btnMultiSetBrand" type="button">
-                      <i class="bi-toggles me-1"></i> Set Status (<span class="fs-5"><span class="brandsDatatableCounter"></span></span>)
-                    </button>
-                  @endcan
-
-                  @can('delete brand maintenance')
-                    <button class="btn btn-sm btn-outline-danger w-100 w-sm-auto" id="btnMultiDeleteBrand" type="button">
-                      <i class="bi-trash3-fill"></i> Delete (<span class="fs-5"><span class="brandsDatatableCounter"></span></span>)
-                    </button>
-                  @endcan
-                </div>
-              </div>
-              <!-- End DataTable Counter -->
-            @endcanAny
-
             <!-- Export Dropdown -->
             <div class="dropdown">
               <button class="btn btn-white btn-sm dropdown-toggle w-100" data-bs-toggle="dropdown" data-bs-auto-close="outside" type="button">
@@ -137,35 +117,13 @@
                     <h5 class="card-header-title">Brand Filters</h5>
                   </div>
                   <div class="card-body">
-                    <!-- Subcategories Filter -->
-                    <div class="mb-4">
-                      <small class="text-cap text-body">Subcategories</small>
-                      <div class="row">
-                        <div class="col">
-                          <div class="tom-select-custom">
-                            <select class="js-select js-datatable-filter form-select" data-target-column-index="3"
-                              data-hs-tom-select-options='{
-                                "placeholder": "All Subcategories",
-                                "singleMultiple": true
-                              }'
-                              autocomplete="off" multiple>
-                              @foreach ($subcategories as $subcategory)
-                                <option value="{{ $subcategory->name }}">{{ $subcategory->name }}</option>
-                              @endforeach
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- End Subcategories Filter -->
-
                     <!-- Status Filter -->
-                    <div class="mb-4">
+                    <div class="mb-2">
                       <small class="text-cap text-body">Status</small>
                       <div class="row">
                         <div class="col">
                           <div class="tom-select-custom">
-                            <select class="js-select js-datatable-filter form-select" data-target-column-index="6"
+                            <select class="js-select js-datatable-filter form-select" data-target-column-index="5"
                               data-hs-tom-select-options='{
                                 "allowEmptyOption": true,
                                 "hideSearch": true,
@@ -194,10 +152,10 @@
           <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100" id="brandsDatatable"
             data-hs-datatables-options='{
               "columnDefs": [{
-                "targets": [0, 7],
+                "targets": [0, 6],
                 "orderable": false
               }],
-              "order": [5, "desc"],
+              "order": [4, "desc"],
               "info": {
                 "totalQty": "#brandsDatatableWithPagination"
               },
@@ -210,38 +168,22 @@
             }'>
             <thead class="thead-light">
               <tr>
-                <th class="w-th" style="width: 8%">
-                  @canAny('update brand maintenance, delete brand maintenance')
-                    <input class="form-check-input" id="brandsDatatableCheckAll" type="checkbox">
-                  @else
-                    #
-                  @endcanAny
-                </th>
+                <th class="w-th" style="width: 8%">#</th>
                 <th class="d-none"></th>
                 <th>Brand Name</th>
-                <th>Brand Subcategories</th>
-                <th>Date Created</th>
-                <th>Last Updated</th>
+                <th>Created At</th>
+                <th>Updated At</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
             </thead>
 
             <tbody>
-              @foreach ($brands as $index => $brand)
+              @foreach ($brands as $brand)
                 <tr>
-                  <td>
-                    @canAny('update brand maintenance, delete brand maintenance')
-                      <input class="form-check-input" id="brandCheck{{ $index + 1 }}" type="checkbox">
-                    @else
-                      {{ $index + 1 }}
-                    @endcanAny
-                  </td>
+                  <td>{{ $loop->iteration }}</td>
                   <td class="d-none" data-brand-id="{{ Crypt::encryptString($brand->id) }}"></td>
-                  <td><a class="d-block h5 mb-0 btnViewBrand">{{ $brand->name }}</a></td>
-                  <td data-full-value="{{ $subcategoryNames = $brand->subcategories->sortBy('name')->pluck('name')->implode(', ') }}">
-                    {{ $subcategoryNames ? Str::limit($subcategoryNames, 30, '...') : 'No subcategories available.' }}
-                  </td>
+                  <td><a class="h5 btnViewBrand">{{ $brand->name }}</a></td>
                   <td data-order="{{ $brand->created_at }}"><span><i class="bi-calendar-plus me-1"></i> {{ $brand->created_at->format('F d, Y') }}</span></td>
                   <td data-order="{{ $brand->updated_at }}"><span><i class="bi-calendar2-event me-1"></i> Updated {{ $brand->updated_at->diffForHumans() }}</span></td>
                   <td>
@@ -252,6 +194,7 @@
                   <td>
                     <div class="btn-group position-static">
                       <button class="btn btn-white btn-sm btnViewBrand" type="button"><i class="bi-eye"></i> View</button>
+
                       @canAny('update brand maintenance, delete brand maintenance')
                         <div class="btn-group position-static">
                           <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" data-bs-toggle="dropdown" type="button"></button>
@@ -324,9 +267,9 @@
 @endsection
 
 @section('sec-content')
-  <x-file-maintenance.add-brand :subcategories="$subcategories" />
+  <x-file-maintenance.add-brand />
   <x-file-maintenance.view-brand />
-  <x-file-maintenance.edit-brand :subcategories="$subcategories" />
+  <x-file-maintenance.edit-brand />
 @endsection
 
 @push('scripts')
@@ -350,7 +293,7 @@
 
   <!-- JS Plugins Initialization -->
   <script>
-    // Initialization of DataTable
+    // Initialization of Datatable
     $(document).on("ready", function() {
       HSCore.components.HSDatatables.init($("#brandsDatatable"), {
         dom: "Bfrtip",
@@ -358,40 +301,31 @@
             extend: "copy",
             className: "d-none",
             exportOptions: {
-              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8))'
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(5)):not(:nth-child(7))'
             }
           },
           {
             extend: "print",
             className: "d-none",
             exportOptions: {
-              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8))'
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(5)):not(:nth-child(7))'
             }
           },
           {
             extend: "excel",
             className: "d-none",
             exportOptions: {
-              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8))'
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(5)):not(:nth-child(7))'
             }
           },
           {
             extend: "pdf",
             className: "d-none",
             exportOptions: {
-              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8))'
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(5)):not(:nth-child(7))'
             }
           }
         ],
-        select: {
-          style: "multi",
-          selector: "td:first-child input[type=\"checkbox\"]",
-          classMap: {
-            checkAll: "#brandsDatatableCheckAll",
-            counter: ".brandsDatatableCounter",
-            counterInfo: "#brandsDatatableCounterInfo"
-          }
-        },
         language: {
           zeroRecords: `<div class="text-center p-4">
               <img class="mb-3" src="{{ Vite::asset('resources/svg/illustrations/oc-error.svg') }}" alt="No records to display." style="width: 10rem;" data-hs-theme-appearance="default">
@@ -401,26 +335,23 @@
         }
       });
 
-      const datatable = HSCore.components.HSDatatables.getItem(0);
+      const brandsDatatable = HSCore.components.HSDatatables.getItem(0);
 
-      $("#brandExportCopy").click(function() {
-        datatable.button(".buttons-copy").trigger();
-      });
+      const exportButtons = {
+        "#brandExportCopy": ".buttons-copy",
+        "#brandExportPrint": ".buttons-print",
+        "#brandExportExcel": ".buttons-excel",
+        "#brandExportPdf": ".buttons-pdf"
+      };
 
-      $("#brandExportPrint").click(function() {
-        datatable.button(".buttons-print").trigger();
-      });
-
-      $("#brandExportExcel").click(function() {
-        datatable.button(".buttons-excel").trigger();
-      });
-
-      $("#brandExportPdf").click(function() {
-        datatable.button(".buttons-pdf").trigger();
+      $.each(exportButtons, function(exportId, exportClass) {
+        $(exportId).click(function() {
+          brandsDatatable.button(exportClass).trigger();
+        });
       });
 
       $(".js-datatable-filter").on("change", function() {
-        filterDatatableAndCount(datatable, "#brandsFilterCount");
+        filterDatatableAndCount(brandsDatatable, "#brandsFilterCount");
       });
     });
 
@@ -439,7 +370,7 @@
 
         // INITIALIZATION OF BOOTSTRAP DROPDOWN
         // =======================================================
-        HSBsDropdown.init();
+        HSBsDropdown.init()
 
 
         // INITIALIZATION OF SELECT

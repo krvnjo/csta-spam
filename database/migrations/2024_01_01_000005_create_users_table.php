@@ -19,7 +19,6 @@ return new class extends Migration {
             $table->string('group_name', 50);
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
-            $table->softDeletes();
         });
 
         Schema::create('roles', function (Blueprint $table) {
@@ -28,7 +27,6 @@ return new class extends Migration {
             $table->string('description', 100)->unique();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
-            $table->softDeletes();
         });
 
         Schema::create('role_permissions', function (Blueprint $table) {
@@ -49,11 +47,8 @@ return new class extends Migration {
             $table->string('email')->unique();
             $table->string('phone_num', 25)->unique()->nullable();
             $table->string('user_image')->default('default.jpg');
-            $table->timestamp('login_at')->nullable();
-            $table->timestamp('logout_at')->nullable();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
-            $table->softDeletes();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

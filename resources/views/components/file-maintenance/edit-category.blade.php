@@ -14,7 +14,7 @@
         <form id="frmEditCategory" method="POST" novalidate>
           @csrf
           @method('PATCH')
-          <input id="txtEditCategoryId" name="id" type="hidden">
+          <input id="txtEditId" name="id" type="hidden">
 
           <!-- Category Name -->
           <div class="form-group">
@@ -23,26 +23,6 @@
             <span class="invalid-feedback" id="valEditCategory"></span>
           </div>
           <!-- End Category Name -->
-
-          <!-- Category Subcategories -->
-          <div class="form-group">
-            <label class="col col-form-label form-label mt-2" for="selEditSubcategories">Category Subcategories</label>
-            <div class="tom-select-custom">
-              <select class="js-select form-select" id="selEditSubcategories" name="subcategories[]"
-                data-hs-tom-select-options='{
-                  "placeholder": "Select a subcategory",
-                  "singleMultiple": true
-                }' autocomplete="off" multiple>
-                @foreach ($subcategories as $subcategory)
-                  @if ($subcategory->is_active)
-                    <option value="{{ $subcategory->id }}">{{ $subcategory->name }}</option>
-                  @endif
-                @endforeach
-              </select>
-              <span class="invalid-feedback" id="valEditSubcategories"></span>
-            </div>
-          </div>
-          <!-- End Category Subcategories -->
         </form>
       </div>
       <!-- End Body -->

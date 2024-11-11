@@ -13,7 +13,7 @@ class LocationSeeder extends Seeder
      */
     public function run(): void
     {
-        $depts = [
+        $departments = [
             'CSTA Administration' => 'CSTA-ADMIN',
             'School of Information Technology' => 'SIT',
             'School of Education' => 'SED',
@@ -21,10 +21,10 @@ class LocationSeeder extends Seeder
             'School of Hospitality Management' => 'SHM',
         ];
 
-        foreach ($depts as $dept => $deptCode) {
-            Department::query()->create([
-                'name' => $dept,
-                'dept_code' => $deptCode,
+        foreach ($departments as $department => $code) {
+            Department::create([
+                'name' => $department,
+                'code' => $code,
             ]);
         }
 
@@ -42,10 +42,10 @@ class LocationSeeder extends Seeder
             'Gym IT Hallway' => '2',
         ];
 
-        foreach ($designations as $designation => $deptId) {
-            Designation::query()->create([
+        foreach ($designations as $designation => $id) {
+            Designation::create([
                 'name' => $designation,
-                'dept_id' => $deptId,
+                'dept_id' => $id,
             ]);
         }
     }

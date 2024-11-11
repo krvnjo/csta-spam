@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DesignationRequest;
+use App\Models\Audit;
 use App\Models\Department;
 use App\Models\Designation;
-use Illuminate\Http\Request;
+use App\Observers\DesignationObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use Throwable;
 
+#[ObservedBy([DesignationObserver::class])]
 class DesignationController extends Controller
 {
     /**
@@ -17,13 +19,13 @@ class DesignationController extends Controller
      */
     public function index()
     {
-        $designations = Designation::with('department')->whereNull('deleted_at')->get();
-        $departments = Department::whereNull('deleted_at')->where('is_active', 1)->orderBy('name')->pluck('name', 'id');
+        $designations = Designation::with('department')->orderBy('name')->get();
+        $departments = Department::where('is_active', 1)->orderBy('name')->get();
 
         $totalDesignations = $designations->count();
-        $deletedDesignations = Designation::onlyTrashed()->count();
+        $unusedDesignations = Designation::doesntHave('propertyChildren')->count();
         $activeDesignations = $designations->where('is_active', 1)->count();
-        $inactiveDesignations = $totalDesignations - $activeDesignations;
+        $inactiveDesignations = $designations->where('is_active', 0)->count();
 
         $activePercentage = $totalDesignations ? ($activeDesignations / $totalDesignations) * 100 : 0;
         $inactivePercentage = $totalDesignations ? ($inactiveDesignations / $totalDesignations) * 100 : 0;
@@ -33,7 +35,7 @@ class DesignationController extends Controller
                 'designations',
                 'departments',
                 'totalDesignations',
-                'deletedDesignations',
+                'unusedDesignations',
                 'activeDesignations',
                 'inactiveDesignations',
                 'activePercentage',
@@ -45,51 +47,23 @@ class DesignationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(DesignationRequest $request)
     {
-        $designationValidationMessages = [
-            'designation.required' => 'Please enter a designation name!',
-            'designation.regex' => 'It must not contain special symbols and multiple spaces.',
-            'designation.min' => 'The designation name must be at least :min characters.',
-            'designation.max' => 'The designation name may not be greater than :max characters.',
-            'designation.unique' => 'This designation name already exists.',
-
-            'department.required' => 'Please select a main department!',
-        ];
-
         try {
-            $designationValidator = Validator::make($request->all(), [
-                'designation' => [
-                    'required',
-                    'regex:/^(?!.*([ -])\1)[a-zA-Z0-9]+(?:[ -][a-zA-Z0-9]+)*$/',
-                    'min:3',
-                    'max:75',
-                    'unique:designations,name'
-                ],
-                'department' => [
-                    'required',
-                ],
-            ], $designationValidationMessages);
+            $validated = $request->validated();
 
-            if ($designationValidator->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'errors' => $designationValidator->errors(),
-                ]);
-            } else {
-                Designation::query()->create([
-                    'name' => $this->formatInput($request->input('designation')),
-                    'dept_id' => $request->input('department'),
-                    'is_active' => 1,
-                ]);
+            Designation::create([
+                'name' => $this->formatInput($validated['designation']),
+                'dept_id' => $validated['department'],
+            ]);
 
-                return response()->json([
-                    'success' => true,
-                    'title' => 'Saved Successfully!',
-                    'text' => 'The designation has been added successfully!',
-                ]);
-            }
-        } catch (Throwable) {
+            return response()->json([
+                'success' => true,
+                'title' => 'Saved Successfully!',
+                'text' => 'The designation has been added successfully!',
+            ]);
+        } catch (Throwable $e) {
+            \Log::error($e->getMessage());
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
@@ -101,24 +75,36 @@ class DesignationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request)
+    public function show(DesignationRequest $request)
     {
         try {
-            $designation = Designation::query()->findOrFail(Crypt::decryptString($request->input('id')));
+            $validated = $request->validated();
+
+            $designation = Designation::with('department')->findOrFail($validated['id']);
+
+            $createdBy = Audit::where('subject_type', Designation::class)->where('subject_id', $designation->id)->where('event', 'created')->first();
+            $createdDetails = $this->getUserAuditDetails($createdBy);
+
+            $updatedBy = Audit::where('subject_type', Designation::class)->where('subject_id', $designation->id)->where('event', 'updated')->latest()->first() ?? $createdBy;
+            $updatedDetails = $this->getUserAuditDetails($updatedBy);
 
             return response()->json([
                 'success' => true,
                 'designation' => $designation->name,
                 'department' => $designation->department->name,
                 'status' => $designation->is_active,
-                'created' => $designation->created_at->format('D, F d, Y | h:i:s A'),
-                'updated' => $designation->updated_at->format('D, F d, Y | h:i:s A'),
+                'created_img' => $createdDetails['image'],
+                'created_by' => $createdDetails['name'],
+                'created_at' => $designation->created_at->format('D, M d, Y | h:i A'),
+                'updated_img' => $updatedDetails['image'],
+                'updated_by' => $updatedDetails['name'],
+                'updated_at' => $designation->updated_at->format('D, M d, Y | h:i A'),
             ]);
         } catch (Throwable) {
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
-                'message' => 'An error occurred while fetching the designation.',
+                'message' => 'An error occurred while fetching the designation. Please try again later.',
             ], 500);
         }
     }
@@ -126,14 +112,16 @@ class DesignationController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Request $request)
+    public function edit(DesignationRequest $request)
     {
         try {
-            $designation = Designation::query()->findOrFail(Crypt::decryptString($request->input('id')));
+            $validated = $request->validated();
+
+            $designation = Designation::findOrFail($validated['id']);
 
             return response()->json([
                 'success' => true,
-                'id' => $request->input('id'),
+                'id' => Crypt::encryptString($designation->id),
                 'designation' => $designation->name,
                 'department' => $designation->dept_id,
             ]);
@@ -141,7 +129,7 @@ class DesignationController extends Controller
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
-                'message' => 'An error occurred while fetching the designation.',
+                'message' => 'An error occurred while fetching the designation. Please try again later.',
             ], 500);
         }
     }
@@ -149,49 +137,23 @@ class DesignationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+    public function update(DesignationRequest $request)
     {
         try {
-            $designation = Designation::query()->findOrFail(Crypt::decryptString($request->input('id')));
+            $validated = $request->validated();
 
-            if ($request->has(['id', 'designation', 'department'])) {
-                $designationValidationMessages = [
-                    'designation.required' => 'Please enter a designation name!',
-                    'designation.regex' => 'The designation name may not contain special symbols.',
-                    'designation.min' => 'The designation name must be at least :min characters.',
-                    'designation.max' => 'The designation name may not be greater than :max characters.',
-                    'designation.unique' => 'This designation name already exists.',
+            $designation = Designation::findOrFail($validated['id']);
 
-                    'department.required' => 'Please select a main department!',
-                ];
-
-                $designationValidator = Validator::make($request->all(), [
-                    'designation' => [
-                        'required',
-                        'regex:/^(?!.*([ -])\1)[a-zA-Z0-9]+(?:[ -][a-zA-Z0-9]+)*$/',
-                        'min:3',
-                        'max:75',
-                        Rule::unique('designations', 'name')->ignore($designation->id)
-                    ],
-                    'department' => [
-                        'required',
-                    ],
-                ], $designationValidationMessages);
-
-                if ($designationValidator->fails()) {
-                    return response()->json([
-                        'success' => false,
-                        'errors' => $designationValidator->errors(),
-                    ]);
-                } else {
-                    $designation->name = $this->formatInput($request->input('designation'));
-                    $designation->dept_id = $request->input('department');
-                }
-            } elseif ($request->has('status')) {
-                $designation->is_active = $request->input('status');
+            if (!isset($validated['status'])) {
+                $designation->update([
+                    'name' => $this->formatInput($validated['designation']),
+                    'dept_id' => $validated['department'],
+                ]);
+            } else {
+                $designation->update([
+                    'is_active' => $validated['status'],
+                ]);
             }
-            $designation->updated_at = now();
-            $designation->save();
 
             return response()->json([
                 'success' => true,
@@ -202,7 +164,7 @@ class DesignationController extends Controller
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
-                'text' => 'An error occurred while updating the designation.',
+                'text' => 'An error occurred while updating the designation. Please try again later.',
             ], 500);
         }
     }
@@ -210,37 +172,33 @@ class DesignationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request)
+    public function destroy(DesignationRequest $request)
     {
         try {
-            $ids = $request->input('id');
+            $validated = $request->validated();
 
-            if (!is_array($ids)) {
-                $ids = [$ids];
+            $designation = Designation::findOrFail($validated['id']);
+
+            if ($designation->propertyChildren->count() > 0) {
+                return response()->json([
+                    'success' => false,
+                    'title' => 'Deletion Failed!',
+                    'text' => 'The designation cannot be deleted because it is still being used by other records.',
+                ], 400);
             }
 
-            $ids = array_map(function ($id) {
-                return Crypt::decryptString($id);
-            }, $ids);
-
-            $designations = Designation::query()->whereIn('id', $ids)->get();
-
-            foreach ($designations as $designation) {
-                $designation->is_active = 0;
-                $designation->save();
-                $designation->delete();
-            }
+            $designation->forceDelete();
 
             return response()->json([
                 'success' => true,
                 'title' => 'Deleted Successfully!',
-                'text' => count($designations) > 1 ? 'The designations have been deleted and can be restored from the bin.' : 'The designation has been deleted and can be restored from the bin.',
+                'text' => 'The designation has been deleted permanently.',
             ]);
         } catch (Throwable) {
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
-                'message' => 'An error occurred while deleting the designation.',
+                'message' => 'An error occurred while deleting the designation. Please try again later.',
             ], 500);
         }
     }

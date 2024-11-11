@@ -20,12 +20,12 @@
               <li class="breadcrumb-item"><a class="breadcrumb-link">User Management</a></li>
               <li class="breadcrumb-item active">Users</li>
             </ol>
-            <h1 class="page-header-title mt-2">Users</h1>
+            <h1 class="page-header-title">Users</h1>
             <p class="page-header-text">Administer and manage user accounts and data.</p>
           </div>
 
           @can('create user management')
-            <div class="col-sm-auto mt-sm-0 mt-3">
+            <div class="col-sm-auto mt-2 mt-sm-0">
               <button class="btn btn-primary w-100 w-sm-auto" id="btnAddUserModal" data-bs-toggle="modal" data-bs-target="#modalAddUser">
                 <i class="bi-plus-lg me-1"></i> Add User
               </button>
@@ -121,8 +121,8 @@
                                 "placeholder": "All Departments"
                               }'>
                               <option value="">All Departments</option>
-                              @foreach ($depts as $dept)
-                                <option value="{{ $dept->name }}">{{ $dept->name }}</option>
+                              @foreach ($departments as $department)
+                                <option value="{{ $department->name }}">{{ $department->name }}</option>
                               @endforeach
                             </select>
                           </div>
@@ -132,7 +132,7 @@
                     <!-- End Departments Filter -->
 
                     <!-- Status Filter -->
-                    <div class="mb-4">
+                    <div class="mb-2">
                       <small class="text-cap text-body">Status</small>
                       <div class="row">
                         <div class="col">
@@ -188,19 +188,22 @@
                 <th>Username</th>
                 <th>Role & Department</th>
                 <th>Phone</th>
-                <th>Date Created</th>
-                <th>Last Updated</th>
+                <th>Created At</th>
+                <th>Updated At</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
             </thead>
 
             <tbody>
-              @foreach ($users as $index => $user)
+              @foreach ($users as $user)
+                @php
+                  $userId = Auth::user()->id !== $user->id;
+                @endphp
                 <tr>
-                  <td>{{ $index + 1 }}</td>
+                  <td>{{ $loop->iteration }}</td>
                   <td class="d-none" data-user-id="{{ Crypt::encryptString($user->id) }}"></td>
-                  <td>
+                  <td data-order="{{ $user->lname }}">
                     <a class="d-flex align-items-center btnViewUser">
                       <div class="avatar avatar-circle"><img class="avatar-img" src="{{ asset('storage/img/user-images/' . $user->user_image) }}" alt="User Image"></div>
                       <div class="ms-3">
@@ -225,6 +228,7 @@
                   <td>
                     <div class="btn-group position-static">
                       <button class="btn btn-white btn-sm btnViewUser" type="button"><i class="bi-eye"></i> View</button>
+
                       @canAny('update user management, delete user management')
                         <div class="btn-group position-static">
                           <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" data-bs-toggle="dropdown" type="button"></button>
@@ -234,7 +238,8 @@
                                 <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
                               </button>
                             @endcan
-                            @if (auth()->id() !== $user->id)
+
+                            @if (Auth::user()->id !== $user->id)
                               <button class="dropdown-item btnSetUser" data-status="{{ $user->is_active ? 0 : 1 }}" type="button">
                                 <i class="bi {{ $user->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
                                 {{ $user->is_active ? 'Set to Inactive' : 'Set to Active' }}
@@ -296,9 +301,9 @@
 @endsection
 
 @section('sec-content')
-  <x-user-management.add-user :roles="$roles" :depts="$depts" />
+  <x-user-management.add-user :roles="$roles" :departments="$departments" />
   <x-user-management.view-user />
-  <x-user-management.edit-user :roles="$roles" :depts="$depts" />
+  <x-user-management.edit-user :roles="$roles" :departments="$departments" :user-id="$userId" />
 @endsection
 
 @push('scripts')
@@ -327,7 +332,7 @@
 
   <!-- JS Plugins Initialization -->
   <script>
-    // Initialization of Datatables
+    // Initialization of DataTable
     $(document).on("ready", function() {
       HSCore.components.HSDatatables.init($("#usersDatatable"), {
         dom: "Bfrtip",
@@ -335,40 +340,31 @@
             extend: "copy",
             className: "d-none",
             exportOptions: {
-              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(10))'
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8)):not(:nth-child(10))'
             }
           },
           {
             extend: "print",
             className: "d-none",
             exportOptions: {
-              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(10))'
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8)):not(:nth-child(10))'
             }
           },
           {
             extend: "excel",
             className: "d-none",
             exportOptions: {
-              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(10))'
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8)):not(:nth-child(10))'
             }
           },
           {
             extend: "pdf",
             className: "d-none",
             exportOptions: {
-              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(10))'
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8)):not(:nth-child(10))'
             }
           }
         ],
-        select: {
-          style: "multi",
-          selector: "td:first-child input[type=\"checkbox\"]",
-          classMap: {
-            checkAll: "#usersDatatableCheckAll",
-            counter: ".usersDatatableCounter",
-            counterInfo: "#usersDatatableCounterInfo"
-          }
-        },
         language: {
           zeroRecords: `<div class="text-center p-4">
               <img class="mb-3" src="{{ Vite::asset('resources/svg/illustrations/oc-error.svg') }}" alt="No records to display." style="width: 10rem;" data-hs-theme-appearance="default">
@@ -378,26 +374,23 @@
         }
       });
 
-      const datatable = HSCore.components.HSDatatables.getItem(0);
+      const usersDatatable = HSCore.components.HSDatatables.getItem(0);
 
-      $("#userExportCopy").click(function() {
-        datatable.button(".buttons-copy").trigger();
-      });
+      const exportButtons = {
+        "#userExportCopy": ".buttons-copy",
+        "#userExportPrint": ".buttons-print",
+        "#userExportExcel": ".buttons-excel",
+        "#userExportPdf": ".buttons-pdf"
+      };
 
-      $("#userExportPrint").click(function() {
-        datatable.button(".buttons-print").trigger();
-      });
-
-      $("#userExportExcel").click(function() {
-        datatable.button(".buttons-excel").trigger();
-      });
-
-      $("#userExportPdf").click(function() {
-        datatable.button(".buttons-pdf").trigger();
+      $.each(exportButtons, function(exportId, exportClass) {
+        $(exportId).click(function() {
+          usersDatatable.button(exportClass).trigger();
+        });
       });
 
       $(".js-datatable-filter").on("change", function() {
-        filterDatatableAndCount(datatable, "#usersFilterCount");
+        filterDatatableAndCount(usersDatatable, "#usersFilterCount");
       });
     });
 

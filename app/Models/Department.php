@@ -5,17 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Department extends Model
 {
-    use SoftDeletes;
-
     protected $table = 'departments';
 
     protected $fillable = [
         'name',
-        'dept_code',
+        'code',
         'is_active'
     ];
 
@@ -39,9 +36,8 @@ class Department extends Model
         return $this->hasMany(User::class, 'dept_id', 'id');
     }
 
-    public function consumptionLogs()
+    public function consumptionLogs(): HasMany
     {
         return $this->hasMany(ConsumptionLog::class, 'dept_id');
     }
-
 }

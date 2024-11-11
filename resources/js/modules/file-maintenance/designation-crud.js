@@ -4,11 +4,13 @@ $(document).ready(function () {
   // ============ Create a Designation ============ //
   const designationAddModal = $('#modalAddDesignation');
   const designationAddForm = $('#frmAddDesignation');
+  const designationAddSaveBtn = $('#btnAddSaveDesignation');
 
-  handleUnsavedChanges(designationAddModal, designationAddForm, $('#btnAddSaveDesignation'));
+  handleUnsavedChanges(designationAddModal, designationAddForm, designationAddSaveBtn);
 
   designationAddForm.on('submit', function (e) {
     e.preventDefault();
+    toggleButtonState(designationAddSaveBtn, true);
 
     const addFormData = new FormData(designationAddForm[0]);
 
@@ -16,26 +18,19 @@ $(document).ready(function () {
       url: '/file-maintenance/designations',
       method: 'POST',
       data: addFormData,
-      dataType: 'json',
       processData: false,
       contentType: false,
       success: function (response) {
         if (response.success) {
-          showSuccessAlert(response, designationAddModal, designationAddForm);
+          toggleButtonState(designationAddSaveBtn, false);
+          showResponseAlert(response, 'success', designationAddModal, designationAddForm);
         } else {
-          if (response.errors.designation) {
-            $('#txtAddDesignation').addClass('is-invalid');
-            $('#valAddDesignation').text(response.errors.designation[0]);
-          }
-
-          if (response.errors.department) {
-            $('#selAddDepartment').next('.ts-wrapper').addClass('is-invalid');
-            $('#valAddDepartment').text(response.errors.department[0]);
-          }
+          handleValidationErrors(response, 'Add');
+          toggleButtonState(designationAddSaveBtn, false);
         }
       },
       error: function (response) {
-        showErrorAlert(response.responseJSON, designationAddModal, designationAddForm);
+        showResponseAlert(response, 'error', designationAddModal, designationAddForm);
       },
     });
   });
@@ -52,38 +47,34 @@ $(document).ready(function () {
       success: function (response) {
         $('#modalViewDesignation').modal('toggle');
 
-        $('#lblViewDesignation').text(response.designation);
-        $('#lblViewDepartment').text(response.department);
-        $('#lblViewDateCreated').text(response.created);
-        $('#lblViewDateUpdated').text(response.updated);
+        const designationConfig = {
+          textFields: [
+            { key: 'designation', selector: '#lblViewDesignation' },
+            { key: 'department', selector: '#lblViewDepartment' },
+            { key: 'created_by', selector: '#lblViewCreatedBy' },
+            { key: 'updated_by', selector: '#lblViewUpdatedBy' },
+            { key: 'created_at', selector: '#lblViewCreatedAt' },
+            { key: 'updated_at', selector: '#lblViewUpdatedAt' },
+          ],
 
-        if (response.status === 1) {
-          $('#lblViewStatus').html(`
-            <span class="badge bg-soft-success text-success">
-              <span class="legend-indicator bg-success"></span>Active
-            </span>
-          `);
-        } else {
-          $('#lblViewStatus').html(`
-            <span class="badge bg-soft-danger text-danger">
-              <span class="legend-indicator bg-danger"></span>Inactive
-            </span>
-          `);
-        }
+          statusFields: { key: 'status', selector: '#lblViewStatus' },
+
+          imageFields: [
+            { key: 'created_img', selector: '#imgViewCreatedBy' },
+            { key: 'updated_img', selector: '#imgViewUpdatedBy' },
+          ],
+        };
+
+        displayViewResponseData(response, designationConfig);
       },
       error: function (response) {
-        showErrorAlert(response.responseJSON);
+        showResponseAlert(response, 'error');
       },
     });
   });
   // ============ End View a Designation ============ //
 
-  // ============ Update a Designation ============ //
-  const designationEditModal = $('#modalEditDesignation');
-  const designationEditForm = $('#frmEditDesignation');
-
-  handleUnsavedChanges(designationEditModal, designationEditForm, $('#btnEditSaveDesignation'));
-
+  // ============ Edit a Designation ============ //
   designationsDatatable.on('click', '.btnEditDesignation', function () {
     const designationId = $(this).closest('tr').find('td[data-designation-id]').data('designation-id');
 
@@ -93,26 +84,27 @@ $(document).ready(function () {
       data: { id: designationId },
       success: function (response) {
         designationEditModal.modal('toggle');
-
-        $('#txtEditDesignationId').val(response.id);
-        $('#txtEditDesignation').val(response.designation);
-        $('#selEditDepartment')[0].tomselect.setValue(response.department);
+        populateEditForm(response);
       },
       error: function (response) {
-        showErrorAlert(response.responseJSON, designationEditModal, designationEditForm);
+        showResponseAlert(response, 'error');
       },
     });
   });
+  // ============ End Edit a Designation ============ //
+
+  // ============ Update a Designation ============ //
+  const designationEditModal = $('#modalEditDesignation');
+  const designationEditForm = $('#frmEditDesignation');
+  const designationEditSaveBtn = $('#btnEditSaveDesignation');
+
+  handleUnsavedChanges(designationEditModal, designationEditForm, designationEditSaveBtn);
 
   designationEditForm.on('submit', function (e) {
     e.preventDefault();
+    toggleButtonState(designationEditSaveBtn, true);
 
     const editFormData = new FormData(designationEditForm[0]);
-
-    editFormData.append('_method', 'PATCH');
-    editFormData.append('id', $('#txtEditDesignationId').val());
-    editFormData.append('designation', $('#txtEditDesignation').val());
-    editFormData.append('department', $('#selEditDepartment').val());
 
     $.ajax({
       url: '/file-maintenance/designations',
@@ -122,46 +114,39 @@ $(document).ready(function () {
       contentType: false,
       success: function (response) {
         if (response.success) {
-          showSuccessAlert(response, designationEditModal, designationEditForm);
+          toggleButtonState(designationEditSaveBtn, false);
+          showResponseAlert(response, 'success', designationAddModal, designationAddForm);
         } else {
-          if (response.errors.designation) {
-            $('#txtEditDesignation').addClass('is-invalid');
-            $('#valEditDesignation').text(response.errors.designation[0]);
-          }
-
-          if (response.errors.department) {
-            $('#selEditDepartment').next('.ts-wrapper').addClass('is-invalid');
-            $('#valEditDepartment').text(response.errors.department[0]);
-          }
+          handleValidationErrors(response, 'Edit');
+          toggleButtonState(designationEditSaveBtn, false);
         }
       },
       error: function (response) {
-        showErrorAlert(response.responseJSON, designationEditModal, designationEditForm);
+        showResponseAlert(response, 'error', designationAddModal, designationAddForm);
       },
     });
   });
 
-  designationsDatatable.on('click', '.btnStatusDesignation', function () {
+  designationsDatatable.on('click', '.btnSetDesignation', function () {
     const designationId = $(this).closest('tr').find('td[data-designation-id]').data('designation-id');
-    const designationSetStatus = $(this).data('status');
-    let statusName;
-
-    if (designationSetStatus === 1) {
-      statusName = 'active';
-    } else {
-      statusName = 'inactive';
-    }
+    const designationName = $(this).closest('tr').find('a.btnViewDesignation').text().trim();
+    const designationStatus = $(this).data('status');
+    const statusName = designationStatus === 1 ? 'active' : 'inactive';
 
     Swal.fire({
-      title: 'Change status?',
-      text: 'Are you sure you want to set it to ' + statusName + '?',
+      title: 'Update designation status?',
+      text: `Are you sure you want to set the designation "${designationName}" to ${statusName}?`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, set it to ' + statusName + '!',
+      focusCancel: true,
+      confirmButtonText: `Yes, set it to ${statusName}!`,
       cancelButtonText: 'No, cancel!',
       customClass: {
-        confirmButton: 'btn btn-primary',
-        cancelButton: 'btn btn-secondary',
+        popup: 'bg-light rounded-3 shadow fs-4',
+        title: 'text-dark fs-1',
+        htmlContainer: 'text-body text-center fs-4',
+        confirmButton: `btn btn-sm ${designationStatus === 1 ? 'btn-success' : 'btn-danger'}`,
+        cancelButton: 'btn btn-sm btn-secondary',
       },
     }).then((result) => {
       if (result.isConfirmed) {
@@ -170,13 +155,13 @@ $(document).ready(function () {
           method: 'PATCH',
           data: {
             id: designationId,
-            status: designationSetStatus,
+            status: designationStatus,
           },
           success: function (response) {
-            showSuccessAlert(response);
+            showResponseAlert(response, 'success');
           },
           error: function (response) {
-            showErrorAlert(response.responseJSON);
+            showResponseAlert(response, 'error');
           },
         });
       }
@@ -187,17 +172,22 @@ $(document).ready(function () {
   // ============ Delete a Designation ============ //
   designationsDatatable.on('click', '.btnDeleteDesignation', function () {
     const designationId = $(this).closest('tr').find('td[data-designation-id]').data('designation-id');
+    const designationName = $(this).closest('tr').find('a.btnViewDesignation').text().trim();
 
     Swal.fire({
       title: 'Delete Record?',
-      text: 'Are you sure you want to delete the designation?',
+      text: `Are you sure you want to permanently delete the designation "${designationName}"? This action cannot be undone.`,
       icon: 'warning',
       showCancelButton: true,
+      focusCancel: true,
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'No, cancel!',
       customClass: {
-        confirmButton: 'btn btn-danger',
-        cancelButton: 'btn btn-secondary',
+        popup: 'bg-light rounded-3 shadow fs-4',
+        title: 'text-dark fs-1',
+        htmlContainer: 'text-body text-center fs-4',
+        confirmButton: 'btn btn-sm btn-danger',
+        cancelButton: 'btn btn-sm btn-secondary',
       },
     }).then((result) => {
       if (result.isConfirmed) {
@@ -206,47 +196,10 @@ $(document).ready(function () {
           method: 'DELETE',
           data: { id: designationId },
           success: function (response) {
-            showSuccessAlert(response);
+            showResponseAlert(response, 'success');
           },
           error: function (response) {
-            showErrorAlert(response.responseJSON);
-          },
-        });
-      }
-    });
-  });
-
-  $('#btnMultiDeleteDesignation').on('click', function () {
-    let checkedCheckboxes = designationsDatatable.rows().nodes().to$().find('input.form-check-input:checked');
-
-    let designationIds = checkedCheckboxes
-      .map(function () {
-        return $(this).closest('tr').find('[data-designation-id]').data('designation-id');
-      })
-      .get();
-
-    Swal.fire({
-      title: 'Delete Records?',
-      text: 'Are you sure you want to delete all the selected designations?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'No, cancel!',
-      customClass: {
-        confirmButton: 'btn btn-danger',
-        cancelButton: 'btn btn-secondary',
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        $.ajax({
-          url: '/file-maintenance/designations',
-          method: 'DELETE',
-          data: { id: designationIds },
-          success: function (response) {
-            showSuccessAlert(response);
-          },
-          error: function (response) {
-            showErrorAlert(response.responseJSON);
+            showResponseAlert(response, 'error');
           },
         });
       }

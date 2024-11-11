@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserRequest;
 use App\Models\Audit;
 use App\Models\Department;
 use App\Models\Role;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use Throwable;
 
 class UserController extends Controller
@@ -21,9 +21,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::with('role', 'department')->whereNull('deleted_at')->orderBy('lname')->get();
-        $roles = Role::whereNull('deleted_at')->orderBy('name')->get();
-        $depts = Department::whereNull('deleted_at')->orderBy('name')->get();
+        $users = User::with('role', 'department')->orderBy('lname')->get();
+        $roles = Role::orderBy('name')->get();
+        $departments = Department::orderBy('name')->get();
 
         $totalUsers = $users->count();
 
@@ -31,7 +31,7 @@ class UserController extends Controller
             compact(
                 'users',
                 'roles',
-                'depts',
+                'departments',
                 'totalUsers'
             )
         );
@@ -40,120 +40,21 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
         try {
-            $request->merge([
-                'user' => trim($request->input('user')),
-                'fname' => ucwords(strtolower(trim($request->input('fname')))),
-                'mname' => ucwords(strtolower(trim($request->input('mname')))),
-                'lname' => ucwords(strtolower(trim($request->input('lname')))),
-                'role' => $request->input('role'),
-                'dept' => $request->input('dept'),
-                'email' => trim($request->input('email')),
-                'phone' => trim($request->input('phone')),
-                'image' => $request->file('image'),
-            ]);
-
-            $userValidationMessages = [
-                'user.required' => 'Please enter a username!',
-                'user.regex' => 'The username must follow the format ##-#####.',
-                'user.unique' => 'This username is already taken!',
-
-                'fname.required' => 'Please enter a first name!',
-                'fname.regex' => 'It must not contain numbers, special symbols, and multiple spaces.',
-                'fname.min' => 'The first name must be at least :min characters.',
-                'fname.max' => 'The first name may not be greater than :max characters.',
-
-                'mname.regex' => 'It must not contain numbers, special symbols, and multiple spaces.',
-                'mname.min' => 'The middle name must be at least :min characters.',
-                'mname.max' => 'The middle name may not be greater than :max characters.',
-
-                'lname.required' => 'Please enter a last name!',
-                'lname.regex' => 'It must not contain numbers, special symbols, and multiple spaces.',
-                'lname.min' => 'The last name must be at least :min characters.',
-                'lname.max' => 'The last name may not be greater than :max characters.',
-
-                'role.required' => 'Please select a role!',
-                'dept.required' => 'Please select a department!',
-
-                'email.required' => 'Please enter email address!',
-                'email.email' => 'This email is invalid!',
-                'email.unique' => 'This email is already taken!',
-
-                'phone.regex' => 'The phone number must follow the format: 09##-###-####.',
-                'phone.unique' => 'This phone number is already taken!',
-
-                'image.image' => 'The file must be an image.',
-                'image.mimes' => 'Only jpeg, png, jpg formats are allowed.',
-                'image.max' => 'Image size must not exceed 2MB.',
-            ];
-
-            $userValidator = Validator::make($request->all(), [
-                'user' => [
-                    'required',
-                    'regex:/^(0[7-9]|1\d|2[0-' . (int)date('y') . '])-\d{5}$/',
-                    'unique:users,user_name'
-                ],
-                'fname' => [
-                    'required',
-                    'regex:/^(?!.*([ \'\-])\1)[a-zA-ZÀ-ÖØ-öø-ÿ\']+(?:[ \'\-][a-zA-ZÀ-ÖØ-öø-ÿ\']+)*$/',
-                    'min:2',
-                    'max:50',
-                ],
-                'mname' => [
-                    'nullable',
-                    'regex:/^(?!.*([ \'\-])\1)[a-zA-ZÀ-ÖØ-öø-ÿ\']+(?:[ \'\-][a-zA-ZÀ-ÖØ-öø-ÿ\']+)*$/',
-                    'min:2',
-                    'max:50',
-                ],
-                'lname' => [
-                    'required',
-                    'regex:/^(?!.*([ \'\-])\1)[a-zA-ZÀ-ÖØ-öø-ÿ\']+(?:[ \'\-][a-zA-ZÀ-ÖØ-öø-ÿ\']+)*$/',
-                    'min:2',
-                    'max:50',
-                ],
-                'role' => [
-                    'required',
-                ],
-                'dept' => [
-                    'required',
-                ],
-                'email' => [
-                    'required',
-                    'email',
-                    'unique:users,email',
-                ],
-                'phone' => [
-                    'nullable',
-                    'regex:/^(09)\d{2}-\d{3}-\d{4}$/',
-                    'unique:users,phone_num'
-                ],
-                'image' => [
-                    'nullable',
-                    'image',
-                    'mimes:jpg,jpeg,png',
-                    'max:2048'
-                ],
-            ], $userValidationMessages);
-
-            if ($userValidator->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'errors' => $userValidator->errors(),
-                ]);
-            }
+            $validated = $request->validated();
 
             $user = User::create([
-                'user_name' => trim($request->input('user')),
-                'pass_hash' => bcrypt('Spampass123!'),
-                'fname' => ucwords(trim($request->input('fname'))),
-                'mname' => ucwords(trim($request->input('mname'))),
-                'lname' => ucwords(trim($request->input('lname'))),
-                'role_id' => $request->input('role'),
-                'dept_id' => $request->input('dept'),
-                'email' => trim($request->input('email')),
-                'phone_num' => trim($request->input('phone'))
+                'user_name' => trim($validated['user']),
+                'pass_hash' => Hash::make($validated['pass']),
+                'fname' => ucwords(trim($validated['fname'])),
+                'mname' => ucwords(trim($validated['mname'])),
+                'lname' => ucwords(trim($validated['lname'])),
+                'role_id' => $validated['role'],
+                'dept_id' => $validated['department'],
+                'email' => trim($validated['email']),
+                'phone_num' => trim($validated['phone'])
             ]);
 
             if ($request->hasFile('image')) {
@@ -173,21 +74,6 @@ class UserController extends Controller
             }
             $user->save();
 
-            activity()
-                ->useLog('Add User')
-                ->performedOn($user)
-                ->event('created')
-                ->withProperties([
-                    'username' => $user->user_name,
-                    'fullname' => $user->fname . ' ' . $user->lname,
-                    'role' => $user->role->name,
-                    'department' => $user->department->name,
-                    'email' => $user->email,
-                    'phone' => $user->phone_num,
-                    'user_image' => $user->user_image,
-                ])
-                ->log("A new user: '{$user->user_name}' has been created.");
-
             return response()->json([
                 'success' => true,
                 'title' => 'Saved Successfully!',
@@ -205,10 +91,12 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request)
+    public function show(UserRequest $request)
     {
         try {
-            $user = User::findOrFail(Crypt::decryptString($request->input('id')));
+            $validated = $request->validated();
+
+            $user = User::with('role', 'department')->findOrFail($validated['id']);
 
             $createdBy = Audit::where('subject_type', User::class)->where('subject_id', $user->id)->where('event', 'created')->first();
             $createdDetails = $this->getUserAuditDetails($createdBy);
@@ -223,7 +111,7 @@ class UserController extends Controller
                 'mname' => $user->mname ? $user->mname : 'N/A',
                 'lname' => $user->lname,
                 'role' => $user->role->name,
-                'dept' => $user->department->name,
+                'department' => $user->department->name,
                 'email' => $user->email,
                 'phone' => $user->phone_num ? $user->phone_num : 'N/A',
                 'login' => $user->last_login ? Carbon::parse($user->last_login)->format('D, F d, Y | h:i:s A') : 'Never',
@@ -240,7 +128,7 @@ class UserController extends Controller
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
-                'message' => 'An error occurred while fetching the user.',
+                'message' => 'An error occurred while fetching the user. Please try again later.',
             ], 500);
         }
     }
@@ -248,10 +136,12 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Request $request)
+    public function edit(UserRequest $request)
     {
         try {
-            $user = User::findOrFail(Crypt::decryptString($request->input('id')));
+            $validated = $request->validated();
+
+            $user = User::findOrFail($validated['id']);
 
             return response()->json([
                 'success' => true,
@@ -261,16 +151,17 @@ class UserController extends Controller
                 'mname' => $user->mname,
                 'lname' => $user->lname,
                 'role' => $user->role_id,
-                'dept' => $user->dept_id,
+                'department' => $user->dept_id,
                 'email' => $user->email,
                 'phone' => $user->phone_num,
                 'image' => asset('storage/img/user-images/' . $user->user_image),
+                'auth' => Auth::user()->id === $user->id,
             ]);
         } catch (Throwable) {
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
-                'message' => 'An error occurred while fetching the user.',
+                'message' => 'An error occurred while fetching the user. Please try again later.',
             ], 500);
         }
     }
@@ -278,108 +169,32 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+    public function update(UserRequest $request)
     {
-        $user = User::findOrFail(Crypt::decryptString($request->input('id')));
         try {
-            if (!$request->has('status')) {
-                $userValidationMessages = [
-                    'user.required' => 'Please enter a username!',
-                    'user.regex' => 'The username must follow the format ##-#####.',
-                    'user.unique' => 'This username is already taken!',
+            $validated = $request->validated();
 
-                    'fname.required' => 'Please enter a user name!',
-                    'fname.regex' => 'It must not contain numbers, special symbols, and multiple spaces.',
-                    'fname.min' => 'The first name must be at least :min characters.',
-                    'fname.max' => 'The first name may not be greater than :max characters.',
+            $user = User::findOrFail($validated['id']);
 
-                    'mname.regex' => 'It must not contain numbers, special symbols, and multiple spaces.',
-                    'mname.min' => 'The middle name must be at least :min characters.',
-                    'mname.max' => 'The middle name may not be greater than :max characters.',
+            if (Hash::check($validated['pass'], $user->pass_hash)) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => ['pass' => ['The new password cannot be the same as your current password!']]
+                ]);
+            }
 
-                    'lname.required' => 'Please enter a last name!',
-                    'lname.regex' => 'It must not contain numbers, special symbols, and multiple spaces.',
-                    'lname.min' => 'The last name must be at least :min characters.',
-                    'lname.max' => 'The last name may not be greater than :max characters.',
-
-                    'role.required' => 'Please select a role!',
-                    'dept.required' => 'Please select a department!',
-
-                    'email.required' => 'Please enter email address!',
-                    'email.email' => 'This email is invalid!',
-                    'email.unique' => 'This email is already taken!',
-
-                    'phone.regex' => 'The phone number must follow the format: 09##-###-####.',
-                    'phone.unique' => 'This phone number is already taken!',
-
-                    'image.image' => 'The file must be an image.',
-                    'image.mimes' => 'Only jpeg, png, jpg formats are allowed.',
-                    'image.max' => 'Image size must not exceed 2MB.',
-                ];
-
-                $userValidator = Validator::make($request->all(), [
-                    'user' => [
-                        'required',
-                        'regex:/^(0[7-9]|1\d|2[0-' . (int)date('y') . '])-\d{5}$/',
-                        Rule::unique('users', 'user_name')->ignore($user->id)
-                    ],
-                    'fname' => [
-                        'required',
-                        'regex:/^(?!.*([ \'\-])\1)[a-zA-ZÀ-ÖØ-öø-ÿ\']+(?:[ \'\-][a-zA-ZÀ-ÖØ-öø-ÿ\']+)*$/',
-                        'min:2',
-                        'max:50',
-                    ],
-                    'mname' => [
-                        'nullable',
-                        'regex:/^(?!.*([ \'\-])\1)[a-zA-ZÀ-ÖØ-öø-ÿ\']+(?:[ \'\-][a-zA-ZÀ-ÖØ-öø-ÿ\']+)*$/',
-                        'min:2',
-                        'max:50',
-                    ],
-                    'lname' => [
-                        'required',
-                        'regex:/^(?!.*([ \'\-])\1)[a-zA-ZÀ-ÖØ-öø-ÿ\']+(?:[ \'\-][a-zA-ZÀ-ÖØ-öø-ÿ\']+)*$/',
-                        'min:2',
-                        'max:50',
-                    ],
-                    'role' => [
-                        'required',
-                    ],
-                    'dept' => [
-                        'required',
-                    ],
-                    'email' => [
-                        'required',
-                        'email',
-                        Rule::unique('users', 'email')->ignore($user->id)
-                    ],
-                    'phone' => [
-                        'nullable',
-                        'regex:/^(09)\d{2}-\d{3}-\d{4}$/',
-                        Rule::unique('users', 'phone_num')->ignore($user->id)
-                    ],
-                    'image' => [
-                        'nullable',
-                        'image',
-                        'mimes:jpg,jpeg,png',
-                        'max:2048'
-                    ],
-                ], $userValidationMessages);
-
-                if ($userValidator->fails()) {
-                    return response()->json([
-                        'success' => false,
-                        'errors' => $userValidator->errors(),
-                    ]);
-                }
-
-                $user->user_name = trim($request->input('user'));
-                $user->fname = ucwords(trim($request->input('fname')));
-                $user->mname = ucwords(trim($request->input('mname')));
-                $user->lname = ucwords(trim($request->input('lname')));
-                $user->role_id = $request->input('role');
-                $user->dept_id = $request->input('dept');
-                $user->email = trim($request->input('email'));
-                $user->phone_num = trim($request->input('phone'));
+            if (!isset($validated['status'])) {
+                $user->update([
+                    'user_name' => trim($validated['user']),
+                    'pass_hash' => Hash::make($validated['pass']),
+                    'fname' => ucwords(trim($validated['fname'])),
+                    'mname' => ucwords(trim($validated['mname'])),
+                    'lname' => ucwords(trim($validated['lname'])),
+                    'role_id' => $validated['role'],
+                    'dept_id' => $validated['department'],
+                    'email' => trim($validated['email']),
+                    'phone_num' => trim($validated['phone'])
+                ]);
 
                 if ($request->hasFile('image')) {
                     if ($user->user_image && $user->user_image !== 'default.jpg' && Storage::exists('public/img/user-images/' . $user->user_image)) {
@@ -396,10 +211,12 @@ class UserController extends Controller
                         $user->user_image = 'default.jpg';
                     }
                 }
+                $user->save();
             } else {
-                $user->is_active = $request->input('status');
+                $user->update([
+                    'is_active' => $validated['status'],
+                ]);
             }
-            $user->save();
 
             return response()->json([
                 'success' => true,
@@ -410,7 +227,7 @@ class UserController extends Controller
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
-                'text' => 'An error occurred while updating the user.',
+                'text' => 'An error occurred while updating the user. Please try again later.',
             ], 500);
         }
     }
@@ -418,37 +235,33 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request)
+    public function destroy(UserRequest $request)
     {
         try {
-            $ids = $request->input('id');
+            $validated = $request->validated();
 
-            if (!is_array($ids)) {
-                $ids = [$ids];
+            $user = User::findOrFail($validated['id']);
+
+            if ($user->audits->count() > 0) {
+                return response()->json([
+                    'success' => false,
+                    'title' => 'Deletion Failed!',
+                    'text' => 'The user cannot be deleted because it is still being used by other records.',
+                ], 400);
             }
 
-            $ids = array_map(function ($id) {
-                return Crypt::decryptString($id);
-            }, $ids);
-
-            $users = User::query()->whereIn('id', $ids)->get();
-
-            foreach ($users as $user) {
-                $user->is_active = 0;
-                $user->save();
-                $user->delete();
-            }
+            $user->forceDelete();
 
             return response()->json([
                 'success' => true,
                 'title' => 'Deleted Successfully!',
-                'text' => count($users) > 1 ? 'The users have been deleted and can be restored from the bin.' : 'The user has been deleted and can be restored from the bin.',
+                'text' => 'The user has been deleted permanently.',
             ]);
         } catch (Throwable) {
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
-                'message' => 'An error occurred while deleting the user.',
+                'message' => 'An error occurred while deleting the user. Please try again later.',
             ], 500);
         }
     }
