@@ -13,7 +13,7 @@ class Designation extends Model
     protected $fillable = [
         'name',
         'dept_id',
-        'is_active'
+        'is_active',
     ];
 
     public function department(): BelongsTo

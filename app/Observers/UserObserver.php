@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Models\Audit;
 use App\Models\User;
 
 class UserObserver
@@ -11,16 +12,17 @@ class UserObserver
      */
     public function created(User $user): void
     {
-//        activity()
-//            ->useLog('Add User')
-//            ->performedOn($user)
-//            ->event('Created')
-//            ->withProperties([
-//                'name' => $user->fname . ' ' . $user->lname,
-//                'username' => $user->user_name,
-//                'status' => 'Active',
-//            ])
-//            ->log("A new user: '{$user->user_name}' has been created.");
+        (new Audit())
+            ->logName('Add User')
+            ->logDesc("A new user: '{$user->name}' has been created.")
+            ->performedOn($user)
+            ->logEvent(1)
+            ->logProperties([
+                'name' => $user->name,
+                'username' => $user->user_name,
+                'status' => 'Active',
+            ])
+            ->log();
     }
 
     /**
@@ -28,45 +30,47 @@ class UserObserver
      */
     public function updated(User $user): void
     {
-//        if ($user->isDirty()) {
-//            $changes = [
-//                'old' => [],
-//                'new' => []
-//            ];
-//
-//            foreach ($user->getDirty() as $attribute => $newValue) {
-//                if ($attribute === 'is_active' || $attribute === 'updated_at') {
-//                    continue;
-//                }
-//
-//                $oldValue = $user->getOriginal($attribute);
-//
-//                $changes['old'][$attribute] = $oldValue;
-//                $changes['new'][$attribute] = $newValue;
-//            }
-//
-//            if (!$user->isDirty('is_active')) {
-//                activity()
-//                    ->useLog('Edit User')
-//                    ->performedOn($user)
-//                    ->event('Updated')
-//                    ->withProperties($changes)
-//                    ->log("The user: '{$user->user_name}' has been updated.");
-//            } else {
-//                $statusText = $user->is_active == 1 ? 'Active' : 'Inactive';
-//
-//                activity()
-//                    ->useLog('Set User Status')
-//                    ->performedOn($user)
-//                    ->event('Updated')
-//                    ->withProperties([
-//                        'name' => $user->fname . ' ' . $user->lname,
-//                        'username' => $user->user_name,
-//                        'status' => $statusText,
-//                    ])
-//                    ->log("Updated the status of user: '{$user->user_name}' to {$statusText}.");
-//            }
-//        }
+        if ($user->isDirty()) {
+            $changes = [
+                'old' => [],
+                'new' => []
+            ];
+
+            foreach ($user->getDirty() as $attribute => $newValue) {
+                if ($attribute === 'is_active' || $attribute === 'updated_at') {
+                    continue;
+                }
+
+                $oldValue = $user->getOriginal($attribute);
+
+                $changes['old'][$attribute] = $oldValue;
+                $changes['new'][$attribute] = $newValue;
+            }
+
+            if (!$user->isDirty('is_active')) {
+                (new Audit())
+                    ->logName('Edit User')
+                    ->logDesc("The user: '{$user->name}' has been updated.")
+                    ->performedOn($user)
+                    ->logEvent(2)
+                    ->logProperties($changes)
+                    ->log();
+            } else {
+                $statusText = $user->is_active == 1 ? 'Active' : 'Inactive';
+
+                (new Audit())
+                    ->logName('Set User Status')
+                    ->logDesc("Updated the status of user: '{$user->name}' to {$statusText}.")
+                    ->performedOn($user)
+                    ->logEvent(2)
+                    ->logProperties([
+                        'name' => $user->name,
+                        'username' => $user->user_name,
+                        'status' => $statusText,
+                    ])
+                    ->log();
+            }
+        }
     }
 
     /**
@@ -74,15 +78,16 @@ class UserObserver
      */
     public function deleted(User $user): void
     {
-//        activity()
-//            ->useLog('Delete User')
-//            ->performedOn($user)
-//            ->event('Deleted')
-//            ->withProperties([
-//                'name' => $user->fname . ' ' . $user->lname,
-//                'username' => $user->user_name,
-//                'status' => 'Deleted',
-//            ])
-//            ->log("The user: '{$user->user_name}' has been permanently deleted.");
+        (new Audit())
+            ->logName('Delete User')
+            ->logDesc("The user: '{$user->name}' has been permanently deleted.")
+            ->performedOn($user)
+            ->logEvent(3)
+            ->logProperties([
+                'name' => $user->name,
+                'username' => $user->user_name,
+                'status' => 'Deleted',
+            ])
+            ->log();
     }
 }

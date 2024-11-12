@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Models\Audit;
 use App\Models\Category;
 
 class CategoryObserver
@@ -11,15 +12,16 @@ class CategoryObserver
      */
     public function created(Category $category): void
     {
-//        activity()
-//            ->useLog('Add Category')
-//            ->performedOn($category)
-//            ->event('Created')
-//            ->withProperties([
-//                'name' => $category->name,
-//                'status' => 'Active',
-//            ])
-//            ->log("A new brand: '{$category->name}' has been created.");
+        (new Audit())
+            ->logName('Add Category')
+            ->logDesc("A new category: '{$category->name}' has been created.")
+            ->performedOn($category)
+            ->logEvent(1)
+            ->logProperties([
+                'name' => $category->name,
+                'status' => 'Active',
+            ])
+            ->log();
     }
 
     /**
@@ -27,33 +29,35 @@ class CategoryObserver
      */
     public function updated(Category $category): void
     {
-//        if (!$category->isDirty('is_active')) {
-//            activity()
-//                ->useLog('Edit Category')
-//                ->performedOn($category)
-//                ->event('Updated')
-//                ->withProperties([
-//                    'old' => [
-//                        'name' => $category->getOriginal('name'),
-//                    ],
-//                    'new' => [
-//                        'name' => $category->name,
-//                    ],
-//                ])
-//                ->log("The brand: '{$category->name}' has been updated.");
-//        } else {
-//            $statusText = $category->is_active == 1 ? 'Active' : 'Inactive';
-//
-//            activity()
-//                ->useLog('Set Category Status')
-//                ->performedOn($category)
-//                ->event('Updated')
-//                ->withProperties([
-//                    'name' => $category->name,
-//                    'status' => $statusText,
-//                ])
-//                ->log("Updated the status of brand: '{$category->name}' to {$statusText}.");
-//        }
+        if (!$category->isDirty('is_active')) {
+            (new Audit())
+                ->logName('Edit Category')
+                ->logDesc("The category: '{$category->name}' has been updated.")
+                ->performedOn($category)
+                ->logEvent(2)
+                ->logProperties([
+                    'old' => [
+                        'name' => $category->getOriginal('name'),
+                    ],
+                    'new' => [
+                        'name' => $category->name,
+                    ],
+                ])
+                ->log();
+        } else {
+            $statusText = $category->is_active == 1 ? 'Active' : 'Inactive';
+
+            (new Audit())
+                ->logName('Set Category Status')
+                ->logDesc("Updated the status of category: '{$category->name}' to {$statusText}.")
+                ->performedOn($category)
+                ->logEvent(2)
+                ->logProperties([
+                    'name' => $category->name,
+                    'status' => $statusText,
+                ])
+                ->log();
+        }
     }
 
     /**
@@ -61,14 +65,15 @@ class CategoryObserver
      */
     public function deleted(Category $category): void
     {
-//        activity()
-//            ->useLog('Delete Category')
-//            ->performedOn($category)
-//            ->event('Deleted')
-//            ->withProperties([
-//                'name' => $category->name,
-//                'status' => 'Deleted',
-//            ])
-//            ->log("The brand: '{$category->name}' has been permanently deleted.");
+        (new Audit())
+            ->logName('Delete Category')
+            ->logDesc("The category: '{$category->name}' has been permanently deleted.")
+            ->performedOn($category)
+            ->logEvent(3)
+            ->logProperties([
+                'name' => $category->name,
+                'status' => 'Deleted',
+            ])
+            ->log();
     }
 }

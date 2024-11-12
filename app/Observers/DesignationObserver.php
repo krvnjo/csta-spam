@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Models\Audit;
 use App\Models\Designation;
 
 class DesignationObserver
@@ -11,16 +12,17 @@ class DesignationObserver
      */
     public function created(Designation $designation): void
     {
-//        activity()
-//            ->useLog('Add Designation')
-//            ->performedOn($designation)
-//            ->event('Created')
-//            ->withProperties([
-//                'name' => $designation->name,
-//                'department' => $designation->department->name,
-//                'status' => 'Active',
-//            ])
-//            ->log("A new designation: '{$designation->name}' has been created.");
+        (new Audit())
+            ->logName('Add Designation')
+            ->logDesc("A new designation: '{$designation->name}' has been created.")
+            ->performedOn($designation)
+            ->logEvent(1)
+            ->logProperties([
+                'name' => $designation->name,
+                'department' => $designation->department->name,
+                'status' => 'Active',
+            ])
+            ->log();
     }
 
     /**
@@ -28,35 +30,37 @@ class DesignationObserver
      */
     public function updated(Designation $designation): void
     {
-//        if (!$designation->isDirty('is_active')) {
-//            activity()
-//                ->useLog('Edit Designation')
-//                ->performedOn($designation)
-//                ->event('Updated')
-//                ->withProperties([
-//                    'old' => [
-//                        'name' => $designation->getOriginal('name'),
-//                        'department' => $designation->department->getOriginal('name'),
-//                    ],
-//                    'new' => [
-//                        'name' => $designation->name,
-//                        'department' => $designation->department->name,
-//                    ],
-//                ])
-//                ->log("The designation: '{$designation->name}' has been updated.");
-//        } else {
-//            $statusText = $designation->is_active == 1 ? 'Active' : 'Inactive';
-//
-//            activity()
-//                ->useLog('Set Designation Status')
-//                ->performedOn($designation)
-//                ->event('Updated')
-//                ->withProperties([
-//                    'name' => $designation->name,
-//                    'status' => $statusText,
-//                ])
-//                ->log("Updated the status of designation: '{$designation->name}' to {$statusText}.");
-//        }
+        if (!$designation->isDirty('is_active')) {
+            (new Audit())
+                ->logName('Edit Designation')
+                ->logDesc("The designation: '{$designation->name}' has been updated.")
+                ->performedOn($designation)
+                ->logEvent(2)
+                ->logProperties([
+                    'old' => [
+                        'name' => $designation->getOriginal('name'),
+                        'department' => $designation->department->getOriginal('name'),
+                    ],
+                    'new' => [
+                        'name' => $designation->name,
+                        'department' => $designation->department->name,
+                    ],
+                ])
+                ->log();
+        } else {
+            $statusText = $designation->is_active == 1 ? 'Active' : 'Inactive';
+
+            (new Audit())
+                ->logName('Set Designation Status')
+                ->logDesc("Updated the status of designation: '{$designation->name}' to {$statusText}.")
+                ->performedOn($designation)
+                ->logEvent(2)
+                ->logProperties([
+                    'name' => $designation->name,
+                    'status' => $statusText,
+                ])
+                ->log();
+        }
     }
 
     /**
@@ -64,14 +68,15 @@ class DesignationObserver
      */
     public function deleted(Designation $designation): void
     {
-//        activity()
-//            ->useLog('Delete Designation')
-//            ->performedOn($designation)
-//            ->event('Deleted')
-//            ->withProperties([
-//                'name' => $designation->name,
-//                'status' => 'Deleted',
-//            ])
-//            ->log("The designation: '{$designation->name}' has been permanently deleted.");
+        (new Audit())
+            ->logName('Delete Designation')
+            ->logDesc("The designation: '{$designation->name}' has been permanently deleted.")
+            ->performedOn($designation)
+            ->logEvent(3)
+            ->logProperties([
+                'name' => $designation->name,
+                'status' => 'Deleted',
+            ])
+            ->log();
     }
 }

@@ -4,12 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ConsumptionLog extends Model
 {
-    use SoftDeletes;
-
     protected $table = 'consumption_logs';
 
     protected $fillable = [
@@ -28,12 +25,12 @@ class ConsumptionLog extends Model
         return $this->belongsTo(PropertyConsumable::class, 'consume_id', 'id');
     }
 
-    public function department()
+    public function department(): BelongsTo
     {
         return $this->belongsTo(Department::class, 'dept_id');
     }
 
-    public function unit()
+    public function unit(): BelongsTo
     {
         return $this->belongsTo(Unit::class, 'unit_id');
     }
