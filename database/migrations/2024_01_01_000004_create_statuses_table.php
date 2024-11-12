@@ -11,45 +11,32 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('colors', function (Blueprint $table) {
-            $table->id();
-            $table->string('name', 50)->unique();
-            $table->string('class', 75)->unique();
-            $table->unsignedTinyInteger('is_color')->default(1);
-            $table->unsignedTinyInteger('is_active')->default(1);
-            $table->timestamps();
-            $table->softDeletes();
-        });
-
         Schema::create('conditions', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50)->unique();
-            $table->string('description', 75)->unique();
+            $table->string('description', 50)->unique();
             $table->foreignIdFor(Color::class, 'color_id')->constrained('colors')->cascadeOnDelete();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
-            $table->softDeletes();
         });
 
         Schema::create('priorities', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50)->unique();
-            $table->string('description', 75)->unique();
+            $table->string('description', 50)->unique();
             $table->unsignedTinyInteger('order');
             $table->foreignIdFor(Color::class, 'color_id')->constrained('colors')->cascadeOnDelete();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
-            $table->softDeletes();
         });
 
         Schema::create('statuses', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50)->unique();
-            $table->string('description', 75)->unique();
+            $table->string('description', 50)->unique();
             $table->foreignIdFor(Color::class, 'color_id')->constrained('colors')->cascadeOnDelete();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -61,6 +48,5 @@ return new class extends Migration {
         Schema::dropIfExists('statuses');
         Schema::dropIfExists('priorities');
         Schema::dropIfExists('conditions');
-        Schema::dropIfExists('colors');
     }
 };

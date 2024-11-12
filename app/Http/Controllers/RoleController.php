@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RoleRequest;
+use App\Models\Audit;
 use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -18,8 +21,10 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::with('permissions')->where('is_active', 1)->get();
-        $permissions = Permission::with('roles')->whereNull('deleted_at')->get();
+        $roles = Role::with('permissions')->where('id', '!=', 1)->orderBy('name')->get();
+        $permissions = Cache::remember('permissions_all', now()->addMinutes(10), function () {
+            return Permission::get();
+        });
 
         return view('pages.user-management.role',
             compact(
@@ -98,12 +103,19 @@ class RoleController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request)
+    public function show(RoleRequest $request)
     {
         try {
-            $role = Role::query()->findOrFail(Crypt::decryptString($request->input('id')));
+            $validated = $request->validated();
 
-            $permissions = $role->permissions->pluck('name');
+            $role = Role::with('permissions')->findOrFail($validated['id']);
+            $permissions = $role->permissions->pluck('name')->toArray();
+
+            $createdBy = Audit::where('subject_type', Role::class)->where('subject_id', $role->id)->where('event', 'created')->first();
+            $createdDetails = $this->getUserAuditDetails($createdBy);
+
+            $updatedBy = Audit::where('subject_type', Role::class)->where('subject_id', $role->id)->where('event', 'updated')->latest()->first() ?? $createdBy;
+            $updatedDetails = $this->getUserAuditDetails($updatedBy);
 
             return response()->json([
                 'success' => true,
@@ -111,14 +123,18 @@ class RoleController extends Controller
                 'description' => $role->description,
                 'permissions' => $permissions,
                 'status' => $role->is_active,
-                'created' => $role->created_at->format('D, F d, Y | h:i:s A'),
-                'updated' => $role->updated_at->format('D, F d, Y | h:i:s A'),
+                'created_img' => $createdDetails['image'],
+                'created_by' => $createdDetails['name'],
+                'created_at' => $role->created_at->format('D, M d, Y | h:i A'),
+                'updated_img' => $updatedDetails['image'],
+                'updated_by' => $updatedDetails['name'],
+                'updated_at' => $role->updated_at->format('D, M d, Y | h:i A'),
             ]);
         } catch (Throwable) {
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
-                'message' => 'An error occurred while fetching the role.',
+                'message' => 'An error occurred while fetching the role. Please try again later.',
             ], 500);
         }
     }
@@ -131,10 +147,10 @@ class RoleController extends Controller
         try {
             $role = Role::query()->findOrFail(Crypt::decryptString($request->input('id')));
 
-            $permissions = DB::table('role_has_permissions')
-                ->join('permissions', 'role_has_permissions.permission_id', '=', 'permissions.id')
-                ->where('role_has_permissions.role_id', $role->id)
-                ->select('permissions.id', 'permissions.name', 'role_has_permissions.can_view', 'role_has_permissions.can_create', 'role_has_permissions.can_edit', 'role_has_permissions.can_delete')
+            $permissions = DB::table('role_permissions')
+                ->join('permissions', 'role_permissions.perm_id', '=', 'permissions.id')
+                ->where('role_permissions.role_id', $role->id)
+                ->select('permissions.id', 'permissions.name', 'role_permissions.can_view', 'role_permissions.can_create', 'role_has_permissions.can_edit', 'role_has_permissions.can_delete')
                 ->get()
                 ->map(function ($permission) {
                     return [

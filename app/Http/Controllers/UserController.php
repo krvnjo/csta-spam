@@ -21,8 +21,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::with('role', 'department')->orderBy('lname')->get();
-        $roles = Role::orderBy('name')->get();
+        $users = User::with('role', 'department')->where('role_id', '!=', 1)->orderBy('lname')->get();
+        $roles = Role::where('id', '!=', 1)->orderBy('name')->get();
         $departments = Department::orderBy('name')->get();
 
         $totalUsers = $users->count();

@@ -197,9 +197,6 @@
 
             <tbody>
               @foreach ($users as $user)
-                @php
-                  $userId = Auth::user()->id !== $user->id;
-                @endphp
                 <tr>
                   <td>{{ $loop->iteration }}</td>
                   <td class="d-none" data-user-id="{{ Crypt::encryptString($user->id) }}"></td>
@@ -240,12 +237,16 @@
                             @endcan
 
                             @if (Auth::user()->id !== $user->id)
-                              <button class="dropdown-item btnSetUser" data-status="{{ $user->is_active ? 0 : 1 }}" type="button">
-                                <i class="bi {{ $user->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
-                                {{ $user->is_active ? 'Set to Inactive' : 'Set to Active' }}
-                              </button>
+                              @can('update user management')
+                                <button class="dropdown-item btnSetUser" data-status="{{ $user->is_active ? 0 : 1 }}" type="button">
+                                  <i class="bi {{ $user->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
+                                  {{ $user->is_active ? 'Set to Inactive' : 'Set to Active' }}
+                                </button>
+                                @can('delete user management')
+                                  <div class="dropdown-divider"></div>
+                                @endcan
+                              @endcan
                               @can('delete user management')
-                                <div class="dropdown-divider"></div>
                                 <button class="dropdown-item text-danger btnDeleteUser" type="button">
                                   <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
                                 </button>
@@ -303,7 +304,7 @@
 @section('sec-content')
   <x-user-management.add-user :roles="$roles" :departments="$departments" />
   <x-user-management.view-user />
-  <x-user-management.edit-user :roles="$roles" :departments="$departments" :user-id="$userId" />
+  <x-user-management.edit-user :roles="$roles" :departments="$departments" />
 @endsection
 
 @push('scripts')

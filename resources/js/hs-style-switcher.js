@@ -1,10 +1,12 @@
 (function () {
+  const $dropdownBtn = document.getElementById('themeDropdown');
   const $variants = document.querySelectorAll('.theme-dropdown [data-icon]');
 
   // Function to set active style in the dropdown menu and set icon for dropdown trigger
   const setActiveStyle = function () {
     $variants.forEach(($item) => {
       if ($item.getAttribute('data-value') === HSThemeAppearance.getOriginalAppearance()) {
+        $dropdownBtn.innerHTML = `<i class="${$item.getAttribute('data-icon')}" />`;
         return $item.classList.add('active');
       }
 
