@@ -11,15 +11,15 @@ class BrandObserver
      */
     public function created(Brand $brand): void
     {
-        activity()
-            ->useLog('Add Brand')
-            ->performedOn($brand)
-            ->event('Created')
-            ->withProperties([
-                'name' => $brand->name,
-                'status' => 'Active',
-            ])
-            ->log("A new brand: '{$brand->name}' has been created.");
+//        activity()
+//            ->useLog('Add Brand')
+//            ->performedOn($brand)
+//            ->event('Created')
+//            ->withProperties([
+//                'name' => $brand->name,
+//                'status' => 'Active',
+//            ])
+//            ->log("A new brand: '{$brand->name}' has been created.");
     }
 
     /**
@@ -27,33 +27,33 @@ class BrandObserver
      */
     public function updated(Brand $brand): void
     {
-        if (!$brand->isDirty('is_active')) {
-            activity()
-                ->useLog('Edit Brand')
-                ->performedOn($brand)
-                ->event('Updated')
-                ->withProperties([
-                    'old' => [
-                        'name' => $brand->getOriginal('name'),
-                    ],
-                    'new' => [
-                        'name' => $brand->name,
-                    ],
-                ])
-                ->log("The brand: '{$brand->name}' has been updated.");
-        } else {
-            $statusText = $brand->is_active == 1 ? 'Active' : 'Inactive';
-
-            activity()
-                ->useLog('Set Brand Status')
-                ->performedOn($brand)
-                ->event('Updated')
-                ->withProperties([
-                    'name' => $brand->name,
-                    'status' => $statusText,
-                ])
-                ->log("Updated the status of brand: '{$brand->name}' to {$statusText}.");
-        }
+//        if (!$brand->isDirty('is_active')) {
+//            activity()
+//                ->useLog('Edit Brand')
+//                ->performedOn($brand)
+//                ->event('Updated')
+//                ->withProperties([
+//                    'old' => [
+//                        'name' => $brand->getOriginal('name'),
+//                    ],
+//                    'new' => [
+//                        'name' => $brand->name,
+//                    ],
+//                ])
+//                ->log("The brand: '{$brand->name}' has been updated.");
+//        } else {
+//            $statusText = $brand->is_active == 1 ? 'Active' : 'Inactive';
+//
+//            activity()
+//                ->useLog('Set Brand Status')
+//                ->performedOn($brand)
+//                ->event('Updated')
+//                ->withProperties([
+//                    'name' => $brand->name,
+//                    'status' => $statusText,
+//                ])
+//                ->log("Updated the status of brand: '{$brand->name}' to {$statusText}.");
+//        }
     }
 
     /**
@@ -61,14 +61,14 @@ class BrandObserver
      */
     public function deleted(Brand $brand): void
     {
-        activity()
-            ->useLog('Delete Brand')
-            ->performedOn($brand)
-            ->event('Deleted')
-            ->withProperties([
-                'name' => $brand->name,
-                'status' => 'Deleted',
-            ])
-            ->log("The brand: '{$brand->name}' has been permanently deleted.");
+//        activity()
+//            ->useLog('Delete Brand')
+//            ->performedOn($brand)
+//            ->event('Deleted')
+//            ->withProperties([
+//                'name' => $brand->name,
+//                'status' => 'Deleted',
+//            ])
+//            ->log("The brand: '{$brand->name}' has been permanently deleted.");
     }
 }

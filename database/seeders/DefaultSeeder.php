@@ -2,16 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Brand;
-use App\Models\Category;
 use App\Models\Color;
 use App\Models\Dashboard;
-use App\Models\Department;
-use App\Models\Designation;
 use App\Models\Event;
-use App\Models\Role;
 use App\Models\Type;
-use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DefaultSeeder extends Seeder
@@ -53,8 +47,7 @@ class DefaultSeeder extends Seeder
 
         $dashboards = [
             'Admin Dashboard' => 'Comprehensive dashboard for administrative details.',
-            'Property & Asset Dashboard' => 'Manage  and track property and asset details.',
-            'Default Dashboard' => 'General user dashboard with essential tools.',
+            'Default Dashboard' => 'Manage and track property and asset details.',
         ];
 
         foreach ($dashboards as $dashboard => $description) {
@@ -96,18 +89,17 @@ class DefaultSeeder extends Seeder
         }
 
         $types = [
-            'User' => User::class,
-            'Role' => Role::class,
-            'Brand' => Brand::class,
-            'Category' => Category::class,
-            'Department' => Department::class,
-            'Designation' => Designation::class,
+            'User',
+            'Role',
+            'Brand',
+            'Category',
+            'Department',
+            'Designation',
         ];
 
-        foreach ($types as $type => $class) {
+        foreach ($types as $type) {
             Type::create([
                 'name' => $type,
-                'class' => $class,
             ]);
         }
     }

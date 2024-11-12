@@ -14,7 +14,7 @@ return new class extends Migration {
         Schema::create('colors', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50)->unique();
-            $table->string('class', 75)->unique();
+            $table->string('class', 50)->unique();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
         });
@@ -39,7 +39,6 @@ return new class extends Migration {
         Schema::create('types', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50)->unique();
-            $table->string('class', 75)->unique();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
         });

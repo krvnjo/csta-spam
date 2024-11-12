@@ -50,7 +50,7 @@ class UserSeeder extends Seeder
 
                     Permission::create([
                         'name' => "$action $base",
-                        'group_name' => $group,
+                        'group' => $group,
                     ]);
                 }
             }
@@ -71,7 +71,7 @@ class UserSeeder extends Seeder
             ],
             'Student Assistant' => [
                 'description' => 'Aids the Property Custodian in daily asset management.',
-                'dashboard' => 3,
+                'dashboard' => 2,
             ],
         ];
 

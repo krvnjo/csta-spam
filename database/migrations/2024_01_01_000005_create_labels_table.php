@@ -30,13 +30,6 @@ return new class extends Migration {
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
         });
-
-        Schema::create('units', function (Blueprint $table) {
-            $table->id();
-            $table->string('name', 50)->unique();
-            $table->unsignedTinyInteger('is_active')->default(1);
-            $table->timestamps();
-        });
     }
 
     /**
@@ -44,7 +37,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('units');
         Schema::dropIfExists('categories');
         Schema::dropIfExists('brands');
         Schema::dropIfExists('acquisitions');

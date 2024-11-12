@@ -19,6 +19,13 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        Schema::create('units', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 50)->unique();
+            $table->unsignedTinyInteger('is_active')->default(1);
+            $table->timestamps();
+        });
+
         Schema::create('property_parents', function (Blueprint $table) {
             $table->id();
             $table->string('name', 255)->unique();
@@ -35,7 +42,6 @@ return new class extends Migration {
             $table->boolean('is_consumable')->default(0);
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
-            $table->softDeletes();
         });
 
         Schema::create('property_children', function (Blueprint $table) {
@@ -55,22 +61,7 @@ return new class extends Migration {
             $table->string('remarks')->nullable();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
-            $table->softDeletes();
         });
-
-//        Schema::create('consumption_logs', function (Blueprint $table) {
-//            $table->id();
-//            $table->string('transaction_number')->unique();
-//            $table->foreignIdFor(PropertyConsumable::class, 'consume_id')->constrained('property_consumables')->cascadeOnDelete();
-//            $table->string('consumed_by', 255);
-//            $table->foreignIdFor(Department::class, 'dept_id')->constrained('departments')->cascadeOnDelete();
-//            $table->unsignedInteger('quantity_consumed');
-//            $table->date('consumed_at');
-//            $table->string('purpose', 255)->nullable();
-//            $table->string('remarks', 255)->nullable();
-//            $table->timestamps();
-//            $table->softDeletes();
-//        });
     }
 
     /**
@@ -80,5 +71,6 @@ return new class extends Migration {
     {
         Schema::dropIfExists('property_children');
         Schema::dropIfExists('property_parents');
+        Schema::dropIfExists('units');
     }
 };

@@ -11,16 +11,16 @@ class DesignationObserver
      */
     public function created(Designation $designation): void
     {
-        activity()
-            ->useLog('Add Designation')
-            ->performedOn($designation)
-            ->event('Created')
-            ->withProperties([
-                'name' => $designation->name,
-                'department' => $designation->department->name,
-                'status' => 'Active',
-            ])
-            ->log("A new designation: '{$designation->name}' has been created.");
+//        activity()
+//            ->useLog('Add Designation')
+//            ->performedOn($designation)
+//            ->event('Created')
+//            ->withProperties([
+//                'name' => $designation->name,
+//                'department' => $designation->department->name,
+//                'status' => 'Active',
+//            ])
+//            ->log("A new designation: '{$designation->name}' has been created.");
     }
 
     /**
@@ -28,35 +28,35 @@ class DesignationObserver
      */
     public function updated(Designation $designation): void
     {
-        if (!$designation->isDirty('is_active')) {
-            activity()
-                ->useLog('Edit Designation')
-                ->performedOn($designation)
-                ->event('Updated')
-                ->withProperties([
-                    'old' => [
-                        'name' => $designation->getOriginal('name'),
-                        'department' => $designation->department->getOriginal('name'),
-                    ],
-                    'new' => [
-                        'name' => $designation->name,
-                        'department' => $designation->department->name,
-                    ],
-                ])
-                ->log("The designation: '{$designation->name}' has been updated.");
-        } else {
-            $statusText = $designation->is_active == 1 ? 'Active' : 'Inactive';
-
-            activity()
-                ->useLog('Set Designation Status')
-                ->performedOn($designation)
-                ->event('Updated')
-                ->withProperties([
-                    'name' => $designation->name,
-                    'status' => $statusText,
-                ])
-                ->log("Updated the status of designation: '{$designation->name}' to {$statusText}.");
-        }
+//        if (!$designation->isDirty('is_active')) {
+//            activity()
+//                ->useLog('Edit Designation')
+//                ->performedOn($designation)
+//                ->event('Updated')
+//                ->withProperties([
+//                    'old' => [
+//                        'name' => $designation->getOriginal('name'),
+//                        'department' => $designation->department->getOriginal('name'),
+//                    ],
+//                    'new' => [
+//                        'name' => $designation->name,
+//                        'department' => $designation->department->name,
+//                    ],
+//                ])
+//                ->log("The designation: '{$designation->name}' has been updated.");
+//        } else {
+//            $statusText = $designation->is_active == 1 ? 'Active' : 'Inactive';
+//
+//            activity()
+//                ->useLog('Set Designation Status')
+//                ->performedOn($designation)
+//                ->event('Updated')
+//                ->withProperties([
+//                    'name' => $designation->name,
+//                    'status' => $statusText,
+//                ])
+//                ->log("Updated the status of designation: '{$designation->name}' to {$statusText}.");
+//        }
     }
 
     /**
@@ -64,14 +64,14 @@ class DesignationObserver
      */
     public function deleted(Designation $designation): void
     {
-        activity()
-            ->useLog('Delete Designation')
-            ->performedOn($designation)
-            ->event('Deleted')
-            ->withProperties([
-                'name' => $designation->name,
-                'status' => 'Deleted',
-            ])
-            ->log("The designation: '{$designation->name}' has been permanently deleted.");
+//        activity()
+//            ->useLog('Delete Designation')
+//            ->performedOn($designation)
+//            ->event('Deleted')
+//            ->withProperties([
+//                'name' => $designation->name,
+//                'status' => 'Deleted',
+//            ])
+//            ->log("The designation: '{$designation->name}' has been permanently deleted.");
     }
 }
