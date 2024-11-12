@@ -17,8 +17,8 @@ class StatusController extends Controller
      */
     public function index()
     {
-        $statuses = Status::whereNull('deleted_at')->get();
-        $colors = Color::whereNull('deleted_at')->where('is_active', 1)->where('is_color', 1)->get();
+        $statuses = Status::get();
+        $colors = Color::where('is_active', 1)->where('is_color', 1)->get();
 
         $totalStatuses = $statuses->count();
         $deletedStatuses = Status::onlyTrashed()->count();

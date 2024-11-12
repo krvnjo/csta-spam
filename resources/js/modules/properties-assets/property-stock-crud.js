@@ -295,6 +295,21 @@ document.addEventListener('DOMContentLoaded', function () {
     hideSearch: true,
     allowEmptyOption: true,
     dropdownParent: 'body',
+    render: {
+      option: (item, escape) => {
+        return `
+        <div class="d-flex align-items-start">
+          <div class="flex-grow-1 ms-2">
+            <span class="d-block fw-semibold">${item.name || 'Select Condition...'}</span>
+            <span class="d-block small">${item.description || 'Select Condition...'}</span>
+          </div>
+        </div>
+      `;
+      },
+      placeholder: (data) => {
+        return 'Select Condition...';
+      }
+    }
   });
 
   const tomSelectAcquiredType = new TomSelect('#cbxAcquiredType', {

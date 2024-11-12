@@ -16,7 +16,7 @@ class ConditionController extends Controller
      */
     public function index()
     {
-        $conditions = Condition::with('color')->whereNull('deleted_at')->get();
+        $conditions = Condition::with('color')->get();
 
         $totalConditions = $conditions->count();
         $deletedConditions = Condition::onlyTrashed()->count();

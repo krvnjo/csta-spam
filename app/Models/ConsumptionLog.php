@@ -8,8 +8,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ConsumptionLog extends Model
 {
-    use SoftDeletes;
-
     protected $table = 'consumption_logs';
 
     protected $fillable = [

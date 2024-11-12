@@ -8,8 +8,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PropertyConsumable extends Model
 {
-    use SoftDeletes;
-
     protected $table = 'property_consumables';
 
     protected $fillable = [

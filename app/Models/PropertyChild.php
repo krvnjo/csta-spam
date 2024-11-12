@@ -9,8 +9,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PropertyChild extends Model
 {
-    use SoftDeletes;
-
     protected $table = 'property_children';
 
     protected $fillable = [

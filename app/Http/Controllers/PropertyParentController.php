@@ -27,7 +27,6 @@ class PropertyParentController extends Controller
     {
         $propertyParents = PropertyParent::with(['category', 'brand', 'propertyChildren'])
             ->where('is_active', 1)
-            ->whereNull('deleted_at')
             ->get()
             ->map(function ($property) {
                 if ($property->purchase_price && $property->useful_life && isset($property->residual_value)) {

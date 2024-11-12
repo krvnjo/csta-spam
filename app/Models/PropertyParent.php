@@ -10,8 +10,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PropertyParent extends Model
 {
-    use SoftDeletes;
-
     protected $table = 'property_parents';
 
     protected $fillable = [

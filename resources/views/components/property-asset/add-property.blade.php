@@ -18,7 +18,6 @@
       <form id="frmAddProperty" method="post" novalidate enctype="multipart/form-data">
         @csrf
         <div class="modal-body custom-modal-body">
-          <!-- Alert (Initially hidden) -->
           <div id="alertContainer" class="alert alert-info" role="alert" style="display: none;">
             <small><i class="bi bi-arrow-down-circle me-2"></i>Additional fields are available below. Please scroll down to fill them out.</small>
           </div>
@@ -106,7 +105,7 @@
                           <input class="form-control text-end" id="txtPurchasePrice" name="purchasePrice" type="number" step="0.01" min="0" placeholder="Purchase Price" />
                           <label for="txtPurchasePrice">Purchase Price</label>
                         </div>
-                        <span class="invalid-feedback" id="valAddPurchasePrice"></span>
+                        <span class="invalid-feedback d-block" id="valAddPurchasePrice"></span>
                       </div>
                     </div>
                   </div>
@@ -143,8 +142,8 @@
                           <input class="form-control text-end" id="txtResidualValue" name="residualValue" type="number" step="0.01" min="0" placeholder="Residual Value"
                                  data-bs-toggle="tooltip" title="The residual value is the estimated value of the asset at the end of its useful life."/>
                           <label for="txtResidualValue">Residual Value</label>
-                          <span class="invalid-feedback" id="valAddResidualValue"></span>
                         </div>
+                        <span class="invalid-feedback d-block" id="valAddResidualValue"></span>
                       </div>
                     </div>
                     <div class="col-md-6">
@@ -187,7 +186,9 @@
                       <select class="js-select form-select" id="cbxCondition" name="condition" required>
                         <option value="" disabled selected>Select Condition...</option>
                         @foreach ($conditions as $condition)
-                          <option value="{{ $condition->id }}">{{ $condition->name }}</option>
+                          <option value="{{ $condition->id }}" data-name="{{ $condition->name }}" data-description="{{ $condition->description }}">
+                            {{ $condition->name }}
+                          </option>
                         @endforeach
                       </select>
                       <label for="cbxCondition">Condition <span class="text-danger">*</span></label>

@@ -245,7 +245,6 @@
             <tbody>
             @foreach ($propertyParents
                 ->where('is_active', 1)
-                ->where('deleted_at', null)
                 ->sortByDesc('updated_at')
                 ->map(function ($propertyParent) {
                     $propertyParent->children_count = $propertyParent->propertyChildren

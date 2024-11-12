@@ -258,7 +258,7 @@
             </thead>
 
             <tbody>
-              @foreach ($propertyParents->where('is_active', 1)->where('deleted_at', null)->sortByDesc('updated_at') as $propertyParent)
+              @foreach ($propertyParents->where('is_active', 1)->sortByDesc('updated_at') as $propertyParent)
                 <tr>
                   <td class="d-none" data-property-id="{{ Crypt::encryptString($propertyParent->id) }}"></td>
                   <td style="text-align: center; padding: 0;">
@@ -920,9 +920,9 @@
         // =======================================================
         HSBsDropdown.init()
 
-        // INITIALIZATION OF CHARTJS
+        // INITIALIZATION OF SELECT
         // =======================================================
-        HSCore.components.HSChartJS.init('.js-chart')
+        HSCore.components.HSTomSelect.init(".js-select");
       }
     })()
   </script>

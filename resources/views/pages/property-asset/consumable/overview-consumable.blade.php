@@ -159,7 +159,7 @@
             </tr>
             </thead>
             <tbody>
-            @foreach ($propertyConsumables->where('deleted_at', null)->sortByDesc('updated_at') as $propertyConsumable)
+            @foreach ($propertyConsumables->sortByDesc('updated_at') as $propertyConsumable)
               <tr>
                 <td class="table-column-pe-0">
                   <div class="form-check">

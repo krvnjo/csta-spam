@@ -10,8 +10,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Condition extends Model
 {
-    use SoftDeletes;
-
     protected $table = 'conditions';
 
     protected $fillable = [

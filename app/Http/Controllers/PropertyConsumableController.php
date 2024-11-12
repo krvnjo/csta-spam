@@ -21,7 +21,6 @@ class PropertyConsumableController extends Controller
     public function index()
     {
         $propertyConsumables = PropertyConsumable::with('unit')
-            ->whereNull('deleted_at')
             ->get();
 
         $units = Unit::where('is_active', 1)->get();
