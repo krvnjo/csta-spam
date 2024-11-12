@@ -119,9 +119,9 @@ class UserSeeder extends Seeder
             [
                 'user_name' => '07-00001',
                 'pass_hash' => bcrypt('Cstaspam24!'),
-                'name' => 'CSTA SPAM System',
+                'name' => 'CSTA-SPAM System',
                 'fname' => 'CSTA',
-                'mname' => 'SPAMs',
+                'mname' => 'SPAM',
                 'lname' => 'System',
                 'role_id' => 1,
                 'dept_id' => 1,

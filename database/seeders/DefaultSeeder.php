@@ -29,6 +29,7 @@ class DefaultSeeder extends Seeder
             'Info-soft' => 'badge bg-soft-info text-info',
             'Light' => 'badge text-bg-light',
             'Dark' => 'badge text-bg-dark',
+            'Dark-soft' => 'badge bg-soft-dark text-dark',
             'Default-indicator' => 'legend-indicator',
             'Primary-indicator' => 'legend-indicator bg-primary',
             'Success-indicator' => 'legend-indicator bg-success',
@@ -60,23 +61,23 @@ class DefaultSeeder extends Seeder
         $events = [
             'Created' => [
                 'badge_id' => 2,
-                'legend_id' => 15,
+                'legend_id' => 16,
             ],
             'Updated' => [
                 'badge_id' => 5,
-                'legend_id' => 16,
+                'legend_id' => 17,
             ],
             'Deleted' => [
                 'badge_id' => 7,
-                'legend_id' => 19,
+                'legend_id' => 20,
             ],
             'Login' => [
                 'badge_id' => 11,
                 'legend_id' => 17,
             ],
             'Logout' => [
-                'badge_id' => 11,
-                'legend_id' => 17,
+                'badge_id' => 14,
+                'legend_id' => 21,
             ],
         ];
 

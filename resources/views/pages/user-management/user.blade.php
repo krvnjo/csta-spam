@@ -182,7 +182,7 @@
             }'>
             <thead class="thead-light">
               <tr>
-                <th class="w-th">#</th>
+                <th class="w-th" style="width: 7%;">#</th>
                 <th class="d-none"></th>
                 <th>Name</th>
                 <th>Username</th>
