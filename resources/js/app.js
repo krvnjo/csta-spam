@@ -393,7 +393,7 @@ function filterDatatableAndCount(filterDatatable, filterCount) {
       const fullValue = $(cell).attr('data-full-value') || data[targetColumnIndex].trim();
 
       if (Array.isArray(filterVal)) {
-        return filterVal.every((val) => fullValue.includes(val));
+        return filterVal.some((val) => fullValue.includes(val));
       }
 
       return fullValue.includes(filterVal);

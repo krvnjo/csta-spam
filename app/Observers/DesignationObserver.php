@@ -14,7 +14,7 @@ class DesignationObserver
         activity()
             ->useLog('Add Designation')
             ->performedOn($designation)
-            ->event('created')
+            ->event('Created')
             ->withProperties([
                 'name' => $designation->name,
                 'department' => $designation->department->name,
@@ -32,7 +32,7 @@ class DesignationObserver
             activity()
                 ->useLog('Edit Designation')
                 ->performedOn($designation)
-                ->event('updated')
+                ->event('Updated')
                 ->withProperties([
                     'old' => [
                         'name' => $designation->getOriginal('name'),
@@ -50,7 +50,7 @@ class DesignationObserver
             activity()
                 ->useLog('Set Designation Status')
                 ->performedOn($designation)
-                ->event('updated')
+                ->event('Updated')
                 ->withProperties([
                     'name' => $designation->name,
                     'status' => $statusText,
@@ -67,7 +67,7 @@ class DesignationObserver
         activity()
             ->useLog('Delete Designation')
             ->performedOn($designation)
-            ->event('deleted')
+            ->event('Deleted')
             ->withProperties([
                 'name' => $designation->name,
                 'status' => 'Deleted',

@@ -14,7 +14,7 @@ class UserObserver
         activity()
             ->useLog('Add User')
             ->performedOn($user)
-            ->event('created')
+            ->event('Created')
             ->withProperties([
                 'name' => $user->fname . ' ' . $user->lname,
                 'username' => $user->user_name,
@@ -49,7 +49,7 @@ class UserObserver
                 activity()
                     ->useLog('Edit User')
                     ->performedOn($user)
-                    ->event('updated')
+                    ->event('Updated')
                     ->withProperties($changes)
                     ->log("The user: '{$user->user_name}' has been updated.");
             } else {
@@ -58,7 +58,7 @@ class UserObserver
                 activity()
                     ->useLog('Set User Status')
                     ->performedOn($user)
-                    ->event('updated')
+                    ->event('Updated')
                     ->withProperties([
                         'name' => $user->fname . ' ' . $user->lname,
                         'username' => $user->user_name,
@@ -77,7 +77,7 @@ class UserObserver
         activity()
             ->useLog('Delete User')
             ->performedOn($user)
-            ->event('deleted')
+            ->event('Deleted')
             ->withProperties([
                 'name' => $user->fname . ' ' . $user->lname,
                 'username' => $user->user_name,

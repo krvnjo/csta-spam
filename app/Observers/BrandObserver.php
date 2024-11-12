@@ -14,7 +14,7 @@ class BrandObserver
         activity()
             ->useLog('Add Brand')
             ->performedOn($brand)
-            ->event('created')
+            ->event('Created')
             ->withProperties([
                 'name' => $brand->name,
                 'status' => 'Active',
@@ -31,7 +31,7 @@ class BrandObserver
             activity()
                 ->useLog('Edit Brand')
                 ->performedOn($brand)
-                ->event('updated')
+                ->event('Updated')
                 ->withProperties([
                     'old' => [
                         'name' => $brand->getOriginal('name'),
@@ -47,7 +47,7 @@ class BrandObserver
             activity()
                 ->useLog('Set Brand Status')
                 ->performedOn($brand)
-                ->event('updated')
+                ->event('Updated')
                 ->withProperties([
                     'name' => $brand->name,
                     'status' => $statusText,
@@ -64,7 +64,7 @@ class BrandObserver
         activity()
             ->useLog('Delete Brand')
             ->performedOn($brand)
-            ->event('deleted')
+            ->event('Deleted')
             ->withProperties([
                 'name' => $brand->name,
                 'status' => 'Deleted',

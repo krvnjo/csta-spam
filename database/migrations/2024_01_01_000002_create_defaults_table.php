@@ -14,7 +14,7 @@ return new class extends Migration {
         Schema::create('colors', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50)->unique();
-            $table->string('description', 75)->unique();
+            $table->string('class', 75)->unique();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
         });
@@ -35,6 +35,14 @@ return new class extends Migration {
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
         });
+
+        Schema::create('types', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 50)->unique();
+            $table->string('class', 75)->unique();
+            $table->unsignedTinyInteger('is_active')->default(1);
+            $table->timestamps();
+        });
     }
 
     /**
@@ -42,6 +50,7 @@ return new class extends Migration {
      */
     public function down(): void
     {
+        Schema::dropIfExists('types');
         Schema::dropIfExists('events');
         Schema::dropIfExists('dashboards');
         Schema::dropIfExists('colors');

@@ -14,7 +14,7 @@ class DepartmentObserver
         activity()
             ->useLog('Add Department')
             ->performedOn($department)
-            ->event('created')
+            ->event('Created')
             ->withProperties([
                 'name' => $department->name,
                 'code' => $department->code,
@@ -32,7 +32,7 @@ class DepartmentObserver
             activity()
                 ->useLog('Edit Department')
                 ->performedOn($department)
-                ->event('updated')
+                ->event('Updated')
                 ->withProperties([
                     'old' => [
                         'name' => $department->getOriginal('name'),
@@ -50,7 +50,7 @@ class DepartmentObserver
             activity()
                 ->useLog('Set Department Status')
                 ->performedOn($department)
-                ->event('updated')
+                ->event('Updated')
                 ->withProperties([
                     'name' => $department->name,
                     'status' => $statusText,
@@ -67,7 +67,7 @@ class DepartmentObserver
         activity()
             ->useLog('Delete Department')
             ->performedOn($department)
-            ->event('deleted')
+            ->event('Deleted')
             ->withProperties([
                 'name' => $department->name,
                 'status' => 'Deleted',
