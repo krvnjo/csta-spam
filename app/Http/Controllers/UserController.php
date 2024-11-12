@@ -176,14 +176,14 @@ class UserController extends Controller
 
             $user = User::findOrFail($validated['id']);
 
-            if (Hash::check($validated['pass'], $user->pass_hash)) {
-                return response()->json([
-                    'success' => false,
-                    'errors' => ['pass' => ['The new password cannot be the same as your current password!']]
-                ]);
-            }
-
             if (!isset($validated['status'])) {
+                if (Hash::check($validated['pass'], $user->pass_hash)) {
+                    return response()->json([
+                        'success' => false,
+                        'errors' => ['pass' => ['The new password cannot be the same as your current password!']]
+                    ]);
+                }
+
                 $user->update([
                     'user_name' => trim($validated['user']),
                     'pass_hash' => Hash::make($validated['pass']),

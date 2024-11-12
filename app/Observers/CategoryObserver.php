@@ -14,7 +14,7 @@ class CategoryObserver
         activity()
             ->useLog('Add Category')
             ->performedOn($category)
-            ->event('created')
+            ->event('Created')
             ->withProperties([
                 'name' => $category->name,
                 'status' => 'Active',
@@ -31,7 +31,7 @@ class CategoryObserver
             activity()
                 ->useLog('Edit Category')
                 ->performedOn($category)
-                ->event('updated')
+                ->event('Updated')
                 ->withProperties([
                     'old' => [
                         'name' => $category->getOriginal('name'),
@@ -47,7 +47,7 @@ class CategoryObserver
             activity()
                 ->useLog('Set Category Status')
                 ->performedOn($category)
-                ->event('updated')
+                ->event('Updated')
                 ->withProperties([
                     'name' => $category->name,
                     'status' => $statusText,
@@ -64,7 +64,7 @@ class CategoryObserver
         activity()
             ->useLog('Delete Category')
             ->performedOn($category)
-            ->event('deleted')
+            ->event('Deleted')
             ->withProperties([
                 'name' => $category->name,
                 'status' => 'Deleted',

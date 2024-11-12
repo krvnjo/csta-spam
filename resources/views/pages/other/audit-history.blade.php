@@ -77,32 +77,50 @@
         <div class="collapse" id="auditFilterSearchCollapse">
           <div class="card-body">
             <div class="row">
-              <!-- Event -->
-              <div class="col-sm-12 col-md-6 col-lg-4">
-                <div class="mb-4">
-                  <label class="form-label" for="teamsFilterLabel">Teams</label>
-                  <div class="input-group input-group-merge">
-                    <div class="input-group-prepend input-group-text">
-                      <i class="bi-people-fill"></i>
-                    </div>
-                    <input class="form-control" id="teamsFilterLabel" placeholder="Name, role, department">
+              <!-- Events -->
+              <div class="col-sm-12 col-md-6 col-lg-3">
+                <div class="mb-3">
+                  <label class="form-label" for="auditEventFilter">Events</label>
+                  <div class="tom-select-custom">
+                    <select class="js-select js-datatable-filter form-select" id="auditEventFilter" data-target-column-index="4"
+                      data-hs-tom-select-options='{
+                        "singleMultiple": true,
+                        "hideSelected": false,
+                        "placeholder": "All Events"
+                      }'
+                      autocomplete="off" multiple>
+                      @foreach ($events as $event)
+                        <option data-option-template='<span class="d-flex align-items-center"><span class="{{ $event->legend->class }}"></span>{{ $event->name }}</span>' value="{{ $event->name }}">
+                        </option>
+                      @endforeach
+                    </select>
                   </div>
                 </div>
               </div>
-              <!-- End Event -->
+              <!-- End Events -->
 
-              <div class="col-sm-12 col-md-6 col-lg-4">
-                <div class="mb-4">
-                  <label class="form-label" for="teamsFilterLabel">User</label>
-                  <div class="input-group input-group-merge">
-                    <div class="input-group-prepend input-group-text">
-                      <i class="bi-people-fill"></i>
-                    </div>
-                    <input class="form-control" id="teamsFilterLabel" placeholder="Name, role, department">
+              <!-- Users -->
+              <div class="col-sm-12 col-md-6 col-lg-3">
+                <div class="mb-3">
+                  <label class="form-label" for="auditUserFilter">Users</label>
+                  <div class="tom-select-custom">
+                    <select class="js-select js-datatable-filter form-select" id="auditUserFilter" data-target-column-index="5"
+                      data-hs-tom-select-options='{
+                        "singleMultiple": true,
+                        "hideSelected": false,
+                        "placeholder": "All Users"
+                      }'
+                      autocomplete="off" multiple>
+                      @foreach ($users as $user)
+                        <option
+                          data-option-template='<span class="d-flex align-items-center"><img class="avatar avatar-xss avatar-circle me-2" src="{{ asset('storage/img/user-images/' . $user->user_image) }}" alt="User Image" /><span class="text-truncate">{{ $user->name }}</span></span>'
+                          value="{{ $user->name }}">{{ $user->name }}</option>
+                      @endforeach
+                    </select>
                   </div>
                 </div>
               </div>
-              <!-- End Event -->
+              <!-- End Users -->
             </div>
           </div>
         </div>
@@ -145,7 +163,7 @@
                   <td>{{ $loop->iteration }}</td>
                   <td class="d-none" data-audit-id="{{ Crypt::encryptString($audit->id) }}"></td>
                   <td><a class="d-block h5 mb-0 btnViewAudit">{{ $audit->log_name }}</a></td>
-                  <td>{{ \Illuminate\Support\Str::limit($audit->description, 70, '...') }}</td>
+                  <td>{{ \Illuminate\Support\Str::limit($audit->description, 50, '...') }}</td>
                   <td data-order="{{ $audit->event }}">
                     <span class="d-block h5 mb-0">{{ $audit->subject->name }}</span>
                     <span class="d-block fs-5">{{ $audit->event }}</span>

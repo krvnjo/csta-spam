@@ -2,9 +2,16 @@
 
 namespace Database\Seeders;
 
+use App\Models\Brand;
+use App\Models\Category;
 use App\Models\Color;
 use App\Models\Dashboard;
+use App\Models\Department;
+use App\Models\Designation;
 use App\Models\Event;
+use App\Models\Role;
+use App\Models\Type;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DefaultSeeder extends Seeder
@@ -40,7 +47,7 @@ class DefaultSeeder extends Seeder
         foreach ($colors as $color => $class) {
             Color::create([
                 'name' => $color,
-                'description' => $class,
+                'class' => $class,
             ]);
         }
 
@@ -85,6 +92,22 @@ class DefaultSeeder extends Seeder
                 'name' => $event,
                 'badge_id' => $data['badge_id'],
                 'legend_id' => $data['legend_id'],
+            ]);
+        }
+
+        $types = [
+            'User' => User::class,
+            'Role' => Role::class,
+            'Brand' => Brand::class,
+            'Category' => Category::class,
+            'Department' => Department::class,
+            'Designation' => Designation::class,
+        ];
+
+        foreach ($types as $type => $class) {
+            Type::create([
+                'name' => $type,
+                'class' => $class,
             ]);
         }
     }

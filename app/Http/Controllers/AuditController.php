@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Audit;
+use App\Models\Event;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -14,11 +15,13 @@ class AuditController extends Controller
     public function index()
     {
         $audits = Audit::orderBy('log_name')->get();
-        $users = User::orderBy('lname')->get();
+        $events = Event::get();
+        $users = User::where('role_id', '!=', 1)->orderBy('lname')->get();
 
         return view('pages.other.audit-history',
             compact(
                 'audits',
+                'events',
                 'users',
             )
         );
