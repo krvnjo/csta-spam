@@ -7,6 +7,8 @@ use App\Models\Audit;
 use App\Models\Department;
 use App\Models\Role;
 use App\Models\User;
+use App\Observers\UserObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -14,6 +16,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
 
+#[ObservedBy([UserObserver::class])]
 class UserController extends Controller
 {
     /**
@@ -177,16 +180,18 @@ class UserController extends Controller
             $user = User::findOrFail($validated['id']);
 
             if (!isset($validated['status'])) {
-                if (Hash::check($validated['pass'], $user->pass_hash)) {
-                    return response()->json([
-                        'success' => false,
-                        'errors' => ['pass' => ['The new password cannot be the same as your current password!']]
-                    ]);
+                if (isset($validated['pass'])) {
+                    if (Hash::check($validated['pass'], $user->pass_hash)) {
+                        return response()->json([
+                            'success' => false,
+                            'errors' => ['pass' => ['The new password cannot be the same as your current password!']]
+                        ]);
+                    }
+                    $user->pass_hash = Hash::make($validated['pass']);
                 }
 
                 $user->update([
                     'user_name' => trim($validated['user']),
-                    'pass_hash' => Hash::make($validated['pass']),
                     'fname' => ucwords(trim($validated['fname'])),
                     'mname' => ucwords(trim($validated['mname'])),
                     'lname' => ucwords(trim($validated['lname'])),

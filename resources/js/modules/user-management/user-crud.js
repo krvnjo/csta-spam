@@ -93,7 +93,9 @@ $(document).ready(function () {
         userEditModal.modal('toggle');
 
         if (response.auth) {
-          $('#rowEditRole').remove();
+          $('#rowEditRole').hide();
+        } else {
+          $('#rowEditRole').show();
         }
 
         $('#imgEditDisplayImage').attr('src', response.image);

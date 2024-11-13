@@ -24,13 +24,13 @@
             <p class="page-header-text">Administer and manage user accounts and data.</p>
           </div>
 
-          @can('create user management')
+          @access('User Management', 'Read and Write, Full Access')
             <div class="col-sm-auto mt-2 mt-sm-0">
               <button class="btn btn-primary w-100 w-sm-auto" id="btnAddUserModal" data-bs-toggle="modal" data-bs-target="#modalAddUser">
                 <i class="bi-plus-lg me-1"></i> Add User
               </button>
             </div>
-          @endcan
+          @endaccess
         </div>
       </div>
       <!-- End Users Header -->
@@ -226,35 +226,29 @@
                     <div class="btn-group position-static">
                       <button class="btn btn-white btn-sm btnViewUser" type="button"><i class="bi-eye"></i> View</button>
 
-                      @canAny('update user management, delete user management')
+                      @access('User Management', 'Read and Write, Full Access')
                         <div class="btn-group position-static">
                           <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" data-bs-toggle="dropdown" type="button"></button>
                           <div class="dropdown-menu dropdown-menu-end mt-1">
-                            @can('update user management')
-                              <button class="dropdown-item btnEditUser" type="button">
-                                <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
-                              </button>
-                            @endcan
+                            <button class="dropdown-item btnEditUser" type="button">
+                              <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
+                            </button>
 
                             @if (Auth::user()->id !== $user->id)
-                              @can('update user management')
-                                <button class="dropdown-item btnSetUser" data-status="{{ $user->is_active ? 0 : 1 }}" type="button">
-                                  <i class="bi {{ $user->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
-                                  {{ $user->is_active ? 'Set to Inactive' : 'Set to Active' }}
-                                </button>
-                                @can('delete user management')
-                                  <div class="dropdown-divider"></div>
-                                @endcan
-                              @endcan
-                              @can('delete user management')
+                              <button class="dropdown-item btnSetUser" data-status="{{ $user->is_active ? 0 : 1 }}" type="button">
+                                <i class="bi {{ $user->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
+                                {{ $user->is_active ? 'Set to Inactive' : 'Set to Active' }}
+                              </button>
+                              @access('User Management', 'Full Access')
+                                <div class="dropdown-divider"></div>
                                 <button class="dropdown-item text-danger btnDeleteUser" type="button">
                                   <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
                                 </button>
-                              @endcan
+                              @endaccess
                             @endif
                           </div>
                         </div>
-                      @endcanAny
+                      @endaccess
                     </div>
                   </td>
                 </tr>

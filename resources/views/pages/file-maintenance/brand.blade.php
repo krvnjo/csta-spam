@@ -24,13 +24,11 @@
             <p class="page-header-text">Manage and organize brand records.</p>
           </div>
 
-          @can('create brand maintenance')
-            <div class="col-sm-auto mt-2 mt-sm-0">
-              <button class="btn btn-primary w-100 w-sm-auto" id="btnAddBrandModal" data-bs-toggle="modal" data-bs-target="#modalAddBrand">
-                <i class="bi-plus-lg me-1"></i> Add Brand
-              </button>
-            </div>
-          @endcan
+          <div class="col-sm-auto mt-2 mt-sm-0">
+            <button class="btn btn-primary w-100 w-sm-auto" id="btnAddBrandModal" data-bs-toggle="modal" data-bs-target="#modalAddBrand">
+              <i class="bi-plus-lg me-1"></i> Add Brand
+            </button>
+          </div>
         </div>
       </div>
       <!-- End Brands Header -->

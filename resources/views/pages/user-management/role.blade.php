@@ -24,13 +24,13 @@
             <p class="page-header-text">Manage and control user roles and permissions.</p>
           </div>
 
-          @can('create role management')
+          @access('Role Management', 'Read and Write, Full Access')
             <div class="col-sm-auto mt-2 mt-sm-0">
               <button class="btn btn-primary w-100 w-sm-auto" id="btnAddRoleModal" data-bs-toggle="modal" data-bs-target="#modalAddRole">
                 <i class="bi-plus-lg me-1"></i> Add Role
               </button>
             </div>
-          @endcan
+          @endaccess
         </div>
       </div>
       <!-- End Roles Header -->
@@ -54,7 +54,7 @@
                     <span class="d-none" data-role-id="{{ Crypt::encryptString($role->id) }}"></span>
                     <h3 class="mb-1"><a class="text-dark btnViewRole">{{ $role->name }}</a></h3>
                   </div>
-                  @canAny('update role management, delete role management')
+                  @access('Role Management', 'Read and Write, Full Access')
                     <div class="col-3 text-end">
                       <div class="dropdown">
                         <button class="btn btn-ghost-secondary btn-icon btn-sm rounded-circle" id="roleDropdown{{ $loop->iteration }}" data-bs-toggle="dropdown" type="button"><i
@@ -65,74 +65,35 @@
                           <button class="dropdown-item btnViewRole" type="button">
                             <i class="bi-eye-fill dropdown-item-icon"></i> View Record
                           </button>
-                          @can('update role management')
-                            <button class="dropdown-item btnEditRole" type="button">
-                              <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
-                            </button>
-                          @endcan
+                          <button class="dropdown-item btnEditRole" type="button">
+                            <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
+                          </button>
                           @if (Auth::user()->role_id !== $role->id)
-                            @can('update role management')
-                              <button class="dropdown-item btnSetRole" data-status="{{ $role->is_active ? 0 : 1 }}" type="button">
-                                <i class="bi {{ $role->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
-                                {{ $role->is_active ? 'Set to Inactive' : 'Set to Active' }}
-                              </button>
-                              @can('delete role management')
-                                <div class="dropdown-divider"></div>
-                              @endcan
-                            @endcan
+                            <button class="dropdown-item btnSetRole" data-status="{{ $role->is_active ? 0 : 1 }}" type="button">
+                              <i class="bi {{ $role->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
+                              {{ $role->is_active ? 'Set to Inactive' : 'Set to Active' }}
+                            </button>
 
-                            @can('delete role management')
+                            @access('Designation Maintenance', 'Full Access')
+                              <div class="dropdown-divider"></div>
                               <button class="dropdown-item text-danger btnDeleteRole" type="button">
                                 <i class="bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
                               </button>
-                            @endcan
+                            @endaccess
                           @endif
                         </div>
                       </div>
                     </div>
-                  @endcanAny
+                  @endaccess
                 </div>
-                <p>{{ $role->description }}</p>
-                @php
-                  $actionLabels = [
-                      'view' => 'View',
-                      'create' => 'Create',
-                      'update' => 'Edit',
-                      'delete' => 'Delete',
-                  ];
-
-                  $groupedPermissions = [];
-                  foreach ($role->permissions as $permission) {
-                      $parts = explode(' ', $permission->name, 2);
-                      $action = $parts[0];
-                      $baseName = $parts[1] ?? '';
-
-                      $displayAction = $actionLabels[$action] ?? ucfirst($action);
-                      $groupedPermissions[$baseName][] = $displayAction;
-                  }
-
-                  $groupedPermissions = array_slice($groupedPermissions, 0, 5, true);
-
-                  $remainingPermissionsCount =
-                      count(
-                          $role->permissions->groupBy(function ($perm) {
-                              return explode(' ', $perm->name, 2)[1] ?? '';
-                          }),
-                      ) - 5;
-                @endphp
-
+                <p class="text-dark">{{ $role->description }}</p>
                 <ul class="list-pointer list-pointer-primary">
-                  @foreach ($groupedPermissions as $baseName => $actions)
-                    @php
-                      $formattedBaseName = ucwords(strtolower($baseName));
-                      $uniqueActions = array_unique($actions);
-                      $actionsText = implode(', ', array_slice($uniqueActions, 0, -1)) . (count($uniqueActions) > 1 ? ', and ' : '') . end($uniqueActions);
-                    @endphp
-                    <li class="list-pointer-item">{{ $formattedBaseName }}: {{ $actionsText }}</li>
+                  @foreach ($role->rolePermissions->take(5) as $rolePermission)
+                    <li class="text-dark list-pointer-item">{{ $rolePermission->permission->name . ': ' . $rolePermission->access->name }}</li>
                   @endforeach
 
-                  @if ($remainingPermissionsCount > 0)
-                    <li class="list-pointer-item">and {{ $remainingPermissionsCount }} more...</li>
+                  @if ($role->rolePermissions->count() > 5)
+                    <li class="text-dark list-pointer-item">and {{ $role->rolePermissions->count() - 5 }} more permissions...</li>
                   @endif
                 </ul>
               </div>
@@ -204,9 +165,9 @@
 @endsection
 
 @section('sec-content')
-  <x-user-management.add-role :permissions="$permissions" />
+  <x-user-management.add-role :permissions="$permissions" :accesses="$accesses" :dashboards="$dashboards" />
   <x-user-management.view-role />
-  <x-user-management.edit-role :permissions="$permissions" />
+  <x-user-management.edit-role :permissions="$permissions" :accesses="$accesses" :dashboards="$dashboards" />
 @endsection
 
 @push('scripts')
@@ -242,6 +203,11 @@
         // INITIALIZATION OF COUNT CHARACTERS
         // =======================================================
         new HSCountCharacters('.js-count-characters')
+
+
+        // INITIALIZATION OF SELECT
+        // =======================================================
+        HSCore.components.HSTomSelect.init(".js-select");
       }
     })()
   </script>

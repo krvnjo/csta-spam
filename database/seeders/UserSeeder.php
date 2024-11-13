@@ -17,7 +17,6 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $accesses = [
-            'No Access' => 'Restricted from viewing or interacting with content.',
             'View Only' => 'View content only, no changes allowed.',
             'Read and Write' => 'Can view, add, and edit content as needed.',
             'Full Access' => 'Has full control over all features, including deletion.',

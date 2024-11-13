@@ -24,13 +24,6 @@ $(document).ready(function () {
           showResponseAlert(response, 'success', roleAddModal, roleAddForm);
         } else {
           handleValidationErrors(response, 'Add');
-
-          if (response.errors.can_view) {
-            const valPerm = $('#valAddPermission');
-            valPerm.text(response.errors.can_view[0]);
-            valPerm.show();
-          }
-
           toggleButtonState(roleAddSaveBtn, false);
         }
       },
@@ -56,6 +49,7 @@ $(document).ready(function () {
           textFields: [
             { key: 'role', selector: '#lblViewRole' },
             { key: 'description', selector: '#lblViewDescription' },
+            { key: 'dashboard', selector: '#lblViewDashboard' },
             { key: 'created_by', selector: '#lblViewCreatedBy' },
             { key: 'updated_by', selector: '#lblViewUpdatedBy' },
             { key: 'created_at', selector: '#lblViewCreatedAt' },
@@ -99,25 +93,29 @@ $(document).ready(function () {
       success: function (response) {
         roleEditModal.modal('toggle');
 
-        $('#txtEditRoleId').val(response.id);
-        $('#txtEditRole').val(response.role);
-        $('#txtEditDescription').val(response.description);
+        if (response.auth) {
+          $('#editRoleContainer').hide();
+        } else {
+          $('#editRoleContainer').show();
+        }
+
+        populateEditForm(response);
         $('#countCharactersRoleDesc').text(response.description.length + ' / 80');
 
-        $('.form-check-input').prop('checked', false);
-        response.permissions.forEach(function (permission) {
-          let permissionIndex = permission.id;
-          if (permission.can_view) {
-            $('#cbxEditViewRole' + permissionIndex).prop('checked', true);
+        $('.selEditPermission').each(function () {
+          let tomSelectInstance = $(this)[0].tomselect;
+          if (tomSelectInstance) {
+            tomSelectInstance.clear();
           }
-          if (permission.can_create) {
-            $('#cbxEditCreateRole' + permissionIndex).prop('checked', true);
-          }
-          if (permission.can_edit) {
-            $('#cbxEditEditRole' + permissionIndex).prop('checked', true);
-          }
-          if (permission.can_delete) {
-            $('#cbxEditDeleteRole' + permissionIndex).prop('checked', true);
+        });
+
+        let permissions = response.permissions;
+        permissions.forEach(function (permission, index) {
+          let selectId = '#selEditPermission' + (index + 1);
+
+          let tomSelectInstance = $(selectId)[0].tomselect;
+          if (tomSelectInstance) {
+            tomSelectInstance.setValue(permission.access_id);
           }
         });
       },
@@ -152,21 +150,8 @@ $(document).ready(function () {
           toggleButtonState(roleEditSaveBtn, false);
           showResponseAlert(response, 'success', roleEditModal, roleEditForm);
         } else {
-          if (response.errors.role) {
-            $('#txtEditRole').addClass('is-invalid');
-            $('#valEditRole').text(response.errors.role[0]);
-          }
-
-          if (response.errors.description) {
-            $('#txtEditDescription').addClass('is-invalid');
-            $('#valEditDescription').text(response.errors.description[0]);
-          }
-
-          if (response.errors.can_view) {
-            const valPerm = $('#valEditPermission');
-            valPerm.text(response.errors.can_view[0]);
-            valPerm.show();
-          }
+          handleValidationErrors(response, 'Edit');
+          toggleButtonState(roleEditSaveBtn, false);
         }
       },
       error: function (response) {
@@ -254,30 +239,4 @@ $(document).ready(function () {
     });
   });
   // ============ End Delete a Role ============ //
-
-  $('.cbx-action').on('change', function () {
-    const row = $(this).closest('tr');
-    const viewCheckbox = row.find('.cbx-view');
-
-    if ($(this).is(':checked')) {
-      viewCheckbox.prop('checked', true);
-    } else {
-      const allUnchecked = row.find('.cbx-action:checked').length === 0;
-      if (allUnchecked) {
-        viewCheckbox.prop('checked', false);
-      }
-    }
-    $('#valAddPermission').html('');
-  });
-
-  $('.cbx-view').on('change', function () {
-    const row = $(this).closest('tr');
-    const actionCheckboxes = row.find('.cbx-action');
-
-    if (!$(this).is(':checked')) {
-      actionCheckboxes.prop('checked', false);
-    }
-
-    $('#valAddPermission').html('');
-  });
 });

@@ -3,17 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RoleRequest;
+use App\Models\Access;
 use App\Models\Audit;
+use App\Models\Dashboard;
 use App\Models\Permission;
 use App\Models\Role;
+use App\Observers\RoleObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Throwable;
 
+#[ObservedBy([RoleObserver::class])]
 class RoleController extends Controller
 {
     /**
@@ -21,15 +26,17 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::with('permissions')->where('id', '!=', 1)->orderBy('name')->get();
-        $permissions = Cache::remember('permissions_all', now()->addMinutes(10), function () {
-            return Permission::get();
-        });
+        $roles = Role::with(['rolePermissions.permission', 'rolePermissions.access'])->where('id', '!=', 1)->orderBy('name')->get();
+        $permissions = Permission::with('roles')->get();
+        $accesses = Access::with('roles')->get();
+        $dashboards = Dashboard::with('roles')->get();
 
         return view('pages.user-management.role',
             compact(
                 'roles',
-                'permissions'
+                'permissions',
+                'accesses',
+                'dashboards'
             )
         );
     }
@@ -45,13 +52,11 @@ class RoleController extends Controller
             'role.min' => 'The role name must be at least :min characters.',
             'role.max' => 'The role name may not be greater than :max characters.',
             'role.unique' => 'This role name already exists.',
-
             'description.required' => 'Please enter a description!',
             'description.regex' => 'It must not contain consecutive spaces and symbols.',
             'description.min' => 'The description code must be at least :min characters.',
             'description.unique' => 'This description already exists.',
-
-            'can_view.required' => 'Please select at least one permission!',
+            'dashboard.required' => 'Please select a main dashboard!',
         ];
 
         try {
@@ -69,8 +74,8 @@ class RoleController extends Controller
                     'min:10',
                     'unique:roles,description'
                 ],
-                'can_view' => [
-                    'required:*',
+                'dashboard' => [
+                    'required',
                 ],
             ], $roleValidationMessages);
 
@@ -79,18 +84,43 @@ class RoleController extends Controller
                     'success' => false,
                     'errors' => $roleValidator->errors(),
                 ]);
-            } else {
-                Role::query()->create([
-                    'name' => ucwords(trim($request->input('role'))),
-                    'description' => ucfirst(rtrim($request->input('description'))) . (str_ends_with(rtrim($request->input('description')), '.') ? '' : '.'),
-                    'is_active' => 1,
-                ]);
+            }
+
+            $permissionsFilled = false;
+            $permissionsData = [];
+            foreach ($request->all() as $key => $value) {
+                if (str_starts_with($key, 'permission') && !empty($value)) {
+                    $permId = (int)filter_var($key, FILTER_SANITIZE_NUMBER_INT);
+                    $accessId = (int)$value;
+
+                    $permissionsData[] = [
+                        'perm_id' => $permId,
+                        'access_id' => $accessId,
+                    ];
+
+                    $permissionsFilled = true;
+                }
+            }
+
+            if (!$permissionsFilled) {
                 return response()->json([
-                    'success' => true,
-                    'title' => 'Saved Successfully!',
-                    'text' => 'The role has been added successfully!',
+                    'success' => false,
+                    'errors' => ['permission' => ['Please select at least 1 permission to add']],
                 ]);
             }
+            $role = Role::create([
+                'name' => ucwords(trim($request->input('role'))),
+                'description' => ucfirst(rtrim($request->input('description'))) . (str_ends_with(rtrim($request->input('description')), '.') ? '' : '.'),
+                'dash_id' => $request->input('dashboard'),
+            ]);
+
+            $role->permissions()->sync($permissionsData);
+
+            return response()->json([
+                'success' => true,
+                'title' => 'Saved Successfully!',
+                'text' => 'The role has been added successfully!',
+            ]);
         } catch (Throwable) {
             return response()->json([
                 'success' => false,
@@ -108,19 +138,22 @@ class RoleController extends Controller
         try {
             $validated = $request->validated();
 
-            $role = Role::with('permissions')->findOrFail($validated['id']);
-            $permissions = $role->permissions->pluck('name')->toArray();
+            $role = Role::with('rolePermissions.permission', 'rolePermissions.access')->findOrFail($validated['id']);
+            $permissions = $role->rolePermissions->map(function ($rolePermission) {
+                return $rolePermission->permission->name . ': ' . $rolePermission->access->name;
+            });
 
-            $createdBy = Audit::where('subject_type', Role::class)->where('subject_id', $role->id)->where('event', 'created')->first();
+            $createdBy = Audit::where('subject_type', Role::class)->where('subject_id', $role->id)->where('event_id', 1)->first();
             $createdDetails = $this->getUserAuditDetails($createdBy);
 
-            $updatedBy = Audit::where('subject_type', Role::class)->where('subject_id', $role->id)->where('event', 'updated')->latest()->first() ?? $createdBy;
+            $updatedBy = Audit::where('subject_type', Role::class)->where('subject_id', $role->id)->where('event_id', 2)->latest()->first() ?? $createdBy;
             $updatedDetails = $this->getUserAuditDetails($updatedBy);
 
             return response()->json([
                 'success' => true,
                 'role' => $role->name,
                 'description' => $role->description,
+                'dashboard' => $role->dashboard->name,
                 'permissions' => $permissions,
                 'status' => $role->is_active,
                 'created_img' => $createdDetails['image'],
@@ -145,30 +178,23 @@ class RoleController extends Controller
     public function edit(Request $request)
     {
         try {
-            $role = Role::query()->findOrFail(Crypt::decryptString($request->input('id')));
+            $role = Role::with('rolePermissions.access')->findOrFail(Crypt::decryptString($request->input('id')));
 
-            $permissions = DB::table('role_permissions')
-                ->join('permissions', 'role_permissions.perm_id', '=', 'permissions.id')
-                ->where('role_permissions.role_id', $role->id)
-                ->select('permissions.id', 'permissions.name', 'role_permissions.can_view', 'role_permissions.can_create', 'role_has_permissions.can_edit', 'role_has_permissions.can_delete')
-                ->get()
-                ->map(function ($permission) {
-                    return [
-                        'id' => $permission->id,
-                        'name' => $permission->name,
-                        'can_view' => $permission->can_view,
-                        'can_create' => $permission->can_create,
-                        'can_edit' => $permission->can_edit,
-                        'can_delete' => $permission->can_delete,
-                    ];
-                });
+            $permissionsWithAccess = $role->rolePermissions->map(function ($rolePermission) {
+                return [
+                    'permission_id' => $rolePermission->perm_id,
+                    'access_id' => $rolePermission->access_id,
+                ];
+            });
 
             return response()->json([
                 'success' => true,
                 'id' => $request->input('id'),
                 'role' => $role->name,
                 'description' => $role->description,
-                'permissions' => $permissions,
+                'dashboard' => $role->dash_id,
+                'permissions' => $permissionsWithAccess,
+                'auth' => Auth::user()->role_id === $role->id,
             ]);
         } catch (Throwable) {
             return response()->json([
@@ -185,40 +211,38 @@ class RoleController extends Controller
     public function update(Request $request)
     {
         try {
-            $role = Role::query()->findOrFail(Crypt::decryptString($request->input('id')));
+            $role = Role::findOrFail(Crypt::decryptString($request->input('id')));
 
-            if ($request->has(['id', 'role', 'description'])) {
-                $roleValidationMessages = [
-                    'role.required' => 'Please enter a role name!',
-                    'role.regex' => 'It must not contain special symbols and multiple spaces.',
-                    'role.min' => 'The role name must be at least :min characters.',
-                    'role.max' => 'The role name may not be greater than :max characters.',
-                    'role.unique' => 'This role name already exists.',
+            $roleValidationMessages = [
+                'role.required' => 'Please enter a role name!',
+                'role.regex' => 'It must not contain special symbols and multiple spaces.',
+                'role.min' => 'The role name must be at least :min characters.',
+                'role.max' => 'The role name may not be greater than :max characters.',
+                'role.unique' => 'This role name already exists.',
+                'description.required' => 'Please enter a description!',
+                'description.regex' => 'It must not contain consecutive spaces and symbols.',
+                'description.min' => 'The description code must be at least :min characters.',
+                'description.unique' => 'This description already exists.',
+                'dashboard.required' => 'Please select a main dashboard!',
+            ];
 
-                    'description.required' => 'Please enter a description!',
-                    'description.regex' => 'It must not contain consecutive spaces and symbols.',
-                    'description.min' => 'The description code must be at least :min characters.',
-                    'description.unique' => 'This description already exists.',
-
-                    'can_view.required' => 'Please select at least one permission!',
-                ];
-
+            if (!$request->has('status')) {
                 $roleValidator = Validator::make($request->all(), [
                     'role' => [
                         'required',
                         'regex:/^(?!.*([ -])\1)[a-zA-Z0-9]+(?:[ -][a-zA-Z0-9]+)*$/',
                         'min:3',
                         'max:75',
-                        Rule::unique('roles', 'name')->ignore($role->id)
+                        Rule::unique('roles', 'name')->ignore($role->id),
                     ],
                     'description' => [
                         'required',
                         'regex:/^(?!.*[ -]{2,}).*$/',
                         'min:10',
-                        Rule::unique('roles', 'description')->ignore($role->id)
+                        Rule::unique('roles', 'description')->ignore($role->id),
                     ],
-                    'can_view' => [
-                        'required:*',
+                    'dashboard' => [
+                        'required',
                     ],
                 ], $roleValidationMessages);
 
@@ -227,44 +251,44 @@ class RoleController extends Controller
                         'success' => false,
                         'errors' => $roleValidator->errors(),
                     ]);
-                } else {
-                    $role->name = ucwords(trim($request->input('role')));
-                    $role->description = ucfirst(rtrim($request->input('description'))) . (str_ends_with(rtrim($request->input('description')), '.') ? '' : '.');
+                }
 
-                    $permissions = Permission::all()->keyBy('id');
+                $permissionsFilled = false;
+                $permissionsData = [];
+                foreach ($request->all() as $key => $value) {
+                    if (str_starts_with($key, 'permission') && !empty($value)) {
+                        $permId = (int)filter_var($key, FILTER_SANITIZE_NUMBER_INT);
+                        $accessId = (int)$value;
 
-                    foreach ($permissions as $permission) {
-                        $canView = isset($request->can_view[$permission->id]) ? 1 : 0;
-                        $canCreate = isset($request->can_create[$permission->id]) ? 1 : 0;
-                        $canEdit = isset($request->can_edit[$permission->id]) ? 1 : 0;
-                        $canDelete = isset($request->can_delete[$permission->id]) ? 1 : 0;
+                        $permissionsData[] = [
+                            'perm_id' => $permId,
+                            'access_id' => $accessId,
+                        ];
 
-                        if ($canView || $canCreate || $canEdit || $canDelete) {
-                            DB::table('role_has_permissions')->updateOrInsert(
-                                [
-                                    'role_id' => $role->id,
-                                    'permission_id' => $permission->id,
-                                ],
-                                [
-                                    'can_view' => $canView,
-                                    'can_create' => $canCreate,
-                                    'can_edit' => $canEdit,
-                                    'can_delete' => $canDelete,
-                                ]
-                            );
-                        } else {
-                            DB::table('role_has_permissions')->where([
-                                'role_id' => $role->id,
-                                'permission_id' => $permission->id,
-                            ])->delete();
-                        }
+                        $permissionsFilled = true;
                     }
                 }
-            } elseif ($request->has('status')) {
+
+                if (!$permissionsFilled) {
+                    return response()->json([
+                        'success' => false,
+                        'errors' => ['permission' => ['Please select at least one permission to add']],
+                    ]);
+                }
+
+                $role->name = ucwords(trim($request->input('role')));
+                $role->description = ucfirst(rtrim($request->input('description'))) . (str_ends_with(rtrim($request->input('description')), '.') ? '' : '.');
+                $role->dash_id = $request->input('dashboard');
+
+                $role->permissions()->detach();
+                $role->permissions()->sync($permissionsData);
+            } else {
                 $role->is_active = $request->input('status');
             }
-            $role->updated_at = now();
             $role->save();
+
+            $cacheKey = "role_permissions.{$role->id}";
+            Cache::forget($cacheKey);
 
             return response()->json([
                 'success' => true,
@@ -286,7 +310,7 @@ class RoleController extends Controller
     public function destroy(Request $request)
     {
         try {
-            $role = Role::query()->findOrFail(Crypt::decryptString($request->input('id')));
+            $role = Role::findOrFail(Crypt::decryptString($request->input('id')));
 
             if ($role->users->count() > 0) {
                 return response()->json([
@@ -296,17 +320,15 @@ class RoleController extends Controller
                 ], 400);
             }
 
-            $role->is_active = 0;
-            $role->save();
-            $role->delete();
+            $role->forceDelete();
 
             return response()->json([
                 'success' => true,
                 'title' => 'Deleted Successfully!',
-                'text' => 'The role has been deleted and can be restored from the bin.',
+                'text' => 'The role has been deleted permanently.',
             ]);
 
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
