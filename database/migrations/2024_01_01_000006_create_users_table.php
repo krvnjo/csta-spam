@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Access;
 use App\Models\Dashboard;
 use App\Models\Department;
 use App\Models\Permission;
@@ -14,6 +15,14 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        Schema::create('accesses', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 50)->unique();
+            $table->string('description', 100)->unique();
+            $table->unsignedTinyInteger('is_active')->default(1);
+            $table->timestamps();
+        });
+
         Schema::create('permissions', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50)->unique();
@@ -29,6 +38,13 @@ return new class extends Migration {
             $table->foreignIdFor(Dashboard::class, 'dash_id')->constrained('dashboards')->cascadeOnDelete();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
+        });
+
+        Schema::create('role_permissions', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(Role::class, 'role_id')->constrained('roles')->cascadeOnDelete();
+            $table->foreignIdFor(Permission::class, 'perm_id')->constrained('permissions')->cascadeOnDelete();
+            $table->foreignIdFor(Access::class, 'access_id')->constrained('accesses')->cascadeOnDelete();
         });
 
         Schema::create('users', function (Blueprint $table) {
@@ -47,12 +63,6 @@ return new class extends Migration {
             $table->string('user_image', 25)->default('default.jpg');
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
-        });
-
-        Schema::create('role_permissions', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(Role::class, 'role_id')->constrained('roles')->cascadeOnDelete();
-            $table->foreignIdFor(Permission::class, 'perm_id')->constrained('permissions')->cascadeOnDelete();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
@@ -78,9 +88,10 @@ return new class extends Migration {
     {
         Schema::dropIfExists('sessions');
         Schema::dropIfExists('password_reset_tokens');
-        Schema::dropIfExists('role_permissions');
         Schema::dropIfExists('users');
+        Schema::dropIfExists('role_permissions');
         Schema::dropIfExists('roles');
         Schema::dropIfExists('permissions');
+        Schema::dropIfExists('accesses');
     }
 };

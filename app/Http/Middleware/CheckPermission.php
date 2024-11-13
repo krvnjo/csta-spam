@@ -2,10 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\RolePermission;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 
 class CheckPermission
 {
@@ -21,11 +21,12 @@ class CheckPermission
     {
         $user = Auth::user();
 
-        $permissions = Cache::remember("role_permissions_$user->role_id", 3600, function () use ($user) {
-            return $user->role->permissions->pluck('name')->toArray();
-        });
+        $rolePermission = RolePermission::where('role_id', $user->role_id)
+            ->whereHas('permission', function ($query) use ($permission) {
+                $query->where('name', $permission);
+            })->first();
 
-        if (!in_array($permission, $permissions)) {
+        if (!$rolePermission) {
             abort(403);
         }
 

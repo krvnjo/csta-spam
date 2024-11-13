@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Access;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\RolePermission;
@@ -15,44 +16,48 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        $accesses = [
+            'No Access' => 'Restricted from viewing or interacting with content.',
+            'View Only' => 'View content only, no changes allowed.',
+            'Read and Write' => 'Can view, add, and edit content as needed.',
+            'Full Access' => 'Has full control over all features, including deletion.',
+        ];
+
+        foreach ($accesses as $access => $description) {
+            Access::create([
+                'name' => $access,
+                'description' => $description,
+            ]);
+        }
+
         $groups = [
             'Property & Asset Management' => [
-                'item management',
+                'Item Inventory Management',
+                'Borrowing & Reservation',
+                'Item Maintenance',
             ],
             'User Management' => [
-                'user management',
-                'role management',
+                'User Management',
+                'Role Management',
             ],
             'File Maintenance' => [
-                'brand maintenance',
-                'category maintenance',
-                'department maintenance',
-                'designation maintenance',
+                'Brand Maintenance',
+                'Category Maintenance',
+                'Department Maintenance',
+                'Designation Maintenance',
             ],
             'Administrative Permissions' => [
-                'audit history',
-                'system settings',
+                'Audit History',
+                'System Settings',
             ],
         ];
 
-        $actions = ['view', 'create', 'update', 'delete'];
-
-        foreach ($groups as $group => $basePermissions) {
-            foreach ($basePermissions as $base) {
-                foreach ($actions as $action) {
-                    if ($group === 'Administrative Permissions' && !in_array($action, ['view', 'update'])) {
-                        continue;
-                    }
-
-                    if ($group === 'audit history' && $action !== 'view') {
-                        continue;
-                    }
-
-                    Permission::create([
-                        'name' => "$action $base",
-                        'group' => $group,
-                    ]);
-                }
+        foreach ($groups as $group => $permissions) {
+            foreach ($permissions as $permission) {
+                Permission::create([
+                    'name' => $permission,
+                    'group' => $group,
+                ]);
             }
         }
 
@@ -83,35 +88,38 @@ class UserSeeder extends Seeder
             ]);
         }
 
-        $roles = Role::all();
-        $permissions = Permission::all();
-
-        $rolePermissionMap = [
-            'Super Admin' => $permissions,
-            'Administrator' => $permissions,
-            'Property Custodian' => $permissions->filter(function ($permission) {
-                return !str_contains($permission->name, 'delete') &&
-                    !str_contains($permission->name, 'user management') &&
-                    !str_contains($permission->name, 'role management');
-            }),
-            'Student Assistant' => $permissions->filter(function ($permission) {
-                return (str_contains($permission->name, 'item management') ||
-                        str_contains($permission->name, 'maintenance')) &&
-                    (str_contains($permission->name, 'view') ||
-                        str_contains($permission->name, 'create') ||
-                        str_contains($permission->name, 'update'));
-            }),
+        $rolesWithPermissions = [
+            'Super Admin' => [
+                'permissions' => Permission::all()->pluck('name')->toArray(),
+                'access' => 'Full Access',
+            ],
+            'Administrator' => [
+                'permissions' => Permission::all()->pluck('name')->toArray(),
+                'access' => 'Full Access',
+            ],
+            'Property Custodian' => [
+                'permissions' => Permission::whereNotIn('name', ['User Management', 'Role Management', 'System Settings'])->pluck('name')->toArray(),
+                'access' => 'Full Access',
+            ],
+            'Student Assistant' => [
+                'permissions' => ['Item Inventory Management', 'Brand Maintenance', 'Category Maintenance', 'Department Maintenance', 'Designation Maintenance'],
+                'access' => 'Read and Write',
+            ],
         ];
 
-        foreach ($roles as $role) {
-            $roleName = $role->name;
-            if (isset($rolePermissionMap[$roleName])) {
-                foreach ($rolePermissionMap[$roleName] as $permission) {
-                    RolePermission::insert([
-                        'role_id' => $role->id,
-                        'perm_id' => $permission->id,
-                    ]);
-                }
+        $accessLevels = Access::all()->keyBy('name');
+
+        foreach ($rolesWithPermissions as $roleName => $data) {
+            $role = Role::where('name', $roleName)->first();
+            $accessLevel = $accessLevels[$data['access']];
+
+            foreach ($data['permissions'] as $permissionName) {
+                $permission = Permission::where('name', $permissionName)->first();
+                RolePermission::insert([
+                    'role_id' => $role->id,
+                    'perm_id' => $permission->id,
+                    'access_id' => $accessLevel->id,
+                ]);
             }
         }
 
