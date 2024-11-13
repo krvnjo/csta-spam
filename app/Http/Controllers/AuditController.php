@@ -61,8 +61,7 @@ class AuditController extends Controller
                 'created_by' => $createdDetails['name'],
                 'created_at' => $audit->created_at->format('D, M d, Y | h:i A'),
             ]);
-        } catch (Throwable $e) {
-            \Log::error($e);
+        } catch (Throwable) {
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
