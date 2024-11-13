@@ -251,7 +251,7 @@
           <table class="table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table table table-hover w-100" id="propertyChildDatatable"
             data-hs-datatables-options='{
                    "columnDefs": [{
-                      "targets": [0, 10],
+                      "targets": [0, 8],
                       "orderable": false
                     }],
                    "order": [],
@@ -279,8 +279,6 @@
                 @endif
                 <th class="d-none w-auto">Child Id</th>
                 <th class="table-column-ps-0">Item Number</th>
-                <th>Serial #</th>
-                <th>Acquired Type</th>
                 <th>Designation</th>
                 <th>Department</th>
                 <th>Condition</th>
@@ -292,7 +290,7 @@
             </thead>
 
             <tbody>
-              @foreach ($propertyChildren->where('inventory_date', null)->sortByDesc('updated_at') as $propertyChild)
+              @foreach ($propertyChildren->sortByDesc('updated_at') as $propertyChild)
                 <tr>
                   @if($propertyParents->is_consumable)
                     <td class="table-column-pe-0"></td>
@@ -315,12 +313,10 @@
                       {{ $propertyChild->prop_code }}
                     @endif
                   </td>
-                  <td>{{ $propertyChild->serial_num ?? '-' }}</td>
-                  <td>{{ $propertyChild->acquisition->name }}</td>
                   <td>{{ $propertyChild->designation->name }}</td>
                   <td>{{ $propertyChild->department->code }}</td>
-                  <td><span class="{{ $propertyChild->condition->color->class ?? ''}}"></span>{{ $propertyChild->condition->name ?? '' }}</td>
-                  <td><span class="{{ $propertyChild->status->color->class ?? ''}} fs-6">{{ $propertyChild->status->name ?? '' }}</span></td>
+                  <td><span class="{{ $propertyChild->condition->color->description ?? ''}}"></span>{{ $propertyChild->condition->name ?? '' }}</td>
+                  <td><span class="{{ $propertyChild->status->color->description ?? ''}} fs-6">{{ $propertyChild->status->name ?? '' }}</span></td>
                   <td data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom"
                     title="Date Acquired: {{ \Carbon\Carbon::parse($propertyChild->acq_date)->format('F j, Y') }}, Warranty Date: {{ $propertyChild->warranty_date ? \Carbon\Carbon::parse($propertyChild->warranty_date)->format('F j, Y') : '-' }}">
                     <i class="bi-calendar-event me-1"></i>
