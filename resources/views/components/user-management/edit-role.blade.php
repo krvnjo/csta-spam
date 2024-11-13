@@ -17,7 +17,7 @@
           <input id="txtEditId" name="id" type="hidden">
 
           <!-- Role Name -->
-          <div class="form-group">
+          <div class="form-group mb-2">
             <label class="col col-form-label form-label" for="txtEditRole">Role Name</label>
             <input class="form-control" id="txtEditRole" name="role" type="text" placeholder="Enter a role name">
             <span class="invalid-feedback" id="valEditRole"></span>
@@ -25,91 +25,100 @@
           <!-- End Role Name -->
 
           <!-- Role Description -->
-          <div class="form-group mb-4">
+          <div class="form-group mb-2">
             <div class="d-flex justify-content-between">
               <label class="col col-form-label form-label" for="txtEditDescription">Description</label>
-              <span class="col-form-label text-muted" id="maxLengthCountCharacters"></span>
+              <span class="col-form-label text-muted" id="countCharactersRoleDesc"></span>
             </div>
             <textarea class="js-count-characters form-control" id="txtEditDescription" name="description" data-hs-count-characters-options='{
-                "output": "#maxLengthCountCharacters"
+                "output": "#countCharactersRoleDesc"
               }'
               style="resize: none;" placeholder="Enter role description" rows="2" maxlength="80"></textarea>
             <span class="invalid-feedback" id="valEditDescription"></span>
           </div>
           <!-- End Role Description -->
 
-          <!-- Table -->
-          <div class="table-responsive datatable-custom">
-            <table class="table table-thead-bordered table-nowrap table-align-middle table-first-col-px-0">
-              <thead class="thead-light">
-                <tr>
-                  <th>Permissions</th>
-                  <th class="text-center pe-5">
-                    <h3 class="mb-1"><i class="bi-eye"></i></h3>View
-                  </th>
-                  <th class="text-center pe-5">
-                    <h3 class="mb-1"><i class="bi-plus-square"></i></h3>Create
-                  </th>
-                  <th class="text-center pe-5">
-                    <h3 class="mb-1"><i class="bi-pencil"></i></h3>Edit
-                  </th>
-                  <th class="text-center pe-5">
-                    <h3 class="mb-1"><i class="bi-trash"></i></h3>Delete
-                  </th>
-                </tr>
-              </thead>
+          <div id="editRoleContainer">
+            <!-- Main Dashboard -->
+            <div class="form-group mb-4">
+              <label class="col col-form-label form-label" for="selEditDashboard">Main Dashboard</label>
+              <div class="tom-select-custom">
+                <select class="js-select form-select" id="selEditDashboard" name="dashboard"
+                  data-hs-tom-select-options='{
+                    "hideSearch": "true",
+                    "placeholder": "Select a main dashboard"
+                  }'>
+                  <option value=""></option>
+                  @foreach ($dashboards as $dashboard)
+                    @if ($dashboard->is_active)
+                      <option
+                        data-option-template='<div class="d-flex align-items-start"><div class="flex-shrink-0"></div><div class="flex-grow-1"><span class="d-block fw-semibold">{{ $dashboard->name }}</span><span class="tom-select-custom-hide small">{{ $dashboard->description }}</span></div></div>'
+                        value="{{ $dashboard->id }}">{{ $dashboard->name }}</option>
+                    @endif
+                  @endforeach
+                </select>
+                <span class="invalid-feedback" id="valEditDashboard"></span>
+              </div>
+            </div>
+            <!-- End Main Dashboard -->
 
-              @php
-                $groupedPermissions = $permissions->groupBy('group_name');
-                $displayedBasePermissions = [];
-              @endphp
-
-              <tbody>
-                @foreach ($groupedPermissions as $groupName => $permissions)
+            <!-- Table -->
+            <div class="table-responsive datatable-custom">
+              <table class="table table-thead-bordered table-nowrap table-align-middle table-first-col-px-0">
+                <thead class="thead-light">
                   <tr>
-                    <th colspan="5">{{ ucwords($groupName) }}</th>
+                    <th style="width: 40%;">Permissions</th>
+                    <th class="text-center pe-5" style="width: 60%;">
+                      <h3 class="mb-1"><i class="bi-person-lock"></i></h3>Access Level
+                    </th>
                   </tr>
+                </thead>
+                @php
+                  $groupedPermissions = $permissions->groupBy('group');
+                  $displayedBasePermissions = [];
+                @endphp
+                <tbody>
+                  @php
+                    $counter = 1;
+                  @endphp
 
-                  @foreach ($permissions as $permission)
-                    @php
-                      $basePermission = preg_replace('/^(view|create|update|delete)\s+/', '', $permission->name);
-                    @endphp
-
-                    @if (!in_array($basePermission, $displayedBasePermissions))
+                  <div class="alert alert-soft-danger avatar-img-val d-none" id="valEditPermission"></div>
+                  @foreach ($groupedPermissions as $groupName => $permissions)
+                    <tr>
+                      <th colspan="5">{{ ucwords($groupName) }}</th>
+                    </tr>
+                    @foreach ($permissions as $permission)
                       <tr>
-                        <td>{{ ucwords($basePermission) }}</td>
-                        <td class="text-center">
-                          <div class="form-check form-check-inline">
-                            <input class="form-check-input" id="cbxViewRole{{ $loop->parent->index }}-{{ $loop->index }}" name="can_view[{{ $permission->id }}]" type="checkbox">
-                          </div>
-                        </td>
-                        <td class="text-center">
-                          <div class="form-check form-check-inline">
-                            <input class="form-check-input" id="cbxCreateRole{{ $loop->parent->index }}-{{ $loop->index }}" name="can_create[{{ $permission->id }}]" type="checkbox">
-                          </div>
-                        </td>
-                        <td class="text-center">
-                          <div class="form-check form-check-inline">
-                            <input class="form-check-input" id="cbxEditRole{{ $loop->parent->index }}-{{ $loop->index }}" name="can_edit[{{ $permission->id }}]" type="checkbox">
-                          </div>
-                        </td>
-                        <td class="text-center">
-                          <div class="form-check form-check-inline">
-                            <input class="form-check-input" id="cbxDeleteRole{{ $loop->parent->index }}-{{ $loop->index }}" name="can_delete[{{ $permission->id }}]" type="checkbox">
+                        <td>{{ $permission->name }}</td>
+                        <td>
+                          <div class="form-group">
+                            <div class="tom-select-custom">
+                              <select class="js-select form-select selEditPermission" id="selEditPermission{{ $counter }}" name="permission{{ $counter }}"
+                                data-hs-tom-select-options='{
+                                "hideSearch": "true",
+                                "placeholder": "No access to this permission"
+                              }'>
+                                <option value=""></option>
+                                @foreach ($accesses as $access)
+                                  <option
+                                    data-option-template='<div class="d-flex align-items-start"><div class="flex-shrink-0"></div><div class="flex-grow-1"><span class="d-block fw-semibold">{{ $access->name }}</span><span class="tom-select-custom-hide small">{{ $access->description }}</span></div></div>'
+                                    value="{{ $access->id }}">{{ $access->name }}</option>
+                                @endforeach
+                              </select>
+                            </div>
                           </div>
                         </td>
                       </tr>
                       @php
-                        $displayedBasePermissions[] = $basePermission;
+                        $counter++;
                       @endphp
-                    @endif
+                    @endforeach
                   @endforeach
-                @endforeach
-              </tbody>
-            </table>
-            <span class="invalid-feedback" id="valEditPermission"></span>
+                </tbody>
+              </table>
+            </div>
+            <!-- End Table -->
           </div>
-          <!-- End Table -->
         </form>
       </div>
       <!-- End Body -->

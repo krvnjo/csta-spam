@@ -288,6 +288,8 @@ function handleValidationErrors(response, mode = 'Add') {
       $(errorTextSelector).text(messages[0]);
     } else if (field === 'image' && $(errorTextSelector).length) {
       $(errorTextSelector).removeClass('d-none').text(messages[0]);
+    } else if (field === 'permission' && $(errorTextSelector).length) {
+      $(errorTextSelector).removeClass('d-none').text(messages[0]);
     }
   });
 

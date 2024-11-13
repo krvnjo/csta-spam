@@ -35,10 +35,8 @@ class AccessService
 
     protected function getPermissionsFromCache(string $cacheKey, int $roleId): array
     {
-        // Check if we already have the permissions cached in memory
         static $permissionsCache = [];
 
-        // If the permissions are not cached, fetch them from the database and cache them
         if (!isset($permissionsCache[$roleId])) {
             $permissionsCache[$roleId] = Cache::remember($cacheKey, self::CACHE_TTL, function () use ($roleId) {
                 return $this->getRolePermissions($roleId);

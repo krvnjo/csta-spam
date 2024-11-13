@@ -35,7 +35,7 @@ return new class extends Migration {
             $table->id();
             $table->string('name', 50)->unique();
             $table->string('description', 100)->unique();
-            $table->foreignIdFor(Dashboard::class, 'dash_id')->constrained('dashboards')->cascadeOnDelete();
+            $table->foreignIdFor(Dashboard::class, 'dash_id')->default(2)->constrained('dashboards')->cascadeOnDelete();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
         });
