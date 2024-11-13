@@ -45,18 +45,21 @@
                   <span class="badge bg-primary">{{ $propertyParents->brand->name ?? '' }}</span>
                   <span class="badge bg-secondary">{{ $propertyParents->category->name ?? '' }}</span>
                 </h4>
-                <p>{{ $propertyParents->specification }}</p>
+                <p>Specifications: {{ $propertyParents->specification }}</p>
               </div>
             </div>
             <p class="page-header-text">Manage and organize stock item records.</p>
-
           </div>
           <!-- End Col -->
 
           <div class="col-sm-auto">
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPropertyChild" type="button">
-              <i class="bi bi-plus-lg me-1"></i> Add Variant
-            </button>
+            @if($propertyParents->is_consumable)
+
+            @else
+              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPropertyChild" type="button">
+                <i class="bi bi-plus-lg me-1"></i> Add Variant
+              </button>
+            @endif
           </div>
           <!-- End Col -->
         </div>
@@ -74,7 +77,13 @@
 
               <div class="row align-items-center gx-2">
                 <div class="col">
-                  <span class="js-counter display-4 text-dark">{{ $propertyQuantity }}</span>
+                  <span class="js-counter display-4 text-dark">
+                    @if($propertyParents->is_consumable)
+                      {{ $propertyParents->quantity }}
+                    @else
+                      {{ $propertyQuantity }}
+                    @endif
+                  </span>
                   {{--                <span class="text-body fs-5 ms-1">from 22</span> --}}
                 </div>
                 <!-- End Col -->
@@ -93,7 +102,13 @@
 
               <div class="row align-items-center gx-2">
                 <div class="col">
-                  <span class="js-counter display-4 text-dark">{{ $propertyActiveStock }}</span>
+                  <span class="js-counter display-4 text-dark">
+                    @if($propertyParents->is_consumable)
+                      {{ $propertyParents->quantity }}
+                    @else
+                      {{ $propertyActiveStock }}
+                    @endif
+                  </span>
                   {{--                <span class="text-body fs-5 ms-1">from 11</span> --}}
                 </div>
               </div>
@@ -111,7 +126,15 @@
 
               <div class="row align-items-center gx-2">
                 <div class="col">
-                  <span class="js-counter display-4 text-dark">{{ $propertyInInventory }}</span>
+                  <span class="js-counter display-4 text-dark">
+                    @if($propertyParents->is_consumable)
+                      <span class="badge text-secondary p-1">
+                        Consumable Item
+                      </span>
+                    @else
+                      {{ $propertyInInventory }}
+                    @endif
+                  </span>
                   {{--                <span class="text-body fs-5 ms-1">from 48.7</span> --}}
                 </div>
               </div>
@@ -228,7 +251,7 @@
           <table class="table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table table table-hover w-100" id="propertyChildDatatable"
             data-hs-datatables-options='{
                    "columnDefs": [{
-                      "targets": [0, 10],
+                      "targets": [0, 8],
                       "orderable": false
                     }],
                    "order": [],
@@ -244,16 +267,18 @@
                  }'>
             <thead class="thead-light">
               <tr>
-                <th class="table-column-pe-0">
-                  <div class="form-check">
-                    <input class="form-check-input" id="propertyStockDatatableCheckAll" type="checkbox" value="">
-                    <label class="form-check-label" for="propertyStockDatatableCheckAll"></label>
-                  </div>
-                </th>
+                @if($propertyParents->is_consumable)
+                  <th class="table-column-pe-0"></th>
+                @else
+                  <th class="table-column-pe-0">
+                    <div class="form-check">
+                      <input class="form-check-input" id="propertyStockDatatableCheckAll" type="checkbox" value="">
+                      <label class="form-check-label" for="propertyStockDatatableCheckAll"></label>
+                    </div>
+                  </th>
+                @endif
                 <th class="d-none w-auto">Child Id</th>
-                <th class="table-column-ps-0">Item Code</th>
-                <th>Serial #</th>
-                <th>Acquired Type</th>
+                <th class="table-column-ps-0">Item Number</th>
                 <th>Designation</th>
                 <th>Department</th>
                 <th>Condition</th>
@@ -265,14 +290,18 @@
             </thead>
 
             <tbody>
-              @foreach ($propertyChildren->where('inventory_date', null)->sortByDesc('updated_at') as $propertyChild)
+              @foreach ($propertyChildren->sortByDesc('updated_at') as $propertyChild)
                 <tr>
-                  <td class="table-column-pe-0">
-                    <div class="form-check">
-                      <input class="form-check-input child-checkbox" id="propertyStockDatatableCheck{{ $propertyChild->id }}" type="checkbox" value="{{ $propertyChild->id }}">
-                      <label class="form-check-label" for="propertyStockDatatableCheck{{ $propertyChild->id }}"></label>
-                    </div>
-                  </td>
+                  @if($propertyParents->is_consumable)
+                    <td class="table-column-pe-0"></td>
+                  @else
+                    <td class="table-column-pe-0">
+                      <div class="form-check">
+                        <input class="form-check-input child-checkbox" id="propertyStockDatatableCheck{{ $propertyChild->id }}" type="checkbox" value="{{ $propertyChild->id }}">
+                        <label class="form-check-label" for="propertyStockDatatableCheck{{ $propertyChild->id }}"></label>
+                      </div>
+                    </td>
+                  @endif
                   <td class="d-none" data-child-id="{{ Crypt::encryptString($propertyChild->id) }}"></td>
                   <td>
                     @if ($propertyChild->created_at == $propertyChild->updated_at)
@@ -284,12 +313,10 @@
                       {{ $propertyChild->prop_code }}
                     @endif
                   </td>
-                  <td>{{ $propertyChild->serial_num ?? '-' }}</td>
-                  <td>{{ $propertyChild->acquisition->name }}</td>
                   <td>{{ $propertyChild->designation->name }}</td>
-                  <td>{{ $propertyChild->department->dept_code }}</td>
-                  <td><span class="{{ $propertyChild->condition->color->class ?? ''}}"></span>{{ $propertyChild->condition->name ?? '' }}</td>
-                  <td><span class="{{ $propertyChild->status->color->class ?? ''}} fs-6">{{ $propertyChild->status->name ?? '' }}</span></td>
+                  <td>{{ $propertyChild->department->code }}</td>
+                  <td><span class="{{ $propertyChild->condition->color->description ?? ''}}"></span>{{ $propertyChild->condition->name ?? '' }}</td>
+                  <td><span class="{{ $propertyChild->status->color->description ?? ''}} fs-6">{{ $propertyChild->status->name ?? '' }}</span></td>
                   <td data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom"
                     title="Date Acquired: {{ \Carbon\Carbon::parse($propertyChild->acq_date)->format('F j, Y') }}, Warranty Date: {{ $propertyChild->warranty_date ? \Carbon\Carbon::parse($propertyChild->warranty_date)->format('F j, Y') : '-' }}">
                     <i class="bi-calendar-event me-1"></i>

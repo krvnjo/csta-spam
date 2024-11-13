@@ -19,7 +19,6 @@ class PropertyInventoryController extends Controller
     {
         $propertyParents = PropertyParent::with(['brand'])
             ->where('is_active', 1)
-            ->where('deleted_at', null)
             ->whereHas('propertyChildren', function ($query) {
                 $query->whereNotNull('inventory_date');
             })

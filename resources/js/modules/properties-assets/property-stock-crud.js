@@ -141,15 +141,34 @@ $(document).ready(function () {
       method: 'GET',
       data: { id: propertyId },
       success: function (response) {
-        propertyEditModal.modal('toggle');
+        $('#editPropertyModal').modal('toggle');
         $('#txtEditPropertyId').val(response.id);
-        $('#txtEditPropertyName').val(response.name);
-        $('#cbxEditCategory')[0].tomselect.setValue(response.categ_id);
-        $('#cbxEditBrand')[0].tomselect.setValue(response.brand_id);
+        $('#txtEditProperty').val(response.name);
         $('#txtEditDescription').val(response.description);
-        $('#txtEditPurchasePrice').val(response.purchase_price);
-        $('#txtEditResidualValue').val(response.residual_value);
-        $('#txtEditUsefulLife').val(response.useful_life);
+        $('#txtEditSpecification').val(response.specification);
+        $('#txtEditPrice').val(response.purchase_price);
+        $('#selEditUnit')[0].tomselect.setValue(response.unit_id);
+        $('#txtEditQuantity').val(response.quantity).prop('disabled', true);
+
+        const itemType = response.item_type;
+
+        if (itemType === 'consumable') {
+          $('#selEditType').val('consumable').prop('disabled', true);
+          $('#nonConsumableFields').hide();
+
+          $('#txtEditResidual').val('');
+          $('#txtEditUseful').val('');
+          $('#selEditCategory')[0].tomselect.clear();
+          $('#selEditBrand')[0].tomselect.clear();
+        } else {
+          $('#selEditType').val('non-consumable').prop('disabled', true);
+          $('#nonConsumableFields').show();
+
+          $('#txtEditResidual').val(response.residual_value);
+          $('#txtEditUseful').val(response.useful_life);
+          $('#selEditCategory')[0].tomselect.setValue(response.categ_id);
+          $('#selEditBrand')[0].tomselect.setValue(response.brand_id);
+        }
       },
       error: function (response) {
         showResponseAlert(response, 'error');
@@ -157,24 +176,17 @@ $(document).ready(function () {
     });
   });
 
+
+
   propertyEditForm.on('submit', function (e) {
     e.preventDefault();
     toggleButtonState(propertyEditSaveBtn, true);
 
     const editFormData = new FormData(propertyEditForm[0]);
 
-    editFormData.append('_method', 'PATCH');
-    editFormData.append('id', $('#txtEditPropertyId').val());
-    editFormData.append('propertyName', $('#txtEditPropertyName').val());
-    editFormData.append('category', $('#cbxEditCategory').val());
-    editFormData.append('brand', $('#cbxEditBrand').val());
-    editFormData.append('description', $('#txtEditDescription').val());
-    editFormData.append('purchasePrice', $('#txtEditPurchasePrice').val());
-    editFormData.append('residualValue', $('#txtEditResidualValue').val());
-    editFormData.append('usefulLife', $('#txtEditUsefulLife').val());
-
-    if (propertyDropzoneEdit.files.length > 0) {
-      editFormData.append('image', propertyDropzoneEdit.files[0]);
+    // Log the form data to verify
+    for (let pair of editFormData.entries()) {
+      console.log(pair[0] + ': ' + pair[1]);
     }
 
     $.ajax({
@@ -188,34 +200,7 @@ $(document).ready(function () {
           showResponseAlert(response, 'success', propertyEditModal, propertyEditForm);
         } else {
           toggleButtonState(propertyEditSaveBtn, false);
-          if (response.errors.propertyName) {
-            $('#txtEditPropertyName').addClass('is-invalid');
-            $('#valEditPropertyName').text(response.errors.propertyName[0]);
-          }
-          if (response.errors.category) {
-            $('#cbxEditCategory').next('.ts-wrapper').addClass('is-invalid');
-            $('#valEditCategoryName').text(response.errors.category[0]);
-          }
-          if (response.errors.brand) {
-            $('#cbxEditBrand').next('.ts-wrapper').addClass('is-invalid');
-            $('#valEditBrandName').text(response.errors.brand[0]);
-          }
-          if (response.errors.description) {
-            $('#txtEditDescription').addClass('is-invalid');
-            $('#valEditDescription').text(response.errors.description[0]);
-          }
-          if (response.errors.purchasePrice) {
-            $('#txtEditPurchasePrice').addClass('is-invalid');
-            $('#valEditPurchasePrice').text(response.errors.purchasePrice[0]);
-          }
-          if (response.errors.residualValue) {
-            $('#txtEditResidualValue').addClass('is-invalid');
-            $('#valEditResidualValue').text(response.errors.residualValue[0]);
-          }
-          if (response.errors.usefulLife) {
-            $('#txtEditUsefulLife').addClass('is-invalid');
-            $('#valEditUsefulLife').text(response.errors.usefulLife[0]);
-          }
+          handleValidationErrors(response, 'Edit');
         }
       },
       error: function (response) {
@@ -223,6 +208,7 @@ $(document).ready(function () {
       },
     });
   });
+
 
   // ============ End Update a Stock Item ============ //
 
@@ -263,6 +249,27 @@ document.addEventListener('DOMContentLoaded', function () {
   const alertContainer = document.getElementById('alertContainer');
   let alertTimeout;
 
+  new TomSelect('#selEditUnit', {
+    controlInput: false,
+    hideSearch: true,
+    allowEmptyOption: true,
+    dropdownParent: 'body',
+  });
+
+  new TomSelect('#selEditCategory', {
+    controlInput: false,
+    hideSearch: true,
+    allowEmptyOption: true,
+    dropdownParent: 'body',
+  });
+
+  new TomSelect('#selEditBrand', {
+    controlInput: false,
+    hideSearch: true,
+    allowEmptyOption: true,
+    dropdownParent: 'body',
+  });
+
   const tomSelectItemType = new TomSelect('#cbxItemType', {
     controlInput: false,
     hideSearch: true,
@@ -295,6 +302,21 @@ document.addEventListener('DOMContentLoaded', function () {
     hideSearch: true,
     allowEmptyOption: true,
     dropdownParent: 'body',
+    render: {
+      option: (item, escape) => {
+        return `
+        <div class="d-flex align-items-start">
+          <div class="flex-grow-1 ms-2">
+            <span class="d-block fw-semibold">${item.name || 'Select Condition...'}</span>
+            <span class="d-block small">${item.description || 'Select Condition...'}</span>
+          </div>
+        </div>
+      `;
+      },
+      placeholder: (data) => {
+        return 'Select Condition...';
+      }
+    }
   });
 
   const tomSelectAcquiredType = new TomSelect('#cbxAcquiredType', {
@@ -322,7 +344,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const inputs1 = nonConsumableFields1.querySelectorAll('input');
     const inputs2 = nonConsumableFields2.querySelectorAll('input');
 
-    // Clear all regular inputs
     inputs1.forEach((input) => (input.value = ''));
     inputs2.forEach((input) => (input.value = ''));
 

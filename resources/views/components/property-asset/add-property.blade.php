@@ -18,7 +18,6 @@
       <form id="frmAddProperty" method="post" novalidate enctype="multipart/form-data">
         @csrf
         <div class="modal-body custom-modal-body">
-          <!-- Alert (Initially hidden) -->
           <div id="alertContainer" class="alert alert-info" role="alert" style="display: none;">
             <small><i class="bi bi-arrow-down-circle me-2"></i>Additional fields are available below. Please scroll down to fill them out.</small>
           </div>
@@ -106,7 +105,7 @@
                           <input class="form-control text-end" id="txtPurchasePrice" name="purchasePrice" type="number" step="0.01" min="0" placeholder="Purchase Price" />
                           <label for="txtPurchasePrice">Purchase Price</label>
                         </div>
-                        <span class="invalid-feedback" id="valAddPurchasePrice"></span>
+                        <span class="invalid-feedback d-block" id="valAddPurchasePrice"></span>
                       </div>
                     </div>
                   </div>
@@ -143,8 +142,8 @@
                           <input class="form-control text-end" id="txtResidualValue" name="residualValue" type="number" step="0.01" min="0" placeholder="Residual Value"
                                  data-bs-toggle="tooltip" title="The residual value is the estimated value of the asset at the end of its useful life."/>
                           <label for="txtResidualValue">Residual Value</label>
-                          <span class="invalid-feedback" id="valAddResidualValue"></span>
                         </div>
+                        <span class="invalid-feedback d-block" id="valAddResidualValue"></span>
                       </div>
                     </div>
                     <div class="col-md-6">
@@ -160,7 +159,6 @@
               </div>
               </div>
             </div>
-
 
           </div>
           <div id="nonConsumableFields2" style="display: none;">
@@ -187,7 +185,9 @@
                       <select class="js-select form-select" id="cbxCondition" name="condition" required>
                         <option value="" disabled selected>Select Condition...</option>
                         @foreach ($conditions as $condition)
-                          <option value="{{ $condition->id }}">{{ $condition->name }}</option>
+                          <option value="{{ $condition->id }}" data-name="{{ $condition->name }}" data-description="{{ $condition->description }}">
+                            {{ $condition->name }}
+                          </option>
                         @endforeach
                       </select>
                       <label for="cbxCondition">Condition <span class="text-danger">*</span></label>
@@ -249,76 +249,6 @@
     </div>
   </div>
 </div>
-{{--<script>--}}
-{{--  document.addEventListener('DOMContentLoaded', function() {--}}
-{{--    const itemTypeSelect = document.getElementById('cbxItemType');--}}
-{{--    const nonConsumableFields1 = document.getElementById('nonConsumableFields1');--}}
-{{--    const nonConsumableFields2 = document.getElementById('nonConsumableFields2');--}}
-{{--    const alertContainer = document.getElementById('alertContainer');--}}
-{{--    let alertTimeout;--}}
-
-{{--    const tomSelect1 = new TomSelect('#cbxCategory');--}}
-{{--    const tomSelect2 = new TomSelect('#cbxCondition');--}}
-{{--    const tomSelect3 = new TomSelect('#cbxBrand');--}}
-{{--    const tomSelect4 = new TomSelect('#cbxAcquiredType');--}}
-
-{{--    function resetNonConsumableFields() {--}}
-
-{{--      const inputs1 = nonConsumableFields1.querySelectorAll('input');--}}
-{{--      const inputs2 = nonConsumableFields2.querySelectorAll('input');--}}
-
-{{--      // Clear all regular inputs--}}
-{{--      inputs1.forEach(input => input.value = '');--}}
-{{--      inputs2.forEach(input => input.value = '');--}}
-
-{{--      if (tomSelect1) {--}}
-{{--        tomSelect1.clear()--}}
-{{--      }--}}
-{{--      if (tomSelect2) {--}}
-{{--        tomSelect2.clear();--}}
-{{--      }--}}
-{{--      if (tomSelect3) {--}}
-{{--        tomSelect3.clear();--}}
-{{--      }--}}
-{{--      if (tomSelect4) {--}}
-{{--        tomSelect4.clear();--}}
-{{--      }--}}
-{{--      --}}
-{{--    }--}}
-
-{{--    itemTypeSelect.addEventListener('change', function() {--}}
-{{--      clearTimeout(alertTimeout);--}}
-
-{{--      if (this.value === 'non-consumable') {--}}
-{{--        nonConsumableFields1.style.display = 'block';--}}
-{{--        nonConsumableFields2.style.display = 'block';--}}
-
-{{--        alertContainer.style.display = 'block';--}}
-{{--        alertContainer.classList.remove('fade');--}}
-
-{{--        alertTimeout = setTimeout(function() {--}}
-{{--          alertContainer.classList.add('fade');--}}
-{{--          alertContainer.addEventListener('transitionend', function() {--}}
-{{--            alertContainer.style.display = 'none';--}}
-{{--            alertContainer.classList.remove('fade');--}}
-{{--          });--}}
-{{--        }, 5000);--}}
-
-{{--        resetNonConsumableFields();--}}
-
-{{--      } else {--}}
-{{--        nonConsumableFields1.style.display = 'none';--}}
-{{--        nonConsumableFields2.style.display = 'none';--}}
-{{--        alertContainer.style.display = 'none';--}}
-
-{{--        resetNonConsumableFields();--}}
-{{--      }--}}
-
-{{--    });--}}
-{{--  });--}}
-{{--</script>--}}
-
-
 <style>
   .modal-xl {
     max-width: 1300px;
