@@ -77,10 +77,10 @@ class CategoryController extends Controller
 
             $category = Category::findOrFail($validated['id']);
 
-            $createdBy = Audit::where('subject_type', Category::class)->where('subject_id', $category->id)->where('event', 'created')->first();
+            $createdBy = Audit::where('subject_type', Category::class)->where('subject_id', $category->id)->where('event_id', 1)->first();
             $createdDetails = $this->getUserAuditDetails($createdBy);
 
-            $updatedBy = Audit::where('subject_type', Category::class)->where('subject_id', $category->id)->where('event', 'updated')->latest()->first() ?? $createdBy;
+            $updatedBy = Audit::where('subject_type', Category::class)->where('subject_id', $category->id)->where('event_id', 2)->latest()->first() ?? $createdBy;
             $updatedDetails = $this->getUserAuditDetails($updatedBy);
 
             return response()->json([

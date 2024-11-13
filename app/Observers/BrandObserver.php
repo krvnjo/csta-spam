@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Models\Audit;
 use App\Models\Brand;
 
 class BrandObserver
@@ -11,15 +12,16 @@ class BrandObserver
      */
     public function created(Brand $brand): void
     {
-        activity()
-            ->useLog('Add Brand')
+        (new Audit())
+            ->logName('Add Brand')
+            ->logDesc("A new brand: '{$brand->name}' has been created.")
             ->performedOn($brand)
-            ->event('created')
-            ->withProperties([
+            ->logEvent(1)
+            ->logProperties([
                 'name' => $brand->name,
                 'status' => 'Active',
             ])
-            ->log("A new brand: '{$brand->name}' has been created.");
+            ->log();
     }
 
     /**
@@ -28,11 +30,12 @@ class BrandObserver
     public function updated(Brand $brand): void
     {
         if (!$brand->isDirty('is_active')) {
-            activity()
-                ->useLog('Edit Brand')
+            (new Audit())
+                ->logName('Edit Brand')
+                ->logDesc("The brand: '{$brand->name}' has been updated.")
                 ->performedOn($brand)
-                ->event('updated')
-                ->withProperties([
+                ->logEvent(2)
+                ->logProperties([
                     'old' => [
                         'name' => $brand->getOriginal('name'),
                     ],
@@ -40,19 +43,20 @@ class BrandObserver
                         'name' => $brand->name,
                     ],
                 ])
-                ->log("The brand: '{$brand->name}' has been updated.");
+                ->log();
         } else {
             $statusText = $brand->is_active == 1 ? 'Active' : 'Inactive';
 
-            activity()
-                ->useLog('Set Brand Status')
+            (new Audit())
+                ->logName('Set Brand Status')
+                ->logDesc("Updated the status of brand: '{$brand->name}' to {$statusText}.")
                 ->performedOn($brand)
-                ->event('updated')
-                ->withProperties([
+                ->logEvent(2)
+                ->logProperties([
                     'name' => $brand->name,
                     'status' => $statusText,
                 ])
-                ->log("Updated the status of brand: '{$brand->name}' to {$statusText}.");
+                ->log();
         }
     }
 
@@ -61,14 +65,15 @@ class BrandObserver
      */
     public function deleted(Brand $brand): void
     {
-        activity()
-            ->useLog('Delete Brand')
+        (new Audit())
+            ->logName('Delete Brand')
+            ->logDesc("The brand: '{$brand->name}' has been permanently deleted.")
             ->performedOn($brand)
-            ->event('deleted')
-            ->withProperties([
+            ->logEvent(3)
+            ->logProperties([
                 'name' => $brand->name,
                 'status' => 'Deleted',
             ])
-            ->log("The brand: '{$brand->name}' has been permanently deleted.");
+            ->log();
     }
 }

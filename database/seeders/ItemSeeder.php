@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Unit;
 use Illuminate\Database\Seeder;
 
 //use App\Models\PropertyParent;
@@ -13,6 +14,18 @@ class ItemSeeder extends Seeder
 {
     public function run()
     {
+        $units = [
+            'Ream',
+            'Pc/s',
+            'Box',
+            'Gallon',
+        ];
+
+        foreach ($units as $unit) {
+            Unit::create([
+                'name' => $unit,
+            ]);
+        }
 //        $Parent = [
 //            [
 //                'name' => 'S-Inverter AR09TYHYEWKNTC',

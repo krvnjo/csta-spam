@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Audit;
+use App\Models\Event;
+use App\Models\Type;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
+use Throwable;
 
 class AuditController extends Controller
 {
@@ -13,62 +17,56 @@ class AuditController extends Controller
      */
     public function index()
     {
-        $audits = Audit::orderBy('log_name')->get();
-        $users = User::orderBy('lname')->get();
+        $audits = Audit::with([
+            'event' => function ($query) {
+                $query->with(['badge', 'legend']);
+            },
+            'subject',
+            'causer.role'
+        ])->orderBy('name')->get();
+        $types = Type::get();
+        $events = Event::with('badge', 'legend')->get();
+        $users = User::with('role')->where('role_id', '!=', 1)->orderBy('lname')->get();
 
         return view('pages.other.audit-history',
             compact(
                 'audits',
+                'types',
+                'events',
                 'users',
             )
         );
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      */
-    public function show(Audit $audit)
+    public function show(Request $request)
     {
-        //
-    }
+        try {
+            $audit = Audit::findOrFail(Crypt::decryptString($request->input('id')));
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Audit $audit)
-    {
-        //
-    }
+            $createdBy = Audit::where('subject_type', Audit::class)->where('subject_id', $audit->id)->where('event_id', 1)->first();
+            $createdDetails = $this->getUserAuditDetails($createdBy);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Audit $audit)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Audit $audit)
-    {
-        //
+            return response()->json([
+                'success' => true,
+                'audit' => $audit->name,
+                'description' => $audit->description,
+                'event_name' => $audit->event->name,
+                'event_badge' => $audit->event->badge->class,
+                'event_legend' => $audit->event->legend->class,
+                'properties' => json_decode($audit->properties),
+                'created_img' => $createdDetails['image'],
+                'created_by' => $createdDetails['name'],
+                'created_at' => $audit->created_at->format('D, M d, Y | h:i A'),
+            ]);
+        } catch (Throwable) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Oops! Something went wrong.',
+                'message' => 'An error occurred while fetching the audit record. Please try again later.',
+            ], 500);
+        }
     }
 }

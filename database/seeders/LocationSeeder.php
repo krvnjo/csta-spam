@@ -14,11 +14,13 @@ class LocationSeeder extends Seeder
     public function run(): void
     {
         $departments = [
-            'CSTA Administration' => 'CSTA-ADMIN',
-            'School of Information Technology' => 'SIT',
-            'School of Education' => 'SED',
-            'School of Tourism Management' => 'STM',
-            'School of Hospitality Management' => 'SHM',
+            'CSTA Administration' => 'ADMIN',
+            'Information Technology' => 'SIT',
+            'Education' => 'SED',
+            'Tourism Management' => 'STM',
+            'Hospitality Management' => 'SHM',
+            'Accounting' => 'ACC',
+            'Registar' => 'REG',
         ];
 
         foreach ($departments as $department => $code) {

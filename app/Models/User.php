@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\CanResetPassword;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -17,6 +16,7 @@ class User extends Authenticatable implements CanResetPassword
     protected $fillable = [
         'user_name',
         'pass_hash',
+        'name',
         'lname',
         'fname',
         'mname',
@@ -24,8 +24,8 @@ class User extends Authenticatable implements CanResetPassword
         'dept_id',
         'email',
         'phone_num',
-        'user_image',
         'last_login',
+        'user_image',
         'is_active'
     ];
 
@@ -37,10 +37,5 @@ class User extends Authenticatable implements CanResetPassword
     public function role(): HasOne
     {
         return $this->hasOne(Role::class, 'id', 'role_id');
-    }
-
-    public function audits(): HasMany
-    {
-        return $this->hasMany(Audit::class, 'causer_id', 'id');
     }
 }

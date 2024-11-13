@@ -17,7 +17,7 @@ return new class extends Migration {
         Schema::create('permissions', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50)->unique();
-            $table->string('group_name', 50);
+            $table->string('group', 50);
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
         });
@@ -35,7 +35,7 @@ return new class extends Migration {
             $table->id();
             $table->string('user_name', 25)->unique();
             $table->string('pass_hash');
-            $table->string('name', 100);
+            $table->string('name', 150);
             $table->string('lname', 75);
             $table->string('fname', 75);
             $table->string('mname', 75)->nullable();
@@ -43,6 +43,7 @@ return new class extends Migration {
             $table->foreignIdFor(Department::class, 'dept_id')->constrained('departments')->cascadeOnDelete();
             $table->string('email', 75)->unique();
             $table->string('phone_num', 25)->unique()->nullable();
+            $table->timestamp('last_login')->nullable();
             $table->string('user_image', 25)->default('default.jpg');
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();

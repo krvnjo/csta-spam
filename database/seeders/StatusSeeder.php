@@ -15,21 +15,21 @@ class StatusSeeder extends Seeder
     public function run(): void
     {
         $conditions = [
-            'Fully Operational' => [
+            'Fully Functional' => [
                 'description' => 'Item is fully working.',
-                'color_id' => 15,
+                'color_id' => 16,
             ],
             'Partially Working' => [
-                'description' => 'Item has small issues, still usable.',
-                'color_id' => 16,
+                'description' => 'Item has small issues but still usable.',
+                'color_id' => 17,
             ],
             'Working with Major Issues' => [
                 'description' => 'Item has significant issues affecting use.',
-                'color_id' => 18,
+                'color_id' => 19,
             ],
             'Not Working' => [
                 'description' => 'Item not usable and needs repair or replacement.',
-                'color_id' => 19,
+                'color_id' => 20,
             ],
         ];
 
@@ -44,23 +44,19 @@ class StatusSeeder extends Seeder
         $priorities = [
             'Urgent' => [
                 'description' => 'Needs immediate action and attention.',
-                'order' => 1,
-                'color_id' => 19,
+                'color_id' => 20,
             ],
             'High' => [
                 'description' => 'Should be addressed soon.',
-                'order' => 2,
-                'color_id' => 18,
+                'color_id' => 19,
             ],
             'Medium' => [
                 'description' => 'Can be scheduled but important.',
-                'order' => 3,
-                'color_id' => 16,
+                'color_id' => 17,
             ],
             'Low' => [
                 'description' => 'Can be addressed later without urgency.',
-                'order' => 4,
-                'color_id' => 15,
+                'color_id' => 16,
             ],
         ];
 
@@ -68,7 +64,6 @@ class StatusSeeder extends Seeder
             Priority::create([
                 'name' => $priority,
                 'description' => $data['description'],
-                'order' => $data['order'],
                 'color_id' => $data['color_id'],
             ]);
         }
@@ -82,10 +77,6 @@ class StatusSeeder extends Seeder
                 'description' => 'Item is currently being used.',
                 'color_id' => 1,
             ],
-            'Unavailable' => [
-                'description' => 'Item is temporarily unavailable.',
-                'color_id' => 3,
-            ],
             'Needs Maintenance' => [
                 'description' => 'Item needs repairs before use.',
                 'color_id' => 8,
@@ -98,12 +89,16 @@ class StatusSeeder extends Seeder
                 'description' => 'Item is reserved and not available.',
                 'color_id' => 10,
             ],
+            'Borrowed' => [
+                'description' => 'Item is currently borrowed and in use.',
+                'color_id' => 9,
+            ],
             'Missing' => [
                 'description' => 'Item is missing and unaccounted for.',
                 'color_id' => 6,
             ],
-            'End of Life' => [
-                'description' => 'Item is no longer usable and obsolete.',
+            'For Disposal' => [
+                'description' => 'Item is no longer usable and EOL.',
                 'color_id' => 12,
             ],
             'Disposed' => [

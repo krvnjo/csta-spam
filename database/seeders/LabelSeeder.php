@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Acquisition;
 use App\Models\Brand;
 use App\Models\Category;
-use App\Models\Unit;
 use Illuminate\Database\Seeder;
 
 class LabelSeeder extends Seeder
@@ -59,19 +58,6 @@ class LabelSeeder extends Seeder
         foreach ($categories as $category) {
             Category::create([
                 'name' => $category,
-            ]);
-        }
-
-        $units = [
-            'Ream',
-            'Pc/s',
-            'Box',
-            'Gallon',
-        ];
-
-        foreach ($units as $unit) {
-            Unit::create([
-                'name' => $unit,
             ]);
         }
     }

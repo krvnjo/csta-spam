@@ -77,10 +77,10 @@ class BrandController extends Controller
 
             $brand = Brand::findOrFail($validated['id']);
 
-            $createdBy = Audit::where('subject_type', Brand::class)->where('subject_id', $brand->id)->where('event', 'created')->first();
+            $createdBy = Audit::where('subject_type', Brand::class)->where('subject_id', $brand->id)->where('event_id', 1)->first();
             $createdDetails = $this->getUserAuditDetails($createdBy);
 
-            $updatedBy = Audit::where('subject_type', Brand::class)->where('subject_id', $brand->id)->where('event', 'updated')->latest()->first() ?? $createdBy;
+            $updatedBy = Audit::where('subject_type', Brand::class)->where('subject_id', $brand->id)->where('event_id', 2)->latest()->first() ?? $createdBy;
             $updatedDetails = $this->getUserAuditDetails($updatedBy);
 
             return response()->json([
@@ -94,8 +94,7 @@ class BrandController extends Controller
                 'updated_by' => $updatedDetails['name'],
                 'updated_at' => $brand->updated_at->format('D, M d, Y | h:i A'),
             ]);
-        } catch (Throwable $e) {
-            \Log::error($e->getMessage());
+        } catch (Throwable) {
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',

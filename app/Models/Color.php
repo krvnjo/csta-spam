@@ -10,6 +10,7 @@ class Color extends Model
 
     protected $fillable = [
         'name',
-        'color_class'
+        'class',
+        'is_active',
     ];
 }

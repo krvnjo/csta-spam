@@ -6,11 +6,13 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Department;
 use App\Models\Designation;
+use App\Models\Role;
 use App\Models\User;
 use App\Observers\BrandObserver;
 use App\Observers\CategoryObserver;
 use App\Observers\DepartmentObserver;
 use App\Observers\DesignationObserver;
+use App\Observers\RoleObserver;
 use App\Observers\UserObserver;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\Facades\Auth;
@@ -38,9 +40,7 @@ class AppServiceProvider extends ServiceProvider
             if (!$user) return [];
 
             return Cache::remember(
-                'role_permissions_' . $user->role_id,
-                3600,
-                fn() => $user->role->permissions->pluck('name')->toArray()
+                'role_permissions_' . $user->role_id, 3600, fn() => $user->role->permissions->pluck('name')->toArray()
             );
         });
 
@@ -73,6 +73,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         User::observe(UserObserver::class);
+        Role::observe(RoleObserver::class);
         Brand::observe(BrandObserver::class);
         Category::observe(CategoryObserver::class);
         Department::observe(DepartmentObserver::class);

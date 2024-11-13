@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AuthRequest;
+use App\Models\Audit;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -48,6 +49,22 @@ class AuthController extends Controller
 
             Auth::login($user);
 
+            $user->timestamps = false;
+            $user->updateQuietly([
+                'last_login' => now(),
+            ]);
+
+            (new Audit())
+                ->logName('User Login')
+                ->logDesc("{$user->name} has been logged in to the system.")
+                ->performedOn($user)
+                ->logEvent(4)
+                ->logProperties([
+                    'name' => $user->name,
+                    'login at' => $user->last_login->format('M d, Y | h:i A'),
+                ])
+                ->log();
+
             return response()->json([
                 'success' => true,
                 'redirect' => route('dashboard.index'),
@@ -66,6 +83,18 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
+        $user = Auth::user();
+        (new Audit())
+            ->logName('User Logout')
+            ->logDesc("{$user->name} has logged out.")
+            ->performedOn($user)
+            ->logEvent(5)
+            ->logProperties([
+                'name' => $user->name,
+                'logout at' => now()->format('M d, Y | h:i A'),
+            ])
+            ->log();
+
         Auth::logout();
 
         $request->session()->invalidate();

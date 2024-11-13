@@ -29,20 +29,4 @@ class RoleObserver
     {
         //
     }
-
-    /**
-     * Handle the Role "restored" event.
-     */
-    public function restored(Role $role): void
-    {
-        //
-    }
-
-    /**
-     * Handle the Role "force deleted" event.
-     */
-    public function forceDeleted(Role $role): void
-    {
-        //
-    }
 }

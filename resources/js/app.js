@@ -334,11 +334,63 @@ function displayViewResponseData(response, config) {
     );
   }
 
+  if (response.event_name && response.event_badge && response.event_legend) {
+    const eventName = response.event_name || 'No event';
+    const eventBadgeClass = response.event_badge || 'secondary';
+    const eventLegendClass = response.event_legend || 'default';
+
+    $(config.eventFields.selector).html(
+      `<span class="${eventBadgeClass}">
+         <span class="${eventLegendClass}"></span>${eventName}
+       </span>`,
+    );
+  }
+
   if (config.imageFields) {
     config.imageFields.forEach((field) => {
       if (response[field.key]) {
         $(field.selector).attr('src', response[field.key]);
       }
+    });
+  }
+
+  if (response.properties) {
+    const properties = response.properties;
+    let propertiesText = '';
+
+    if (properties.old && properties.new) {
+      propertiesText += '<div class="mb-2"><span class="fw-semibold">Old Values:</span><br>';
+      for (const key in properties.old) {
+        if (properties.old.hasOwnProperty(key)) {
+          const capitalizedKey = capitalizeFirstLetterOfEachWord(key);
+          propertiesText += `<span class="fw-semibold">${capitalizedKey}:</span> ${properties.old[key]}<br>`;
+        }
+      }
+      propertiesText += '</div>';
+
+      propertiesText += '<div><span class="fw-semibold">New Values:</span><br>';
+      for (const key in properties.new) {
+        if (properties.new.hasOwnProperty(key)) {
+          const capitalizedKey = capitalizeFirstLetterOfEachWord(key);
+          propertiesText += `<span class="fw-semibold">${capitalizedKey}:</span> ${properties.new[key]}<br>`;
+        }
+      }
+      propertiesText += '</div>';
+    } else {
+      for (const key in properties) {
+        if (properties.hasOwnProperty(key)) {
+          const capitalizedKey = capitalizeFirstLetterOfEachWord(key);
+          propertiesText += `<span class="fw-semibold">${capitalizedKey}:</span> ${properties[key]}<br>`;
+        }
+      }
+    }
+
+    $(config.textFields.find((field) => field.key === 'properties').selector).html(propertiesText);
+  }
+
+  function capitalizeFirstLetterOfEachWord(str) {
+    return str.replace(/\b\w/g, function (char) {
+      return char.toUpperCase();
     });
   }
 }
@@ -388,16 +440,27 @@ function filterDatatableAndCount(filterDatatable, filterCount) {
       selectedFilterCount++;
     }
 
-    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
-      const cell = filterDatatable.cell(dataIndex, targetColumnIndex).node();
-      const fullValue = $(cell).attr('data-full-value') || data[targetColumnIndex].trim();
+    if (targetColumnIndex !== undefined && filterVal.includes('-')) {
+      const [startDate, endDate] = filterVal.split(' - ').map((date) => date.trim());
 
-      if (Array.isArray(filterVal)) {
-        return filterVal.every((val) => fullValue.includes(val));
-      }
+      $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+        const cell = filterDatatable.cell(dataIndex, targetColumnIndex).node();
+        const fullValue = $(cell).attr('data-full-value') || data[targetColumnIndex].trim();
 
-      return fullValue.includes(filterVal);
-    });
+        return fullValue >= startDate && fullValue <= endDate;
+      });
+    } else {
+      $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+        const cell = filterDatatable.cell(dataIndex, targetColumnIndex).node();
+        const fullValue = $(cell).attr('data-full-value') || data[targetColumnIndex].trim();
+
+        if (Array.isArray(filterVal)) {
+          return filterVal.some((val) => fullValue.includes(val));
+        }
+
+        return fullValue.includes(filterVal);
+      });
+    }
   });
 
   filterDatatable.draw();

@@ -4,12 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Acquisition extends Model
+class Type extends Model
 {
-    protected $table = 'acquisitions';
+    protected $table = 'types';
 
     protected $fillable = [
         'name',
-        'is_active'
+        'is_active',
     ];
 }

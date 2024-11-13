@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Color;
 use App\Models\Dashboard;
 use App\Models\Event;
+use App\Models\Type;
 use Illuminate\Database\Seeder;
 
 class DefaultSeeder extends Seeder
@@ -28,6 +29,7 @@ class DefaultSeeder extends Seeder
             'Info-soft' => 'badge bg-soft-info text-info',
             'Light' => 'badge text-bg-light',
             'Dark' => 'badge text-bg-dark',
+            'Dark-soft' => 'badge bg-soft-dark text-dark',
             'Default-indicator' => 'legend-indicator',
             'Primary-indicator' => 'legend-indicator bg-primary',
             'Success-indicator' => 'legend-indicator bg-success',
@@ -40,14 +42,13 @@ class DefaultSeeder extends Seeder
         foreach ($colors as $color => $class) {
             Color::create([
                 'name' => $color,
-                'description' => $class,
+                'class' => $class,
             ]);
         }
 
         $dashboards = [
             'Admin Dashboard' => 'Comprehensive dashboard for administrative details.',
-            'Property & Asset Dashboard' => 'Manage  and track property and asset details.',
-            'Default Dashboard' => 'General user dashboard with essential tools.',
+            'Default Dashboard' => 'Manage and track property and asset details.',
         ];
 
         foreach ($dashboards as $dashboard => $description) {
@@ -60,23 +61,23 @@ class DefaultSeeder extends Seeder
         $events = [
             'Created' => [
                 'badge_id' => 2,
-                'legend_id' => 15,
+                'legend_id' => 16,
             ],
             'Updated' => [
                 'badge_id' => 5,
-                'legend_id' => 16,
+                'legend_id' => 17,
             ],
             'Deleted' => [
                 'badge_id' => 7,
-                'legend_id' => 19,
+                'legend_id' => 20,
             ],
             'Login' => [
                 'badge_id' => 11,
                 'legend_id' => 17,
             ],
             'Logout' => [
-                'badge_id' => 11,
-                'legend_id' => 17,
+                'badge_id' => 14,
+                'legend_id' => 21,
             ],
         ];
 
@@ -85,6 +86,21 @@ class DefaultSeeder extends Seeder
                 'name' => $event,
                 'badge_id' => $data['badge_id'],
                 'legend_id' => $data['legend_id'],
+            ]);
+        }
+
+        $types = [
+            'User',
+            'Role',
+            'Brand',
+            'Category',
+            'Department',
+            'Designation',
+        ];
+
+        foreach ($types as $type) {
+            Type::create([
+                'name' => $type,
             ]);
         }
     }

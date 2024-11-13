@@ -98,10 +98,10 @@ class UserController extends Controller
 
             $user = User::with('role', 'department')->findOrFail($validated['id']);
 
-            $createdBy = Audit::where('subject_type', User::class)->where('subject_id', $user->id)->where('event', 'created')->first();
+            $createdBy = Audit::where('subject_type', User::class)->where('subject_id', $user->id)->where('event_id', 1)->first();
             $createdDetails = $this->getUserAuditDetails($createdBy);
 
-            $updatedBy = Audit::where('subject_type', User::class)->where('subject_id', $user->id)->where('event', 'updated')->latest()->first() ?? $createdBy;
+            $updatedBy = Audit::where('subject_type', User::class)->where('subject_id', $user->id)->where('event_id', 2)->latest()->first() ?? $createdBy;
             $updatedDetails = $this->getUserAuditDetails($updatedBy);
 
             return response()->json([
@@ -176,14 +176,14 @@ class UserController extends Controller
 
             $user = User::findOrFail($validated['id']);
 
-            if (Hash::check($validated['pass'], $user->pass_hash)) {
-                return response()->json([
-                    'success' => false,
-                    'errors' => ['pass' => ['The new password cannot be the same as your current password!']]
-                ]);
-            }
-
             if (!isset($validated['status'])) {
+                if (Hash::check($validated['pass'], $user->pass_hash)) {
+                    return response()->json([
+                        'success' => false,
+                        'errors' => ['pass' => ['The new password cannot be the same as your current password!']]
+                    ]);
+                }
+
                 $user->update([
                     'user_name' => trim($validated['user']),
                     'pass_hash' => Hash::make($validated['pass']),

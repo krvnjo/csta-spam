@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Models\Audit;
 use App\Models\Department;
 
 class DepartmentObserver
@@ -11,16 +12,17 @@ class DepartmentObserver
      */
     public function created(Department $department): void
     {
-        activity()
-            ->useLog('Add Department')
+        (new Audit())
+            ->logName('Add Department')
+            ->logDesc("A new department: '{$department->name}' has been created.")
             ->performedOn($department)
-            ->event('created')
-            ->withProperties([
+            ->logEvent(1)
+            ->logProperties([
                 'name' => $department->name,
                 'code' => $department->code,
                 'status' => 'Active',
             ])
-            ->log("A new department: '{$department->name}' has been created.");
+            ->log();
     }
 
     /**
@@ -29,11 +31,12 @@ class DepartmentObserver
     public function updated(Department $department): void
     {
         if (!$department->isDirty('is_active')) {
-            activity()
-                ->useLog('Edit Department')
+            (new Audit())
+                ->logName('Edit Department')
+                ->logDesc("The department: '{$department->name}' has been updated.")
                 ->performedOn($department)
-                ->event('updated')
-                ->withProperties([
+                ->logEvent(2)
+                ->logProperties([
                     'old' => [
                         'name' => $department->getOriginal('name'),
                         'code' => $department->getOriginal('code'),
@@ -43,19 +46,20 @@ class DepartmentObserver
                         'code' => $department->code,
                     ],
                 ])
-                ->log("The department: '{$department->name}' has been updated.");
+                ->log();
         } else {
             $statusText = $department->is_active == 1 ? 'Active' : 'Inactive';
 
-            activity()
-                ->useLog('Set Department Status')
+            (new Audit())
+                ->logName('Set Department Status')
+                ->logDesc("Updated the status of department: '{$department->name}' to {$statusText}.")
                 ->performedOn($department)
-                ->event('updated')
-                ->withProperties([
+                ->logEvent(2)
+                ->logProperties([
                     'name' => $department->name,
                     'status' => $statusText,
                 ])
-                ->log("Updated the status of department: '{$department->name}' to {$statusText}.");
+                ->log();
         }
     }
 
@@ -64,14 +68,15 @@ class DepartmentObserver
      */
     public function deleted(Department $department): void
     {
-        activity()
-            ->useLog('Delete Department')
+        (new Audit())
+            ->logName('Delete Department')
+            ->logDesc("The department: '{$department->name}' has been permanently deleted.")
             ->performedOn($department)
-            ->event('deleted')
-            ->withProperties([
+            ->logEvent(3)
+            ->logProperties([
                 'name' => $department->name,
                 'status' => 'Deleted',
             ])
-            ->log("The department: '{$department->name}' has been permanently deleted.");
+            ->log();
     }
 }
