@@ -35,20 +35,20 @@
                   <div class="row g-3">
                     <div class="col-md-6">
                       <div class="form-floating">
-                        <input class="form-control" id="txtEditPropertyName" name="propertyName" type="text" placeholder="Item Name" autocomplete="off" />
+                        <input class="form-control" id="txtEditProperty" name="property" type="text" placeholder="Item Name" autocomplete="off" />
                         <label for="txtEditPropertyName">Item Name <span class="text-danger">*</span></label>
-                        <span class="invalid-feedback" id="valEditPropertyName"></span>
+                        <span class="invalid-feedback" id="valEditProperty"></span>
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="tom-select-custom mb-3 form-floating">
-                        <select class="js-select form-select" id="cbxEditItemType" name="itemType" disabled required>
+                        <select class="js-select form-select" id="selEditType" name="type" disabled required>
                           <option value="" disabled>Select Item Type...</option>
                           <option value="consumable">Consumable</option>
                           <option value="non-consumable">Non-Consumable</option>
                         </select>
                         <label for="cbxEditItemType">Item Type <span class="text-danger">*</span></label>
-                        <span class="invalid-feedback" id="valEditItemType"></span>
+                        <span class="invalid-feedback" id="valEditType"></span>
                       </div>
                     </div>
                   </div>
@@ -96,7 +96,7 @@
                     </div>
                     <div class="col-md-4">
                       <div class="tom-select-custom mb-3 form-floating">
-                        <select class="js-select form-select" id="cbxEditUnit" name="unit">
+                        <select class="js-select form-select" id="selEditUnit" name="unit">
                           <option value="" disabled selected>Select Unit...</option>
                           @foreach ($units as $unit)
                             <option value="{{ $unit->id }}">{{ $unit->name }}</option>
@@ -110,10 +110,10 @@
                       <div class="input-group">
                         <span class="input-group-text">₱</span>
                         <div class="form-floating">
-                          <input class="form-control text-end" id="txtEditPurchasePrice" name="purchasePrice" type="number" step="0.01" min="0" placeholder="Purchase Price" />
+                          <input class="form-control text-end" id="txtEditPrice" name="price" type="number" step="0.01" min="0" placeholder="Purchase Price" />
                           <label for="txtEditPurchasePrice">Purchase Price</label>
                         </div>
-                        <span class="invalid-feedback d-block" id="valEditPurchasePrice"></span>
+                        <span class="invalid-feedback d-block" id="valEditPrice"></span>
                       </div>
                     </div>
                   </div>
@@ -150,22 +150,22 @@
                       <div class="input-group">
                         <span class="input-group-text">₱</span>
                         <div class="form-floating">
-                          <input class="form-control text-end" id="txtEditResidualValue" name="residualValue" type="number" step="0.01" min="0" placeholder="Residual Value" />
+                          <input class="form-control text-end" id="txtEditResidual" name="residual" type="number" step="0.01" min="0" placeholder="Residual Value" />
                           <label for="txtEditResidualValue">Residual Value</label>
                         </div>
-                        <span class="invalid-feedback" id="valEditResidualValue"></span>
+                        <span class="invalid-feedback" id="valEditResidual"></span>
                       </div>
                     </div>
                     <div class="col-md-3">
                       <div class="form-floating">
-                        <input class="form-control" id="txtEditUsefulLife" name="usefulLife" type="number" min="0" placeholder="Useful Life" />
+                        <input class="form-control" id="txtEditUseful" name="useful" type="number" min="0" placeholder="Useful Life" />
                         <label for="txtEditUsefulLife">Useful Life (years)</label>
-                        <span class="invalid-feedback" id="valEditUsefulLife"></span>
+                        <span class="invalid-feedback" id="valEditUseful"></span>
                       </div>
                     </div>
                     <div class="col-md-3">
                       <div class="tom-select-custom mb-3 form-floating">
-                        <select class="js-select form-select" id="cbxEditCategory" name="category" required>
+                        <select class="js-select form-select" id="selEditCategory" name="category" >
                           <option value="" disabled selected>Select Category...</option>
                           @foreach ($categories as $category)
                             <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -177,7 +177,7 @@
                     </div>
                     <div class="col-md-3">
                       <div class="tom-select-custom mb-3 form-floating">
-                        <select class="js-select form-select" id="cbxEditBrand" name="brand" required>
+                        <select class="js-select form-select" id="selEditBrand" name="brand" >
                           <option value="" disabled selected>Select Brand...</option>
                           @foreach ($brands as $brand)
                             <option value="{{ $brand->id }}">{{ $brand->name }}</option>

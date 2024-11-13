@@ -340,106 +340,103 @@ class PropertyParentController extends Controller
     public function update(Request $request)
     {
         try {
-            $property = PropertyParent::query()->findOrFail(Crypt::decryptString($request->input('id')));
+            $property = PropertyParent::findOrFail($request->input('id'));
 
-            $propertyValidationMessages = [
-                'propertyName.required' => 'Please enter an item name!',
-                'propertyName.regex' => 'The item name may only contain letters, numbers, spaces, and hyphens.',
-                'propertyName.min' => 'The item name must be at least :min characters.',
-                'propertyName.max' => 'The item name may not be greater than :max characters.',
-                'propertyName.unique' => 'This item name already exists.',
+            $purchasePrice = $request->input('price');
+            $propertyEditValidationMessages = [
+                'property.required' => 'Please enter an item name!',
+                'property.regex' => 'The item name may only contain letters, numbers, spaces, and hyphens.',
+                'property.min' => 'The item name must be at least :min characters.',
+                'property.max' => 'The item name may not be greater than :max characters.',
+                'property.unique' => 'This item name already exists.',
+
                 'category.required' => 'Please choose a category!',
+
                 'brand.required' => 'Please choose a brand!',
+
                 'description.regex' => 'The description may only contain letters, numbers, spaces, and some special characters.',
                 'description.min' => 'The description must be at least :min characters.',
                 'description.max' => 'The description may not be greater than :max characters.',
 
-                'purchasePrice.required' => 'Please enter the purchase price!',
-                'purchasePrice.min' => 'The purchase price must be at least :min.',
-                'purchasePrice.numeric' => 'The purchase price must be a number.',
-                'purchasePrice.regex' => 'The purchase price can only have up to 2 decimal places.',
+                'price.required' => 'Please enter the purchase price!',
+                'price.min' => 'The purchase price must be at least :min.',
+                'price.numeric' => 'The purchase price must be a number.',
+                'price.regex' => 'The purchase price can only have up to 2 decimal places.',
 
-                'residualValue.required' => 'Please enter the residual value!',
-                'residualValue.numeric' => 'The residual value must be a number.',
-                'residualValue.regex' => 'The residual value can only have up to 2 decimal places.',
+                'residual.required' => 'Please enter the residual value!',
+                'residual.numeric' => 'The residual value must be a number.',
+                'residual.regex' => 'The residual value can only have up to 2 decimal places.',
+                'residual.min' => 'The residual value must be at least :min.',
+                'residual.max' => 'The residual value may not be greater than the purchase price.',
 
-                'usefulLife.required' => 'Please enter the useful life!',
-                'usefulLife.min' => 'The useful life must be at least :min.',
-                'usefulLife.integer' => 'The useful life must be a whole number.',
-                'usefulLife.max' => 'The useful life may not be greater than :max.',
+                'useful.required' => 'Please enter the useful life!',
+                'useful.min' => 'The useful life must be at least :min.',
+                'useful.integer' => 'The useful life must be a whole number.',
+                'useful.max' => 'The useful life may not be greater than :max.',
+
+                'unit.required' => 'Please choose a unit type!',
+
+                'specification.required' => 'Please enter a specification!',
+                'specification.regex' => 'The specification may only contain letters, spaces, periods, and hyphens.',
+                'specification.min' => 'The specification must be at least :min characters.',
+                'specification.max' => 'The specification may not be greater than :max characters.',
             ];
 
-            $propertyValidator = Validator::make($request->all(), [
-                'propertyName' => [
+            $propertyEditValidator = Validator::make($request->all(), [
+                'property' => [
                     'required',
                     'regex:/^[A-Za-z0-9\- ]+$/',
                     'min:3',
                     'max:50',
                     'unique:property_parents,name,' . $property->id,
                 ],
-                'category' => ['required'],
-                'brand' => ['required'],
-                'description' => [
-                    'nullable',
-                    'regex:/^[A-Za-z0-9%,\- ×"]+$/',
-                    'min:3',
-                    'max:100',
-                ],
-                'purchasePrice' => [
+                'price' => [
                     'required',
                     'numeric',
                     'regex:/^\d+(\.\d{1,2})?$/',
                     'min:1'
                 ],
-                'residualValue' => [
+                'specification' => [
                     'required',
-                    'numeric',
-                    'regex:/^\d+(\.\d{1,2})?$/'
+                    'regex:/^[A-Za-z0-9%,\- ×."\'"]+$/',
+                    'min:3',
+                    'max:100'
                 ],
-                'usefulLife' => [
-                    'required',
-                    'integer',
-                    'min:1',
-                    'max:500'
-                ],
-            ], $propertyValidationMessages);
+                'category' => ['required'],
+                'brand' => ['required'],
+                'residual' => ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/', 'min:1','max:'.$purchasePrice],
+                'useful' => ['required', 'integer', 'min:1', 'max:500'],
 
-            if ($propertyValidator->fails()) {
+            ], $propertyEditValidationMessages);
+
+            if ($propertyEditValidator->fails()) {
                 return response()->json([
                     'success' => false,
-                    'errors' => $propertyValidator->errors(),
+                    'errors' => $propertyEditValidator->errors(),
                 ]);
-            } else {
-                $property->name = $this->formatInput($request->input('propertyName'));
-                $property->categ_id = $request->input('category');
-                $property->brand_id = $request->input('brand');
-                $property->description = $request->input('description');
-                $property->purchase_price = floatval($request->input('purchasePrice'));
-                $property->residual_value = floatval($request->input('residualValue'));
-                $property->useful_life = intval($request->input('usefulLife'));
-            }
-            if ($request->hasFile('image')) {
-                $file = $request->file('image');
-                if ($file !== null && $file->isValid()) {
-                    if ($property->image && $property->image !== 'default.jpg') {
-                        $oldImagePath = public_path('storage/img/prop-asset/' . $property->image);
-                        if (file_exists($oldImagePath)) {
-                            unlink($oldImagePath);
-                        }
-                    }
-                    $filename = time() . '_' . $file->getClientOriginalName();
-                    $file->move(public_path('storage/img/prop-asset/'), $filename);
-                    $property->image = $filename;
-                }
-            } else {
-                if (!$property->image || $property->image === 'default.jpg') {
-                    $property->image = 'default.jpg';
-                }
             }
 
-
-            $property->updated_at = now();
-            $property->save();
+            if (!$property->is_consumable){
+                $property->update([
+                    'name' => ucwords(strtolower(trim($request->input('property')))),
+                    'specification' => ucwords(strtolower(trim($request->input('specification')))),
+                    'purchase_price' => $request->input('price'),
+                    'unit_id' => $request->input('unit'),
+                    'description' => ucwords(strtolower(trim($request->input('description')))),
+                    'categ_id' => $request->input('category'),
+                    'brand_id' => $request->input('brand'),
+                    'residual_value' => $request->input('residual'),
+                    'useful_life' => $request->input('useful'),
+                ]);
+            } elseif ($property->is_consumable) {
+                $property->update([
+                    'name' => ucwords(strtolower(trim($request->input('property')))),
+                    'specification' => ucwords(strtolower(trim($request->input('specification')))),
+                    'purchase_price' => $request->input('price'),
+                    'unit_id' => $request->input('unit'),
+                    'description' => ucwords(strtolower(trim($request->input('description')))),
+                ]);
+            }
 
             return response()->json([
                 'success' => true,

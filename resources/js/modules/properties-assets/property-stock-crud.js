@@ -143,31 +143,31 @@ $(document).ready(function () {
       success: function (response) {
         $('#editPropertyModal').modal('toggle');
         $('#txtEditPropertyId').val(response.id);
-        $('#txtEditPropertyName').val(response.name);
+        $('#txtEditProperty').val(response.name);
         $('#txtEditDescription').val(response.description);
         $('#txtEditSpecification').val(response.specification);
-        $('#txtEditPurchasePrice').val(response.purchase_price);
-        $('#cbxEditUnit')[0].tomselect.setValue(response.unit_id);
+        $('#txtEditPrice').val(response.purchase_price);
+        $('#selEditUnit')[0].tomselect.setValue(response.unit_id);
         $('#txtEditQuantity').val(response.quantity).prop('disabled', true);
 
         const itemType = response.item_type;
 
         if (itemType === 'consumable') {
-          $('#cbxEditItemType').val('consumable').prop('disabled', true);
+          $('#selEditType').val('consumable').prop('disabled', true);
           $('#nonConsumableFields').hide();
 
-          $('#txtEditResidualValue').val('');
-          $('#txtEditUsefulLife').val('');
-          $('#cbxEditCategory')[0].tomselect.clear();
-          $('#cbxEditBrand')[0].tomselect.clear();
+          $('#txtEditResidual').val('');
+          $('#txtEditUseful').val('');
+          $('#selEditCategory')[0].tomselect.clear();
+          $('#selEditBrand')[0].tomselect.clear();
         } else {
-          $('#cbxEditItemType').val('non-consumable').prop('disabled', true);
+          $('#selEditType').val('non-consumable').prop('disabled', true);
           $('#nonConsumableFields').show();
 
-          $('#txtEditResidualValue').val(response.residual_value);
-          $('#txtEditUsefulLife').val(response.useful_life);
-          $('#cbxEditCategory')[0].tomselect.setValue(response.categ_id);
-          $('#cbxEditBrand')[0].tomselect.setValue(response.brand_id);
+          $('#txtEditResidual').val(response.residual_value);
+          $('#txtEditUseful').val(response.useful_life);
+          $('#selEditCategory')[0].tomselect.setValue(response.categ_id);
+          $('#selEditBrand')[0].tomselect.setValue(response.brand_id);
         }
       },
       error: function (response) {
@@ -178,25 +178,15 @@ $(document).ready(function () {
 
 
 
-
   propertyEditForm.on('submit', function (e) {
     e.preventDefault();
     toggleButtonState(propertyEditSaveBtn, true);
 
     const editFormData = new FormData(propertyEditForm[0]);
 
-    editFormData.append('_method', 'PATCH');
-    editFormData.append('id', $('#txtEditPropertyId').val());
-    editFormData.append('propertyName', $('#txtEditPropertyName').val());
-    editFormData.append('category', $('#cbxEditCategory').val());
-    editFormData.append('brand', $('#cbxEditBrand').val());
-    editFormData.append('description', $('#txtEditDescription').val());
-    editFormData.append('purchasePrice', $('#txtEditPurchasePrice').val());
-    editFormData.append('residualValue', $('#txtEditResidualValue').val());
-    editFormData.append('usefulLife', $('#txtEditUsefulLife').val());
-
-    if (propertyDropzoneEdit.files.length > 0) {
-      editFormData.append('image', propertyDropzoneEdit.files[0]);
+    // Log the form data to verify
+    for (let pair of editFormData.entries()) {
+      console.log(pair[0] + ': ' + pair[1]);
     }
 
     $.ajax({
@@ -210,34 +200,7 @@ $(document).ready(function () {
           showResponseAlert(response, 'success', propertyEditModal, propertyEditForm);
         } else {
           toggleButtonState(propertyEditSaveBtn, false);
-          if (response.errors.propertyName) {
-            $('#txtEditPropertyName').addClass('is-invalid');
-            $('#valEditPropertyName').text(response.errors.propertyName[0]);
-          }
-          if (response.errors.category) {
-            $('#cbxEditCategory').next('.ts-wrapper').addClass('is-invalid');
-            $('#valEditCategoryName').text(response.errors.category[0]);
-          }
-          if (response.errors.brand) {
-            $('#cbxEditBrand').next('.ts-wrapper').addClass('is-invalid');
-            $('#valEditBrandName').text(response.errors.brand[0]);
-          }
-          if (response.errors.description) {
-            $('#txtEditDescription').addClass('is-invalid');
-            $('#valEditDescription').text(response.errors.description[0]);
-          }
-          if (response.errors.purchasePrice) {
-            $('#txtEditPurchasePrice').addClass('is-invalid');
-            $('#valEditPurchasePrice').text(response.errors.purchasePrice[0]);
-          }
-          if (response.errors.residualValue) {
-            $('#txtEditResidualValue').addClass('is-invalid');
-            $('#valEditResidualValue').text(response.errors.residualValue[0]);
-          }
-          if (response.errors.usefulLife) {
-            $('#txtEditUsefulLife').addClass('is-invalid');
-            $('#valEditUsefulLife').text(response.errors.usefulLife[0]);
-          }
+          handleValidationErrors(response, 'Edit');
         }
       },
       error: function (response) {
@@ -245,6 +208,7 @@ $(document).ready(function () {
       },
     });
   });
+
 
   // ============ End Update a Stock Item ============ //
 
@@ -285,21 +249,21 @@ document.addEventListener('DOMContentLoaded', function () {
   const alertContainer = document.getElementById('alertContainer');
   let alertTimeout;
 
-  new TomSelect('#cbxEditUnit', {
+  new TomSelect('#selEditUnit', {
     controlInput: false,
     hideSearch: true,
     allowEmptyOption: true,
     dropdownParent: 'body',
   });
 
-  new TomSelect('#cbxEditCategory', {
+  new TomSelect('#selEditCategory', {
     controlInput: false,
     hideSearch: true,
     allowEmptyOption: true,
     dropdownParent: 'body',
   });
 
-  new TomSelect('#cbxEditBrand', {
+  new TomSelect('#selEditBrand', {
     controlInput: false,
     hideSearch: true,
     allowEmptyOption: true,
