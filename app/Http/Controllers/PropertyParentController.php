@@ -87,8 +87,8 @@ class PropertyParentController extends Controller
             'itemType' => ['required'],
             'quantity' => ['required', 'integer', 'min:1', 'max:500'],
             'unit' => ['required'],
-            'specification' => ['required', 'regex:/^[A-Za-z0-9%,\- ×"]+$/', 'min:3', 'max:100'],
-            'description' => ['nullable', 'regex:/^[A-Za-z0-9%,\- ×"]+$/', 'min:3', 'max:100'],
+            'specification' => ['required', 'regex:/^[A-Za-z0-9%,\- ×."\'"]+$/', 'min:3', 'max:100'],
+            'description' => ['nullable', 'regex:/^[A-Za-z0-9%,\- ×."\'"]+$/', 'min:3', 'max:100'],
             'purchasePrice' => ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/', 'min:1'],
         ];
 
@@ -105,10 +105,10 @@ class PropertyParentController extends Controller
             'quantity.max' => 'The quantity may not be greater than :max.',
             'unit.required' => 'Please choose a unit type!',
             'specification.required' => 'Please enter a specification!',
-            'specification.regex' => 'The specification may only contain letters, spaces, and hyphens.',
+            'specification.regex' => 'The specification may only contain letters, spaces, periods, and hyphens.',
             'specification.min' => 'The specification must be at least :min characters.',
             'specification.max' => 'The specification may not be greater than :max characters.',
-            'description.regex' => 'The description may only contain letters, spaces, and hyphens.',
+            'description.regex' => 'The description may only contain letters, spaces, periods, and hyphens.',
             'description.min' => 'The description must be at least :min characters.',
             'description.max' => 'The description may not be greater than :max characters.',
             'purchasePrice.required' => 'Please enter the purchase price!',
