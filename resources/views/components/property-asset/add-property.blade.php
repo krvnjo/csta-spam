@@ -160,7 +160,6 @@
               </div>
             </div>
 
-
           </div>
           <div id="nonConsumableFields2" style="display: none;">
             <div class="card mb-4">
@@ -250,76 +249,6 @@
     </div>
   </div>
 </div>
-{{--<script>--}}
-{{--  document.addEventListener('DOMContentLoaded', function() {--}}
-{{--    const itemTypeSelect = document.getElementById('cbxItemType');--}}
-{{--    const nonConsumableFields1 = document.getElementById('nonConsumableFields1');--}}
-{{--    const nonConsumableFields2 = document.getElementById('nonConsumableFields2');--}}
-{{--    const alertContainer = document.getElementById('alertContainer');--}}
-{{--    let alertTimeout;--}}
-
-{{--    const tomSelect1 = new TomSelect('#cbxCategory');--}}
-{{--    const tomSelect2 = new TomSelect('#cbxCondition');--}}
-{{--    const tomSelect3 = new TomSelect('#cbxBrand');--}}
-{{--    const tomSelect4 = new TomSelect('#cbxAcquiredType');--}}
-
-{{--    function resetNonConsumableFields() {--}}
-
-{{--      const inputs1 = nonConsumableFields1.querySelectorAll('input');--}}
-{{--      const inputs2 = nonConsumableFields2.querySelectorAll('input');--}}
-
-{{--      // Clear all regular inputs--}}
-{{--      inputs1.forEach(input => input.value = '');--}}
-{{--      inputs2.forEach(input => input.value = '');--}}
-
-{{--      if (tomSelect1) {--}}
-{{--        tomSelect1.clear()--}}
-{{--      }--}}
-{{--      if (tomSelect2) {--}}
-{{--        tomSelect2.clear();--}}
-{{--      }--}}
-{{--      if (tomSelect3) {--}}
-{{--        tomSelect3.clear();--}}
-{{--      }--}}
-{{--      if (tomSelect4) {--}}
-{{--        tomSelect4.clear();--}}
-{{--      }--}}
-{{--      --}}
-{{--    }--}}
-
-{{--    itemTypeSelect.addEventListener('change', function() {--}}
-{{--      clearTimeout(alertTimeout);--}}
-
-{{--      if (this.value === 'non-consumable') {--}}
-{{--        nonConsumableFields1.style.display = 'block';--}}
-{{--        nonConsumableFields2.style.display = 'block';--}}
-
-{{--        alertContainer.style.display = 'block';--}}
-{{--        alertContainer.classList.remove('fade');--}}
-
-{{--        alertTimeout = setTimeout(function() {--}}
-{{--          alertContainer.classList.add('fade');--}}
-{{--          alertContainer.addEventListener('transitionend', function() {--}}
-{{--            alertContainer.style.display = 'none';--}}
-{{--            alertContainer.classList.remove('fade');--}}
-{{--          });--}}
-{{--        }, 5000);--}}
-
-{{--        resetNonConsumableFields();--}}
-
-{{--      } else {--}}
-{{--        nonConsumableFields1.style.display = 'none';--}}
-{{--        nonConsumableFields2.style.display = 'none';--}}
-{{--        alertContainer.style.display = 'none';--}}
-
-{{--        resetNonConsumableFields();--}}
-{{--      }--}}
-
-{{--    });--}}
-{{--  });--}}
-{{--</script>--}}
-
-
 <style>
   .modal-xl {
     max-width: 1300px;

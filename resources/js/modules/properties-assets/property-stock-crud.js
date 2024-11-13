@@ -141,21 +141,43 @@ $(document).ready(function () {
       method: 'GET',
       data: { id: propertyId },
       success: function (response) {
-        propertyEditModal.modal('toggle');
+        $('#editPropertyModal').modal('toggle');
         $('#txtEditPropertyId').val(response.id);
         $('#txtEditPropertyName').val(response.name);
-        $('#cbxEditCategory')[0].tomselect.setValue(response.categ_id);
-        $('#cbxEditBrand')[0].tomselect.setValue(response.brand_id);
         $('#txtEditDescription').val(response.description);
+        $('#txtEditSpecification').val(response.specification);
         $('#txtEditPurchasePrice').val(response.purchase_price);
-        $('#txtEditResidualValue').val(response.residual_value);
-        $('#txtEditUsefulLife').val(response.useful_life);
+        $('#cbxEditUnit')[0].tomselect.setValue(response.unit_id);
+        $('#txtEditQuantity').val(response.quantity).prop('disabled', true);
+
+        const itemType = response.item_type;
+
+        if (itemType === 'consumable') {
+          $('#cbxEditItemType').val('consumable').prop('disabled', true);
+          $('#nonConsumableFields').hide();
+
+          $('#txtEditResidualValue').val('');
+          $('#txtEditUsefulLife').val('');
+          $('#cbxEditCategory')[0].tomselect.clear();
+          $('#cbxEditBrand')[0].tomselect.clear();
+        } else {
+          $('#cbxEditItemType').val('non-consumable').prop('disabled', true);
+          $('#nonConsumableFields').show();
+
+          $('#txtEditResidualValue').val(response.residual_value);
+          $('#txtEditUsefulLife').val(response.useful_life);
+          $('#cbxEditCategory')[0].tomselect.setValue(response.categ_id);
+          $('#cbxEditBrand')[0].tomselect.setValue(response.brand_id);
+        }
       },
       error: function (response) {
         showResponseAlert(response, 'error');
       },
     });
   });
+
+
+
 
   propertyEditForm.on('submit', function (e) {
     e.preventDefault();
@@ -263,6 +285,27 @@ document.addEventListener('DOMContentLoaded', function () {
   const alertContainer = document.getElementById('alertContainer');
   let alertTimeout;
 
+  new TomSelect('#cbxEditUnit', {
+    controlInput: false,
+    hideSearch: true,
+    allowEmptyOption: true,
+    dropdownParent: 'body',
+  });
+
+  new TomSelect('#cbxEditCategory', {
+    controlInput: false,
+    hideSearch: true,
+    allowEmptyOption: true,
+    dropdownParent: 'body',
+  });
+
+  new TomSelect('#cbxEditBrand', {
+    controlInput: false,
+    hideSearch: true,
+    allowEmptyOption: true,
+    dropdownParent: 'body',
+  });
+
   const tomSelectItemType = new TomSelect('#cbxItemType', {
     controlInput: false,
     hideSearch: true,
@@ -337,7 +380,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const inputs1 = nonConsumableFields1.querySelectorAll('input');
     const inputs2 = nonConsumableFields2.querySelectorAll('input');
 
-    // Clear all regular inputs
     inputs1.forEach((input) => (input.value = ''));
     inputs2.forEach((input) => (input.value = ''));
 

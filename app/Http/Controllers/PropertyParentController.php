@@ -114,16 +114,18 @@ class PropertyParentController extends Controller
             'purchasePrice.required' => 'Please enter the purchase price!',
             'purchasePrice.numeric' => 'The purchase price must be a number.',
             'purchasePrice.min' => 'The purchase price must be at least :min.',
+            'purchasePrice.regex' => 'The purchase price can only have up to 2 decimal places.',
         ];
 
         if ($request->itemType !== 'consumable') {
+            $purchasePrice = $request->input('purchasePrice');
             $rules = array_merge($rules, [
                 'category' => ['required'],
                 'brand' => ['required'],
                 'acquiredType' => ['required'],
                 'acquiredDate' => ['required', 'date', 'before_or_equal:today', 'after_or_equal:2007-01-01'],
                 'condition' => ['required'],
-                'residualValue' => ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/'],
+                'residualValue' => ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/', 'min:1','max:'.$purchasePrice],
                 'usefulLife' => ['required', 'integer', 'min:1', 'max:500'],
             ]);
 
@@ -137,6 +139,9 @@ class PropertyParentController extends Controller
                 'condition.required' => 'Please choose a condition!',
                 'residualValue.required' => 'Please enter the residual value!',
                 'residualValue.numeric' => 'The residual value must be a number.',
+                'residualValue.min' => 'The residual value must be at least :min.',
+                'residualValue.regex' => 'The residual value can only have up to 2 decimal places.',
+                'residualValue.max' => 'The residual value may not be greater than the purchase price.',
                 'usefulLife.required' => 'Please enter the useful life!',
                 'usefulLife.min' => 'The useful life must be at least :min.',
                 'usefulLife.integer' => 'The useful life must be a whole number.',
@@ -295,19 +300,30 @@ class PropertyParentController extends Controller
         try {
             $propertyParent = PropertyParent::query()->findOrFail(Crypt::decryptString($request->input('id')));
 
-            return response()->json([
+            $responseData = [
                 'success' => true,
-                'id' => $request->input('id'),
-                'image' => $propertyParent->image,
+                'id' => $propertyParent->id,
                 'name' => $propertyParent->name,
-                'brand_id' => $propertyParent->brand_id,
-                'categ_id' => $propertyParent->categ_id,
                 'description' => $propertyParent->description,
+                'specification' => $propertyParent->specification,
+                'quantity' => $propertyParent->quantity,
+                'unit_id' => $propertyParent->unit_id,
                 'purchase_price' => $propertyParent->purchase_price,
-                'residual_value' => $propertyParent->residual_value,
-                'useful_life' => $propertyParent->useful_life,
-            ]);
-        } catch (Throwable) {
+                'item_type' => $propertyParent->is_consumable ? 'consumable' : 'non-consumable',
+            ];
+
+            if (!$propertyParent->is_consumable) {
+                $responseData = array_merge($responseData, [
+                    'categ_id' => $propertyParent->categ_id,
+                    'brand_id' => $propertyParent->brand_id,
+                    'residual_value' => $propertyParent->residual_value,
+                    'useful_life' => $propertyParent->useful_life,
+                ]);
+            }
+
+            return response()->json($responseData);
+
+        } catch (Throwable $e) {
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
@@ -315,6 +331,8 @@ class PropertyParentController extends Controller
             ], 500);
         }
     }
+
+
 
     /**
      * Update the specified resource in storage.

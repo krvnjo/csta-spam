@@ -29,7 +29,11 @@
             <p class="page-header-text">
               <span class="legend-indicator bg-danger "></span>No stock
               <span class="ms-2"></span>
-              <span class="legend-indicator bg-info"></span>Low stock
+              <span class="legend-indicator bg-warning"></span>Low stock
+              <span class="ms-2"></span>
+              <span class="legend-indicator bg-success"></span>Sufficient stock
+              <span class="ms-2"></span>
+              <span class="legend-indicator bg-secondary"></span>Non-Consumable
             </p>
           </div>
           <!-- End Col -->
@@ -226,7 +230,7 @@
           <table class="table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table table table-hover w-100" id="propertyOverviewDatatable"
             data-hs-datatables-options='{
                    "columnDefs": [{
-                      "targets": [0, 8],
+                      "targets": [0, 9],
                       "orderable": false
                     }],
                    "order": [],
@@ -245,7 +249,8 @@
                 <th class="d-none" id="PropertyId"></th>
                 <th class="text-center" style="padding: 0 0 0 1rem;">
                   <span class="legend-indicator bg-danger"></span>
-                  <span class="legend-indicator bg-info"></span>
+                  <span class="legend-indicator bg-warning"></span>
+                  <span class="legend-indicator bg-success"></span>
                 </th>
                 <th class="col-3">Item Name</th>
                 <th class="col-3">Specification</th>
@@ -253,6 +258,7 @@
                 <th class="col-2">Price</th>
                 <th class="col-2">Deprecation Rate</th>
                 <th class="col-1 text-center">Total Quantity</th>
+                <th class="col-1 text-center">Unit</th>
                 <th class="col-3">Action</th>
               </tr>
             </thead>
@@ -262,10 +268,14 @@
                 <tr>
                   <td class="d-none" data-property-id="{{ Crypt::encryptString($propertyParent->id) }}"></td>
                   <td style="text-align: center; padding: 0;">
-                    @if (!$propertyParent->propertyChildren->where('inventory_date', null)->count())
+                    @if (!$propertyParent->propertyChildren->where('inventory_date', null)->count() && $propertyParent->is_consumable == 1)
                       <span class="legend-indicator bg-danger" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="No Stock"></span>
-                    @elseif ($propertyParent->propertyChildren->where('inventory_date', null)->count() <= 5)
-                      <span class="legend-indicator bg-info" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="Low Stock"></span>
+                    @elseif ($propertyParent->quantity <= 5 && $propertyParent->is_consumable == 1)
+                      <span class="legend-indicator bg-warning" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="Low Stock"></span>
+                    @elseif ($propertyParent->quantity >= 6 && $propertyParent->is_consumable == 1)
+                      <span class="legend-indicator bg-success" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="Sufficient Stock"></span>
+                    @elseif ($propertyParent->is_consumable == 0)
+                      <span class="legend-indicator bg-secondary" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="Non-Consumable"></span>
                     @endif
                   </td>
                   <td>
@@ -331,6 +341,8 @@
                   <td class="text-center">
                     {{ $propertyParent->quantity }}
                   </td>
+                  <td class="text-center">
+                    {{ $propertyParent->unit->name }}
                   <td>
                     <div class="btn-group position-static" role="group">
                       <a class="btn btn-white btn-sm" href="{{ route('prop-asset.child.index', $propertyParent) }}">
@@ -413,7 +425,7 @@
 @section('sec-content')
   <x-property-asset.add-property :brands="$brands" :categories="$categories" :conditions="$conditions" :acquisitions="$acquisitions" :units="$units" />
 
-  <x-property-asset.edit-property :brands="$brands" :categories="$categories" />
+  <x-property-asset.edit-property :brands="$brands" :categories="$categories" :units="$units" :conditions="$conditions" :acquisitions="$acquisitions" />
 
   <x-property-asset.view-property />
 
@@ -920,9 +932,6 @@
         // =======================================================
         HSBsDropdown.init()
 
-        // INITIALIZATION OF SELECT
-        // =======================================================
-        HSCore.components.HSTomSelect.init(".js-select");
       }
     })()
   </script>
