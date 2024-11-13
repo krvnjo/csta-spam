@@ -283,11 +283,11 @@ class PropertyParentController extends Controller
                 'created' => $propertyParent->created_at->format('D, F d, Y | h:i:s A'),
                 'updated' => $propertyParent->updated_at->format('D, F d, Y | h:i:s A'),
             ]);
-        } catch (Throwable) {
+        } catch (Throwable $e) {
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
-                'message' => 'An error occurred while fetching the item.',
+                'message' => 'An error occurred while fetching the item.' . $e->getMessage(),
             ], 500);
         }
     }
@@ -350,10 +350,6 @@ class PropertyParentController extends Controller
                 'property.max' => 'The item name may not be greater than :max characters.',
                 'property.unique' => 'This item name already exists.',
 
-                'category.required' => 'Please choose a category!',
-
-                'brand.required' => 'Please choose a brand!',
-
                 'description.regex' => 'The description may only contain letters, numbers, spaces, and some special characters.',
                 'description.min' => 'The description must be at least :min characters.',
                 'description.max' => 'The description may not be greater than :max characters.',
@@ -380,6 +376,10 @@ class PropertyParentController extends Controller
                 'specification.regex' => 'The specification may only contain letters, spaces, periods, and hyphens.',
                 'specification.min' => 'The specification must be at least :min characters.',
                 'specification.max' => 'The specification may not be greater than :max characters.',
+
+                'category.required' => 'Please choose a category!',
+
+                'brand.required' => 'Please choose a brand!',
             ];
 
             $propertyEditValidator = Validator::make($request->all(), [
@@ -402,10 +402,10 @@ class PropertyParentController extends Controller
                     'min:3',
                     'max:100'
                 ],
-                'category' => ['required'],
-                'brand' => ['required'],
-                'residual' => ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/', 'min:1','max:'.$purchasePrice],
-                'useful' => ['required', 'integer', 'min:1', 'max:500'],
+                'category' => $property->is_consumable ? 'nullable' : 'required',
+                'brand' => $property->is_consumable ? 'nullable' : 'required',
+                'residual' => $property->is_consumable ? 'nullable' : ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/', 'min:1', 'max:' . $purchasePrice],
+                'useful' => $property->is_consumable ? 'nullable' : ['required', 'integer', 'min:1', 'max:500'],
 
             ], $propertyEditValidationMessages);
 
