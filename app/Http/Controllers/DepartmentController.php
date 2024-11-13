@@ -79,10 +79,10 @@ class DepartmentController extends Controller
             $department = Department::with('designations')->findOrFail($validated['id']);
             $designations = $department->designations()->orderBy('name')->pluck('name')->toArray();
 
-            $createdBy = Audit::where('subject_type', Department::class)->where('subject_id', $department->id)->where('event', 'created')->first();
+            $createdBy = Audit::where('subject_type', Department::class)->where('subject_id', $department->id)->where('event_id', 1)->first();
             $createdDetails = $this->getUserAuditDetails($createdBy);
 
-            $updatedBy = Audit::where('subject_type', Department::class)->where('subject_id', $department->id)->where('event', 'updated')->latest()->first() ?? $createdBy;
+            $updatedBy = Audit::where('subject_type', Department::class)->where('subject_id', $department->id)->where('event_id', 2)->latest()->first() ?? $createdBy;
             $updatedDetails = $this->getUserAuditDetails($updatedBy);
 
             return response()->json([

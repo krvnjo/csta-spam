@@ -17,19 +17,19 @@ class StatusSeeder extends Seeder
         $conditions = [
             'Fully Functional' => [
                 'description' => 'Item is fully working.',
-                'color_id' => 15,
+                'color_id' => 16,
             ],
             'Partially Working' => [
                 'description' => 'Item has small issues but still usable.',
-                'color_id' => 16,
+                'color_id' => 17,
             ],
             'Working with Major Issues' => [
                 'description' => 'Item has significant issues affecting use.',
-                'color_id' => 18,
+                'color_id' => 19,
             ],
             'Not Working' => [
                 'description' => 'Item not usable and needs repair or replacement.',
-                'color_id' => 19,
+                'color_id' => 20,
             ],
         ];
 
@@ -44,19 +44,19 @@ class StatusSeeder extends Seeder
         $priorities = [
             'Urgent' => [
                 'description' => 'Needs immediate action and attention.',
-                'color_id' => 19,
+                'color_id' => 20,
             ],
             'High' => [
                 'description' => 'Should be addressed soon.',
-                'color_id' => 18,
+                'color_id' => 19,
             ],
             'Medium' => [
                 'description' => 'Can be scheduled but important.',
-                'color_id' => 16,
+                'color_id' => 17,
             ],
             'Low' => [
                 'description' => 'Can be addressed later without urgency.',
-                'color_id' => 15,
+                'color_id' => 16,
             ],
         ];
 

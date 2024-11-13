@@ -6,6 +6,7 @@
 
 @push('styles')
   <link href="{{ Vite::asset('resources/vendor/tom-select/dist/css/tom-select.bootstrap5.css') }}" rel="stylesheet">
+  <link href="{{ Vite::asset('resources/vendor/daterangepicker/daterangepicker.css') }}" rel="stylesheet">
 @endpush
 
 @section('main-content')
@@ -77,6 +78,27 @@
         <div class="collapse" id="auditFilterSearchCollapse">
           <div class="card-body">
             <div class="row">
+              <!-- Subjects -->
+              <div class="col-sm-12 col-md-6 col-lg-3">
+                <div class="mb-3">
+                  <label class="form-label" for="auditSubjectFilter">Subjects</label>
+                  <div class="tom-select-custom">
+                    <select class="js-select js-datatable-filter form-select" id="auditSubjectFilter" data-target-column-index="2"
+                      data-hs-tom-select-options='{
+                        "singleMultiple": true,
+                        "hideSelected": false,
+                        "placeholder": "All Subjects"
+                      }'
+                      autocomplete="off" multiple>
+                      @foreach ($types as $type)
+                        <option value="{{ $type->name }}">{{ $type->name }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <!-- End Subjects -->
+
               <!-- Events -->
               <div class="col-sm-12 col-md-6 col-lg-3">
                 <div class="mb-3">
@@ -121,6 +143,22 @@
                 </div>
               </div>
               <!-- End Users -->
+
+              <!-- Date Range -->
+              <div class="col-sm-12 col-md-6 col-lg-3">
+                <div class="mb-3">
+                  <label class="form-label" for="auditDateRangeFilter">Date Range</label>
+                  <input class="js-daterangepicker-clear js-datatable-filter form-control daterangepicker-custom-input" data-target-column-index="6"
+                    data-hs-daterangepicker-options='{
+                      "autoUpdateInput": false,
+                      "locale": {
+                        "cancelLabel": "Clear"
+                      }
+                    }'
+                    type="text" placeholder="Select date range">
+                </div>
+              </div>
+              <!-- End Date Range -->
             </div>
           </div>
         </div>
@@ -131,7 +169,7 @@
           <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100" id="auditsDatatable"
             data-hs-datatables-options='{
               "columnDefs": [{
-                 "targets": [0, 3],
+                 "targets": [3, 7],
                  "orderable": false
                }],
               "order": [6, "desc"],
@@ -151,9 +189,10 @@
                 <th class="d-none"></th>
                 <th>Log Name</th>
                 <th>Description</th>
-                <th>Subject & Event</th>
+                <th>Event</th>
                 <th>Performed By</th>
                 <th>Date Logged</th>
+                <th>Action</th>
               </tr>
             </thead>
 
@@ -162,26 +201,34 @@
                 <tr>
                   <td>{{ $loop->iteration }}</td>
                   <td class="d-none" data-audit-id="{{ Crypt::encryptString($audit->id) }}"></td>
-                  <td><a class="d-block h5 mb-0 btnViewAudit">{{ $audit->log_name }}</a></td>
+                  <td data-full-value="{{ $audit->name }}">
+                    <span class="d-block h5 mb-0">{{ $audit->name }}</span>
+                    <span class="d-block fs-5">{{ $audit->subject->name }}</span>
+                  </td>
                   <td>{{ \Illuminate\Support\Str::limit($audit->description, 50, '...') }}</td>
                   <td data-order="{{ $audit->event }}">
-                    <span class="d-block h5 mb-0">{{ $audit->subject->name }}</span>
-                    <span class="d-block fs-5">{{ $audit->event }}</span>
+                    <span class="{{ $audit->event->badge->class }}">
+                      <span class="{{ $audit->event->legend->class }}"></span>{{ $audit->event->name }}
+                    </span>
                   </td>
                   <td>
                     <a class="d-flex align-items-center btnViewUser">
                       <div class="avatar avatar-circle">
-                        <img class="avatar-img" src="{{ Vite::asset('resources/img/uploads/user-images/' . ($audit ? $audit->causer->user_image ?? 'system.jpg' : 'system.jpg')) }}"
-                          alt="User Avatar">
+                        <img class="avatar-img" src="{{ Vite::asset('resources/img/uploads/user-images/' . $audit->causer->user_image) }}" alt="User Avatar">
                       </div>
                       <div class="ms-3">
-                        <span class="d-block h5 text-inherit mb-0">{{ $audit?->causer ? $audit->causer->fname . ' ' . $audit->causer->lname : 'CSTA-SPAM System' }}</span>
-                        <span class="d-block fs-5 text-body">{{ $audit?->causer ? $audit->causer->role->name : 'Super Admin' }}</span>
+                        <span class="d-block h5 text-inherit mb-0">{{ $audit->causer->name }}</span>
+                        <span class="d-block fs-5 text-body">{{ $audit->causer->role->name }}</span>
                       </div>
                     </a>
                   </td>
-                  <td data-order="{{ $audit->created_at }}">
+                  <td data-full-value="{{ $audit->created_at->format('m/d/Y') }}" data-order="{{ $audit->created_at }}">
                     <span><i class="bi-calendar-event me-1"></i> Logged {{ $audit->created_at->diffForHumans() }}</span>
+                  </td>
+                  <td>
+                    <button class="btn btn-white btn-sm btnViewAudit" type="button">
+                      <i class="bi-eye me-1"></i> View
+                    </button>
                   </td>
                 </tr>
               @endforeach
@@ -227,12 +274,13 @@
 @endsection
 
 @section('sec-content')
-  {{-- Secondary Content --}}
+  <x-other.view-audit />
 @endsection
 
 @push('scripts')
   <script src="{{ Vite::asset('resources/vendor/tom-select/dist/js/tom-select.complete.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/clipboard/dist/clipboard.min.js') }}"></script>
+  <script src="{{ Vite::asset('resources/vendor/daterangepicker/moment.min.js') }}"></script>
+  <script src="{{ Vite::asset('resources/vendor/daterangepicker/daterangepicker.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables/media/js/jquery.dataTables.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables.net.extensions/select/select.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
@@ -254,6 +302,20 @@
   <script>
     // Initialization of DataTable
     $(document).on("ready", function() {
+      HSCore.components.HSDaterangepicker.init('.js-daterangepicker-clear');
+
+      const daterangepickerClear = $('.js-daterangepicker-clear');
+
+      daterangepickerClear.on('apply.daterangepicker', function(ev, picker) {
+        $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+        filterDatatableAndCount(auditsDatatable, "#auditsFilterCount");
+      });
+
+      daterangepickerClear.on('cancel.daterangepicker', function() {
+        $(this).val('');
+        filterDatatableAndCount(auditsDatatable, "#auditsFilterCount");
+      });
+
       HSCore.components.HSDatatables.init($("#auditsDatatable"), {
         dom: "Bfrtip",
         buttons: [{
@@ -335,11 +397,6 @@
         // INITIALIZATION OF SELECT
         // =======================================================
         HSCore.components.HSTomSelect.init(".js-select");
-
-
-        // INITIALIZATION OF CLIPBOARD
-        // =======================================================
-        HSCore.components.HSClipboard.init('.js-clipboard')
       };
     })();
   </script>

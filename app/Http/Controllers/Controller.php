@@ -41,7 +41,7 @@ abstract class Controller
     {
         return [
             'image' => asset('storage/img/user-images/' . ($audit ? ($audit->causer->user_image ?? 'system.jpg') : 'system.jpg')),
-            'name' => $audit?->causer ? $this->formatFullName($audit->causer->fname, $audit->causer->lname) : 'CSTA-SPAM System',
+            'name' => $audit?->causer ? $audit->causer->name : 'CSTA-SPAM System',
         ];
     }
 }

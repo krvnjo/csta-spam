@@ -43,6 +43,7 @@ return new class extends Migration {
             $table->foreignIdFor(Department::class, 'dept_id')->constrained('departments')->cascadeOnDelete();
             $table->string('email', 75)->unique();
             $table->string('phone_num', 25)->unique()->nullable();
+            $table->timestamp('last_login')->nullable();
             $table->string('user_image', 25)->default('default.jpg');
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();

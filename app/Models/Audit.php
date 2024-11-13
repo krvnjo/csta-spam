@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,6 +21,11 @@ class Audit extends Model
         'causer_id',
         'properties',
     ];
+
+    public function event(): BelongsTo
+    {
+        return $this->belongsTo(Event::class, 'event_id');
+    }
 
     protected array $auditDetails = [];
 
