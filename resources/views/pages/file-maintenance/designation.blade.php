@@ -24,13 +24,13 @@
             <p class="page-header-text">Manage and organize designation records.</p>
           </div>
 
-          @can('create designation maintenance')
+          @access('Designation Maintenance', 'Read and Write, Full Access')
             <div class="col-sm-auto mt-2 mt-sm-0">
               <button class="btn btn-primary w-100 w-sm-auto" id="btnAddDesignationModal" data-bs-toggle="modal" data-bs-target="#modalAddDesignation">
                 <i class="bi-plus-lg me-1"></i> Add Designation
               </button>
             </div>
-          @endcan
+          @endaccess
         </div>
       </div>
       <!-- End Designations Header -->
@@ -220,31 +220,27 @@
                     <div class="btn-group position-static">
                       <button class="btn btn-white btn-sm btnViewDesignation" type="button"><i class="bi-eye"></i> View</button>
 
-                      @canAny('update designation maintenance, delete designation maintenance')
+                      @access('Designation Maintenance', 'Read and Write, Full Access')
                         <div class="btn-group position-static">
                           <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" data-bs-toggle="dropdown" type="button"></button>
                           <div class="dropdown-menu dropdown-menu-end mt-1">
-                            @can('update designation maintenance')
-                              <button class="dropdown-item btnEditDesignation" type="button">
-                                <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
-                              </button>
-                              <button class="dropdown-item btnSetDesignation" data-status="{{ $designation->is_active ? 0 : 1 }}" type="button">
-                                <i class="bi {{ $designation->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
-                                {{ $designation->is_active ? 'Set to Inactive' : 'Set to Active' }}
-                              </button>
-                              @can('delete designation maintenance')
-                                <div class="dropdown-divider"></div>
-                              @endcan
-                            @endcan
+                            <button class="dropdown-item btnEditDesignation" type="button">
+                              <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
+                            </button>
+                            <button class="dropdown-item btnSetDesignation" data-status="{{ $designation->is_active ? 0 : 1 }}" type="button">
+                              <i class="bi {{ $designation->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
+                              {{ $designation->is_active ? 'Set to Inactive' : 'Set to Active' }}
+                            </button>
 
-                            @can('delete designation maintenance')
+                            @access('Designation Maintenance', 'Full Access')
+                              <div class="dropdown-divider"></div>
                               <button class="dropdown-item text-danger btnDeleteDesignation" type="button">
                                 <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
                               </button>
-                            @endcan
+                            @endaccess
                           </div>
                         </div>
-                      @endcanAny
+                      @endaccess
                     </div>
                   </td>
                 </tr>

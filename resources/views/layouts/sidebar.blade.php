@@ -107,7 +107,9 @@
                 </a>
 
                 <div class="nav-collapse collapse" id="navbarVerticalMenuFileMaintenance" data-bs-parent="#navbarVerticalMenuOthersMenu">
-                  <a class="nav-link" data-route="brand.index" href="{{ route('brand.index') }}">Brands</a>
+                  @access('Brand Maintenance', 'View Only, Read and Write, Full Access')
+                    <a class="nav-link" data-route="brand.index" href="{{ route('brand.index') }}">Brands</a>
+                  @endaccess
                   <a class="nav-link" data-route="category.index" href="{{ route('category.index') }}">Categories</a>
                   <a class="nav-link" data-route="department.index" href="{{ route('department.index') }}">Departments</a>
                   <a class="nav-link" data-route="designation.index" href="{{ route('designation.index') }}">Designations</a>
