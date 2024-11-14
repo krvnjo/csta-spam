@@ -88,22 +88,19 @@
                     <!-- Roles Filter -->
                     <div class="mb-4">
                       <small class="text-cap text-body">Roles</small>
-                      <div class="row">
-                        <div class="col">
-                          <div class="tom-select-custom">
-                            <select class="js-select js-datatable-filter form-select" data-target-column-index="4"
-                              data-hs-tom-select-options='{
-                                "allowEmptyOption": true,
-                                "hideSearch": true,
-                                "placeholder": "All Roles"
-                              }'>
-                              <option value="">All Roles</option>
-                              @foreach ($roles as $role)
-                                <option value="{{ $role->name }}">{{ $role->name }}</option>
-                              @endforeach
-                            </select>
-                          </div>
-                        </div>
+                      <div class="tom-select-custom">
+                        <select class="js-select js-datatable-filter form-select" data-target-column-index="4"
+                          data-hs-tom-select-options='{
+                            "singleMultiple": true,
+                            "hideSearch": true,
+                            "hideSelected": false,
+                            "placeholder": "All Roles"
+                          }'
+                          multiple>
+                          @foreach ($roles as $role)
+                            <option value="{{ $role->name }}">{{ $role->name }}</option>
+                          @endforeach
+                        </select>
                       </div>
                     </div>
                     <!-- End Roles Filter -->
@@ -111,22 +108,19 @@
                     <!-- Departments Filter -->
                     <div class="mb-4">
                       <small class="text-cap text-body">Departments</small>
-                      <div class="row">
-                        <div class="col">
-                          <div class="tom-select-custom">
-                            <select class="js-select js-datatable-filter form-select" data-target-column-index="4"
-                              data-hs-tom-select-options='{
-                                "allowEmptyOption": true,
-                                "hideSearch": true,
-                                "placeholder": "All Departments"
-                              }'>
-                              <option value="">All Departments</option>
-                              @foreach ($departments as $department)
-                                <option value="{{ $department->name }}">{{ $department->name }}</option>
-                              @endforeach
-                            </select>
-                          </div>
-                        </div>
+                      <div class="tom-select-custom">
+                        <select class="js-select js-datatable-filter form-select" data-target-column-index="4"
+                          data-hs-tom-select-options='{
+                            "singleMultiple": true,
+                            "hideSearch": true,
+                            "hideSelected": false,
+                            "placeholder": "All Departments"
+                          }'
+                          multiple>
+                          @foreach ($departments as $department)
+                            <option value="{{ $department->name }}">{{ $department->name }}</option>
+                          @endforeach
+                        </select>
                       </div>
                     </div>
                     <!-- End Departments Filter -->
@@ -134,21 +128,17 @@
                     <!-- Status Filter -->
                     <div class="mb-2">
                       <small class="text-cap text-body">Status</small>
-                      <div class="row">
-                        <div class="col">
-                          <div class="tom-select-custom">
-                            <select class="js-select js-datatable-filter form-select" data-target-column-index="8"
-                              data-hs-tom-select-options='{
-                                "allowEmptyOption": true,
-                                "hideSearch": true,
-                                "placeholder": "All Status"
-                              }'>
-                              <option value="">All Status</option>
-                              <option data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-success"></span>Active</span>' value="Active"></option>
-                              <option data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-danger"></span>Inactive</span>' value="Inactive"></option>
-                            </select>
-                          </div>
-                        </div>
+                      <div class="tom-select-custom">
+                        <select class="js-select js-datatable-filter form-select" data-target-column-index="8"
+                          data-hs-tom-select-options='{
+                            "allowEmptyOption": true,
+                            "hideSearch": true,
+                            "placeholder": "All Status"
+                          }'>
+                          <option value="">All Status</option>
+                          <option data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-success"></span>Active</span>' value="Active"></option>
+                          <option data-option-template='<span class="d-flex align-items-center"><span class="legend-indicator bg-danger"></span>Inactive</span>' value="Inactive"></option>
+                        </select>
                       </div>
                     </div>
                     <!-- End Status Filter -->
@@ -166,7 +156,7 @@
           <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100" id="usersDatatable"
             data-hs-datatables-options='{
               "columnDefs": [{
-                "targets": [0, 5, 9],
+                "targets": [5, 9],
                 "orderable": false
               }],
               "order": [7, "desc"],
@@ -182,7 +172,7 @@
             }'>
             <thead class="thead-light">
               <tr>
-                <th class="w-th" style="width: 7%;">#</th>
+                <th class="w-th" style="width: 5%;">#</th>
                 <th class="d-none"></th>
                 <th>Name</th>
                 <th>Username</th>
@@ -204,7 +194,7 @@
                     <a class="d-flex align-items-center btnViewUser">
                       <div class="avatar avatar-circle"><img class="avatar-img" src="{{ asset('storage/img/user-images/' . $user->user_image) }}" alt="User Image"></div>
                       <div class="ms-3">
-                        <span class="d-block h5 text-inherit mb-0">{{ $user->fname . ' ' . $user->lname }}</span>
+                        <span class="d-block h5 text-inherit mb-0">{{ $user->name }}</span>
                         <span class="d-block fs-5 text-body">{{ $user->email }}</span>
                       </div>
                     </a>
@@ -215,8 +205,18 @@
                     <span class="d-block fs-5">{{ $user->department->name }}</span>
                   </td>
                   <td>{{ $user->phone_num }}</td>
-                  <td data-order="{{ $user->created_at }}"><span><i class="bi-calendar-plus me-1"></i> {{ $user->created_at->format('F d, Y') }}</span></td>
-                  <td data-order="{{ $user->updated_at }}"><span><i class="bi-calendar2-event me-1"></i> Updated {{ $user->updated_at->diffForHumans() }}</span></td>
+                  <td data-order="{{ $user->created_at }}">
+                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $user->created_at->format('D, M d, Y | h:i A') }}">
+                      <i class="bi-calendar-plus me-1"></i>
+                      {{ $user->created_at->format('F d, Y') }}
+                    </span>
+                  </td>
+                  <td data-order="{{ $user->updated_at }}">
+                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $user->updated_at->format('D, M d, Y | h:i A') }}">
+                      <i class="bi-calendar2-event me-1"></i> Updated
+                      {{ $user->updated_at->diffForHumans() }}
+                    </span>
+                  </td>
                   <td>
                     <span class="badge bg-soft-{{ $user->is_active ? 'success' : 'danger' }} text-{{ $user->is_active ? 'success' : 'danger' }}">
                       <span class="legend-indicator bg-{{ $user->is_active ? 'success' : 'danger' }}"></span>{{ $user->is_active ? 'Active' : 'Inactive' }}

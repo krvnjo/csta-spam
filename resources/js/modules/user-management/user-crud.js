@@ -72,6 +72,7 @@ $(document).ready(function () {
             { key: 'updated_img', selector: '#imgViewUpdatedBy' },
           ],
         };
+
         displayViewResponseData(response, userConfig);
       },
       error: function (response) {
@@ -93,12 +94,11 @@ $(document).ready(function () {
         userEditModal.modal('toggle');
 
         if (response.auth) {
-          $('#rowEditRole').hide();
+          $('#userEditRoleContainer').hide();
         } else {
-          $('#rowEditRole').show();
+          $('#userEditRoleContainer').show();
         }
 
-        $('#imgEditDisplayImage').attr('src', response.image);
         populateEditForm(response);
       },
       error: function (response) {

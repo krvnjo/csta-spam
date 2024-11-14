@@ -14,7 +14,7 @@ class UserObserver
     {
         (new Audit())
             ->logName('Add User')
-            ->logDesc("A new user: '{$user->name}' has been created.")
+            ->logDesc("A new user: '{$user->name}' has been added.")
             ->performedOn($user)
             ->logEvent(1)
             ->logProperties([

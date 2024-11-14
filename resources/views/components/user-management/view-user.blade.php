@@ -96,7 +96,7 @@
           <!-- Email Address -->
           <div class="row mb-4">
             <div class="col-12 col-sm-5 d-flex align-items-center mb-2 mb-sm-0">
-              <p class="form-label fw-semibold mb-0">Email:</p>
+              <p class="form-label fw-semibold mb-0">Email Address:</p>
             </div>
             <div class="col-12 col-sm-7 d-flex align-items-center">
               <p class="fw-semibold mb-0" id="lblViewEmail"></p>

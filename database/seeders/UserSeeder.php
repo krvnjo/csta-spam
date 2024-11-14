@@ -35,17 +35,9 @@ class UserSeeder extends Seeder
                 'Borrowing & Reservation',
                 'Item Maintenance',
             ],
-            'User Management' => [
-                'User Management',
-                'Role Management',
-            ],
-            'File Maintenance' => [
-                'Brand Maintenance',
-                'Category Maintenance',
-                'Department Maintenance',
-                'Designation Maintenance',
-            ],
             'Administrative Permissions' => [
+                'User Management',
+                'File Maintenance',
                 'Audit History',
                 'System Settings',
             ],
@@ -97,11 +89,11 @@ class UserSeeder extends Seeder
                 'access' => 'Full Access',
             ],
             'Property Custodian' => [
-                'permissions' => Permission::whereNotIn('name', ['User Management', 'Role Management', 'System Settings'])->pluck('name')->toArray(),
+                'permissions' => Permission::whereNotIn('name', ['User Management', 'System Settings'])->pluck('name')->toArray(),
                 'access' => 'Full Access',
             ],
             'Student Assistant' => [
-                'permissions' => ['Item Inventory Management', 'Brand Maintenance', 'Category Maintenance', 'Department Maintenance', 'Designation Maintenance'],
+                'permissions' => ['Item Inventory Management', 'File Maintenance'],
                 'access' => 'Read and Write',
             ],
         ];

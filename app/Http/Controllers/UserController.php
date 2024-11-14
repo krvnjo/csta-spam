@@ -51,6 +51,7 @@ class UserController extends Controller
             $user = User::create([
                 'user_name' => trim($validated['user']),
                 'pass_hash' => Hash::make($validated['pass']),
+                'name' => $this->formatName($validated['fname'], $validated['mname'], $validated['lname']),
                 'fname' => ucwords(trim($validated['fname'])),
                 'mname' => ucwords(trim($validated['mname'])),
                 'lname' => ucwords(trim($validated['lname'])),
@@ -65,7 +66,7 @@ class UserController extends Controller
                     Storage::delete('public/img/user-images/' . $user->user_image);
                 }
                 $image = $request->file('image');
-                $filename = time() . "_" . uniqid() . '.' . $image->getClientOriginalExtension();
+                $filename = $user->id . '_' . time() . '.' . $image->getClientOriginalExtension();
 
                 $image->storeAs('public/img/user-images', $filename);
                 $user->user_image = $filename;
@@ -80,7 +81,7 @@ class UserController extends Controller
             return response()->json([
                 'success' => true,
                 'title' => 'Saved Successfully!',
-                'text' => 'The user has been added successfully!',
+                'text' => 'A new user has been added successfully!',
             ]);
         } catch (Throwable) {
             return response()->json([
@@ -117,7 +118,7 @@ class UserController extends Controller
                 'department' => $user->department->name,
                 'email' => $user->email,
                 'phone' => $user->phone_num ? $user->phone_num : 'N/A',
-                'login' => $user->last_login ? Carbon::parse($user->last_login)->format('D, F d, Y | h:i:s A') : 'Never',
+                'login' => $user->last_login ? Carbon::parse($user->last_login)->format('D, F d, Y | h:i A') : 'Never',
                 'image' => asset('storage/img/user-images/' . $user->user_image),
                 'status' => $user->is_active,
                 'created_img' => $createdDetails['image'],
@@ -192,6 +193,7 @@ class UserController extends Controller
 
                 $user->update([
                     'user_name' => trim($validated['user']),
+                    'name' => $this->formatName($validated['fname'], $validated['mname'], $validated['lname']),
                     'fname' => ucwords(trim($validated['fname'])),
                     'mname' => ucwords(trim($validated['mname'])),
                     'lname' => ucwords(trim($validated['lname'])),
@@ -206,7 +208,7 @@ class UserController extends Controller
                         Storage::delete('public/img/user-images/' . $user->user_image);
                     }
                     $image = $request->file('image');
-                    $filename = time() . "_" . uniqid() . '.' . $image->getClientOriginalExtension();
+                    $filename = $user->id . '_' . time() . '.' . $image->getClientOriginalExtension();
 
                     $image->storeAs('public/img/user-images', $filename);
                     $user->user_image = $filename;
@@ -253,6 +255,10 @@ class UserController extends Controller
                     'title' => 'Deletion Failed!',
                     'text' => 'The user cannot be deleted because it is still being used by other records.',
                 ], 400);
+            }
+
+            if ($user->user_image && $user->user_image !== 'default.jpg' && Storage::exists('public/img/user-images/' . $user->user_image)) {
+                Storage::delete('public/img/user-images/' . $user->user_image);
             }
 
             $user->forceDelete();

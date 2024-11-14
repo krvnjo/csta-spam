@@ -49,7 +49,7 @@
           <div class="row mb-4 mt-sm-4 mt-1">
             <label class="col-sm-3 col-form-label form-label" for="txtAddFname">First Name</label>
             <div class="col-sm-9">
-              <input class="form-control" id="txtAddFname" name="fname" type="text" placeholder="Enter first name">
+              <input class="form-control" id="txtAddFname" name="fname" type="text" placeholder="Enter your first name">
               <span class="invalid-feedback" id="valAddFname"></span>
             </div>
           </div>
@@ -59,7 +59,7 @@
           <div class="row mb-4">
             <label class="col-sm-3 col-form-label form-label" for="txtAddMname">Middle Name <span class="form-label-secondary">(Optional)</span></label>
             <div class="col-sm-9">
-              <input class="form-control" id="txtAddMname" name="mname" type="text" placeholder="Enter middle name">
+              <input class="form-control" id="txtAddMname" name="mname" type="text" placeholder="Enter your middle name">
               <span class="invalid-feedback" id="valAddMname"></span>
             </div>
           </div>
@@ -69,7 +69,7 @@
           <div class="row mb-4">
             <label class="col-sm-3 col-form-label form-label" for="txtAddLname">Last Name</label>
             <div class="col-sm-9">
-              <input class="form-control" id="txtAddLname" name="lname" type="text" placeholder="Enter last name">
+              <input class="form-control" id="txtAddLname" name="lname" type="text" placeholder="Enter your last name">
               <span class="invalid-feedback" id="valAddLname"></span>
             </div>
           </div>
@@ -121,15 +121,15 @@
           </div>
           <!-- End Department -->
 
-          <!-- Email -->
+          <!-- Email Address -->
           <div class="row mb-4">
-            <label class="col-sm-3 col-form-label form-label" for="txtAddEmail">Email</label>
+            <label class="col-sm-3 col-form-label form-label" for="txtAddEmail">Email Address</label>
             <div class="col-sm-9">
-              <input class="form-control" id="txtAddEmail" name="email" type="email" placeholder="sample@site.com">
+              <input class="form-control" id="txtAddEmail" name="email" type="email" placeholder="Enter your email address">
               <span class="invalid-feedback" id="valAddEmail"></span>
             </div>
           </div>
-          <!-- End Email -->
+          <!-- End Email Address -->
 
           <!-- Phone -->
           <div class="row">
@@ -168,13 +168,13 @@
               <div class="input-group">
                 <input class="js-toggle-password form-control" id="txtAddPass" name="pass"
                   data-hs-toggle-password-options='{
-                    "target": "#togglePassTarget",
+                    "target": "#toggleAddPassTarget",
                     "defaultClass": "bi-eye-slash",
                     "showClass": "bi-eye",
-                    "classChangeTarget": "#togglePassIcon"
+                    "classChangeTarget": "#toggleAddPassIcon"
                   }'
                   type="password" placeholder="Enter your password" />
-                <a class="input-group-text" id="togglePassTarget"><i class="bi-eye" id="togglePassIcon"></i></a>
+                <a class="input-group-text" id="toggleAddPassTarget"><i class="bi-eye" id="toggleAddPassIcon"></i></a>
                 <span class="invalid-feedback" id="valAddPass"></span>
               </div>
             </div>
@@ -188,13 +188,13 @@
               <div class="input-group">
                 <input class="js-toggle-password form-control" id="txtAddConfirm" name="confirm"
                   data-hs-toggle-password-options='{
-                    "target": "#togglePassConTarget",
+                    "target": "#toggleAddPassConTarget",
                     "defaultClass": "bi-eye-slash",
                     "showClass": "bi-eye",
-                    "classChangeTarget": "#toggleConPassIcon"
+                    "classChangeTarget": "#toggleAddConPassIcon"
                   }'
                   type="password" placeholder="Confirm your password" />
-                <a class="input-group-text" id="togglePassConTarget"><i class="bi-eye" id="toggleConPassIcon"></i></a>
+                <a class="input-group-text" id="toggleAddPassConTarget"><i class="bi-eye" id="toggleAddConPassIcon"></i></a>
                 <span class="invalid-feedback" id="valAddConfirm"></span>
               </div>
             </div>

@@ -405,11 +405,14 @@ function populateEditForm(response) {
   $.each(response, function (key, value) {
     const inputSelector = '#txtEdit' + capitalizeFirstLetter(key);
     const selectWrapperSelector = '#selEdit' + capitalizeFirstLetter(key);
+    const imageSelector = '#imgEditDisplay' + capitalizeFirstLetter(key);
 
     if ($(inputSelector).length) {
       $(inputSelector).val(value);
     } else if ($(selectWrapperSelector).length) {
       $(selectWrapperSelector)[0].tomselect.setValue(value);
+    } else if ($(imageSelector).length) {
+      $(imageSelector).attr('src', value);
     }
   });
 

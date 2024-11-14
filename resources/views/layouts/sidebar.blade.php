@@ -83,19 +83,21 @@
           <small class="bi-three-dots nav-subtitle-replacer"></small>
 
           <div id="navbarVerticalMenuOthersMenu">
-            <!-- User Management -->
-            <div class="nav-item">
-              <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuUserManagement">
-                <i class="bi-people nav-icon"></i>
-                <span class="nav-link-title">User Management</span>
-              </a>
+            @access('User Management', 'View Only, Read and Write, Full Access')
+              <!-- User Management -->
+              <div class="nav-item">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuUserManagement">
+                  <i class="bi-people nav-icon"></i>
+                  <span class="nav-link-title">User Management</span>
+                </a>
 
-              <div class="nav-collapse collapse" id="navbarVerticalMenuUserManagement" data-bs-parent="#navbarVerticalMenuOthersMenu">
-                <a class="nav-link" data-route="user.index" href="{{ route('user.index') }}">Users</a>
-                <a class="nav-link" data-route="role.index" href="{{ route('role.index') }}">Roles</a>
+                <div class="nav-collapse collapse" id="navbarVerticalMenuUserManagement" data-bs-parent="#navbarVerticalMenuOthersMenu">
+                  <a class="nav-link" data-route="user.index" href="{{ route('user.index') }}">Users</a>
+                  <a class="nav-link" data-route="role.index" href="{{ route('role.index') }}">Roles</a>
+                </div>
               </div>
-            </div>
-            <!-- End User Management -->
+              <!-- End User Management -->
+            @endaccess
 
             <!-- File Maintenance -->
             <div class="nav-item">

@@ -51,7 +51,7 @@
           <div class="row mb-4 mt-sm-4 mt-1">
             <label class="col-sm-3 col-form-label form-label" for="txtEditFname">First Name</label>
             <div class="col-sm-9">
-              <input class="form-control" id="txtEditFname" name="fname" type="text" placeholder="Enter first name">
+              <input class="form-control" id="txtEditFname" name="fname" type="text" placeholder="Enter your first name">
               <span class="invalid-feedback" id="valEditFname"></span>
             </div>
           </div>
@@ -61,7 +61,7 @@
           <div class="row mb-4">
             <label class="col-sm-3 col-form-label form-label" for="txtEditMname">Middle Name <span class="form-label-secondary">(Optional)</span></label>
             <div class="col-sm-9">
-              <input class="form-control" id="txtEditMname" name="mname" type="text" placeholder="Enter middle name">
+              <input class="form-control" id="txtEditMname" name="mname" type="text" placeholder="Enter your middle name">
               <span class="invalid-feedback" id="valEditMname"></span>
             </div>
           </div>
@@ -71,14 +71,14 @@
           <div class="row mb-4">
             <label class="col-sm-3 col-form-label form-label" for="txtEditLname">Last Name</label>
             <div class="col-sm-9">
-              <input class="form-control" id="txtEditLname" name="lname" type="text" placeholder="Enter last name">
+              <input class="form-control" id="txtEditLname" name="lname" type="text" placeholder="Enter your last name">
               <span class="invalid-feedback" id="valEditLname"></span>
             </div>
           </div>
           <!-- End Last Name -->
 
           <!-- Role -->
-          <div class="row mb-4" id="rowEditRole">
+          <div class="row mb-4" id="userEditRoleContainer">
             <label class="col-sm-3 col-form-label form-label" for="selEditRole">Role</label>
             <div class="col-sm-9">
               <div class="tom-select-custom">
@@ -123,15 +123,15 @@
           </div>
           <!-- End Department -->
 
-          <!-- Email -->
+          <!-- Email Address -->
           <div class="row mb-4">
-            <label class="col-sm-3 col-form-label form-label" for="txtEditEmail">Email</label>
+            <label class="col-sm-3 col-form-label form-label" for="txtEditEmail">Email Address</label>
             <div class="col-sm-9">
-              <input class="form-control" id="txtEditEmail" name="email" type="email" placeholder="sample@site.com">
+              <input class="form-control" id="txtEditEmail" name="email" type="email" placeholder="Enter your email address">
               <span class="invalid-feedback" id="valEditEmail"></span>
             </div>
           </div>
-          <!-- End Email -->
+          <!-- End Email Address -->
 
           <!-- Phone -->
           <div class="row">
@@ -170,38 +170,38 @@
               <div class="input-group">
                 <input class="js-toggle-password form-control" id="txtEditPass" name="pass"
                   data-hs-toggle-password-options='{
-                    "target": "#toggleEditPass",
+                    "target": "#toggleEditPassTarget",
                     "defaultClass": "bi-eye-slash",
                     "showClass": "bi-eye",
                     "classChangeTarget": "#toggleEditPassIcon"
                   }'
                   type="password" placeholder="Enter your new password" />
-                <a class="input-group-text" id="toggleEditPass"><i class="bi-eye" id="toggleEditPassIcon"></i></a>
+                <a class="input-group-text" id="toggleEditPassTarget"><i class="bi-eye" id="toggleEditPassIcon"></i></a>
                 <span class="invalid-feedback" id="valEditPass"></span>
               </div>
             </div>
           </div>
           <!-- End New Password -->
 
-          <!-- Confirm Password -->
+          <!-- Confirm New Password -->
           <div class="row">
             <label class="col-sm-3 col-form-label form-label" for="txtEditConfirm">Confirm Password</label>
             <div class="col-sm-9">
               <div class="input-group">
                 <input class="js-toggle-password form-control" id="txtEditConfirm" name="confirm"
                   data-hs-toggle-password-options='{
-                    "target": "#toggleEditConfirm",
+                    "target": "#toggleEditPassConTarget",
                     "defaultClass": "bi-eye-slash",
                     "showClass": "bi-eye",
-                    "classChangeTarget": "#toggleEditConfirmIcon"
+                    "classChangeTarget": "#toggleEditConPassIcon"
                   }'
                   type="password" placeholder="Confirm your new password" />
-                <a class="input-group-text" id="toggleEditConfirm"><i class="bi-eye" id="toggleEditConfirmIcon"></i></a>
+                <a class="input-group-text" id="toggleEditPassConTarget"><i class="bi-eye" id="toggleEditConPassIcon"></i></a>
                 <span class="invalid-feedback" id="valEditConfirm"></span>
               </div>
             </div>
           </div>
-          <!-- End Confirm Password -->
+          <!-- End Confirm New Password -->
         </form>
       </div>
       <!-- End Body -->

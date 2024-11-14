@@ -13,8 +13,6 @@ use App\Http\Controllers\HelpController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\PropertyChildController;
 use App\Http\Controllers\PropertyConsumableController;
-use App\Http\Controllers\PropertyInvChildController;
-use App\Http\Controllers\PropertyInventoryController;
 use App\Http\Controllers\PropertyParentController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SystemController;
@@ -98,32 +96,6 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
         });
     });
 
-    // Inventory Routes
-    Route::middleware('checkPermission:Item Inventory Management')->prefix('properties-assets/inventory')->name('prop-inv.')->controller(PropertyInventoryController::class)->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::post('/', 'store')->name('store')->middleware('checkPermission:create item management');
-        Route::get('/show', 'show')->name('show')->middleware('expectsJson');
-        Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
-        Route::patch('/', 'update')->name('update')->middleware('checkPermission:update item management');
-        Route::delete('/', 'destroy')->name('delete')->middleware('checkPermission:delete item management');
-        Route::fallback(function () {
-            abort(404);
-        });
-    });
-
-    Route::middleware('checkPermission:view item management')->prefix('properties-assets/{propertyParent}/child-inventory')->name('prop-inv.child.')->controller(PropertyInvChildController::class)->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::post('/', 'store')->name('store')->middleware('checkPermission:create item management');
-        Route::get('/show', 'show')->name('show')->middleware('expectsJson');
-        Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
-        Route::patch('/', 'update')->name('update')->middleware('checkPermission:update item management');
-        Route::delete('/', 'destroy')->name('delete')->middleware('checkPermission:delete item management');
-        Route::patch('/move', 'move')->name('move')->middleware('checkPermission:update item management');
-        Route::fallback(function () {
-            abort(404);
-        });
-    });
-
     // Consumable Routes
     Route::middleware('checkPermission:Item Inventory Management')->prefix('properties-assets/consumable')->name('prop-consumable.')->controller(PropertyConsumableController::class)->group(function () {
         Route::get('/', 'index')->name('index');
@@ -167,7 +139,7 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
     });
 
     // Role Routes
-    Route::middleware('checkPermission:Role Management')->prefix('user-management/roles')->name('role.')->controller(RoleController::class)->group(function () {
+    Route::middleware('checkPermission:User Management')->prefix('user-management/roles')->name('role.')->controller(RoleController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('create');
         Route::get('/show', 'show')->name('view')->middleware('expectsJson');
@@ -181,7 +153,7 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
     // ============ File Maintenance Routes ============ //
 
     // Brand Routes
-    Route::middleware('checkPermission:Brand Maintenance')->prefix('file-maintenance/brands')->name('brand.')->controller(BrandController::class)->group(function () {
+    Route::middleware('checkPermission:File Maintenance')->prefix('file-maintenance/brands')->name('brand.')->controller(BrandController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('create');
         Route::get('/show', 'show')->name('view')->middleware('expectsJson');
@@ -191,7 +163,7 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
     });
 
     // Category Routes
-    Route::middleware('checkPermission:Category Maintenance')->prefix('file-maintenance/categories')->name('category.')->controller(CategoryController::class)->group(function () {
+    Route::middleware('checkPermission:File Maintenance')->prefix('file-maintenance/categories')->name('category.')->controller(CategoryController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('create');
         Route::get('/show', 'show')->name('view')->middleware('expectsJson');
@@ -201,7 +173,7 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
     });
 
     // Department Routes
-    Route::middleware('checkPermission:Department Maintenance')->prefix('file-maintenance/departments')->name('department.')->controller(DepartmentController::class)->group(function () {
+    Route::middleware('checkPermission:File Maintenance')->prefix('file-maintenance/departments')->name('department.')->controller(DepartmentController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('create');
         Route::get('/show', 'show')->name('view')->middleware('expectsJson');
@@ -211,7 +183,7 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
     });
 
     // Designation Routes
-    Route::middleware('checkPermission:Designation Maintenance')->prefix('file-maintenance/designations')->name('designation.')->controller(DesignationController::class)->group(function () {
+    Route::middleware('checkPermission:File Maintenance')->prefix('file-maintenance/designations')->name('designation.')->controller(DesignationController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('create');
         Route::get('/show', 'show')->name('view')->middleware('expectsJson');

@@ -27,14 +27,6 @@ abstract class Controller
     }
 
     /**
-     * Format to Full Name.
-     */
-    public function formatFullName($firstName, $lastName)
-    {
-        return $firstName . ' ' . $lastName;
-    }
-
-    /**
      * Get the user details in audit.
      */
     public function getUserAuditDetails($audit)
@@ -43,5 +35,14 @@ abstract class Controller
             'image' => asset('storage/img/user-images/' . ($audit ? ($audit->causer->user_image ?? 'system.jpg') : 'system.jpg')),
             'name' => $audit?->causer ? $audit->causer->name : 'CSTA-SPAM System',
         ];
+    }
+
+    public function formatName($fname, $mname, $lname)
+    {
+        if (empty($mname)) {
+            return ucwords(trim($fname)) . ' ' . ucwords(trim($lname));
+        } else {
+            return ucwords(trim($fname)) . ' ' . strtoupper(substr(ucwords(trim($mname)), 0, 1)) . '. ' . ucwords(trim($lname)); // First Name M. Last Name
+        }
     }
 }

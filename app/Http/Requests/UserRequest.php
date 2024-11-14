@@ -52,7 +52,7 @@ class UserRequest extends FormRequest
             'user' => [
                 'required',
                 'size:8',
-                'regex:/^(0[7-9]|1[0-9]|2[0-' . date('y') . '])-\d{5}$/',
+                'regex:/^(0[7-9]|1[0-9]|2[0-' . date('y')[1] . '])-\d{5}$/',
                 Rule::unique('users', 'user_name')->ignore($this->id),
             ],
             'pass' => [
