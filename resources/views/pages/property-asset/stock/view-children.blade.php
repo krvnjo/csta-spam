@@ -192,7 +192,7 @@
                   Selected
                 </span>
                 <button class="btn btn-outline-info btn-md me-2" id="btnMoveToInventory" type="button">
-                  <i class="bi bi-arrow-left-right"></i> Move to Inventory
+                  <i class="bi bi-arrow-left-right"></i> Assign Item
                 </button>
                 <button class="btn btn-outline-danger btn-md" id="btnMultiDeleteChild" type="button">
                   <i class="bi-trash3-fill"></i> Delete
@@ -290,84 +290,84 @@
             </thead>
 
             <tbody>
-              @foreach ($propertyChildren->sortByDesc('updated_at') as $propertyChild)
-                <tr>
-                  @if($propertyParents->is_consumable)
-                    <td class="table-column-pe-0"></td>
-                  @else
-                    <td class="table-column-pe-0">
-                      <div class="form-check">
-                        <input class="form-check-input child-checkbox" id="propertyStockDatatableCheck{{ $propertyChild->id }}" type="checkbox" value="{{ $propertyChild->id }}">
-                        <label class="form-check-label" for="propertyStockDatatableCheck{{ $propertyChild->id }}"></label>
-                      </div>
-                    </td>
-                  @endif
-                  <td class="d-none" data-child-id="{{ Crypt::encryptString($propertyChild->id) }}"></td>
-                  <td>
-                    @if ($propertyChild->created_at == $propertyChild->updated_at)
-                      <span class="badge bg-success">New</span>
-                      {{ $propertyChild->prop_code }}
-                    @elseif ($propertyChild->created_at->diffInDays(\Carbon\Carbon::now()) >= 7)
-                      {{ $propertyChild->prop_code }}
-                    @else
-                      {{ $propertyChild->prop_code }}
-                    @endif
-                  </td>
-                  <td>{{ $propertyChild->designation->name }}</td>
-                  <td>{{ $propertyChild->department->code }}</td>
-                  <td><span class="{{ $propertyChild->condition->color->class ?? ''}}"></span>{{ $propertyChild->condition->name ?? '' }}</td>
-                  <td>
-                    @if($propertyChild->property->is_consumable)
-                      <span class="badge bg-soft-secondary text-secondary p-1">
-                        Consumable Item
-                      </span>
-                    @else
-
-                    @endif
-                    <span class="{{ $propertyChild->status->color->class ?? ''}} fs-6">{{ $propertyChild->status->name ?? '' }}</span>
-                  </td>
-                  <td data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom"
-                    title="Date Acquired: {{ \Carbon\Carbon::parse($propertyChild->acq_date)->format('F j, Y') }}, Warranty Date: {{ $propertyChild->warranty_date ? \Carbon\Carbon::parse($propertyChild->warranty_date)->format('F j, Y') : '-' }}">
-                    <i class="bi-calendar-event me-1"></i>
-                    {{ \Carbon\Carbon::parse($propertyChild->stock_date)->format('F j, Y') }}
-                  </td>
-                  <td @if ($propertyChild->remarks) data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="Remarks: {{ $propertyChild->remarks }}" @endif>
-                    <span class="badge bg-soft-{{ $propertyChild->is_active ? 'success' : 'danger' }} text-{{ $propertyChild->is_active ? 'success' : 'danger' }}">
-                      <span class="legend-indicator bg-{{ $propertyChild->is_active ? 'success' : 'danger' }}"></span>{{ $propertyChild->is_active ? 'Active' : 'Inactive' }}
-                    </span>
-                  </td>
-                  <td>
-                    <div class="btn-group position-static">
-                      <button class="btn btn-white btn-sm btnViewChild" type="button">
-                        <i class="bi-eye me-1"></i> View
-                      </button>
-                      <!-- Button Group -->
-                      <div class="btn-group position-static">
-                        <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="childEditDropdown" data-bs-toggle="dropdown" type="button"
-                          aria-expanded="false"></button>
-
-                        <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="childEditDropdown">
-                          <button class="dropdown-item btnEditPropChild" type="button">
-                            <i class="bi-pencil-fill me-1 dropdown-item-icon"></i> Edit
-                          </button>
-                          <button class="dropdown-item btnMoveToInventory"  data-childmove-id="{{ $propertyChild->id }}" type="button">
-                            <i class="bi bi-arrow-left-right dropdown-item-icon text-info"></i> Move to Inventory
-                          </button>
-                          <button class="dropdown-item btnStatusChild" data-status="{{ $propertyChild->is_active ? 0 : 1 }}" type="button">
-                            <i class="bi {{ $propertyChild->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
-                            {{ $propertyChild->is_active ? 'Set to Inactive' : 'Set to Active' }}
-                          </button>
-                          <button class="dropdown-item text-danger btnDeleteChild" data-childdel-id="{{ $propertyChild->id }}" type="button">
-                            <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
-                          </button>
-                        </div>
-                      </div>
-                      <!-- End Button Group -->
+            @foreach ($propertyChildren->sortByDesc('updated_at') as $propertyChild)
+              <tr id="child-{{ $propertyChild->id }}" data-status="{{ $propertyChild->status->id ?? '0' }}" data-inventory-date="{{ $propertyChild->stock_date ? \Carbon\Carbon::parse($propertyChild->stock_date)->format('Y-m-d') : null }}">
+                @if($propertyParents->is_consumable)
+                  <td class="table-column-pe-0"></td>
+                @else
+                  <td class="table-column-pe-0">
+                    <div class="form-check">
+                      <input class="form-check-input child-checkbox" id="propertyStockDatatableCheck{{ $propertyChild->id }}" type="checkbox" value="{{ $propertyChild->id }}">
+                      <label class="form-check-label" for="propertyStockDatatableCheck{{ $propertyChild->id }}"></label>
                     </div>
                   </td>
-                </tr>
-              @endforeach
+                @endif
+                <td class="d-none" data-child-id="{{ Crypt::encryptString($propertyChild->id) }}"></td>
+                <td>
+                  @if ($propertyChild->created_at == $propertyChild->updated_at)
+                    <span class="badge bg-success">New</span>
+                    {{ $propertyChild->prop_code }}
+                  @elseif ($propertyChild->created_at->diffInDays(\Carbon\Carbon::now()) >= 7)
+                    {{ $propertyChild->prop_code }}
+                  @else
+                    {{ $propertyChild->prop_code }}
+                  @endif
+                </td>
+                <td>{{ $propertyChild->designation->name }}</td>
+                <td>{{ $propertyChild->designation->department->code }}</td>
+                <td><span class="{{ $propertyChild->condition->color->class ?? ''}}"></span>{{ $propertyChild->condition->name ?? '' }}</td>
+                <td>
+                  @if($propertyChild->property->is_consumable)
+                    <span class="badge bg-soft-secondary text-secondary p-1">
+            Consumable Item
+          </span>
+                  @else
+                  @endif
+                  <span class="{{ $propertyChild->status->color->class ?? ''}} fs-6">{{ $propertyChild->status->name ?? '' }}</span>
+                </td>
+                <td data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom"
+                    title="Date Acquired: {{ \Carbon\Carbon::parse($propertyChild->acq_date)->format('F j, Y') }}, Warranty Date: {{ $propertyChild->warranty_date ? \Carbon\Carbon::parse($propertyChild->warranty_date)->format('F j, Y') : '-' }}">
+                  <i class="bi-calendar-event me-1"></i>
+                  {{ \Carbon\Carbon::parse($propertyChild->stock_date)->format('F j, Y') }}
+                </td>
+                <td @if ($propertyChild->remarks) data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="Remarks: {{ $propertyChild->remarks }}" @endif>
+        <span class="badge bg-soft-{{ $propertyChild->is_active ? 'success' : 'danger' }} text-{{ $propertyChild->is_active ? 'success' : 'danger' }}">
+          <span class="legend-indicator bg-{{ $propertyChild->is_active ? 'success' : 'danger' }}"></span>{{ $propertyChild->is_active ? 'Active' : 'Inactive' }}
+        </span>
+                </td>
+                <td>
+                  <div class="btn-group position-static">
+                    <button class="btn btn-white btn-sm btnViewChild" type="button">
+                      <i class="bi-eye me-1"></i> View
+                    </button>
+                    <!-- Button Group -->
+                    <div class="btn-group position-static">
+                      <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="childEditDropdown" data-bs-toggle="dropdown" type="button"
+                              aria-expanded="false"></button>
+
+                      <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="childEditDropdown">
+                        <button class="dropdown-item btnEditPropChild" type="button">
+                          <i class="bi-pencil-fill me-1 dropdown-item-icon"></i> Edit
+                        </button>
+                        <button class="dropdown-item btnMoveToInventory" data-childmove-id="{{ $propertyChild->id }}" type="button">
+                          <i class="bi bi-arrow-left-right dropdown-item-icon text-info"></i> Move to Inventory
+                        </button>
+                        <button class="dropdown-item btnStatusChild" data-status="{{ $propertyChild->is_active ? 0 : 1 }}" type="button">
+                          <i class="bi {{ $propertyChild->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
+                          {{ $propertyChild->is_active ? 'Set to Inactive' : 'Set to Active' }}
+                        </button>
+                        <button class="dropdown-item text-danger btnDeleteChild" data-childdel-id="{{ $propertyChild->id }}" type="button">
+                          <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
+                        </button>
+                      </div>
+                    </div>
+                    <!-- End Button Group -->
+                  </div>
+                </td>
+              </tr>
+            @endforeach
             </tbody>
+
 
           </table>
         </div>
@@ -425,7 +425,7 @@
   <x-property-asset.stock.add-children :propertyParents="$propertyParents" />
   <x-property-asset.stock.edit-children :propertyParents="$propertyParents" :propertyChildren="$propertyChildren" :conditions="$conditions" :acquisitions="$acquisitions" />
   <x-property-asset.stock.view-details-children />
-  <x-property-asset.stock.move-children :designations="$designations" :departments="$departments" :statuses="$statuses" />
+  <x-property-asset.stock.move-children :designations="$designations"  />
   {{--  <x-modals.edit-property-child :propertyParents="$propertyParents" :conditions="$conditions" :acquisitions="$acquisitions" :propertyChildren="$propertyChildren" /> --}}
   {{--  <x-modals.move-property :designations="$designations" :departments="$departments" :statuses="$statuses"/> --}}
 

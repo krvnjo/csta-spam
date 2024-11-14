@@ -342,18 +342,16 @@ class PropertyChildController extends Controller
             $propertyChildIds = explode(',', $request->input('movePropIds'));
 
             $moveValidationMessages = [
-                'status.required' => 'Please choose a status type!',
-
                 'designation.required' => 'Please choose designation!',
+                'remarks.required' => 'Please enter a remarks!',
+                'remarks.regex' => 'The remarks may only contain letters, spaces, periods, and hyphens.',
+                'remarks.min' => 'The remarks must be at least :min characters.',
+                'remarks.max' => 'The remarks may not be greater than :max characters.',
             ];
 
             $moveValidator = Validator::make($request->all(), [
-                'status' => [
-                    'required'
-                ],
-                'designation' => [
-                    'required'
-                ],
+                'designation' => ['required'],
+                'remarks' => ['required', 'regex:/^[A-Za-z0-9%,\- ×."\'"]+$/', 'min:3', 'max:100'],
             ], $moveValidationMessages);
 
             if ($moveValidator->fails()) {
@@ -363,27 +361,31 @@ class PropertyChildController extends Controller
                 ]);
             } else {
                 $designation = $request->input('designation');
-                $status = $request->input('status');
+                $remarks = ucwords(strtolower(trim($request->input('description'))));
             }
+
+            $deptId = Designation::query()->findOrFail($designation)->dept_id;
 
             PropertyChild::whereIn('id', $propertyChildIds)->update([
                 'desig_id' => $designation,
-                'status_id' => $status,
+                'dept_id' => $deptId,
+                'remarks' => $remarks,
+                'status_id' => 2,
                 'inventory_date' => now(),
+                'updated_at' => now(),
             ]);
 
             return response()->json([
                 'success' => true,
-                'title' => 'Item Inventoried Successfully!',
-                'text' => 'The item has been added to the inventory.',
+                'title' => 'Item Deployed Successfully!',
+                'text' => 'The item has been deployed to the selected designation.',
             ]);
 
         } catch (Throwable $e) {
-            Log::error('Error moving property child:', ['exception' => $e]);
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
-                'message' => 'An error occurred while moving the item: ' . $e->getMessage(),
+                'message' => 'An error occurred while assigning the item.' . $e->getMessage(),
             ], 500);
         }
     }

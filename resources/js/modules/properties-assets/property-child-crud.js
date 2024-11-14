@@ -371,8 +371,6 @@ $(document).ready(function() {
     $("#movePropIds").text(`${selectedCount} item${selectedCount > 1 ? 's' : ''}`);
   });
 
-
-
   childMoveForm.on("submit", function (e) {
     e.preventDefault();
 
@@ -381,7 +379,7 @@ $(document).ready(function() {
 
     editFormData.append("_method", "PATCH");
     editFormData.append("movePropIds", selectedPropertyChildIds);
-    editFormData.append("status", $("#cbxMoveStatus").val());
+    editFormData.append("remarks", $("#txtMoveRemarks").val());
     editFormData.append("designation", $("#cbxMoveDesignation").val());
 
     $.ajax({
@@ -399,9 +397,9 @@ $(document).ready(function() {
             $("#cbxMoveDesignation").next(".ts-wrapper").addClass("is-invalid");
             $("#valMoveDesignation").text(response.errors.designation[0]);
           }
-          if (response.errors.status) {
-            $("#cbxMoveStatus").next(".ts-wrapper").addClass("is-invalid");
-            $("#valMoveStatus").text(response.errors.status[0]);
+          if (response.errors.remarks) {
+            $("#txtMoveRemarks").addClass("is-invalid");
+            $("#valMoveRemarks").text(response.errors.remarks[0]);
           }
         }
       },
@@ -441,13 +439,6 @@ document.addEventListener('DOMContentLoaded', function() {
     allowEmptyOption: true
   });
 
-  new TomSelect('#cbxMoveStatus', {
-    controlInput: false,
-    hideSearch: true,
-    allowEmptyOption: true,
-    placeholder: "Select Status...",
-  });
-
   new TomSelect('#propertyStockDatatableEntries', {
     controlInput: false,
     hideSearch: true,
@@ -458,7 +449,6 @@ document.addEventListener('DOMContentLoaded', function() {
     controlInput: false,
     hideSearch: true,
     allowEmptyOption: true,
-    placeholder: "Select Designation...",
   });
 
   document.querySelectorAll('.tom-select input[type="text"]').forEach(function(input) {

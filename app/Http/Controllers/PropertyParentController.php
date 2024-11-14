@@ -422,6 +422,7 @@ class PropertyParentController extends Controller
                     'min:3',
                     'max:100'
                 ],
+                'description' => ['nullable', 'regex:/^[A-Za-z0-9%,\- ×."\'"]+$/', 'min:3', 'max:100'],
                 'category' => $property->is_consumable ? 'nullable' : 'required',
                 'brand' => $property->is_consumable ? 'nullable' : 'required',
                 'residual' => $property->is_consumable ? 'nullable' : ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/', 'min:1', 'max:' . $purchasePrice],
