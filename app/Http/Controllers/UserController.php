@@ -257,10 +257,6 @@ class UserController extends Controller
                 ], 400);
             }
 
-            if ($user->user_image && $user->user_image !== 'default.jpg' && Storage::exists('public/img/user-images/' . $user->user_image)) {
-                Storage::delete('public/img/user-images/' . $user->user_image);
-            }
-
             $user->forceDelete();
 
             return response()->json([

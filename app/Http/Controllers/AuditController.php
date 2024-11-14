@@ -57,8 +57,8 @@ class AuditController extends Controller
                 'event_badge' => $audit->event->badge->class,
                 'event_legend' => $audit->event->legend->class,
                 'properties' => json_decode($audit->properties),
-                'created_img' => $createdDetails['image'],
-                'created_by' => $createdDetails['name'],
+                'created_img' => asset('storage/img/user-images/' . $audit->causer->user_image),
+                'created_by' => $audit->causer->name,
                 'created_at' => $audit->created_at->format('D, M d, Y | h:i A'),
             ]);
         } catch (Throwable) {

@@ -74,9 +74,9 @@ class UserObserver
     }
 
     /**
-     * Handle the User "deleted" event.
+     * Handle the User "deleting" event.
      */
-    public function deleted(User $user): void
+    public function deleting(User $user): void
     {
         (new Audit())
             ->logName('Delete User')

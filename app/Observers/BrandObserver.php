@@ -61,9 +61,9 @@ class BrandObserver
     }
 
     /**
-     * Handle the Brand "deleted" event.
+     * Handle the Brand "deleting" event.
      */
-    public function deleted(Brand $brand): void
+    public function deleting(Brand $brand): void
     {
         (new Audit())
             ->logName('Delete Brand')
