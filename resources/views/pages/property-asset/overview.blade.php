@@ -706,6 +706,7 @@
   <script src="{{ Vite::asset('resources/vendor/dropzone/dist/min/dropzone.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/chart.js/dist/chart.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js') }}"></script>
+  <script src="{{ Vite::asset('resources/vendor/hs-quantity-counter/dist/hs-quantity-counter.min.js') }}"></script>
 
   <!-- JS Modules -->
   <script src="{{ Vite::asset('resources/js/modules/properties-assets/property-stock-crud.js') }}"></script>
@@ -932,6 +933,9 @@
         // =======================================================
         HSBsDropdown.init()
 
+        // INITIALIZATION OF  QUANTITY COUNTER
+        // =======================================================
+        new HSQuantityCounter('.js-quantity-counter')
       }
     })()
   </script>

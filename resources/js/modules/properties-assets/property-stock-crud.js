@@ -67,15 +67,19 @@ $(document).ready(function () {
       Object.assign(requiredFields, nonConsumableRequiredFields);
     }
 
+    // Clear validation states
     Object.entries(requiredFields).forEach(([key, field]) => {
       field.removeClass('is-invalid');
       if (field[0] && field[0].tomselect) {
         $(field[0].tomselect.wrapper).removeClass('is-invalid');
+      } else if (key === 'quantity') {  // Add quantity-specific handling
+        field.closest('.quantity-wrapper').removeClass('is-invalid');
       }
     });
 
     Object.entries(optionalFields).forEach(([key, field]) => field.removeClass('is-invalid'));
 
+    // Append form data - this section stays the same
     Object.entries(requiredFields).forEach(([key, field]) => {
       if (field[0] && field[0].tomselect) {
         formData.append(key, field[0].tomselect.getValue());
@@ -111,6 +115,8 @@ $(document).ready(function () {
 
               if (field[0] && field[0].tomselect) {
                 $(field[0].tomselect.wrapper).addClass('is-invalid');
+              } else if (fieldName === 'quantity') {  // Add quantity-specific handling
+                field.closest('.quantity-wrapper').addClass('is-invalid');
               }
 
               validationMessage.text(response.errors[fieldName][0]);
