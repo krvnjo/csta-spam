@@ -72,9 +72,9 @@ class RoleObserver
     }
 
     /**
-     * Handle the Role "deleted" event.
+     * Handle the Role "deleting" event.
      */
-    public function deleted(Role $role): void
+    public function deleting(Role $role): void
     {
         (new Audit())
             ->logName('Delete Role')

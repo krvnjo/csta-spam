@@ -64,9 +64,9 @@ class DesignationObserver
     }
 
     /**
-     * Handle the Designation "deleted" event.
+     * Handle the Designation "deleting" event.
      */
-    public function deleted(Designation $designation): void
+    public function deleting(Designation $designation): void
     {
         (new Audit())
             ->logName('Delete Designation')

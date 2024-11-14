@@ -89,7 +89,7 @@ class UserSeeder extends Seeder
                 'access' => 'Full Access',
             ],
             'Property Custodian' => [
-                'permissions' => Permission::whereNotIn('name', ['User Management', 'System Settings'])->pluck('name')->toArray(),
+                'permissions' => ['Item Inventory Management', 'Borrowing & Reservation', 'Item Maintenance', 'File Maintenance', 'Audit History'],
                 'access' => 'Full Access',
             ],
             'Student Assistant' => [

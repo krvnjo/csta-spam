@@ -52,10 +52,12 @@ class RoleController extends Controller
             'role.min' => 'The role name must be at least :min characters.',
             'role.max' => 'The role name may not be greater than :max characters.',
             'role.unique' => 'This role name already exists.',
+
             'description.required' => 'Please enter a description!',
             'description.regex' => 'It must not contain consecutive spaces and symbols.',
             'description.min' => 'The description code must be at least :min characters.',
             'description.unique' => 'This description already exists.',
+
             'dashboard.required' => 'Please select a main dashboard!',
         ];
 
@@ -108,6 +110,7 @@ class RoleController extends Controller
                     'errors' => ['permission' => ['Please select at least 1 permission to add']],
                 ]);
             }
+
             $role = Role::create([
                 'name' => ucwords(trim($request->input('role'))),
                 'description' => ucfirst(rtrim($request->input('description'))) . (str_ends_with(rtrim($request->input('description')), '.') ? '' : '.'),
@@ -182,7 +185,7 @@ class RoleController extends Controller
 
             $permissionsWithAccess = $role->rolePermissions->map(function ($rolePermission) {
                 return [
-                    'permission_id' => $rolePermission->perm_id,
+                    'perm_id' => $rolePermission->perm_id,
                     'access_id' => $rolePermission->access_id,
                 ];
             });
@@ -200,7 +203,7 @@ class RoleController extends Controller
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
-                'message' => 'An error occurred while fetching the role.',
+                'message' => 'An error occurred while fetching the role. Please try again later.',
             ], 500);
         }
     }
@@ -219,10 +222,12 @@ class RoleController extends Controller
                 'role.min' => 'The role name must be at least :min characters.',
                 'role.max' => 'The role name may not be greater than :max characters.',
                 'role.unique' => 'This role name already exists.',
+
                 'description.required' => 'Please enter a description!',
                 'description.regex' => 'It must not contain consecutive spaces and symbols.',
                 'description.min' => 'The description code must be at least :min characters.',
                 'description.unique' => 'This description already exists.',
+
                 'dashboard.required' => 'Please select a main dashboard!',
             ];
 
@@ -299,7 +304,7 @@ class RoleController extends Controller
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
-                'text' => 'An error occurred while updating the role.',
+                'text' => 'An error occurred while updating the role. Please try again later.',
             ], 500);
         }
     }
@@ -332,7 +337,7 @@ class RoleController extends Controller
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
-                'message' => 'An error occurred while deleting the role.',
+                'message' => 'An error occurred while deleting the role. Please try again later.',
             ], 500);
         }
     }

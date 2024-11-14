@@ -24,7 +24,7 @@
             <p class="page-header-text">Manage and control user roles and permissions.</p>
           </div>
 
-          @access('Role Management', 'Read and Write, Full Access')
+          @access('User Management', 'Read and Write, Full Access')
             <div class="col-sm-auto mt-2 mt-sm-0">
               <button class="btn btn-primary w-100 w-sm-auto" id="btnAddRoleModal" data-bs-toggle="modal" data-bs-target="#modalAddRole">
                 <i class="bi-plus-lg me-1"></i> Add Role
@@ -54,7 +54,7 @@
                     <span class="d-none" data-role-id="{{ Crypt::encryptString($role->id) }}"></span>
                     <h3 class="mb-1"><a class="text-dark btnViewRole">{{ $role->name }}</a></h3>
                   </div>
-                  @access('Role Management', 'Read and Write, Full Access')
+                  @access('User Management', 'Read and Write, Full Access')
                     <div class="col-3 text-end">
                       <div class="dropdown">
                         <button class="btn btn-ghost-secondary btn-icon btn-sm rounded-circle" id="roleDropdown{{ $loop->iteration }}" data-bs-toggle="dropdown" type="button"><i
@@ -74,7 +74,7 @@
                               {{ $role->is_active ? 'Set to Inactive' : 'Set to Active' }}
                             </button>
 
-                            @access('Designation Maintenance', 'Full Access')
+                            @access('User Management', 'Full Access')
                               <div class="dropdown-divider"></div>
                               <button class="dropdown-item text-danger btnDeleteRole" type="button">
                                 <i class="bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
@@ -87,7 +87,7 @@
                   @endaccess
                 </div>
                 <p class="text-dark">{{ $role->description }}</p>
-                <ul class="list-pointer list-pointer-primary">
+                <ul class="list-pointer list-pointer-sm list-pointer-soft-bg-primary">
                   @foreach ($role->rolePermissions->take(5) as $rolePermission)
                     <li class="text-dark list-pointer-item">{{ $rolePermission->permission->name . ': ' . $rolePermission->access->name }}</li>
                   @endforeach

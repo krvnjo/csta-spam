@@ -64,9 +64,9 @@ class DepartmentObserver
     }
 
     /**
-     * Handle the User "deleted" event.
+     * Handle the User "deleting" event.
      */
-    public function deleted(Department $department): void
+    public function deleting(Department $department): void
     {
         (new Audit())
             ->logName('Delete Department')

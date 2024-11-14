@@ -93,6 +93,8 @@ $(document).ready(function () {
       success: function (response) {
         roleEditModal.modal('toggle');
 
+        $('#countCharactersRoleDesc').text(response.description.length + ' / 80');
+
         if (response.auth) {
           $('#editRoleContainer').hide();
         } else {
@@ -100,7 +102,6 @@ $(document).ready(function () {
         }
 
         populateEditForm(response);
-        $('#countCharactersRoleDesc').text(response.description.length + ' / 80');
 
         $('.selEditPermission').each(function () {
           let tomSelectInstance = $(this)[0].tomselect;
@@ -110,8 +111,8 @@ $(document).ready(function () {
         });
 
         let permissions = response.permissions;
-        permissions.forEach(function (permission, index) {
-          let selectId = '#selEditPermission' + (index + 1);
+        permissions.forEach(function (permission) {
+          let selectId = '#selEditPermission' + permission.perm_id;
 
           let tomSelectInstance = $(selectId)[0].tomselect;
           if (tomSelectInstance) {

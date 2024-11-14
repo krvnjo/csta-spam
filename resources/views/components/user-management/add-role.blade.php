@@ -1,6 +1,6 @@
 <!-- Add Role Modal -->
 <div class="modal fade" id="modalAddRole" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <!-- Header -->
       <div class="modal-header">
@@ -42,9 +42,9 @@
             <div class="tom-select-custom">
               <select class="js-select form-select" id="selAddDashboard" name="dashboard"
                 data-hs-tom-select-options='{
-                    "hideSearch": "true",
-                    "placeholder": "Select a main dashboard"
-                  }'>
+                  "hideSearch": "true",
+                  "placeholder": "Select a main dashboard"
+                }'>
                 <option value=""></option>
                 @foreach ($dashboards as $dashboard)
                   @if ($dashboard->is_active)

@@ -1,6 +1,6 @@
 <!-- View Role Modal -->
 <div class="modal fade" id="modalViewRole" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <!-- Header -->
       <div class="modal-header">
