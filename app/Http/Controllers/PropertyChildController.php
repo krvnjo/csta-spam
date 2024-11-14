@@ -159,13 +159,18 @@ class PropertyChildController extends Controller
                 'serialNum' => $child->serial_num ?? "-",
                 'department' => $child->department->name,
                 'designation' => $child->designation->name,
-                'condition' => $child->condition->name,
-                'itemStatus' => $child->status->name,
-                'remarks' => $child->remarks ?? "-",
+                'condition' => $child->condition->name ?? 'Consumable Item',
+                'itemStatus' => $child->status->name ?? 'Consumable Item',
+                'remarks' => $child->remarks ?? "No remarks provided",
                 'acquiredType' => $acquiredType,
-                'acquiredDate' => $child->acq_date ? Carbon::parse($child->acq_date)->format('F d, Y') : "-",
+                'acquiredDate' => $child->acq_date ? Carbon::parse($child->acq_date)->format('F d, Y') : "No acquired date provided",
                 'status' => $child->is_active,
-                'warrantyDate' => $child->warranty_date ? Carbon::parse($child->warranty_date)->format('F d, Y') : "-",
+                'warrantyDate' => $child->warranty_date
+                    ? Carbon::parse($child->warranty_date)->format('F d, Y')
+                    : ($child->property->is_consumable == 1 ? 'Consumable Item' : 'No warranty date provided'),
+                'inventoryDate' => $child->inventory_date
+                    ? Carbon::parse($child->inventory_date)->format('F d, Y')
+                    : ($child->property->is_consumable == 1 ? 'Consumable Item' : 'In stock'),
                 'dateCreated' => $child->created_at->format('D, F d, Y | h:i:s A'),
                 'dateUpdated' => $child->updated_at->format('D, F d, Y | h:i:s A'),
             ]);

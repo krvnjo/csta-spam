@@ -21,7 +21,7 @@
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb breadcrumb-no-gutter">
                 <li class="breadcrumb-item"><a class="breadcrumb-link" data-route="dashboard.index" href="{{ route('dashboard.index') }}">Home</a></li>
-                <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ route('prop-asset.index') }}">Stock Masterlist</a></li>
+                <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ route('prop-asset.index') }}">Item Masterlist</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ $propertyParents->name }}</li>
               </ol>
             </nav>
@@ -98,7 +98,7 @@
           <!-- Card -->
           <div class="card h-100">
             <div class="card-body">
-              <h6 class="card-subtitle mb-2">In Stock</h6>
+              <h6 class="card-subtitle mb-2">Quantity In Stock</h6>
 
               <div class="row align-items-center gx-2">
                 <div class="col">
@@ -122,7 +122,7 @@
           <!-- Card -->
           <div class="card h-100">
             <div class="card-body">
-              <h6 class="card-subtitle mb-2">In Inventory</h6>
+              <h6 class="card-subtitle mb-2">Quantity On Site</h6>
 
               <div class="row align-items-center gx-2">
                 <div class="col">

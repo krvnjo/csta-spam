@@ -200,6 +200,7 @@ $(document).ready(function() {
         $("#lblViewAcquiredType").text(response.acquiredType);
         $("#lblViewItemStatus").text(response.itemStatus);
         $("#lblViewAcquiredDate").text(response.acquiredDate);
+        $('#lblViewInvDate').text(response.inventoryDate);
         $("#lblViewWarrantyDate").text(response.warrantyDate);
         $("#lblViewDateCreated").text(response.dateCreated);
         $("#lblViewDateUpdated").text(response.dateUpdated);

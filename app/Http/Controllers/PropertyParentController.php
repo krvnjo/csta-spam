@@ -31,24 +31,34 @@ class PropertyParentController extends Controller
             ->map(function ($property) {
                 if ($property->purchase_price && $property->useful_life && isset($property->residual_value)) {
                     $annualDepreciation = ($property->purchase_price - $property->residual_value) / $property->useful_life;
-                    $property->annualDepreciation = round($annualDepreciation, 2);
 
+                    $acquisitionDate = $property->propertyChildren->first()->acq_date ?? null;
+
+                    $yearsInUse = $acquisitionDate
+                        ? round(\Carbon\Carbon::parse($acquisitionDate)->diffInMonths(\Carbon\Carbon::now()) / 12, 2)
+                        : 0;
+
+                    $totalDepreciationSoFar = $annualDepreciation * $yearsInUse;
+
+                    $currentValue = max($property->purchase_price - $totalDepreciationSoFar, $property->residual_value);
+
+                    $property->depreciatedValueThisYear = round($currentValue, 2);
+                    $property->totalDepreciationSoFar = round($totalDepreciationSoFar, 2);
                     $property->depreciationRate = round(($annualDepreciation / $property->purchase_price) * 100, 2);
-
-                    $currentValue = $property->purchase_price;
-                    $totalDepreciationSoFar = 0;
-                    $depreciatedValueThisYear = $property->purchase_price;
-
-                    for ($i = 1; $i <= $property->current_year; $i++) {
-                        $totalDepreciationSoFar += $annualDepreciation;
-                        $currentValue -= $annualDepreciation;
-                    }
-
-                    $depreciatedValueThisYear = round($currentValue, 2);
-                    $property->depreciatedValueThisYear = $depreciatedValueThisYear;
-                    $property->totalDepreciationSoFar = $totalDepreciationSoFar;
                     $property->combinedDepreciationPercentage = round(($totalDepreciationSoFar / $property->purchase_price) * 100, 2);
 
+//                    $debug = [
+//                        'purchase_price' => $property->purchase_price,
+//                        'residual_value' => $property->residual_value,
+//                        'useful_life' => $property->useful_life,
+//                        'acquisition_date' => $acquisitionDate,
+//                        'years_in_use' => $yearsInUse,
+//                        'annual_depreciation' => $annualDepreciation,
+//                        'total_depreciation' => $totalDepreciationSoFar,
+//                        'current_value' => $currentValue,
+//                        'depreciation_percentage' => $property->combinedDepreciationPercentage
+//                    ];
+//                    dd($debug);
                 } else {
                     $property->depreciatedValueThisYear = $property->purchase_price;
                     $property->totalDepreciationSoFar = 0;
@@ -56,8 +66,10 @@ class PropertyParentController extends Controller
                     $property->depreciationRate = 0;
                     $property->combinedDepreciationPercentage = 0;
                 }
+
                 return $property;
             });
+
 
 
         $categories = Category::where('is_active', 1)->get();
@@ -273,12 +285,20 @@ class PropertyParentController extends Controller
             return response()->json([
                 'success' => true,
                 'name' => $propertyParent->name,
-                'description' => $propertyParent->description,
-                'brand' => $propertyParent->brand->name,
-                'category' => $propertyParent->category->name,
-                'status' => $propertyParent->is_active,
+                'description' => $propertyParent->description ?? 'No description provided',
+                'specification' => $propertyParent->specification ?? 'No specification',
+                'unit' => $propertyParent->unit->name ? $propertyParent->unit->name : 'No unit type provided',
+                'brand' => $propertyParent->brand ? $propertyParent->brand->name : 'Consumable Item',
+                'category' => $propertyParent->category ? $propertyParent->category->name : 'Consumable Item',
+                'purchasePrice' => $propertyParent->purchase_price ?? 'No price provided',
+                'residualValue' => $propertyParent->residual_value
+                    ? '₱'.$propertyParent->residual_value
+                    : ($propertyParent->is_consumable == 1 ? 'Consumable Item' : 'No residual value provided'),
+                'usefulLife' => $propertyParent->useful_life
+                    ? $propertyParent->useful_life
+                    : ($propertyParent->is_consumable == 1 ? 'Consumable Item' : 'No useful life provided'),
                 'inStock' => $propertyInStock,
-                'inventory' => $propertyInInventory,
+                'inventory' => $propertyInInventory ,
                 'quantity' => $propertyTotal,
                 'created' => $propertyParent->created_at->format('D, F d, Y | h:i:s A'),
                 'updated' => $propertyParent->updated_at->format('D, F d, Y | h:i:s A'),

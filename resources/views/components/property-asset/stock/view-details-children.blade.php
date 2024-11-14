@@ -101,6 +101,15 @@
 
           <div class="row mb-4">
             <div class="col-5 d-flex align-items-center">
+              <p class="form-label fw-semibold mb-0">Inventory Date:</p>
+            </div>
+            <div class="col-7 d-flex align-items-center">
+              <p class="mb-0" id="lblViewInvDate"></p>
+            </div>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-5 d-flex align-items-center">
               <p class="form-label fw-semibold mb-0">Date Acquired:</p>
             </div>
             <div class="col-7 d-flex align-items-center">

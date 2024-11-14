@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-  Stock Masterlist
+  Item Masterlist
 @endsection
 
 @push('styles')
@@ -21,10 +21,10 @@
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb breadcrumb-no-gutter">
                 <li class="breadcrumb-item"><a class="breadcrumb-link" data-route="dashboard.index" href="{{ route('dashboard.index') }}">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Stock Masterlist</li>
+                <li class="breadcrumb-item active" aria-current="page">Item Masterlist</li>
               </ol>
             </nav>
-            <h1 class="page-header-title">Item Stock Management</h1>
+            <h1 class="page-header-title">Item Management</h1>
             <p class="page-header-text">Manage and organize stock records.</p>
             <p class="page-header-text">
               <span class="legend-indicator bg-danger "></span>No stock
@@ -257,7 +257,7 @@
                 <th class="col-2">Description</th>
                 <th class="col-2">Price</th>
                 <th class="col-2">Deprecation Rate</th>
-                <th class="col-1 text-center">Total Quantity</th>
+                <th class="col-1 text-center">Quantity</th>
                 <th class="col-1 text-center">Unit</th>
                 <th class="col-3">Action</th>
               </tr>
@@ -316,13 +316,11 @@
                       $depreciatedValue = number_format($propertyParent->depreciatedValueThisYear, 2);
                       $purchasePrice = number_format($propertyParent->purchase_price, 2);
                     @endphp
-                    <strong
-                      data-bs-toggle="tooltip"
-                      title="{{ $propertyParent->depreciatedValueThisYear < $propertyParent->purchase_price ? '₱' . $purchasePrice . ' Purchase Price' : '' }}"
-                    >
+                    <strong data-bs-toggle="tooltip" title="{{ $propertyParent->depreciatedValueThisYear < $propertyParent->purchase_price ? '₱' . $purchasePrice . ' Purchase Price' : '' }}">
                       ₱{{ $depreciatedValue }}
                     </strong>
                   </td>
+
                   <td class="text-center">
                     @if ($propertyParent->depreciationRate > 0)
                       @php
@@ -338,10 +336,11 @@
                       </span>
                     @endif
                   </td>
+
                   <td class="text-center">
                     {{ $propertyParent->quantity }}
                   </td>
-                  <td class="text-center">
+                  <td>
                     {{ $propertyParent->unit->name }}
                   <td>
                     <div class="btn-group position-static" role="group">
