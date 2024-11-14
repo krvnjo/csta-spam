@@ -15,10 +15,15 @@ class ItemSeeder extends Seeder
     public function run()
     {
         $units = [
-            'Ream',
-            'Pc/s',
-            'Box',
-            'Gallon',
+            'PIECE/S',
+            'GALLON',
+            'REAM',
+            'PLASTIC',
+            'BOX',
+            'BUNDLE',
+            'PACK',
+            'SET',
+            'UNIT/S',
         ];
 
         foreach ($units as $unit) {
@@ -26,6 +31,7 @@ class ItemSeeder extends Seeder
                 'name' => $unit,
             ]);
         }
+
 //        $Parent = [
 //            [
 //                'name' => 'S-Inverter AR09TYHYEWKNTC',

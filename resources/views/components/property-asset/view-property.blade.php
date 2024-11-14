@@ -29,6 +29,23 @@
 
           <div class="row mb-4">
             <div class="col-5 d-flex align-items-center">
+              <p class="form-label fw-semibold mb-0">Specification:</p>
+            </div>
+            <div class="col-7 d-flex align-items-center">
+              <p class="mb-0" id="lblViewSpecification"></p>
+            </div>
+          </div>
+          <div class="row mb-4">
+            <div class="col-5 d-flex align-items-center">
+              <p class="form-label fw-semibold mb-0">Description:</p>
+            </div>
+            <div class="col-7 d-flex align-items-center">
+              <p class="mb-0" id="lblViewDescription"></p>
+            </div>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-5 d-flex align-items-center">
               <p class="form-label fw-semibold mb-0">Brand:</p>
             </div>
             <div class="col-7 d-flex align-items-center">
@@ -47,19 +64,37 @@
 
           <div class="row mb-4">
             <div class="col-5 d-flex align-items-center">
-              <p class="form-label fw-semibold mb-0">Subcategory:</p>
+              <p class="form-label fw-semibold mb-0">Unit:</p>
             </div>
             <div class="col-7 d-flex align-items-center">
-              <p class="mb-0" id="lblViewSubCategory"></p>
+              <p class="mb-0" id="lblViewUnit"></p>
             </div>
           </div>
 
           <div class="row mb-4">
             <div class="col-5 d-flex align-items-center">
-              <p class="form-label fw-semibold mb-0">Description:</p>
+              <p class="form-label fw-semibold mb-0">Purchase Price:</p>
             </div>
             <div class="col-7 d-flex align-items-center">
-              <p class="mb-0" id="lblViewDescription"></p>
+              ₱<p class="mb-0" id="lblViewPrice"></p>
+            </div>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-5 d-flex align-items-center">
+              <p class="form-label fw-semibold mb-0">Residual Value:</p>
+            </div>
+            <div class="col-7 d-flex align-items-center">
+              <p class="mb-0" id="lblViewResidualValue"></p>
+            </div>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-5 d-flex align-items-center">
+              <p class="form-label fw-semibold mb-0">Useful Life:</p>
+            </div>
+            <div class="col-7 d-flex align-items-center">
+              <p class="mb-0" id="lblViewUsefulLife"></p>
             </div>
           </div>
 
@@ -74,7 +109,7 @@
 
           <div class="row mb-4">
             <div class="col-5 d-flex align-items-center">
-              <p class="form-label fw-semibold mb-0">Inventory:</p>
+              <p class="form-label fw-semibold mb-0">Quantity On Site:</p>
             </div>
             <div class="col-7 d-flex align-items-center">
               <p class="mb-0" id="lblViewInventory"></p>

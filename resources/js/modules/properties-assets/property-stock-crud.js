@@ -226,7 +226,11 @@ $(document).ready(function () {
         $('#lblViewItemName').text(response.name);
         $('#lblViewBrand').text(response.brand);
         $('#lblViewCategory').text(response.category);
-        $('#lblViewSubCategory').text(response.subcategory);
+        $('#lblViewSpecification').text(response.specification);
+        $('#lblViewUnit').text(response.unit);
+        $('#lblViewPrice').text(response.purchasePrice);
+        $('#lblViewResidualValue').text(response.residualValue);
+        $('#lblViewUsefulLife').text(response.usefulLife);
         $('#lblViewDescription').text(response.description);
         $('#lblViewInStock').text(response.inStock);
         $('#lblViewInventory').text(response.inventory);

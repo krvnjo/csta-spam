@@ -21,7 +21,7 @@
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb breadcrumb-no-gutter">
                 <li class="breadcrumb-item"><a class="breadcrumb-link" data-route="dashboard.index" href="{{ route('dashboard.index') }}">Home</a></li>
-                <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ route('prop-asset.index') }}">Stock Masterlist</a></li>
+                <li class="breadcrumb-item"><a class="breadcrumb-link" href="{{ route('prop-asset.index') }}">Item Masterlist</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ $propertyParents->name }}</li>
               </ol>
             </nav>
@@ -98,7 +98,7 @@
           <!-- Card -->
           <div class="card h-100">
             <div class="card-body">
-              <h6 class="card-subtitle mb-2">In Stock</h6>
+              <h6 class="card-subtitle mb-2">Quantity In Stock</h6>
 
               <div class="row align-items-center gx-2">
                 <div class="col">
@@ -122,7 +122,7 @@
           <!-- Card -->
           <div class="card h-100">
             <div class="card-body">
-              <h6 class="card-subtitle mb-2">In Inventory</h6>
+              <h6 class="card-subtitle mb-2">Quantity On Site</h6>
 
               <div class="row align-items-center gx-2">
                 <div class="col">
@@ -315,8 +315,17 @@
                   </td>
                   <td>{{ $propertyChild->designation->name }}</td>
                   <td>{{ $propertyChild->department->code }}</td>
-                  <td><span class="{{ $propertyChild->condition->color->description ?? ''}}"></span>{{ $propertyChild->condition->name ?? '' }}</td>
-                  <td><span class="{{ $propertyChild->status->color->description ?? ''}} fs-6">{{ $propertyChild->status->name ?? '' }}</span></td>
+                  <td><span class="{{ $propertyChild->condition->color->class ?? ''}}"></span>{{ $propertyChild->condition->name ?? '' }}</td>
+                  <td>
+                    @if($propertyChild->property->is_consumable)
+                      <span class="badge bg-soft-secondary text-secondary p-1">
+                        Consumable Item
+                      </span>
+                    @else
+
+                    @endif
+                    <span class="{{ $propertyChild->status->color->class ?? ''}} fs-6">{{ $propertyChild->status->name ?? '' }}</span>
+                  </td>
                   <td data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom"
                     title="Date Acquired: {{ \Carbon\Carbon::parse($propertyChild->acq_date)->format('F j, Y') }}, Warranty Date: {{ $propertyChild->warranty_date ? \Carbon\Carbon::parse($propertyChild->warranty_date)->format('F j, Y') : '-' }}">
                     <i class="bi-calendar-event me-1"></i>
@@ -329,8 +338,8 @@
                   </td>
                   <td>
                     <div class="btn-group position-static">
-                      <button class="btn btn-white btn-sm btnEditPropChild" type="button">
-                        <i class="bi-pencil-fill me-1"></i> Edit
+                      <button class="btn btn-white btn-sm btnViewChild" type="button">
+                        <i class="bi-eye me-1"></i> View
                       </button>
                       <!-- Button Group -->
                       <div class="btn-group position-static">
@@ -338,8 +347,8 @@
                           aria-expanded="false"></button>
 
                         <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="childEditDropdown">
-                          <button class="dropdown-item btnViewChild" type="button">
-                            <i class="bi bi-info-square-fill dropdown-item-icon"></i> View Details
+                          <button class="dropdown-item btnEditPropChild" type="button">
+                            <i class="bi-pencil-fill me-1 dropdown-item-icon"></i> Edit
                           </button>
                           <button class="dropdown-item btnMoveToInventory"  data-childmove-id="{{ $propertyChild->id }}" type="button">
                             <i class="bi bi-arrow-left-right dropdown-item-icon text-info"></i> Move to Inventory
