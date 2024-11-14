@@ -34,38 +34,44 @@
           <small class="bi-three-dots nav-subtitle-replacer"></small>
 
           <div id="navbarVerticalMenuMainMenu">
-            <!-- Property and Assets -->
-            <div class="nav-item">
-              <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesPropertyAssets">
-                <i class="bi-box-seam nav-icon"></i>
-                <span class="nav-link-title">P&A Management</span>
-              </a>
+            @access('Item Inventory Management', 'View Only, Read and Write, Full Access')
+              <!-- Property and Assets -->
+              <div class="nav-item">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesPropertyAssets">
+                  <i class="bi-box-seam nav-icon"></i>
+                  <span class="nav-link-title">P&A Management</span>
+                </a>
 
-              <div class="nav-collapse collapse" id="navbarVerticalMenuPagesPropertyAssets" data-bs-parent="#navbarVerticalMenuMainMenu">
-                <a class="nav-link" data-route="" href="">Overview</a>
-                <a class="nav-link" data-route="prop-asset.index" href="{{ route('prop-asset.index') }}">Item Masterlist</a>
-                <a class="nav-link" data-route="" href="">Consumption Logs</a>
+                <div class="nav-collapse collapse" id="navbarVerticalMenuPagesPropertyAssets" data-bs-parent="#navbarVerticalMenuMainMenu">
+                  <a class="nav-link" data-route="" href="">Overview</a>
+                  <a class="nav-link" data-route="prop-asset.index" href="{{ route('prop-asset.index') }}">Item Masterlist</a>
+                  <a class="nav-link" data-route="" href="">Consumption Logs</a>
+                </div>
               </div>
-            </div>
-            <!-- End Property and Assets -->
+              <!-- End Property and Assets -->
+            @endaccess
 
-            <!-- Borrow and Reservation -->
-            <div class="nav-item">
-              <a class="nav-link" data-placement="left" href="#">
-                <i class="bi-calendar2-week nav-icon"></i>
-                <span class="nav-link-title">Borrow & Reservation</span>
-              </a>
-            </div>
-            <!-- End Borrow and Reservation -->
+            @access('Borrowing & Reservation', 'View Only, Read and Write, Full Access')
+              <!-- Borrow and Reservation -->
+              <div class="nav-item">
+                <a class="nav-link" data-placement="left" href="#">
+                  <i class="bi-calendar2-week nav-icon"></i>
+                  <span class="nav-link-title">Borrow & Reservation</span>
+                </a>
+              </div>
+              <!-- End Borrow and Reservation -->
+            @endaccess
 
-            <!-- Item Maintenance -->
-            <div class="nav-item">
-              <a class="nav-link" data-placement="left" href="#">
-                <i class="bi-tools nav-icon"></i>
-                <span class="nav-link-title">Item Maintenance</span>
-              </a>
-            </div>
-            <!-- End Item Maintenance -->
+            @access('Item Maintenance', 'View Only, Read and Write, Full Access')
+              <!-- Item Maintenance -->
+              <div class="nav-item">
+                <a class="nav-link" data-placement="left" href="#">
+                  <i class="bi-tools nav-icon"></i>
+                  <span class="nav-link-title">Item Maintenance</span>
+                </a>
+              </div>
+              <!-- End Item Maintenance -->
+            @endaccess
 
             <!-- Reports & Analytics -->
             <div class="nav-item">
@@ -119,23 +125,27 @@
             @endaccess
             <!-- End File Maintenance -->
 
-            <!-- Audit History -->
-            <div class="nav-item">
-              <a class="nav-link" data-placement="left" data-route="audit.index" href="{{ route('audit.index') }}">
-                <i class="bi-clock-history nav-icon"></i>
-                <span class="nav-link-title">Audit History</span>
-              </a>
-            </div>
-            <!-- End Audit History -->
+            @access('Audit History', 'View Only, Read and Write, Full Access')
+              <!-- Audit History -->
+              <div class="nav-item">
+                <a class="nav-link" data-placement="left" data-route="audit.index" href="{{ route('audit.index') }}">
+                  <i class="bi-clock-history nav-icon"></i>
+                  <span class="nav-link-title">Audit History</span>
+                </a>
+              </div>
+              <!-- End Audit History -->
+            @endaccess
 
-            <!-- System Settings -->
-            <div class="nav-item">
-              <a class="nav-link" data-placement="left" data-route="system.index" href="{{ route('system.index') }}">
-                <i class="bi-gear nav-icon"></i>
-                <span class="nav-link-title">System Settings</span>
-              </a>
-            </div>
-            <!-- End System Settings -->
+            @access('System Settings', 'View Only, Read and Write, Full Access')
+              <!-- System Settings -->
+              <div class="nav-item">
+                <a class="nav-link" data-placement="left" data-route="system.index" href="{{ route('system.index') }}">
+                  <i class="bi-gear nav-icon"></i>
+                  <span class="nav-link-title">System Settings</span>
+                </a>
+              </div>
+              <!-- End System Settings -->
+            @endaccess
           </div>
           <!-- End Others -->
         </div>

@@ -56,9 +56,28 @@
     <script src="{{ Vite::asset('resources/vendor/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ Vite::asset('resources/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside.min.js') }}"></script>
     <script src="{{ Vite::asset('resources/vendor/hs-form-search/dist/hs-form-search.min.js') }}"></script>
+    <script src="{{ Vite::asset('resources/vendor/list.js/dist/list.min.js') }}"></script>
 
     <!-- JS Plugins -->
     @stack('scripts')
+
+    <script>
+      (function() {
+        // INITIALIZATION OF LISTJS COMPONENT
+        // =======================================================
+        HSCore.components.HSList.init('#docsSearch');
+        const docsSearch = HSCore.components.HSList.getItem('docsSearch');
+
+
+        // GET JSON FILE RESULTS
+        // =======================================================
+        fetch('/json/docs-search.json')
+          .then(response => response.json())
+          .then(data => {
+            docsSearch.add(data)
+          })
+      })()
+    </script>
 
     <!-- JS Style Switcher -->
     <script src="{{ Vite::asset('resources/js/hs-style-switcher.js') }}"></script>

@@ -1,0 +1,47 @@
+[
+    {
+        "component": "Dashboard",
+        "category": "CSTA - SPAM",
+        "link": "/"
+    },
+    {
+        "component": "Brands",
+        "category": "File Maintenance",
+        "link": "/file-maintenance/brands"
+    },
+    {
+        "component": "Categories",
+        "category": "File Maintenance",
+        "link": "/file-maintenance/categories"
+    },
+    {
+        "component": "Departments",
+        "category": "File Maintenance",
+        "link": "/file-maintenance/departments"
+    },
+    {
+        "component": "Designations",
+        "category": "File Maintenance",
+        "link": "/file-maintenance/designations"
+    },
+    {
+        "component": "Users",
+        "category": "User Management",
+        "link": "/user-management/users"
+    },
+    {
+        "component": "Roles",
+        "category": "User Management",
+        "link": "/user-management/roles"
+    },
+    {
+        "component": "Audit History",
+        "category": "CSTA - SPAM",
+        "link": "/audit-history"
+    },
+    {
+        "component": "System Settings",
+        "category": "CSTA - SPAM",
+        "link": "/system-settings"
+    }
+]
