@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Throwable;
 
 class PropertyChildController extends Controller
@@ -100,35 +101,45 @@ class PropertyChildController extends Controller
                 $parentProperty = PropertyParent::findOrFail($request->parent_id);
 
                 $newQuantity = $parentProperty->quantity + request('VarQuantity');
-                $parentProperty->update(['quantity' => $newQuantity]);
 
-                $propertyQuantity = request('VarQuantity');
-                $currentYear = Carbon::now()->year;
-
-                $lastCode = PropertyChild::query()
-                    ->where('prop_code', 'LIKE', "{$currentYear}%")
-                    ->orderBy('prop_code', 'desc')
-                    ->value('prop_code');
-
-                $nextNumber = $lastCode ? (int)substr($lastCode, 4) + 1 : 1;
-
-                for ($i = 0; $i < $propertyQuantity; $i++) {
-                    $code = $currentYear . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
-                    $nextNumber++;
-                    PropertyChild::create([
-                        'prop_id' => $parentProperty->id,
-                        'prop_code' => $code,
-                        'type_id' => 1,
-                        'acq_date' => now(),
-                        'stock_date' => now(),
-                        'warranty_date' => null,
-                        'status_id' => 1,
-                        'dept_id' => 1,
-                        'desig_id' => 1,
-                        'condi_id' => 1,
+                if ($parentProperty->is_consumable == 1) {
+                    $parentProperty->update(['quantity' => $newQuantity]);
+                    return response()->json([
+                        'success' => true,
+                        'title' => 'Saved Successfully!',
+                        'text' => 'The consumable item has been added successfully!',
                     ]);
-                }
 
+                } else{
+                    $parentProperty->update(['quantity' => $newQuantity]);
+
+                    $propertyQuantity = request('VarQuantity');
+                    $currentYear = Carbon::now()->year;
+
+                    $lastCode = PropertyChild::query()
+                        ->where('prop_code', 'LIKE', "{$currentYear}%")
+                        ->orderBy('prop_code', 'desc')
+                        ->value('prop_code');
+
+                    $nextNumber = $lastCode ? (int)substr($lastCode, 4) + 1 : 1;
+
+                    for ($i = 0; $i < $propertyQuantity; $i++) {
+                        $code = $currentYear . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
+                        $nextNumber++;
+                        PropertyChild::create([
+                            'prop_id' => $parentProperty->id,
+                            'prop_code' => $code,
+                            'type_id' => 1,
+                            'acq_date' => now(),
+                            'stock_date' => now(),
+                            'warranty_date' => null,
+                            'status_id' => 1,
+                            'dept_id' => 1,
+                            'desig_id' => 1,
+                            'condi_id' => 1,
+                        ]);
+                    }
+                }
                 return response()->json([
                     'success' => true,
                     'title' => 'Saved Successfully!',
@@ -169,7 +180,7 @@ class PropertyChildController extends Controller
                     ? Carbon::parse($child->warranty_date)->format('F d, Y')
                     : ($child->property->is_consumable == 1 ? 'Consumable Item' : 'No warranty date provided'),
                 'inventoryDate' => $child->inventory_date
-                    ? Carbon::parse($child->inventory_date)->format('F d, Y')
+                    ? Carbon::parse($child->inventory_date)->format('D, F d, Y | h:i:s A')
                     : ($child->property->is_consumable == 1 ? 'Consumable Item' : 'In stock'),
                 'dateCreated' => $child->created_at->format('D, F d, Y | h:i:s A'),
                 'dateUpdated' => $child->updated_at->format('D, F d, Y | h:i:s A'),
@@ -342,18 +353,16 @@ class PropertyChildController extends Controller
             $propertyChildIds = explode(',', $request->input('movePropIds'));
 
             $moveValidationMessages = [
-                'status.required' => 'Please choose a status type!',
-
                 'designation.required' => 'Please choose designation!',
+                'remarks.required' => 'Please enter a remarks!',
+                'remarks.regex' => 'The remarks may only contain letters, spaces, periods, and hyphens.',
+                'remarks.min' => 'The remarks must be at least :min characters.',
+                'remarks.max' => 'The remarks may not be greater than :max characters.',
             ];
 
             $moveValidator = Validator::make($request->all(), [
-                'status' => [
-                    'required'
-                ],
-                'designation' => [
-                    'required'
-                ],
+                'designation' => ['required'],
+                'remarks' => ['required', 'regex:/^[A-Za-z0-9%,\- ×."\'"]+$/', 'min:3', 'max:100'],
             ], $moveValidationMessages);
 
             if ($moveValidator->fails()) {
@@ -363,28 +372,61 @@ class PropertyChildController extends Controller
                 ]);
             } else {
                 $designation = $request->input('designation');
-                $status = $request->input('status');
+                $remarks = ucwords(strtolower(trim($request->input('remarks'))));
             }
+
+            $deptId = Designation::query()->findOrFail($designation)->dept_id;
 
             PropertyChild::whereIn('id', $propertyChildIds)->update([
                 'desig_id' => $designation,
-                'status_id' => $status,
+                'dept_id' => $deptId,
+                'remarks' => $remarks,
+                'status_id' => 2,
                 'inventory_date' => now(),
+                'updated_at' => now(),
             ]);
 
             return response()->json([
                 'success' => true,
-                'title' => 'Item Inventoried Successfully!',
-                'text' => 'The item has been added to the inventory.',
+                'title' => 'Item Deployed Successfully!',
+                'text' => 'The item has been deployed to the selected designation.',
             ]);
 
         } catch (Throwable $e) {
-            Log::error('Error moving property child:', ['exception' => $e]);
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
-                'message' => 'An error occurred while moving the item: ' . $e->getMessage(),
+                'message' => 'An error occurred while assigning the item.' . $e->getMessage(),
             ], 500);
         }
     }
+    public function generate($id)
+    {
+        $propertyChild = PropertyChild::with([
+            'property',
+            'acquisition',
+            'designation',
+            'department',
+            'condition',
+            'status',
+            'property'
+        ])->findOrFail($id);
+
+        $text = "Item Number: " . $propertyChild->prop_code . "\n";
+        $text .= "Item Name: " . $propertyChild->property->name . "\n";
+        $text .= "Category/Brand: " . $propertyChild->property->category->name . " - " . $propertyChild->property->brand->name . "\n";
+        $text .= "Specification: " . $propertyChild->property->specification . "\n";
+        $text .= "Condition: " . $propertyChild->condition->name . "\n";
+        $text .= "Status: " . $propertyChild->status->name . "\n";
+        $text .= "Designation: " . $propertyChild->designation->name . "\n";
+        $text .= "Assign Date: " . $propertyChild->inventory_date->format('Y-m-d') . "\n";
+
+        $qr = QrCode::size(150)->generate($text);
+
+        return view('pages.property-asset.stock.generate-qr', compact('propertyChild', 'qr'));
+    }
+
+
+
+
 }

@@ -209,7 +209,6 @@ class PropertyParentController extends Controller
                     'dept_id' => 1,
                     'acq_date' => now(),
                     'desig_id' => 1,
-                    'condi_id' => 1,
                 ]);
             } else {
                 $parentProperty = PropertyParent::query()->create([
@@ -422,6 +421,7 @@ class PropertyParentController extends Controller
                     'min:3',
                     'max:100'
                 ],
+                'description' => ['nullable', 'regex:/^[A-Za-z0-9%,\- ×."\'"]+$/', 'min:3', 'max:100'],
                 'category' => $property->is_consumable ? 'nullable' : 'required',
                 'brand' => $property->is_consumable ? 'nullable' : 'required',
                 'residual' => $property->is_consumable ? 'nullable' : ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/', 'min:1', 'max:' . $purchasePrice],

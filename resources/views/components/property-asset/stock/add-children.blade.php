@@ -3,7 +3,13 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="addPropertyChildLabel">Add Variant Quantity</h5>
+        <h5 class="modal-title" id="addPropertyChildLabel">
+          @if($propertyParents->is_consumable)
+            Restock Item
+          @else
+            Add Variation Quantity
+          @endif
+        </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form id="frmAddVarProperty" action="{{ route('prop-asset.child.store', $propertyParents->id) }}" method="POST" novalidate enctype="multipart/form-data">
@@ -21,7 +27,13 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-white" data-bs-dismiss="modal">Close</button>
           <button class="btn btn-primary" id="btnAddSaveChild" form="frmAddVarProperty" type="submit" disabled>
-            <span class="spinner-label">Save</span>
+            <span class="spinner-label">
+              @if($propertyParents->is_consumable)
+                Restock
+              @else
+                Save
+              @endif
+            </span>
             <span class="spinner-border spinner-border-sm d-none"></span>
           </button>
         </div>

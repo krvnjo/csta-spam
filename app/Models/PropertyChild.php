@@ -25,6 +25,9 @@ class PropertyChild extends Model
         'remarks',
         'is_active'
     ];
+    protected $casts = [
+        'inventory_date' => 'datetime',
+    ];
 
     public function acquisition(): BelongsTo
     {
