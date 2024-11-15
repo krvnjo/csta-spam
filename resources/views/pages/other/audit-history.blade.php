@@ -203,7 +203,7 @@
                   <td class="d-none" data-audit-id="{{ Crypt::encryptString($audit->id) }}"></td>
                   <td data-full-value="{{ $audit->name }}">
                     <a class="d-block h5 mb-0 btnViewAudit">{{ $audit->name }}</a>
-                    <span class="d-block fs-5">{{ $audit->subject->name }}</span>
+                    <span class="d-block fs-5">{{ $audit->subject->name ?? '' }}</span>
                   </td>
                   <td>{{ \Illuminate\Support\Str::limit($audit->description, 50, '...') }}</td>
                   <td data-order="{{ $audit->event }}">
