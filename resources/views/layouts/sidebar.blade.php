@@ -132,6 +132,7 @@
                     <a class="nav-link" data-route="category.index" href="{{ route('category.index') }}">Categories</a>
                     <a class="nav-link" data-route="department.index" href="{{ route('department.index') }}">Departments</a>
                     <a class="nav-link" data-route="designation.index" href="{{ route('designation.index') }}">Designations</a>
+                    <a class="nav-link" data-route="requester.index" href="{{ route('requester.index') }}">Requesters</a>
                   </div>
                 </div>
               </div>

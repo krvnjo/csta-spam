@@ -6,12 +6,14 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Department;
 use App\Models\Designation;
+use App\Models\Requester;
 use App\Models\Role;
 use App\Models\User;
 use App\Observers\BrandObserver;
 use App\Observers\CategoryObserver;
 use App\Observers\DepartmentObserver;
 use App\Observers\DesignationObserver;
+use App\Observers\RequesterObserver;
 use App\Observers\RoleObserver;
 use App\Observers\UserObserver;
 use App\Services\AccessService;
@@ -49,5 +51,6 @@ class AppServiceProvider extends ServiceProvider
         Category::observe(CategoryObserver::class);
         Department::observe(DepartmentObserver::class);
         Designation::observe(DesignationObserver::class);
+        Requester::observe(RequesterObserver::class);
     }
 }

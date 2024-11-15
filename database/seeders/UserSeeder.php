@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Access;
 use App\Models\Permission;
+use App\Models\Requester;
 use App\Models\Role;
 use App\Models\RolePermission;
 use App\Models\User;
@@ -16,6 +17,62 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        $requesters = [
+            [
+                'req_num' => '21-00090',
+                'name' => 'Joshua M. Maglinao',
+                'lname' => 'Maglinao',
+                'fname' => 'Joshua',
+                'mname' => 'Martin',
+                'dept_id' => 2,
+                'email' => 'joshuamaglinao@gmail.com',
+                'phone_num' => '0979-345-1234',
+            ],
+            [
+                'req_num' => '21-00075',
+                'name' => 'Mark Jason A. Espinosa',
+                'lname' => 'Espinosa',
+                'fname' => 'Mark Jason',
+                'mname' => 'Aranez',
+                'dept_id' => 2,
+                'email' => 'markjasonespinosa@gmail.com',
+                'phone_num' => '0934-474-8693',
+            ],
+            [
+                'req_num' => '21-00313',
+                'name' => 'Johnsen S. Lopez',
+                'lname' => 'Lopez',
+                'fname' => 'Johnsen',
+                'mname' => 'Santos',
+                'dept_id' => 2,
+                'email' => 'johnsenlopez@gmail.com',
+                'phone_num' => '0974-9314-4567',
+            ],
+            [
+                'req_num' => '21-00614',
+                'name' => 'Froilan V. Odog',
+                'lname' => 'Odog',
+                'fname' => 'Froilan',
+                'mname' => 'Villanueva',
+                'dept_id' => 2,
+                'email' => 'froilanodog@gmail.com',
+                'phone_num' => '0953-785-2345',
+            ],
+        ];
+
+        foreach ($requesters as $data) {
+            Requester::create([
+                'req_num' => $data['req_num'],
+                'name' => $data['name'],
+                'lname' => $data['lname'],
+                'fname' => $data['fname'],
+                'mname' => $data['mname'],
+                'dept_id' => $data['dept_id'],
+                'email' => $data['email'],
+                'phone_num' => $data['phone_num'],
+            ]);
+        }
+
         $accesses = [
             'View Only' => 'View content only, no changes allowed.',
             'Read and Write' => 'Can view, add, and edit content as needed.',

@@ -14,6 +14,7 @@ use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\PropertyChildController;
 use App\Http\Controllers\PropertyConsumableController;
 use App\Http\Controllers\PropertyParentController;
+use App\Http\Controllers\RequesterController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TicketApprovalController;
 use App\Http\Controllers\TicketRequestController;
@@ -214,6 +215,16 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
 
     // Designation Routes
     Route::middleware('checkPermission:File Maintenance')->prefix('file-maintenance/designations')->name('designation.')->controller(DesignationController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('create');
+        Route::get('/show', 'show')->name('view')->middleware('expectsJson');
+        Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
+        Route::patch('/', 'update')->name('update');
+        Route::delete('/', 'destroy')->name('delete');
+    });
+
+    // Requester Routes
+    Route::middleware('checkPermission:File Maintenance')->prefix('file-maintenance/requesters')->name('requester.')->controller(RequesterController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('create');
         Route::get('/show', 'show')->name('view')->middleware('expectsJson');

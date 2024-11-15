@@ -15,6 +15,20 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        Schema::create('requesters', function (Blueprint $table) {
+            $table->id();
+            $table->string('req_num', 25)->unique();
+            $table->string('name', 150);
+            $table->string('lname', 75);
+            $table->string('fname', 75);
+            $table->string('mname', 75)->nullable();
+            $table->foreignIdFor(Department::class, 'dept_id')->constrained('departments')->cascadeOnDelete();
+            $table->string('email', 75)->unique();
+            $table->string('phone_num', 25)->nullable();
+            $table->unsignedTinyInteger('is_active')->default(1);
+            $table->timestamps();
+        });
+
         Schema::create('accesses', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50)->unique();
@@ -58,7 +72,7 @@ return new class extends Migration {
             $table->foreignIdFor(Role::class, 'role_id')->constrained('roles')->cascadeOnDelete();
             $table->foreignIdFor(Department::class, 'dept_id')->constrained('departments')->cascadeOnDelete();
             $table->string('email', 75)->unique();
-            $table->string('phone_num', 25)->unique()->nullable();
+            $table->string('phone_num', 25)->nullable();
             $table->timestamp('last_login')->nullable();
             $table->string('user_image', 25)->default('default.jpg');
             $table->unsignedTinyInteger('is_active')->default(1);
