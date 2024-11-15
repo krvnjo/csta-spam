@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Priority;
+use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -13,11 +14,13 @@ class TicketRequestController extends Controller
      */
     public function index()
     {
+        $tickets = Ticket::with('priority', 'progress')->orderBy('created_at', 'desc')->get();
         $priorities = Priority::with('color')->get();
         $users = User::where('role_id', '!=', 1)->orderBy('lname')->get();
 
         return view('pages.repair-maintenance.request',
             compact(
+                'tickets',
                 'priorities',
                 'users'
             )
