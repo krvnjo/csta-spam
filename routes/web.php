@@ -13,6 +13,7 @@ use App\Http\Controllers\HelpController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\PropertyChildController;
 use App\Http\Controllers\PropertyConsumableController;
+use App\Http\Controllers\PropertyOverviewController;
 use App\Http\Controllers\PropertyParentController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TicketApprovalController;
@@ -95,6 +96,19 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
         Route::delete('/', 'destroy')->name('delete');
         Route::patch('/move', 'move')->name('move');
         Route::get('/generate-qr/{id}', 'generate')->name('generate');
+        Route::fallback(function () {
+            abort(404);
+        });
+    });
+
+    // Item Overview Routes
+    Route::middleware('checkPermission:Item Management')->prefix('properties-assets/overview')->name('prop-overview.')->controller(PropertyOverviewController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+        Route::get('/show', 'show')->name('show')->middleware('expectsJson');
+        Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
+        Route::patch('/', 'update')->name('update');
+        Route::delete('/', 'destroy')->name('delete');
         Route::fallback(function () {
             abort(404);
         });
