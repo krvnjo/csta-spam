@@ -379,6 +379,13 @@
                               <button class="dropdown-item text-danger btnDeleteChild" data-childdel-id="{{ $propertyChild->id }}" type="button">
                                 <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
                               </button>
+                            @else
+                              @php
+                                $encryptedId = \Illuminate\Support\Facades\Crypt::encryptString($propertyChild->id);
+                              @endphp
+                              <a class="dropdown-item" href="{{ route('prop-asset.child.generate', ['propertyParent' => $propertyParents->id, 'id' => $encryptedId]) }}">
+                                <i class="bi bi-qr-code dropdown-item-icon"></i> Generate QR
+                              </a>
                             @endif
                           @endif
                         </div>

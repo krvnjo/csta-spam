@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Throwable;
 
 class PropertyChildController extends Controller
@@ -399,4 +400,33 @@ class PropertyChildController extends Controller
             ], 500);
         }
     }
+    public function generate($id)
+    {
+        $propertyChild = PropertyChild::with([
+            'property',
+            'acquisition',
+            'designation',
+            'department',
+            'condition',
+            'status',
+            'property'
+        ])->findOrFail($id);
+
+        $text = "Item Number: " . $propertyChild->prop_code . "\n";
+        $text .= "Item Name: " . $propertyChild->property->name . "\n";
+        $text .= "Category/Brand: " . $propertyChild->property->category->name . " - " . $propertyChild->property->brand->name . "\n";
+        $text .= "Specification: " . $propertyChild->property->specification . "\n";
+        $text .= "Condition: " . $propertyChild->condition->name . "\n";
+        $text .= "Status: " . $propertyChild->status->name . "\n";
+        $text .= "Designation: " . $propertyChild->designation->name . "\n";
+        $text .= "Assign Date: " . $propertyChild->inventory_date->format('Y-m-d') . "\n";
+
+        $qr = QrCode::size(150)->generate($text);
+
+        return view('pages.property-asset.stock.generate-qr', compact('propertyChild', 'qr'));
+    }
+
+
+
+
 }
