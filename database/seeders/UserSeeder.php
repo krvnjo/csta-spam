@@ -31,9 +31,10 @@ class UserSeeder extends Seeder
 
         $groups = [
             'Property & Asset Management' => [
-                'Item Inventory Management',
-                'Borrowing & Reservation',
-                'Item Maintenance',
+                'Item Management',
+                'Borrow & Reservation',
+                'Repair & Maintenance',
+                'Analytics Reports',
             ],
             'Administrative Permissions' => [
                 'User Management',
@@ -89,11 +90,11 @@ class UserSeeder extends Seeder
                 'access' => 'Full Access',
             ],
             'Property Custodian' => [
-                'permissions' => ['Item Inventory Management', 'Borrowing & Reservation', 'Item Maintenance', 'File Maintenance', 'Audit History'],
+                'permissions' => ['Item Management', 'Borrow & Reservation', 'Repair & Maintenance', 'File Maintenance', 'Audit History'],
                 'access' => 'Full Access',
             ],
             'Student Assistant' => [
-                'permissions' => ['Item Inventory Management', 'File Maintenance'],
+                'permissions' => ['Item Management', 'File Maintenance'],
                 'access' => 'Read and Write',
             ],
         ];

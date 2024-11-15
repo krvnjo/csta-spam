@@ -34,53 +34,63 @@
           <small class="bi-three-dots nav-subtitle-replacer"></small>
 
           <div id="navbarVerticalMenuMainMenu">
-            @access('Item Inventory Management', 'View Only, Read and Write, Full Access')
-              <!-- Property and Assets -->
+            @access('Item Management', 'View Only, Read and Write, Full Access')
+              <!-- Item Management -->
               <div class="nav-item">
-                <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesPropertyAssets">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesItemManagement">
                   <i class="bi-box-seam nav-icon"></i>
-                  <span class="nav-link-title">P&A Management</span>
+                  <span class="nav-link-title">Item Management</span>
                 </a>
 
-                <div class="nav-collapse collapse" id="navbarVerticalMenuPagesPropertyAssets" data-bs-parent="#navbarVerticalMenuMainMenu">
+                <div class="nav-collapse collapse" id="navbarVerticalMenuPagesItemManagement" data-bs-parent="#navbarVerticalMenuMainMenu">
                   <a class="nav-link" data-route="" href="">Overview</a>
                   <a class="nav-link" data-route="prop-asset.index" href="{{ route('prop-asset.index') }}">Item Masterlist</a>
                   <a class="nav-link" data-route="" href="">Consumption Logs</a>
                 </div>
               </div>
-              <!-- End Property and Assets -->
+              <!-- End Item Management -->
             @endaccess
 
-            @access('Borrowing & Reservation', 'View Only, Read and Write, Full Access')
-              <!-- Borrow and Reservation -->
+            @access('Borrow & Reservation', 'View Only, Read and Write, Full Access')
+              <!-- Borrow & Reservation -->
               <div class="nav-item">
-                <a class="nav-link" data-placement="left" href="#">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesBorrowReservation">
                   <i class="bi-calendar2-week nav-icon"></i>
                   <span class="nav-link-title">Borrow & Reservation</span>
                 </a>
+
+                <div class="nav-collapse collapse" id="navbarVerticalMenuPagesBorrowReservation" data-bs-parent="#navbarVerticalMenuMainMenu">
+                  <a class="nav-link" data-route="" href="">Overview</a>
+                </div>
               </div>
-              <!-- End Borrow and Reservation -->
+              <!-- End Borrow & Reservation -->
             @endaccess
 
-            @access('Item Maintenance', 'View Only, Read and Write, Full Access')
-              <!-- Item Maintenance -->
+            @access('Repair & Maintenance', 'View Only, Read and Write, Full Access')
+              <!-- Repair & Maintenance -->
+              <div class="nav-item">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesRepairMaintenance">
+                  <i class="bi-tools nav-icon"></i>
+                  <span class="nav-link-title">Repair & Maintenance</span>
+                </a>
+
+                <div class="nav-collapse collapse" id="navbarVerticalMenuPagesRepairMaintenance" data-bs-parent="#navbarVerticalMenuMainMenu">
+                  <a class="nav-link" data-route="" href="">Overview</a>
+                </div>
+              </div>
+              <!-- End Repair & Maintenance -->
+            @endaccess
+
+            @access('Analytics Reports', 'View Only, Read and Write, Full Access')
+              <!-- Analytics Reports -->
               <div class="nav-item">
                 <a class="nav-link" data-placement="left" href="#">
-                  <i class="bi-tools nav-icon"></i>
-                  <span class="nav-link-title">Item Maintenance</span>
+                  <i class="bi-clipboard-data nav-icon"></i>
+                  <span class="nav-link-title">Analytics Reports</span>
                 </a>
               </div>
-              <!-- End Item Maintenance -->
+              <!-- End Analytics Reports -->
             @endaccess
-
-            <!-- Reports & Analytics -->
-            <div class="nav-item">
-              <a class="nav-link" data-placement="left" href="#">
-                <i class="bi-clipboard-data nav-icon"></i>
-                <span class="nav-link-title">Reports & Analytics</span>
-              </a>
-            </div>
-            <!-- End Reports & Analytics -->
           </div>
           <!-- End Main Menu -->
 

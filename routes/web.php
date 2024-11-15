@@ -69,10 +69,10 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
 
     // ============ End Dashboard Routes ============ //
 
-    // ============ Item Inventory Management Routes ============ //
+    // ============ Item Management Routes ============ //
 
-    // Stock Routes
-    Route::middleware('checkPermission:Item Inventory Management')->prefix('properties-assets/stocks')->name('prop-asset.')->controller(PropertyParentController::class)->group(function () {
+    // Item Parent Stock Routes
+    Route::middleware('checkPermission:Item Management')->prefix('properties-assets/stocks')->name('prop-asset.')->controller(PropertyParentController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('store');
         Route::get('/show', 'show')->name('show')->middleware('expectsJson');
@@ -83,7 +83,9 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
             abort(404);
         });
     });
-    Route::middleware('checkPermission:Item Inventory Management')->prefix('properties-assets/{propertyParent}/child-stocks')->name('prop-asset.child.')->controller(PropertyChildController::class)->group(function () {
+
+    // Item Child Stock Routes
+    Route::middleware('checkPermission:Item Management')->prefix('properties-assets/{propertyParent}/child-stocks')->name('prop-asset.child.')->controller(PropertyChildController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('store');
         Route::get('/show', 'show')->name('show')->middleware('expectsJson');
@@ -97,7 +99,7 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
     });
 
     // Consumable Routes
-    Route::middleware('checkPermission:Item Inventory Management')->prefix('properties-assets/consumable')->name('prop-consumable.')->controller(PropertyConsumableController::class)->group(function () {
+    Route::middleware('checkPermission:Item Management')->prefix('properties-assets/consumable')->name('prop-consumable.')->controller(PropertyConsumableController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('store');
         Route::get('/show', 'show')->name('show')->middleware('expectsJson');
@@ -112,7 +114,7 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
     });
 
     // Consumption Routes
-    Route::middleware('checkPermission:Item Inventory Management')->prefix('properties-assets/consumption-logs')->name('prop-consumption.')->controller(ConsumptionLogsController::class)->group(function () {
+    Route::middleware('checkPermission:Item Management')->prefix('properties-assets/consumption-logs')->name('prop-consumption.')->controller(ConsumptionLogsController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('store');
         Route::get('/show', 'show')->name('show')->middleware('expectsJson');
@@ -124,7 +126,16 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
         });
     });
 
-    // ============ End Item Inventory Management Routes ============ //
+    // ============ End Item Management Routes ============ //
+
+    // ============ Borrow & Reservation Routes ============ //
+    // ============ End Borrow & Reservation Routes ============ //
+
+    // ============ Repair & Maintenance Routes ============ //
+    // ============ End Repair & Maintenance Routes ============ //
+
+    // ============ Analytics Reports Routes ============ //
+    // ============ End Analytics Reports Routes ============ //
 
     // ============ User Management Routes ============ //
 
