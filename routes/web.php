@@ -16,6 +16,8 @@ use App\Http\Controllers\PropertyConsumableController;
 use App\Http\Controllers\PropertyParentController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SystemController;
+use App\Http\Controllers\TicketApprovalController;
+use App\Http\Controllers\TicketRequestController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -132,6 +134,24 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
     // ============ End Borrow & Reservation Routes ============ //
 
     // ============ Repair & Maintenance Routes ============ //
+
+    // Ticket Request Routes
+    Route::middleware('checkPermission:Repair & Maintenance')->prefix('repair-maintenance/ticket-requests')->name('request.')->controller(TicketRequestController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('create');
+        Route::get('/show', 'show')->name('view')->middleware('expectsJson');
+        Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
+        Route::patch('/', 'update')->name('update');
+        Route::delete('/', 'destroy')->name('delete');
+    });
+
+    // Ticket Approvals Routes
+    Route::middleware('checkPermission:Repair & Maintenance')->prefix('repair-maintenance/ticket-approvals')->name('approval.')->controller(TicketApprovalController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/show', 'show')->name('view')->middleware('expectsJson');
+        Route::patch('/', 'update')->name('update');
+    });
+
     // ============ End Repair & Maintenance Routes ============ //
 
     // ============ Analytics Reports Routes ============ //

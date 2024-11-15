@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Color;
 use App\Models\Dashboard;
 use App\Models\Event;
+use App\Models\Progress;
 use App\Models\Type;
 use Illuminate\Database\Seeder;
 
@@ -73,7 +74,7 @@ class DefaultSeeder extends Seeder
             ],
             'Login' => [
                 'badge_id' => 11,
-                'legend_id' => 17,
+                'legend_id' => 18,
             ],
             'Logout' => [
                 'badge_id' => 14,
@@ -84,6 +85,37 @@ class DefaultSeeder extends Seeder
         foreach ($events as $event => $data) {
             Event::create([
                 'name' => $event,
+                'badge_id' => $data['badge_id'],
+                'legend_id' => $data['legend_id'],
+            ]);
+        }
+
+        $progresses = [
+            'Pending' => [
+                'badge_id' => 9,
+                'legend_id' => 19,
+            ],
+            'Approved' => [
+                'badge_id' => 5,
+                'legend_id' => 17,
+            ],
+            'Disapproved' => [
+                'badge_id' => 7,
+                'legend_id' => 20,
+            ],
+            'In Progress' => [
+                'badge_id' => 2,
+                'legend_id' => 16,
+            ],
+            'Completed' => [
+                'badge_id' => 5,
+                'legend_id' => 17,
+            ],
+        ];
+
+        foreach ($progresses as $progress => $data) {
+            Progress::create([
+                'name' => $progress,
                 'badge_id' => $data['badge_id'],
                 'legend_id' => $data['legend_id'],
             ]);

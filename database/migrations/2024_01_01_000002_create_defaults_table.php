@@ -36,6 +36,15 @@ return new class extends Migration {
             $table->timestamps();
         });
 
+        Schema::create('progresses', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 50)->unique();
+            $table->foreignIdFor(Color::class, 'badge_id')->constrained('colors')->cascadeOnDelete();
+            $table->foreignIdFor(Color::class, 'legend_id')->constrained('colors')->cascadeOnDelete();
+            $table->unsignedTinyInteger('is_active')->default(1);
+            $table->timestamps();
+        });
+
         Schema::create('types', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50)->unique();
@@ -50,6 +59,7 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::dropIfExists('types');
+        Schema::dropIfExists('progresses');
         Schema::dropIfExists('events');
         Schema::dropIfExists('dashboards');
         Schema::dropIfExists('colors');
