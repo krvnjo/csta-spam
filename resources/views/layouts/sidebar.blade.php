@@ -148,17 +148,6 @@
               </div>
               <!-- End Audit History -->
             @endaccess
-
-            @access('System Settings', 'View Only, Read and Write, Full Access')
-              <!-- System Settings -->
-              <div class="nav-item">
-                <a class="nav-link" data-placement="left" data-route="system.index" href="{{ route('system.index') }}">
-                  <i class="bi-gear nav-icon"></i>
-                  <span class="nav-link-title">System Settings</span>
-                </a>
-              </div>
-              <!-- End System Settings -->
-            @endaccess
           </div>
           <!-- End Others -->
         </div>

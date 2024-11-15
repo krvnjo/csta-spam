@@ -24,13 +24,13 @@
             <p class="page-header-text">Manage and organize category records.</p>
           </div>
 
-          @can('create category maintenance')
+          @access('File Maintenance', 'Read and Write, Full Access')
             <div class="col-sm-auto mt-2 mt-sm-0">
               <button class="btn btn-primary w-100 w-sm-auto" id="btnAddCategoryModal" data-bs-toggle="modal" data-bs-target="#modalAddCategory">
                 <i class="bi-plus-lg me-1"></i> Add Category
               </button>
             </div>
-          @endcan
+          @endaccess
         </div>
       </div>
       <!-- End Categories Header -->
@@ -184,8 +184,16 @@
                   <td>{{ $loop->iteration }}</td>
                   <td class="d-none" data-category-id="{{ Crypt::encryptString($category->id) }}"></td>
                   <td><a class="h5 btnViewCategory">{{ $category->name }}</a></td>
-                  <td data-order="{{ $category->created_at }}"><span><i class="bi-calendar-plus me-1"></i> {{ $category->created_at->format('F d, Y') }}</span></td>
-                  <td data-order="{{ $category->updated_at }}"><span><i class="bi-calendar2-event me-1"></i> Updated {{ $category->updated_at->diffForHumans() }}</span></td>
+                  <td data-order="{{ $category->created_at }}">
+                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $category->created_at->format('D, M d, Y | h:i A') }}">
+                      <i class="bi-calendar-plus me-1"></i> {{ $category->created_at->format('F d, Y') }}
+                    </span>
+                  </td>
+                  <td data-order="{{ $category->updated_at }}">
+                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $category->updated_at->format('D, M d, Y | h:i A') }}">
+                      <i class="bi-calendar2-event me-1"></i> Updated {{ $category->updated_at->diffForHumans() }}
+                    </span>
+                  </td>
                   <td>
                     <span class="badge bg-soft-{{ $category->is_active ? 'success' : 'danger' }} text-{{ $category->is_active ? 'success' : 'danger' }}">
                       <span class="legend-indicator bg-{{ $category->is_active ? 'success' : 'danger' }}"></span>{{ $category->is_active ? 'Active' : 'Inactive' }}
@@ -195,31 +203,26 @@
                     <div class="btn-group position-static">
                       <button class="btn btn-white btn-sm btnViewCategory" type="button"><i class="bi-eye"></i> View</button>
 
-                      @canAny('update category maintenance, delete category maintenance')
+                      @access('File Maintenance', 'Read and Write, Full Access')
                         <div class="btn-group position-static">
                           <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" data-bs-toggle="dropdown" type="button"></button>
                           <div class="dropdown-menu dropdown-menu-end mt-1">
-                            @can('update category maintenance')
-                              <button class="dropdown-item btnEditCategory" type="button">
-                                <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
-                              </button>
-                              <button class="dropdown-item btnSetCategory" data-status="{{ $category->is_active ? 0 : 1 }}" type="button">
-                                <i class="bi {{ $category->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
-                                {{ $category->is_active ? 'Set to Inactive' : 'Set to Active' }}
-                              </button>
-                              @can('delete category maintenance')
-                                <div class="dropdown-divider"></div>
-                              @endcan
-                            @endcan
+                            <button class="dropdown-item btnEditCategory" type="button">
+                              <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
+                            </button>
+                            <button class="dropdown-item btnSetCategory" data-status="{{ $category->is_active ? 0 : 1 }}" type="button">
+                              <i class="bi {{ $category->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
+                              {{ $category->is_active ? 'Set to Inactive' : 'Set to Active' }}
+                            </button>
 
-                            @can('delete category maintenance')
+                            @access('File Maintenance', 'Full Access')
                               <button class="dropdown-item text-danger btnDeleteCategory" type="button">
                                 <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
                               </button>
-                            @endcan
+                            @endaccess
                           </div>
                         </div>
-                      @endcanAny
+                      @endaccess
                     </div>
                   </td>
                 </tr>

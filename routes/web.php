@@ -15,7 +15,6 @@ use App\Http\Controllers\PropertyChildController;
 use App\Http\Controllers\PropertyConsumableController;
 use App\Http\Controllers\PropertyParentController;
 use App\Http\Controllers\RoleController;
-use App\Http\Controllers\SystemController;
 use App\Http\Controllers\TicketApprovalController;
 use App\Http\Controllers\TicketRequestController;
 use App\Http\Controllers\UserController;
@@ -231,12 +230,6 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
     Route::middleware('checkPermission:Audit History')->prefix('audit-history')->name('audit.')->controller(AuditController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/show', 'show')->name('show')->middleware('expectsJson');
-    });
-
-    // System Settings Routes
-    Route::middleware('checkPermission:System Settings')->prefix('system-settings')->name('system.')->controller(SystemController::class)->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::patch('/', 'update')->name('update');
     });
 
     // ============ End Other Routes ============ //

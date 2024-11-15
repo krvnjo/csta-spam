@@ -202,7 +202,7 @@
                   <td>{{ $loop->iteration }}</td>
                   <td class="d-none" data-audit-id="{{ Crypt::encryptString($audit->id) }}"></td>
                   <td data-full-value="{{ $audit->name }}">
-                    <span class="d-block h5 mb-0">{{ $audit->name }}</span>
+                    <a class="d-block h5 mb-0 btnViewAudit">{{ $audit->name }}</a>
                     <span class="d-block fs-5">{{ $audit->subject->name }}</span>
                   </td>
                   <td>{{ \Illuminate\Support\Str::limit($audit->description, 50, '...') }}</td>
@@ -212,7 +212,7 @@
                     </span>
                   </td>
                   <td>
-                    <a class="d-flex align-items-center btnViewUser">
+                    <span class="d-flex align-items-center">
                       <div class="avatar avatar-circle">
                         <img class="avatar-img" src="{{ Vite::asset('resources/img/uploads/user-images/' . $audit->causer->user_image) }}" alt="User Avatar">
                       </div>
@@ -220,10 +220,12 @@
                         <span class="d-block h5 text-inherit mb-0">{{ $audit->causer->name }}</span>
                         <span class="d-block fs-5 text-body">{{ $audit->causer->role->name }}</span>
                       </div>
-                    </a>
+                    </span>
                   </td>
                   <td data-full-value="{{ $audit->created_at->format('m/d/Y') }}" data-order="{{ $audit->created_at }}">
-                    <span><i class="bi-calendar-event me-1"></i> Logged {{ $audit->created_at->diffForHumans() }}</span>
+                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $audit->created_at->format('D, M d, Y | h:i A') }}">
+                      <i class="bi-calendar-event me-1"></i> Logged {{ $audit->created_at->diffForHumans() }}
+                    </span>
                   </td>
                   <td>
                     <button class="btn btn-white btn-sm btnViewAudit" type="button">

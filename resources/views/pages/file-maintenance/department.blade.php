@@ -24,13 +24,13 @@
             <p class="page-header-text">Manage and organize department records.</p>
           </div>
 
-          @can('create department maintenance')
+          @access('File Maintenance', 'Read and Write, Full Access')
             <div class="col-sm-auto mt-2 mt-sm-0">
               <button class="btn btn-primary w-100 w-sm-auto" id="btnAddDepartmentModal" data-bs-toggle="modal" data-bs-target="#modalAddDepartment">
                 <i class="bi-plus-lg me-1"></i> Add Department
               </button>
             </div>
-          @endcan
+          @endaccess
         </div>
       </div>
       <!-- End Departments Header -->
@@ -186,8 +186,16 @@
                   <td class="d-none" data-department-id="{{ Crypt::encryptString($department->id) }}"></td>
                   <td><a class="h5 btnViewDepartment">{{ $department->name }}</a></td>
                   <td>{{ $department->code }}</td>
-                  <td data-order="{{ $department->created_at }}"><span><i class="bi-calendar-plus me-1"></i> {{ $department->created_at->format('F d, Y') }}</span></td>
-                  <td data-order="{{ $department->updated_at }}"><span><i class="bi-calendar2-event me-1"></i> Updated {{ $department->updated_at->diffForHumans() }}</span></td>
+                  <td data-order="{{ $department->created_at }}">
+                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $department->created_at->format('D, M d, Y | h:i A') }}">
+                      <i class="bi-calendar-plus me-1"></i> {{ $department->created_at->format('F d, Y') }}
+                    </span>
+                  </td>
+                  <td data-order="{{ $department->updated_at }}">
+                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $department->updated_at->format('D, M d, Y | h:i A') }}">
+                      <i class="bi-calendar2-event me-1"></i> Updated {{ $department->updated_at->diffForHumans() }}
+                    </span>
+                  </td>
                   <td>
                     <span class="badge bg-soft-{{ $department->is_active ? 'success' : 'danger' }} text-{{ $department->is_active ? 'success' : 'danger' }}">
                       <span class="legend-indicator bg-{{ $department->is_active ? 'success' : 'danger' }}"></span>{{ $department->is_active ? 'Active' : 'Inactive' }}
@@ -197,31 +205,27 @@
                     <div class="btn-group position-static">
                       <button class="btn btn-white btn-sm btnViewDepartment" type="button"><i class="bi-eye"></i> View</button>
 
-                      @canAny('update department maintenance, delete department maintenance')
+                      @access('File Maintenance', 'Read and Write, Full Access')
                         <div class="btn-group position-static">
                           <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" data-bs-toggle="dropdown" type="button"></button>
                           <div class="dropdown-menu dropdown-menu-end mt-1">
-                            @can('update department maintenance')
-                              <button class="dropdown-item btnEditDepartment" type="button">
-                                <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
-                              </button>
-                              <button class="dropdown-item btnSetDepartment" data-status="{{ $department->is_active ? 0 : 1 }}" type="button">
-                                <i class="bi {{ $department->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
-                                {{ $department->is_active ? 'Set to Inactive' : 'Set to Active' }}
-                              </button>
-                              @can('delete department maintenance')
-                                <div class="dropdown-divider"></div>
-                              @endcan
-                            @endcan
+                            <button class="dropdown-item btnEditDepartment" type="button">
+                              <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
+                            </button>
+                            <button class="dropdown-item btnSetDepartment" data-status="{{ $department->is_active ? 0 : 1 }}" type="button">
+                              <i class="bi {{ $department->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
+                              {{ $department->is_active ? 'Set to Inactive' : 'Set to Active' }}
+                            </button>
 
-                            @can('delete department maintenance')
+                            @access('File Maintenance', 'Full Access')
+                              <div class="dropdown-divider"></div>
                               <button class="dropdown-item text-danger btnDeleteDepartment" type="button">
                                 <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
                               </button>
-                            @endcan
+                            @endaccess
                           </div>
                         </div>
-                      @endcanAny
+                      @endaccess
                     </div>
                   </td>
                 </tr>

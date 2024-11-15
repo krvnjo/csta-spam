@@ -24,7 +24,7 @@
             <p class="page-header-text">Manage and organize designation records.</p>
           </div>
 
-          @access('Designation Maintenance', 'Read and Write, Full Access')
+          @access('File Maintenance', 'Read and Write, Full Access')
             <div class="col-sm-auto mt-2 mt-sm-0">
               <button class="btn btn-primary w-100 w-sm-auto" id="btnAddDesignationModal" data-bs-toggle="modal" data-bs-target="#modalAddDesignation">
                 <i class="bi-plus-lg me-1"></i> Add Designation
@@ -209,8 +209,16 @@
                   <td class="d-none" data-designation-id="{{ Crypt::encryptString($designation->id) }}"></td>
                   <td><a class="h5 btnViewDesignation">{{ $designation->name }}</a></td>
                   <td>{{ $designation->department->name }}</td>
-                  <td data-order="{{ $designation->created_at }}"><span><i class="bi-calendar-plus me-1"></i> {{ $designation->created_at->format('F d, Y') }}</span></td>
-                  <td data-order="{{ $designation->updated_at }}"><span><i class="bi-calendar2-event me-1"></i> Updated {{ $designation->updated_at->diffForHumans() }}</span></td>
+                  <td data-order="{{ $designation->created_at }}">
+                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $designation->created_at->format('D, M d, Y | h:i A') }}">
+                      <i class="bi-calendar-plus me-1"></i> {{ $designation->created_at->format('F d, Y') }}
+                    </span>
+                  </td>
+                  <td data-order="{{ $designation->updated_at }}">
+                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $designation->updated_at->format('D, M d, Y | h:i A') }}">
+                      <i class="bi-calendar2-event me-1"></i> Updated {{ $designation->updated_at->diffForHumans() }}
+                    </span>
+                  </td>
                   <td>
                     <span class="badge bg-soft-{{ $designation->is_active ? 'success' : 'danger' }} text-{{ $designation->is_active ? 'success' : 'danger' }}">
                       <span class="legend-indicator bg-{{ $designation->is_active ? 'success' : 'danger' }}"></span>{{ $designation->is_active ? 'Active' : 'Inactive' }}
@@ -220,7 +228,7 @@
                     <div class="btn-group position-static">
                       <button class="btn btn-white btn-sm btnViewDesignation" type="button"><i class="bi-eye"></i> View</button>
 
-                      @access('Designation Maintenance', 'Read and Write, Full Access')
+                      @access('File Maintenance', 'Read and Write, Full Access')
                         <div class="btn-group position-static">
                           <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" data-bs-toggle="dropdown" type="button"></button>
                           <div class="dropdown-menu dropdown-menu-end mt-1">
@@ -232,7 +240,7 @@
                               {{ $designation->is_active ? 'Set to Inactive' : 'Set to Active' }}
                             </button>
 
-                            @access('Designation Maintenance', 'Full Access')
+                            @access('File Maintenance', 'Full Access')
                               <div class="dropdown-divider"></div>
                               <button class="dropdown-item text-danger btnDeleteDesignation" type="button">
                                 <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete

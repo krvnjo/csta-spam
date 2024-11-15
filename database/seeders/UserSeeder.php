@@ -40,7 +40,6 @@ class UserSeeder extends Seeder
                 'User Management',
                 'File Maintenance',
                 'Audit History',
-                'System Settings',
             ],
         ];
 

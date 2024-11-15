@@ -56,7 +56,7 @@ class AuthController extends Controller
 
             (new Audit())
                 ->logName('User Login')
-                ->logDesc("{$user->name} has been logged in to the system.")
+                ->logDesc("{$user->name} has logged in to the system.")
                 ->performedOn($user)
                 ->logEvent(4)
                 ->logProperties([
