@@ -419,7 +419,7 @@ class PropertyChildController extends Controller
         $text .= "Condition: " . $propertyChild->condition->name . "\n";
         $text .= "Status: " . $propertyChild->status->name . "\n";
         $text .= "Designation: " . $propertyChild->designation->name . "\n";
-        $text .= "Assign Date: " . $propertyChild->inventory_date->format('Y-m-d') . "\n";
+        $text .= "Assign Date: " . Carbon::parse($propertyChild->inventory_date)->format('Y-m-d') . "\n";
 
         $qr = QrCode::size(150)->generate($text);
 

@@ -330,6 +330,9 @@ document.addEventListener('DOMContentLoaded', function () {
     dropdownParent: 'body',
     onChange: function (value) {
       const warrantyDateInput = document.getElementById('dtpWarranty');
+      const priceInput = document.getElementById('txtPurchasePrice');
+      const residualValueInput = document.getElementById('txtResidualValue');
+      const usefulLifeInput = document.getElementById('txtUsefulLife');
       const PURCHASED_ID = '1';
       const DONATION_ID = '2';
 
@@ -337,9 +340,24 @@ document.addEventListener('DOMContentLoaded', function () {
         warrantyDateInput.disabled = true;
         warrantyDateInput.value = '';
         warrantyDateInput.classList.add('bg-light');
+        priceInput.disabled = true;
+        priceInput.value = '';
+        priceInput.classList.add('bg-light');
+        residualValueInput.disabled = true;
+        residualValueInput.value = '';
+        residualValueInput.classList.add('bg-light');
+        usefulLifeInput.disabled = true;
+        usefulLifeInput.value = '';
+        usefulLifeInput.classList.add('bg-light');
       } else if (value === PURCHASED_ID) {
         warrantyDateInput.disabled = false;
         warrantyDateInput.classList.remove('bg-light');
+        priceInput.disabled = false;
+        priceInput.classList.remove('bg-light');
+        residualValueInput.disabled = false;
+        residualValueInput.classList.remove('bg-light');
+        usefulLifeInput.disabled = false;
+        usefulLifeInput.classList.remove('bg-light');
       }
     },
   });

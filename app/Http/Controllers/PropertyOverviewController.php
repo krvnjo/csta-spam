@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Condition;
+use App\Models\Department;
+use App\Models\Designation;
 use App\Models\PropertyChild;
+use App\Models\Status;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -29,9 +33,14 @@ class PropertyOverviewController extends Controller
             return $item->property->is_consumable && $item->property->quantity < 5;
         })->count();
 
+        $designations = Designation::get();
+        $departments = Department::get();
+        $statuses = Status::with('color')->get();
+        $conditions = Condition::with('color')->get();
 
         return view('pages.property-asset.overview.item-overview', compact(
-            'totalItems', 'itemsInStock', 'itemsAssigned', 'lowStockConsumables', 'propertyChildren'
+            'totalItems', 'itemsInStock', 'itemsAssigned', 'lowStockConsumables', 'propertyChildren',
+            'designations', 'departments', 'statuses', 'conditions'
         ));
     }
 
