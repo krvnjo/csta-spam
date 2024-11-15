@@ -169,7 +169,7 @@ class PropertyChildController extends Controller
                     ? Carbon::parse($child->warranty_date)->format('F d, Y')
                     : ($child->property->is_consumable == 1 ? 'Consumable Item' : 'No warranty date provided'),
                 'inventoryDate' => $child->inventory_date
-                    ? Carbon::parse($child->inventory_date)->format('F d, Y')
+                    ? Carbon::parse($child->inventory_date)->format('D, F d, Y | h:i:s A')
                     : ($child->property->is_consumable == 1 ? 'Consumable Item' : 'In stock'),
                 'dateCreated' => $child->created_at->format('D, F d, Y | h:i:s A'),
                 'dateUpdated' => $child->updated_at->format('D, F d, Y | h:i:s A'),
@@ -361,7 +361,7 @@ class PropertyChildController extends Controller
                 ]);
             } else {
                 $designation = $request->input('designation');
-                $remarks = ucwords(strtolower(trim($request->input('description'))));
+                $remarks = ucwords(strtolower(trim($request->input('remarks'))));
             }
 
             $deptId = Designation::query()->findOrFail($designation)->dept_id;

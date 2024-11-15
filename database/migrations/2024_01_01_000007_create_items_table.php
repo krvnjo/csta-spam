@@ -52,8 +52,8 @@ return new class extends Migration {
             $table->foreignIdFor(Acquisition::class, 'type_id')->nullable()->constrained('acquisitions')->cascadeOnDelete();
             $table->date('acq_date')->nullable();
             $table->date('warranty_date')->nullable();
-            $table->date('stock_date')->nullable();
-            $table->date('inventory_date')->nullable();
+            $table->dateTime('stock_date')->nullable();
+            $table->dateTime('inventory_date')->nullable();
             $table->foreignIdFor(Department::class, 'dept_id')->nullable()->constrained('departments')->cascadeOnDelete();
             $table->foreignIdFor(Designation::class, 'desig_id')->nullable()->constrained('designations')->cascadeOnDelete();
             $table->foreignIdFor(Condition::class, 'condi_id')->nullable()->constrained('conditions')->cascadeOnDelete();
