@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Priority;
+use App\Models\Progress;
 use App\Models\PropertyChild;
 use App\Models\Ticket;
 use Illuminate\Database\Migrations\Migration;
@@ -15,9 +16,12 @@ return new class extends Migration {
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 100)->unique();
-            $table->text('description')->unique();
+            $table->string('name', 20)->unique();
+            $table->text('description');
+            $table->decimal('total_cost', 15)->nullable();
             $table->foreignIdFor(Priority::class, 'prio_id')->constrained('priorities')->cascadeOnDelete();
+            $table->foreignIdFor(Progress::class, 'prog_id')->constrained('progresses')->cascadeOnDelete();
+            $table->text('remarks')->nullable();
             $table->timestamps();
         });
 

@@ -84,28 +84,8 @@
         <div class="collapse" id="requestFilterSearchCollapse">
           <div class="card-body">
             <div class="row">
-              <!-- Types -->
-              <div class="col-sm-12 col-md-6 col-lg-3">
-                <div class="mb-3">
-                  <label class="form-label" for="requestTypeFilter">Types</label>
-                  <div class="tom-select-custom">
-                    <select class="js-select js-datatable-filter form-select" id="requestTypeFilter" data-target-column-index="2"
-                      data-hs-tom-select-options='{
-                        "allowEmptyOption": true,
-                        "hideSearch": true,
-                        "placeholder": "All Types"
-                      }'>
-                      <option value="">All Types</option>
-                      <option value="Repair">Repair</option>
-                      <option value="Maintenance">Maintenance</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <!-- End Types -->
-
               <!-- Priorities -->
-              <div class="col-sm-12 col-md-6 col-lg-3">
+              <div class="col-sm-12 col-md-4">
                 <div class="mb-3">
                   <label class="form-label" for="requestPriorityFilter">Priorities</label>
                   <div class="tom-select-custom">
@@ -129,7 +109,7 @@
               <!-- End Priorities -->
 
               <!-- Users -->
-              <div class="col-sm-12 col-md-6 col-lg-3">
+              <div class="col-sm-12 col-md-4">
                 <div class="mb-3">
                   <label class="form-label" for="requestUserFilter">Users</label>
                   <div class="tom-select-custom">
@@ -152,7 +132,7 @@
               <!-- End Users -->
 
               <!-- Date Range -->
-              <div class="col-sm-12 col-md-6 col-lg-3">
+              <div class="col-sm-12 col-md-4">
                 <div class="mb-3">
                   <label class="form-label" for="requestDateRangeFilter">Date Range</label>
                   <input class="js-daterangepicker-clear js-datatable-filter form-control daterangepicker-custom-input" data-target-column-index="6"
@@ -176,10 +156,10 @@
           <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100" id="requestsDatatable"
             data-hs-datatables-options='{
               "columnDefs": [{
-                 "targets": [3, 7],
+                 "targets": [3, 6, 9],
                  "orderable": false
                }],
-              "order": [6, "desc"],
+              "order": [7, "desc"],
               "info": {
                 "totalQty": "#requestsDatatableWithPagination"
               },
@@ -192,12 +172,13 @@
             }'>
             <thead class="thead-light">
               <tr>
-                <th class="w-th" style="width: 7%;">#</th>
+                <th class="w-th" style="width: 5%;">#</th>
                 <th class="d-none"></th>
                 <th>Ticket No.</th>
-                <th>Name</th>
-                <th>Type & Priority</th>
-                <th>Total Cost</th>
+                <th>Description</th>
+                <th>Estimated Cost</th>
+                <th>Priority</th>
+                <th>Status</th>
                 <th>Created At</th>
                 <th>Updated At</th>
                 <th>Action</th>
@@ -205,6 +186,62 @@
             </thead>
 
             <tbody>
+              @foreach ($tickets as $ticket)
+                <tr>
+                  <td>{{ $loop->iteration }}</td>
+                  <td class="d-none" data-brand-id="{{ Crypt::encryptString($ticket->id) }}"></td>
+                  <td><a class="h5 btnViewRequest">{{ $ticket->name }}</a></td>
+                  <td>
+                    {{ Str::limit($ticket->description, 50, '...') }}
+                  </td>
+                  <td class="text-end">
+                    @php
+                      $purchasePrice = number_format($ticket->total_cost, 2);
+                    @endphp
+                    <strong>₱{{ $purchasePrice }}</strong>
+                  </td>
+                  <td data-order="{{ $ticket->priority->name }}">
+                    <span class="{{ $ticket->priority->color->class }}"></span>{{ $ticket->priority->name }}
+                  </td>
+                  <td>
+                    <span class="{{ $ticket->progress->badge->class }}">
+                      <span class="{{ $ticket->progress->legend->class }}"></span>{{ $ticket->progress->name }}
+                    </span>
+                  </td>
+                  <td data-order="{{ $ticket->created_at }}">
+                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $ticket->created_at->format('D, M d, Y | h:i A') }}">
+                      <i class="bi-calendar-plus me-1"></i> {{ $ticket->created_at->format('F d, Y') }}
+                    </span>
+                  </td>
+                  <td data-order="{{ $ticket->updated_at }}">
+                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $ticket->updated_at->format('D, M d, Y | h:i A') }}">
+                      <i class="bi-calendar2-event me-1"></i> Updated {{ $ticket->updated_at->diffForHumans() }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="btn-group position-static">
+                      <button class="btn btn-white btn-sm btnViewRequest" type="button"><i class="bi-eye"></i> View</button>
+
+                      @access('File Maintenance', 'Read and Write, Full Access')
+                        <div class="btn-group position-static">
+                          <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" data-bs-toggle="dropdown" type="button"></button>
+                          <div class="dropdown-menu dropdown-menu-end mt-1">
+                            <button class="dropdown-item btnEditRequest" type="button">
+                              <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
+                            </button>
+
+                            @access('File Maintenance', 'Full Access')
+                              <button class="dropdown-item text-danger btnDeleteRequest" type="button">
+                                <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
+                              </button>
+                            @endaccess
+                          </div>
+                        </div>
+                      @endaccess
+                    </div>
+                  </td>
+                </tr>
+              @endforeach
             </tbody>
           </table>
         </div>
@@ -247,6 +284,9 @@
 @endsection
 
 @section('sec-content')
+  <x-repair-maintenance.add-request :priorities="$priorities" />
+  <x-repair-maintenance.view-request />
+  <x-repair-maintenance.edit-request :priorities="$priorities" />
 @endsection
 
 @push('scripts')

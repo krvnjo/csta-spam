@@ -31,7 +31,7 @@
             <textarea class="js-count-characters form-control" id="txtAddDescription" name="description" data-hs-count-characters-options='{
                 "output": "#maxLengthCountCharacters"
               }'
-              style="resize: none;" placeholder="Enter role description" rows="2" maxlength="80"></textarea>
+              placeholder="Enter role description" rows="3"></textarea>
             <span class="invalid-feedback" id="valAddDescription"></span>
           </div>
           <!-- End Role Description -->

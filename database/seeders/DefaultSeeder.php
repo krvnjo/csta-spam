@@ -92,8 +92,8 @@ class DefaultSeeder extends Seeder
 
         $progresses = [
             'Pending' => [
-                'badge_id' => 9,
-                'legend_id' => 19,
+                'badge_id' => 11,
+                'legend_id' => 18,
             ],
             'Approved' => [
                 'badge_id' => 5,
