@@ -11,7 +11,13 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('pages.dashboard.admin');
+        $user = auth()->user();
+
+        if ($user && $user->role->dash_id == 1) {
+            return view('pages.dashboard.admin');
+        }
+
+        return view('pages.dashboard.default');
     }
 
     /**
