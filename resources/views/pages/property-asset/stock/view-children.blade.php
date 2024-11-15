@@ -291,9 +291,14 @@
               </tr>
             </thead>
             <tbody>
+            @php
+              $focusedChildId = request('focus');
+            @endphp
               @foreach ($propertyChildren->sortByDesc('updated_at') as $propertyChild)
-                <tr id="child-{{ $propertyChild->id }}" data-stats-id="{{ $propertyChild->status->id ?? '0' }}"
-                  data-inventory-date="{{ $propertyChild->inventory_date ? \Carbon\Carbon::parse($propertyChild->inventory_date)->format('Y-m-d') : '' }}">
+                <tr id="child-{{ $propertyChild->id }}"
+                    class="{{ $focusedChildId == $propertyChild->id ? 'table-success' : '' }}"
+                    data-stats-id="{{ $propertyChild->status->id ?? '0' }}"
+                    data-inventory-date="{{ $propertyChild->inventory_date ? \Carbon\Carbon::parse($propertyChild->inventory_date)->format('Y-m-d') : '' }}">
 
                   @if ($propertyParents->is_consumable)
                     <td class="table-column-pe-0"></td>
@@ -372,6 +377,14 @@
                               <button class="dropdown-item btnMoveToInventory" data-childmove-id="{{ $propertyChild->id }}" type="button">
                                 <i class="bi bi-arrow-left-right dropdown-item-icon text-info"></i> Move to Inventory
                               </button>
+                              <button class="dropdown-item btnStatusChild" data-status="{{ $propertyChild->is_active ? 0 : 1 }}" type="button">
+                                <i class="bi {{ $propertyChild->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
+                                {{ $propertyChild->is_active ? 'Set to Inactive' : 'Set to Active' }}
+                              </button>
+                              <button class="dropdown-item text-danger btnDeleteChild" data-childdel-id="{{ $propertyChild->id }}" type="button">
+                                <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
+                              </button>
+                            @elseif($propertyChild->status->id == 1 && $propertyChild->is_active == 0 && $propertyChild->inventory_date == null)
                               <button class="dropdown-item btnStatusChild" data-status="{{ $propertyChild->is_active ? 0 : 1 }}" type="button">
                                 <i class="bi {{ $propertyChild->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
                                 {{ $propertyChild->is_active ? 'Set to Inactive' : 'Set to Active' }}
@@ -735,6 +748,21 @@
 
   <!-- JS Themes -->
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const focusedRowId = "{{ request('focus') }}";
+      if (focusedRowId) {
+        const focusedRow = document.getElementById(`child-${focusedRowId}`);
+        if (focusedRow) {
+          focusedRow.scrollIntoView({ behavior: "smooth", block: "center" });
+
+          focusedRow.classList.add("table-warning");
+          setTimeout(() => focusedRow.classList.remove("table-warning"), 10000);
+        }
+      }
+    });
+  </script>
 
   <script>
     $(document).ready(function() {

@@ -128,7 +128,6 @@ $(document).ready(function () {
   // ============ Update a Stock Item ============ //
   const propertyEditModal = $('#editPropertyModal');
   const propertyEditForm = $('#frmEditProperty');
-  const propertyDropzoneEdit = Dropzone.forElement('#editPropertyDropzone');
   const propertyEditSaveBtn = $('#btnEditSaveProperty');
 
   handleUnsavedChanges(propertyEditModal, propertyEditForm, propertyEditSaveBtn);
@@ -176,7 +175,7 @@ $(document).ready(function () {
     });
   });
 
-
+  const propertyDropzoneEdit = Dropzone.forElement('#editPropertyDropzone');
 
   propertyEditForm.on('submit', function (e) {
     e.preventDefault();
@@ -184,9 +183,8 @@ $(document).ready(function () {
 
     const editFormData = new FormData(propertyEditForm[0]);
 
-    // Log the form data to verify
-    for (let pair of editFormData.entries()) {
-      console.log(pair[0] + ': ' + pair[1]);
+    if (propertyDropzoneEdit.files.length > 0) {
+      editFormData.append("image", propertyDropzoneEdit.files[0]);
     }
 
     $.ajax({
@@ -330,6 +328,9 @@ document.addEventListener('DOMContentLoaded', function () {
     dropdownParent: 'body',
     onChange: function (value) {
       const warrantyDateInput = document.getElementById('dtpWarranty');
+      const priceInput = document.getElementById('txtPurchasePrice');
+      const residualValueInput = document.getElementById('txtResidualValue');
+      const usefulLifeInput = document.getElementById('txtUsefulLife');
       const PURCHASED_ID = '1';
       const DONATION_ID = '2';
 
@@ -337,9 +338,24 @@ document.addEventListener('DOMContentLoaded', function () {
         warrantyDateInput.disabled = true;
         warrantyDateInput.value = '';
         warrantyDateInput.classList.add('bg-light');
+        priceInput.disabled = true;
+        priceInput.value = '';
+        priceInput.classList.add('bg-light');
+        residualValueInput.disabled = true;
+        residualValueInput.value = '';
+        residualValueInput.classList.add('bg-light');
+        usefulLifeInput.disabled = true;
+        usefulLifeInput.value = '';
+        usefulLifeInput.classList.add('bg-light');
       } else if (value === PURCHASED_ID) {
         warrantyDateInput.disabled = false;
         warrantyDateInput.classList.remove('bg-light');
+        priceInput.disabled = false;
+        priceInput.classList.remove('bg-light');
+        residualValueInput.disabled = false;
+        residualValueInput.classList.remove('bg-light');
+        usefulLifeInput.disabled = false;
+        usefulLifeInput.classList.remove('bg-light');
       }
     },
   });
