@@ -53,12 +53,14 @@
           <!-- End Col -->
 
           <div class="col-sm-auto">
-            @if ($propertyParents->is_consumable)
-            @else
-              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPropertyChild" type="button">
-                <i class="bi bi-plus-lg me-1"></i> Add Variant
-              </button>
-            @endif
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPropertyChild" type="button">
+              <i class="bi bi-plus-lg me-1"></i>
+              @if ($propertyParents->is_consumable)
+                Restock
+              @else
+                Add Variation
+              @endif
+            </button>
           </div>
           <!-- End Col -->
         </div>
@@ -222,10 +224,6 @@
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/excel-icon.svg') }}" alt="Image Description">
                   Excel
                 </a>
-                <a class="dropdown-item" id="export-csv" href="">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/components/placeholder-csv-format.svg') }}" alt="Image Description">
-                  .CSV
-                </a>
                 <a class="dropdown-item" id="export-pdf" href="">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/pdf-icon.svg') }}" alt="Image Description">
                   PDF
@@ -280,19 +278,22 @@
                 <th class="table-column-ps-0">Item Number</th>
                 <th>Designation</th>
                 <th>Department</th>
-                <th>Condition</th>
-                <th>Status</th>
+                @if ($propertyParents->is_consumable)
+                  <th class="d-none"></th>
+                  <th class="d-none"></th>
+                @else
+                  <th>Condition</th>
+                  <th>Status</th>
+                @endif
+                <th>Remarks</th>
                 <th>Time Ago</th>
-                <th>Active</th>
                 <th>Action</th>
               </tr>
             </thead>
-
             <tbody>
               @foreach ($propertyChildren->sortByDesc('updated_at') as $propertyChild)
-                <tr id="child-{{ $propertyChild->id }}"
-                    data-stats-id="{{ $propertyChild->status->id ?? '0' }}"
-                    data-inventory-date="{{ $propertyChild->inventory_date ? \Carbon\Carbon::parse($propertyChild->inventory_date)->format('Y-m-d') : '' }}">
+                <tr id="child-{{ $propertyChild->id }}" data-stats-id="{{ $propertyChild->status->id ?? '0' }}"
+                  data-inventory-date="{{ $propertyChild->inventory_date ? \Carbon\Carbon::parse($propertyChild->inventory_date)->format('Y-m-d') : '' }}">
 
                   @if ($propertyParents->is_consumable)
                     <td class="table-column-pe-0"></td>
@@ -317,15 +318,27 @@
                   </td>
                   <td>{{ $propertyChild->designation->name }}</td>
                   <td>{{ $propertyChild->designation->department->code }}</td>
-                  <td><span class="{{ $propertyChild->condition->color->class ?? '' }}"></span>{{ $propertyChild->condition->name ?? '' }}</td>
+                  @if ($propertyParents->is_consumable)
+                    <td class="d-none"></td>
+                    <td class="d-none"></td>
+                  @else
+                    <td>
+                      <span class="{{ $propertyChild->status->color->class ?? '' }} fs-6">{{ $propertyChild->status->name ?? '' }}</span>
+                    </td>
+                    <td>
+                      <span class="{{ $propertyChild->condition->color->class ?? '' }}"></span>{{ $propertyChild->condition->name ?? '' }}
+                    </td>
+                  @endif
                   <td>
-                    @if ($propertyChild->property->is_consumable)
-                      <span class="badge bg-soft-secondary text-secondary p-1">Consumable Item</span>
-                    @endif
-                    <span class="{{ $propertyChild->status->color->class ?? '' }} fs-6">{{ $propertyChild->status->name ?? '' }}</span>
+                    <span style="color:gray"
+                      @if (!empty($propertyChild->remarks) && strlen($propertyChild->remarks) > 20) data-bs-toggle="tooltip"
+                          data-bs-html="true"
+                          data-bs-placement="bottom"
+                          title="{{ $propertyChild->remarks }}" @endif>
+                      {{ Str::limit(!empty($propertyChild->remarks) ? $propertyChild->remarks : 'No remarks provided', 20) }}
+                    </span>
                   </td>
-                  <td data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom"
-                    title="Date Acquired: {{ \Carbon\Carbon::parse($propertyChild->acq_date)->format('F j, Y') }}">
+                  <td data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="Date Acquired: {{ \Carbon\Carbon::parse($propertyChild->acq_date)->format('F j, Y') }}">
                     <i class="bi-calendar-event me-1"></i>
                     @if ($propertyChild->is_consumable)
                       Added {{ \Carbon\Carbon::parse($propertyChild->stock_date)->diffForHumans() }}
@@ -334,11 +347,6 @@
                     @else
                       Added {{ \Carbon\Carbon::parse($propertyChild->stock_date)->diffForHumans() }}
                     @endif
-                  </td>
-                  <td @if ($propertyChild->remarks) data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="Remarks: {{ $propertyChild->remarks }}" @endif>
-                    <span class="badge bg-soft-{{ $propertyChild->is_active ? 'success' : 'danger' }} text-{{ $propertyChild->is_active ? 'success' : 'danger' }}">
-                      <span class="legend-indicator bg-{{ $propertyChild->is_active ? 'success' : 'danger' }}"></span>{{ $propertyChild->is_active ? 'Active' : 'Inactive' }}
-                    </span>
                   </td>
                   <td>
                     <div class="btn-group position-static">
@@ -351,25 +359,28 @@
                           aria-expanded="false"></button>
 
                         <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="childEditDropdown">
-                          <button class="dropdown-item btnEditPropChild" type="button">
-                            <i class="bi-pencil-fill me-1 dropdown-item-icon"></i> Edit
-                          </button>
-                          @if($propertyChild->property->is_consumable)
-
+                          @if ($propertyChild->property->is_consumable)
+                            <button class="dropdown-item btnStatusChild" data-status="{{ $propertyChild->is_active ? 0 : 1 }}" type="button">
+                              <i class="bi {{ $propertyChild->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
+                              {{ $propertyChild->is_active ? 'Set to Inactive' : 'Set to Active' }}
+                            </button>
                           @else
+                            <button class="dropdown-item btnEditPropChild" type="button">
+                              <i class="bi-pencil-fill me-1 dropdown-item-icon"></i>Edit
+                            </button>
                             @if ($propertyChild->status->id == 1 && $propertyChild->is_active == 1 && $propertyChild->inventory_date == null)
                               <button class="dropdown-item btnMoveToInventory" data-childmove-id="{{ $propertyChild->id }}" type="button">
                                 <i class="bi bi-arrow-left-right dropdown-item-icon text-info"></i> Move to Inventory
                               </button>
+                              <button class="dropdown-item btnStatusChild" data-status="{{ $propertyChild->is_active ? 0 : 1 }}" type="button">
+                                <i class="bi {{ $propertyChild->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
+                                {{ $propertyChild->is_active ? 'Set to Inactive' : 'Set to Active' }}
+                              </button>
+                              <button class="dropdown-item text-danger btnDeleteChild" data-childdel-id="{{ $propertyChild->id }}" type="button">
+                                <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
+                              </button>
                             @endif
                           @endif
-                          <button class="dropdown-item btnStatusChild" data-status="{{ $propertyChild->is_active ? 0 : 1 }}" type="button">
-                            <i class="bi {{ $propertyChild->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
-                            {{ $propertyChild->is_active ? 'Set to Inactive' : 'Set to Active' }}
-                          </button>
-                          <button class="dropdown-item text-danger btnDeleteChild" data-childdel-id="{{ $propertyChild->id }}" type="button">
-                            <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
-                          </button>
                         </div>
                       </div>
                       <!-- End Button Group -->
@@ -378,7 +389,6 @@
                 </tr>
               @endforeach
             </tbody>
-
           </table>
         </div>
         <!-- End Table -->
@@ -720,28 +730,25 @@
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>
 
   <script>
-    $(document).ready(function () {
-      // Get the buttons
+    $(document).ready(function() {
       const btnMoveToInventory = $("#btnMoveToInventory");
       const btnMultiDeleteChild = $("#btnMultiDeleteChild");
 
-      // Function to update button visibility based on conditions
       function updateButtonVisibility() {
-        let showButtons = false;
+        let showButtons = true;
 
-        // Loop through each selected row's checkbox
-        $(".child-checkbox:checked").each(function () {
+        $(".child-checkbox:checked").each(function() {
           const row = $(this).closest("tr");
-          const usageStatus = parseInt(row.data("stats-id"), 10); // Item usage status (e.g., available)
+          const usageStatus = parseInt(row.data("stats-id"), 10);
           const inventoryDate = row.data("inventory-date");
 
           console.log("Row ID:", row.attr("id"));
           console.log("Usage Status:", usageStatus);
           console.log("Inventory Date:", inventoryDate);
 
-          // Check if the item is "available" and inventoryDate is empty or null
-          if (usageStatus === 1 && (!inventoryDate || inventoryDate === "")) {
-            showButtons = true;
+          if (usageStatus !== 1 || (inventoryDate && inventoryDate !== "")) {
+            showButtons = false;
+            return false;
           }
         });
 
@@ -756,16 +763,13 @@
         }
       }
 
-      // Update visibility when checkboxes change
-      $(".child-checkbox, #propertyStockDatatableCheckAll").change(function () {
+      $(".child-checkbox, #propertyStockDatatableCheckAll").on('change', function() {
         updateButtonVisibility();
       });
 
-      // Initial update on page load
       updateButtonVisibility();
     });
   </script>
-
 
   <script>
     $(document).on('ready', function() {
@@ -779,10 +783,6 @@
           },
           {
             extend: 'excel',
-            className: 'd-none'
-          },
-          {
-            extend: 'csv',
             className: 'd-none'
           },
           {

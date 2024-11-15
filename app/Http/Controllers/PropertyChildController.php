@@ -100,35 +100,45 @@ class PropertyChildController extends Controller
                 $parentProperty = PropertyParent::findOrFail($request->parent_id);
 
                 $newQuantity = $parentProperty->quantity + request('VarQuantity');
-                $parentProperty->update(['quantity' => $newQuantity]);
 
-                $propertyQuantity = request('VarQuantity');
-                $currentYear = Carbon::now()->year;
-
-                $lastCode = PropertyChild::query()
-                    ->where('prop_code', 'LIKE', "{$currentYear}%")
-                    ->orderBy('prop_code', 'desc')
-                    ->value('prop_code');
-
-                $nextNumber = $lastCode ? (int)substr($lastCode, 4) + 1 : 1;
-
-                for ($i = 0; $i < $propertyQuantity; $i++) {
-                    $code = $currentYear . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
-                    $nextNumber++;
-                    PropertyChild::create([
-                        'prop_id' => $parentProperty->id,
-                        'prop_code' => $code,
-                        'type_id' => 1,
-                        'acq_date' => now(),
-                        'stock_date' => now(),
-                        'warranty_date' => null,
-                        'status_id' => 1,
-                        'dept_id' => 1,
-                        'desig_id' => 1,
-                        'condi_id' => 1,
+                if ($parentProperty->is_consumable == 1) {
+                    $parentProperty->update(['quantity' => $newQuantity]);
+                    return response()->json([
+                        'success' => true,
+                        'title' => 'Saved Successfully!',
+                        'text' => 'The consumable item has been added successfully!',
                     ]);
-                }
 
+                } else{
+                    $parentProperty->update(['quantity' => $newQuantity]);
+
+                    $propertyQuantity = request('VarQuantity');
+                    $currentYear = Carbon::now()->year;
+
+                    $lastCode = PropertyChild::query()
+                        ->where('prop_code', 'LIKE', "{$currentYear}%")
+                        ->orderBy('prop_code', 'desc')
+                        ->value('prop_code');
+
+                    $nextNumber = $lastCode ? (int)substr($lastCode, 4) + 1 : 1;
+
+                    for ($i = 0; $i < $propertyQuantity; $i++) {
+                        $code = $currentYear . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
+                        $nextNumber++;
+                        PropertyChild::create([
+                            'prop_id' => $parentProperty->id,
+                            'prop_code' => $code,
+                            'type_id' => 1,
+                            'acq_date' => now(),
+                            'stock_date' => now(),
+                            'warranty_date' => null,
+                            'status_id' => 1,
+                            'dept_id' => 1,
+                            'desig_id' => 1,
+                            'condi_id' => 1,
+                        ]);
+                    }
+                }
                 return response()->json([
                     'success' => true,
                     'title' => 'Saved Successfully!',

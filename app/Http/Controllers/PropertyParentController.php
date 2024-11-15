@@ -209,7 +209,6 @@ class PropertyParentController extends Controller
                     'dept_id' => 1,
                     'acq_date' => now(),
                     'desig_id' => 1,
-                    'condi_id' => 1,
                 ]);
             } else {
                 $parentProperty = PropertyParent::query()->create([
