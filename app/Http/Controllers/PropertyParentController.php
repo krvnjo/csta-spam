@@ -436,6 +436,25 @@ class PropertyParentController extends Controller
                 ]);
             }
 
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                if ($file !== null && $file->isValid()) {
+                    if ($property->image && $property->image !== 'default.jpg') {
+                        $oldImagePath = public_path('storage/img/prop-asset/' . $property->image);
+                        if (file_exists($oldImagePath)) {
+                            unlink($oldImagePath);
+                        }
+                    }
+                    $filename = time() . '_' . $file->getClientOriginalName();
+                    $file->move(public_path('storage/img/prop-asset/'), $filename);
+                    $property->image = $filename;
+                }
+            } else {
+                if (!$property->image || $property->image === 'default.jpg') {
+                    $property->image = 'default.jpg';
+                }
+            }
+
             if (!$property->is_consumable){
                 $property->update([
                     'name' => ucwords(strtolower(trim($request->input('property')))),

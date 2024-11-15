@@ -128,7 +128,6 @@ $(document).ready(function () {
   // ============ Update a Stock Item ============ //
   const propertyEditModal = $('#editPropertyModal');
   const propertyEditForm = $('#frmEditProperty');
-  const propertyDropzoneEdit = Dropzone.forElement('#editPropertyDropzone');
   const propertyEditSaveBtn = $('#btnEditSaveProperty');
 
   handleUnsavedChanges(propertyEditModal, propertyEditForm, propertyEditSaveBtn);
@@ -176,7 +175,7 @@ $(document).ready(function () {
     });
   });
 
-
+  const propertyDropzoneEdit = Dropzone.forElement('#editPropertyDropzone');
 
   propertyEditForm.on('submit', function (e) {
     e.preventDefault();
@@ -184,9 +183,8 @@ $(document).ready(function () {
 
     const editFormData = new FormData(propertyEditForm[0]);
 
-    // Log the form data to verify
-    for (let pair of editFormData.entries()) {
-      console.log(pair[0] + ': ' + pair[1]);
+    if (propertyDropzoneEdit.files.length > 0) {
+      editFormData.append("image", propertyDropzoneEdit.files[0]);
     }
 
     $.ajax({
