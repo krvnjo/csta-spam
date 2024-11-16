@@ -3,6 +3,7 @@
 use App\Models\Priority;
 use App\Models\Progress;
 use App\Models\PropertyChild;
+use App\Models\Status;
 use App\Models\Ticket;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -16,7 +17,8 @@ return new class extends Migration {
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 20)->unique();
+            $table->string('ticket_num', 15)->unique();
+            $table->string('name', 50)->unique();
             $table->text('description');
             $table->decimal('total_cost', 15)->nullable();
             $table->foreignIdFor(Priority::class, 'prio_id')->constrained('priorities')->cascadeOnDelete();
@@ -29,6 +31,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignIdFor(Ticket::class, 'ticket_id')->constrained('tickets')->cascadeOnDelete();
             $table->foreignIdFor(PropertyChild::class, 'item_id')->constrained('property_children')->cascadeOnDelete();
+            $table->foreignIdFor(Status::class, 'status_id')->nullable()->constrained('statuses')->cascadeOnDelete();
         });
     }
 

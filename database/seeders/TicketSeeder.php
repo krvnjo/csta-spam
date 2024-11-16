@@ -14,8 +14,9 @@ class TicketSeeder extends Seeder
     {
         $tickets = [
             [
-                'name' => '202400001',
-                'description' => 'The printer is not working and jammed',
+                'ticket_num' => 'RMT202400001',
+                'name' => 'Printer Jammed',
+                'description' => 'The printer is not working and jammed.',
                 'total_cost' => 1000.00,
                 'prio_id' => 1,
                 'prog_id' => 1,
@@ -24,6 +25,7 @@ class TicketSeeder extends Seeder
 
         foreach ($tickets as $data) {
             Ticket::create([
+                'ticket_num' => $data['ticket_num'],
                 'name' => $data['name'],
                 'description' => $data['description'],
                 'total_cost' => $data['total_cost'],

@@ -6,7 +6,7 @@
 
 @push('styles')
   <link href="{{ Vite::asset('resources/vendor/tom-select/dist/css/tom-select.bootstrap5.css') }}" rel="stylesheet">
-  <link href="{{ Vite::asset('resources/vendor/daterangepicker/daterangepicker.css') }}" rel="stylesheet">
+  <link href="{{ Vite::asset('resources/vendor/quill/dist/quill.snow.css') }}" rel="stylesheet">
 @endpush
 
 @section('main-content')
@@ -71,95 +71,57 @@
             </div>
             <!-- End Export Dropdown -->
 
-            <!-- Filter Collapse Trigger -->
-            <a class="btn btn-white btn-sm dropdown-toggle" data-bs-toggle="collapse" href="#requestFilterSearchCollapse">
-              <i class="bi-funnel me-1"></i> Filters <span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="requestsFilterCount"></span>
-            </a>
-            <!-- End Filter Collapse Trigger -->
+            <!-- Filter Dropdown -->
+            <div class="dropdown">
+              <button class="btn btn-white btn-sm dropdown-toggle w-100" data-bs-toggle="dropdown" data-bs-auto-close="outside" type="button">
+                <i class="bi-filter me-2"></i> Filter <span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="requestsFilterCount"></span>
+              </button>
+
+              <div class="dropdown-menu dropdown-menu-sm-end custom-dropdown">
+                <div class="card">
+                  <div class="card-header card-header-content-between">
+                    <h5 class="card-header-title">Ticket Request Filters</h5>
+                  </div>
+                  <div class="card-body">
+                    <!-- Priorities Filter -->
+                    <div class="mb-4">
+                      <small class="text-cap text-body">Priorities</small>
+                      <div class="tom-select-custom">
+                        <select class="js-select js-datatable-filter form-select" data-target-column-index="5"
+                          data-hs-tom-select-options='{
+                            "singleMultiple": true,
+                            "hideSearch": true,
+                            "hideSelected": false,
+                            "placeholder": "All Priorities"
+                          }'
+                          multiple>
+                          @foreach ($priorities as $priority)
+                            <option data-option-template='<span class="d-flex align-items-center"><span class="{{ $priority->color->class }}"></span>{{ $priority->name }}</span>'
+                              value="{{ $priority->name }}">
+                            </option>
+                          @endforeach
+                        </select>
+                      </div>
+                    </div>
+                    <!-- End Priorities Filter -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- End Filter Dropdown -->
           </div>
         </div>
         <!-- End Header -->
-
-        <!-- Filter Search Collapse -->
-        <div class="collapse" id="requestFilterSearchCollapse">
-          <div class="card-body">
-            <div class="row">
-              <!-- Priorities -->
-              <div class="col-sm-12 col-md-4">
-                <div class="mb-3">
-                  <label class="form-label" for="requestPriorityFilter">Priorities</label>
-                  <div class="tom-select-custom">
-                    <select class="js-select js-datatable-filter form-select" id="requestPriorityFilter" data-target-column-index="5"
-                      data-hs-tom-select-options='{
-                        "singleMultiple": true,
-                        "hideSearch": true,
-                        "hideSelected": false,
-                        "placeholder": "All Priorities"
-                      }'
-                      multiple>
-                      @foreach ($priorities as $priority)
-                        <option data-option-template='<span class="d-flex align-items-center"><span class="{{ $priority->color->class }}"></span>{{ $priority->name }}</span>'
-                          value="{{ $priority->name }}">
-                        </option>
-                      @endforeach
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <!-- End Priorities -->
-
-              <!-- Users -->
-              <div class="col-sm-12 col-md-4">
-                <div class="mb-3">
-                  <label class="form-label" for="requestUserFilter">Users</label>
-                  <div class="tom-select-custom">
-                    <select class="js-select js-datatable-filter form-select" id="requestUserFilter" data-target-column-index="5"
-                      data-hs-tom-select-options='{
-                        "singleMultiple": true,
-                        "hideSelected": false,
-                        "placeholder": "All Users"
-                      }'
-                      autocomplete="off" multiple>
-                      @foreach ($users as $user)
-                        <option
-                          data-option-template='<span class="d-flex align-items-center"><img class="avatar avatar-xss avatar-circle me-2" src="{{ asset('storage/img/user-images/' . $user->user_image) }}" alt="User Image" /><span class="text-truncate">{{ $user->name }}</span></span>'
-                          value="{{ $user->name }}">{{ $user->name }}</option>
-                      @endforeach
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <!-- End Users -->
-
-              <!-- Date Range -->
-              <div class="col-sm-12 col-md-4">
-                <div class="mb-3">
-                  <label class="form-label" for="requestDateRangeFilter">Date Range</label>
-                  <input class="js-daterangepicker-clear js-datatable-filter form-control daterangepicker-custom-input" data-target-column-index="6"
-                    data-hs-daterangepicker-options='{
-                      "autoUpdateInput": false,
-                      "locale": {
-                        "cancelLabel": "Clear"
-                      }
-                    }'
-                    type="text" placeholder="Select date range">
-                </div>
-              </div>
-              <!-- End Date Range -->
-            </div>
-          </div>
-        </div>
-        <!-- End Filter Search Collapse -->
 
         <!-- Body -->
         <div class="table-responsive datatable-custom">
           <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100" id="requestsDatatable"
             data-hs-datatables-options='{
               "columnDefs": [{
-                 "targets": [3, 6, 9],
+                 "targets": [3, 6, 8],
                  "orderable": false
                }],
-              "order": [7, "desc"],
+              "order": [6, "desc"],
               "info": {
                 "totalQty": "#requestsDatatableWithPagination"
               },
@@ -175,12 +137,11 @@
                 <th class="w-th" style="width: 5%;">#</th>
                 <th class="d-none"></th>
                 <th>Ticket No.</th>
-                <th>Description</th>
+                <th>Ticket Name</th>
                 <th>Estimated Cost</th>
                 <th>Priority</th>
-                <th>Status</th>
                 <th>Created At</th>
-                <th>Updated At</th>
+                <th>Status</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -189,11 +150,9 @@
               @foreach ($tickets as $ticket)
                 <tr>
                   <td>{{ $loop->iteration }}</td>
-                  <td class="d-none" data-brand-id="{{ Crypt::encryptString($ticket->id) }}"></td>
-                  <td><a class="h5 btnViewRequest">{{ $ticket->name }}</a></td>
-                  <td>
-                    {{ Str::limit($ticket->description, 50, '...') }}
-                  </td>
+                  <td class="d-none" data-request-id="{{ Crypt::encryptString($ticket->id) }}"></td>
+                  <td><a class="h5 btnViewRequest">{{ $ticket->ticket_num }}</a></td>
+                  <td>{{ $ticket->name }}</td>
                   <td class="text-end">
                     @php
                       $purchasePrice = number_format($ticket->total_cost, 2);
@@ -203,31 +162,30 @@
                   <td data-order="{{ $ticket->priority->name }}">
                     <span class="{{ $ticket->priority->color->class }}"></span>{{ $ticket->priority->name }}
                   </td>
-                  <td>
-                    <span class="{{ $ticket->progress->badge->class }}">
-                      <span class="{{ $ticket->progress->legend->class }}"></span>{{ $ticket->progress->name }}
-                    </span>
-                  </td>
                   <td data-order="{{ $ticket->created_at }}">
                     <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $ticket->created_at->format('D, M d, Y | h:i A') }}">
                       <i class="bi-calendar-plus me-1"></i> {{ $ticket->created_at->format('F d, Y') }}
                     </span>
                   </td>
-                  <td data-order="{{ $ticket->updated_at }}">
-                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $ticket->updated_at->format('D, M d, Y | h:i A') }}">
-                      <i class="bi-calendar2-event me-1"></i> Updated {{ $ticket->updated_at->diffForHumans() }}
+                  <td>
+                    <span class="{{ $ticket->progress->badge->class }}">
+                      <span class="{{ $ticket->progress->legend->class }}"></span>{{ $ticket->progress->name }}
                     </span>
                   </td>
                   <td>
                     <div class="btn-group position-static">
                       <button class="btn btn-white btn-sm btnViewRequest" type="button"><i class="bi-eye"></i> View</button>
 
-                      @access('File Maintenance', 'Read and Write, Full Access')
+                      @access('Repair & Maintenance', 'Read and Write, Full Access')
                         <div class="btn-group position-static">
                           <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" data-bs-toggle="dropdown" type="button"></button>
                           <div class="dropdown-menu dropdown-menu-end mt-1">
+                            <button class="dropdown-item btnSetRequest" data-status="2" type="button">
+                              <i class="bi bi-check-circle-fill text-success dropdown-item-icon fs-7"></i>Approve Request
+                            </button>
+                            <div class="dropdown-divider"></div>
                             <button class="dropdown-item btnEditRequest" type="button">
-                              <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
+                              <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Request
                             </button>
 
                             @access('File Maintenance', 'Full Access')
@@ -284,15 +242,15 @@
 @endsection
 
 @section('sec-content')
-  <x-repair-maintenance.add-request :priorities="$priorities" />
+  <x-repair-maintenance.add-request :priorities="$priorities" :items="$items" />
   <x-repair-maintenance.view-request />
-  <x-repair-maintenance.edit-request :priorities="$priorities" />
+  <x-repair-maintenance.edit-request :priorities="$priorities" :items="$items" />
 @endsection
 
 @push('scripts')
   <script src="{{ Vite::asset('resources/vendor/tom-select/dist/js/tom-select.complete.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/daterangepicker/moment.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/daterangepicker/daterangepicker.js') }}"></script>
+  <script src="{{ Vite::asset('resources/vendor/hs-add-field/dist/hs-add-field.min.js') }}"></script>
+  <script src="{{ Vite::asset('resources/vendor/quill/dist/quill.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables/media/js/jquery.dataTables.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables.net.extensions/select/select.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
@@ -314,48 +272,34 @@
   <script>
     // Initialization of DataTable
     $(document).on("ready", function() {
-      HSCore.components.HSDaterangepicker.init('.js-daterangepicker-clear');
-
-      const daterangepickerClear = $('.js-daterangepicker-clear');
-
-      daterangepickerClear.on('apply.daterangepicker', function(ev, picker) {
-        $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
-        filterDatatableAndCount(requestsDatatable, "#requestsFilterCount");
-      });
-
-      daterangepickerClear.on('cancel.daterangepicker', function() {
-        $(this).val('');
-        filterDatatableAndCount(requestsDatatable, "#requestsFilterCount");
-      });
-
       HSCore.components.HSDatatables.init($("#requestsDatatable"), {
         dom: "Bfrtip",
         buttons: [{
             extend: "copy",
             className: "d-none",
             exportOptions: {
-              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(5)):not(:nth-child(7))'
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(9))'
             }
           },
           {
             extend: "print",
             className: "d-none",
             exportOptions: {
-              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(5)):not(:nth-child(7))'
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(9))'
             }
           },
           {
             extend: "excel",
             className: "d-none",
             exportOptions: {
-              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(5)):not(:nth-child(7))'
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(9))'
             }
           },
           {
             extend: "pdf",
             className: "d-none",
             exportOptions: {
-              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(5)):not(:nth-child(7))'
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(9))'
             }
           }
         ],
@@ -409,6 +353,20 @@
         // INITIALIZATION OF SELECT
         // =======================================================
         HSCore.components.HSTomSelect.init(".js-select");
+
+
+        // INITIALIZATION OF ADD FIELD
+        // =======================================================
+        new HSAddField('.js-add-field', {
+          addedField: field => {
+            HSCore.components.HSTomSelect.init(field.querySelector('.js-select-dynamic'))
+          }
+        })
+
+
+        // INITIALIZATION OF QUILLJS EDITOR
+        // =======================================================
+        HSCore.components.HSQuill.init('.js-quill')
       };
     })();
   </script>
