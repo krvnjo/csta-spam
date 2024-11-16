@@ -13,7 +13,7 @@ class Ticket extends Model
         'ticket_num',
         'name',
         'description',
-        'total_cost',
+        'estimated_cost',
         'prio_id',
         'prog_id',
         'remarks',

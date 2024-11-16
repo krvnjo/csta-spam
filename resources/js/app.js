@@ -348,6 +348,25 @@ function displayViewResponseData(response, config) {
     );
   }
 
+  if (response.priority_name && response.priority_color) {
+    const prioName = response.priority_name || 'No status';
+    const prioLegendClass = response.priority_color || 'default';
+
+    $(config.priorityFields.selector).html(`<span class="${prioLegendClass}"></span>${prioName}</span`);
+  }
+
+  if (response.progress_name && response.progress_badge && response.progress_legend) {
+    const progressName = response.progress_name || 'No status';
+    const progressBadgeClass = response.progress_badge || 'secondary';
+    const progressLegendClass = response.progress_legend || 'default';
+
+    $(config.progressFields.selector).html(
+      `<span class="${progressBadgeClass}">
+         <span class="${progressLegendClass}"></span>${progressName}
+       </span>`,
+    );
+  }
+
   if (config.imageFields) {
     config.imageFields.forEach((field) => {
       if (response[field.key]) {

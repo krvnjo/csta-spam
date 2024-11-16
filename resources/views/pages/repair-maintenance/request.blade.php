@@ -83,7 +83,7 @@
                   </div>
                   <div class="card-body">
                     <!-- Priorities Filter -->
-                    <div class="mb-4">
+                    <div class="mb-2">
                       <small class="text-cap text-body">Priorities</small>
                       <div class="tom-select-custom">
                         <select class="js-select js-datatable-filter form-select" data-target-column-index="5"
@@ -117,7 +117,7 @@
           <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100" id="requestsDatatable"
             data-hs-datatables-options='{
               "columnDefs": [{
-                 "targets": [3, 6, 8],
+                 "targets": [3, 8],
                  "orderable": false
                }],
               "order": [6, "desc"],
@@ -151,14 +151,11 @@
                   <td>{{ $loop->iteration }}</td>
                   <td class="d-none" data-request-id="{{ Crypt::encryptString($ticket->id) }}"></td>
                   <td><a class="h5 btnViewRequest">{{ $ticket->ticket_num }}</a></td>
-                  <td>{{ $ticket->name }}</td>
+                  <td class="request-name">{{ $ticket->name }}</td>
                   <td class="text-end">
-                    @php
-                      $purchasePrice = number_format($ticket->total_cost, 2);
-                    @endphp
-                    <strong>₱{{ $purchasePrice }}</strong>
+                    <strong>₱{{ number_format($ticket->estimated_cost, 2) }}</strong>
                   </td>
-                  <td data-order="{{ $ticket->priority->name }}">
+                  <td data-order="{{ $ticket->priority->id }}">
                     <span class="{{ $ticket->priority->color->class }}"></span>{{ $ticket->priority->name }}
                   </td>
                   <td data-order="{{ $ticket->created_at }}">
@@ -179,7 +176,7 @@
                         <div class="btn-group position-static">
                           <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" data-bs-toggle="dropdown" type="button"></button>
                           <div class="dropdown-menu dropdown-menu-end mt-1">
-                            <button class="dropdown-item btnSetRequest" data-status="2" type="button">
+                            <button class="dropdown-item btnSetStatus" data-status="2" type="button">
                               <i class="bi bi-check-circle-fill text-success dropdown-item-icon fs-7"></i>Approve Request
                             </button>
                             <div class="dropdown-divider"></div>
@@ -187,7 +184,7 @@
                               <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Request
                             </button>
 
-                            @access('File Maintenance', 'Full Access')
+                            @access('Repair & Maintenance', 'Full Access')
                               <button class="dropdown-item text-danger btnDeleteRequest" type="button">
                                 <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
                               </button>

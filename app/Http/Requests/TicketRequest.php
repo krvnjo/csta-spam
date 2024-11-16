@@ -52,7 +52,7 @@ class TicketRequest extends FormRequest
             'description' => [
                 'required',
                 'min:10',
-                'max:255',
+                'max:500',
             ],
             'cost' => [
                 'required',

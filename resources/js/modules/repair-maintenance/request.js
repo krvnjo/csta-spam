@@ -36,12 +36,12 @@ $(document).ready(function () {
   });
   // ============ End Create a Ticket Request ============ //
 
-  // ============ View a Ticket Request ============ //
+  // ============ View Ticket Request ============ //
   requestsDatatable.on('click', '.btnViewRequest', function () {
     const requestId = $(this).closest('tr').find('td[data-request-id]').data('request-id');
 
     $.ajax({
-      url: '/repair-maintenance/ticket-requests/show',
+      url: '/repair-maintenance/ticket-requests/view',
       method: 'GET',
       data: { id: requestId },
       success: function (response) {
@@ -49,22 +49,18 @@ $(document).ready(function () {
 
         const userConfig = {
           textFields: [
-            { key: 'name', selector: '#lblViewName' },
-            { key: 'fname', selector: '#lblViewFname' },
-            { key: 'mname', selector: '#lblViewMname' },
-            { key: 'lname', selector: '#lblViewLname' },
-            { key: 'role', selector: '#lblViewRole' },
-            { key: 'department', selector: '#lblViewDepartment' },
-            { key: 'email', selector: '#lblViewEmail' },
-            { key: 'phone', selector: '#lblViewPhone' },
-            { key: 'login', selector: '#lblViewLogin' },
+            { key: 'num', selector: '#lblViewNum' },
+            { key: 'ticket', selector: '#lblViewTicket' },
+            { key: 'description', selector: '#lblViewDescription' },
+            { key: 'cost', selector: '#lblViewCost' },
             { key: 'created_by', selector: '#lblViewCreatedBy' },
             { key: 'updated_by', selector: '#lblViewUpdatedBy' },
             { key: 'created_at', selector: '#lblViewCreatedAt' },
             { key: 'updated_at', selector: '#lblViewUpdatedAt' },
           ],
 
-          statusFields: { key: 'status', selector: '#lblViewStatus' },
+          priorityFields: { key: 'priority', selector: '#lblViewPriority' },
+          progressFields: { key: 'progress', selector: '#lblViewProgress' },
 
           imageFields: [
             { key: 'image', selector: '#imgViewUser' },
@@ -80,7 +76,7 @@ $(document).ready(function () {
       },
     });
   });
-  // ============ End View a Ticket Request ============ //
+  // ============ End View Ticket Request ============ //
 
   // // ============ Edit a User ============ //
   // usersDatatable.on('click', '.btnEditUser', function () {
@@ -142,7 +138,7 @@ $(document).ready(function () {
   //   });
   // });
 
-  requestsDatatable.on('click', '.btnSetRequest', function () {
+  requestsDatatable.on('click', '.btnSetStatus', function () {
     const requestId = $(this).closest('tr').find('td[data-request-id]').data('request-id');
     const requestStatus = $(this).data('status');
 
@@ -180,43 +176,43 @@ $(document).ready(function () {
       }
     });
   });
-  // ============ End Update a User ============ //
+  // ============ End Update Ticket Request ============ //
 
-  // // ============ Delete a User ============ //
-  // usersDatatable.on('click', '.btnDeleteUser', function () {
-  //   const userId = $(this).closest('tr').find('td[data-user-id]').data('user-id');
-  //   const userName = $(this).closest('tr').find('.user-name').text().trim();
-  //
-  //   Swal.fire({
-  //     title: 'Delete Record?',
-  //     text: `Are you sure you want to permanently delete the user "${userName}"? This action cannot be undone.`,
-  //     icon: 'warning',
-  //     showCancelButton: true,
-  //     focusCancel: true,
-  //     confirmButtonText: 'Yes, delete it!',
-  //     cancelButtonText: 'No, cancel!',
-  //     customClass: {
-  //       popup: 'bg-light rounded-3 shadow fs-4',
-  //       title: 'text-dark fs-1',
-  //       htmlContainer: 'text-body text-center fs-4',
-  //       confirmButton: 'btn btn-sm btn-danger',
-  //       cancelButton: 'btn btn-sm btn-secondary',
-  //     },
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       $.ajax({
-  //         url: '/user-management/users',
-  //         method: 'DELETE',
-  //         data: { id: userId },
-  //         success: function (response) {
-  //           showResponseAlert(response, 'success');
-  //         },
-  //         error: function (response) {
-  //           showResponseAlert(response, 'error');
-  //         },
-  //       });
-  //     }
-  //   });
-  // });
-  // // ============ End Delete a User ============ //
+  // ============ Delete a User ============ //
+  requestsDatatable.on('click', '.btnDeleteRequest', function () {
+    const requestId = $(this).closest('tr').find('td[data-request-id]').data('request-id');
+    const requestName = $(this).closest('tr').find('.request-name').text().trim();
+
+    Swal.fire({
+      title: 'Delete Record?',
+      text: `Are you sure you want to delete the ticket request "${requestName}"? This action cannot be undone.`,
+      icon: 'warning',
+      showCancelButton: true,
+      focusCancel: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
+      customClass: {
+        popup: 'bg-light rounded-3 shadow fs-4',
+        title: 'text-dark fs-1',
+        htmlContainer: 'text-body text-center fs-4',
+        confirmButton: 'btn btn-sm btn-danger',
+        cancelButton: 'btn btn-sm btn-secondary',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: '/repair-maintenance/ticket-requests',
+          method: 'DELETE',
+          data: { id: requestId },
+          success: function (response) {
+            showResponseAlert(response, 'success');
+          },
+          error: function (response) {
+            showResponseAlert(response, 'error');
+          },
+        });
+      }
+    });
+  });
+  // ============ End Delete a User ============ //
 });

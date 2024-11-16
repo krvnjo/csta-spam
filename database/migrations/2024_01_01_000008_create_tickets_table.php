@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->string('ticket_num', 15)->unique();
             $table->string('name', 50)->unique();
             $table->text('description');
-            $table->decimal('total_cost', 15)->nullable();
+            $table->decimal('estimated_cost', 15)->nullable();
             $table->foreignIdFor(Priority::class, 'prio_id')->constrained('priorities')->cascadeOnDelete();
             $table->foreignIdFor(Progress::class, 'prog_id')->constrained('progresses')->cascadeOnDelete();
             $table->text('remarks')->nullable();

@@ -27,15 +27,15 @@
                 <!-- Body -->
                 <div class="card-body">
                   <div class="row">
-                    <!-- Name -->
+                    <!-- Ticket Name -->
                     <div class="col-sm-5">
                       <div class="mb-4">
-                        <label class="form-label" for="txtAddTicket">Name</label>
+                        <label class="form-label" for="txtAddTicket">Ticket Name</label>
                         <input class="form-control" id="txtAddTicket" name="ticket" type="text" placeholder="Enter ticket name">
                         <span class="invalid-feedback" id="valAddTicket"></span>
                       </div>
                     </div>
-                    <!-- End Name -->
+                    <!-- End Ticket Name -->
 
                     <!-- Estimated Cost -->
                     <div class="col-sm">
@@ -76,11 +76,13 @@
                   </div>
                   <!-- End Row -->
 
+                  <!-- Description -->
                   <div class="form-group">
                     <label class="form-label" for="txtAddDescription">Description</label>
-                    <textarea class="form-control" id="txtAddDescription" name="description" rows="4" placeholder="Enter ticket description"></textarea>
+                    <textarea class="form-control" id="txtAddDescription" name="description" rows="4" placeholder="Type ticket description"></textarea>
                     <span class="invalid-feedback" id="valAddDescription"></span>
                   </div>
+                  <!-- End Description -->
                 </div>
                 <!-- Body -->
               </div>
@@ -107,10 +109,10 @@
                     <div class="row mb-4">
                       <div class="col-sm-11">
                         <div class="tom-select-custom">
-                          <select class="js-select form-select" id="selAddItem1"
-                            data-hs-tom-select-options='{
+                          <select class="js-select form-select" data-hs-tom-select-options='{
                               "placeholder": "Select an item"
-                            }' autocomplete="off">
+                            }'
+                            autocomplete="off">
                             <option value=""></option>
                             @foreach ($items as $item)
                               <option value="{{ $item->id }}">
@@ -118,7 +120,6 @@
                               </option>
                             @endforeach
                           </select>
-                          <span class="invalid-feedback" id="valAddItem1"></span>
                         </div>
                       </div>
                       <div class="col-sm"><button class="btn btn-white" type="button"><i class="bi-trash"></i></button></div>
@@ -142,13 +143,14 @@
                             autocomplete="off">
                             <option value=""></option>
                             @foreach ($items as $item)
-                              <option value="{{ $item->id }}">{{ $item->property->name . ' | ' . $item->prop_code }}</option>
+                              <option value="{{ $item->id }}">
+                                {{ $item->prop_code . ' | ' . $item->property->name . ' | ' . $item->department->name . ' | ' . $item->designation->name . ' | ' . $item->condition->name . ' | ' . $item->status->name }}
+                              </option>
                             @endforeach
                           </select>
-                          <span class="invalid-feedback"></span>
                         </div>
                       </div>
-                      <div class="col-sm"><button class="btn btn-white js-delete-field" type="button"><i class="bi-trash"></i></button></div>
+                      <div class="col-sm"><button class="btn btn-white" type="button"><i class="bi-trash"></i></button></div>
                     </div>
                   </div>
                   <!-- End Add Item Field Template -->
@@ -179,3 +181,5 @@
   </div>
 </div>
 <!-- End Add Request Modal -->
+
+<script></script>

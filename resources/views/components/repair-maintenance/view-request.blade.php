@@ -4,7 +4,7 @@
     <div class="modal-content">
       <!-- Header -->
       <div class="modal-header">
-        <h4 class="modal-title">View Request</h4>
+        <h4 class="modal-title">View Ticket Request</h4>
         <button class="btn-close" data-bs-dismiss="modal" type="button"></button>
       </div>
       <!-- End Header -->
@@ -12,16 +12,49 @@
       <!-- Body -->
       <div class="modal-body">
         <div class="col">
-          <!-- Request Name -->
+          <!-- Ticket Name -->
           <div class="row mb-4">
             <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
-              <p class="form-label fw-semibold mb-0">Request Name:</p>
+              <p class="form-label fw-semibold mb-0">Ticket Name:</p>
             </div>
             <div class="col-12 col-md-7 d-flex align-items-center">
-              <p class="fw-semibold mb-0" id="lblViewRequest"></p>
+              <p class="fw-semibold mb-0" id="lblViewTicket"></p>
             </div>
           </div>
-          <!-- End Request Name -->
+          <!-- End Ticket Name -->
+
+          <!-- Description -->
+          <div class="row mb-4">
+            <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
+              <p class="form-label fw-semibold mb-0">Description:</p>
+            </div>
+            <div class="col-12 col-md-7 d-flex align-items-center">
+              <p class="fw-semibold mb-0" id="lblViewDescription"></p>
+            </div>
+          </div>
+          <!-- End Description -->
+
+          <!-- Estimated Cost -->
+          <div class="row mb-4">
+            <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
+              <p class="form-label fw-semibold mb-0">Estimated Cost:</p>
+            </div>
+            <div class="col-12 col-md-7 d-flex align-items-center">
+              <p class="fw-semibold mb-0" id="lblViewCost"></p>
+            </div>
+          </div>
+          <!-- End Estimated Cost -->
+
+          <!-- Priority -->
+          <div class="row mb-4">
+            <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
+              <p class="form-label fw-semibold mb-0">Priority:</p>
+            </div>
+            <div class="col-12 col-md-7 d-flex align-items-center">
+              <p class="fw-semibold mb-0" id="lblViewPriority"></p>
+            </div>
+          </div>
+          <!-- End Priority -->
 
           <!-- Status -->
           <div class="row mb-4">
@@ -29,10 +62,9 @@
               <p class="form-label fw-semibold mb-0">Status:</p>
             </div>
             <div class="col-12 col-md-7 d-flex align-items-center">
-              <p class="mb-0" id="lblViewStatus"></p>
+              <p class="fw-semibold mb-0" id="lblViewProgress"></p>
             </div>
           </div>
-          <!-- End Status -->
 
           <!-- Created By -->
           <div class="row mb-4">
