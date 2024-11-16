@@ -45,7 +45,6 @@
                 <div class="nav-collapse collapse" id="navbarVerticalMenuPagesItemManagement" data-bs-parent="#navbarVerticalMenuMainMenu">
                   <a class="nav-link" data-route="prop-overview.index" href="{{ route('prop-overview.index') }}">Overview</a>
                   <a class="nav-link" data-route="prop-asset.index" href="{{ route('prop-asset.index') }}">Item Masterlist</a>
-                  <a class="nav-link" data-route="" href="">Consumption Logs</a>
                 </div>
               </div>
               <!-- End Item Management -->
@@ -60,7 +59,9 @@
                 </a>
 
                 <div class="nav-collapse collapse" id="navbarVerticalMenuPagesBorrowReservation" data-bs-parent="#navbarVerticalMenuMainMenu">
-                  <a class="nav-link" data-route="" href="">Overview</a>
+                  <a class="nav-link" data-route="" href="">New Requests</a>
+                  <a class="nav-link" data-route="" href="">Ongoing Borrowings</a>
+                  <a class="nav-link" data-route="" href="">Return History</a>
                 </div>
               </div>
               <!-- End Borrow & Reservation -->

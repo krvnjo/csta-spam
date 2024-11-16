@@ -114,38 +114,23 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
             abort(404);
         });
     });
-
-    // Consumable Routes
-    Route::middleware('checkPermission:Item Management')->prefix('properties-assets/consumable')->name('prop-consumable.')->controller(PropertyConsumableController::class)->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::post('/', 'store')->name('store');
-        Route::get('/show', 'show')->name('show')->middleware('expectsJson');
-        Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
-        Route::patch('/', 'update')->name('update');
-        Route::delete('/', 'destroy')->name('delete');
-        Route::patch('/restock', 'restock')->name('restock');
-        Route::patch('/use', 'use')->name('use');
-        Route::fallback(function () {
-            abort(404);
-        });
-    });
-
-    // Consumption Routes
-    Route::middleware('checkPermission:Item Management')->prefix('properties-assets/consumption-logs')->name('prop-consumption.')->controller(ConsumptionLogsController::class)->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::post('/', 'store')->name('store');
-        Route::get('/show', 'show')->name('show')->middleware('expectsJson');
-        Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
-        Route::patch('/', 'update')->name('update');
-        Route::delete('/', 'destroy')->name('delete');
-        Route::fallback(function () {
-            abort(404);
-        });
-    });
-
     // ============ End Item Management Routes ============ //
 
     // ============ Borrow & Reservation Routes ============ //
+
+    // New Request Routes
+    Route::middleware('checkPermission:Borrow & Reservation')->prefix('borrow-reservation/new-requests')->name('new-request.')->controller(PropertyOverviewController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+        Route::get('/show', 'show')->name('show')->middleware('expectsJson');
+        Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
+        Route::patch('/', 'update')->name('update');
+        Route::delete('/', 'destroy')->name('delete');
+        Route::fallback(function () {
+            abort(404);
+        });
+    });
+
     // ============ End Borrow & Reservation Routes ============ //
 
     // ============ Repair & Maintenance Routes ============ //
