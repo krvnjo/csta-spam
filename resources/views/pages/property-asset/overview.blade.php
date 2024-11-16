@@ -215,11 +215,11 @@
             <!-- End Dropdown -->
 
             <!-- Dropdown -->
-            <div class="dropdown">
-              <button class="btn btn-white" data-bs-toggle="offcanvas" data-bs-target="#offcanvasPropertyFilter" type="button" aria-controls="offcanvasPropertyFilter">
-                <i class="bi-filter me-1"></i> Filters
-              </button>
-            </div>
+{{--            <div class="dropdown">--}}
+{{--              <button class="btn btn-white" data-bs-toggle="offcanvas" data-bs-target="#offcanvasPropertyFilter" type="button" aria-controls="offcanvasPropertyFilter">--}}
+{{--                <i class="bi-filter me-1"></i> Filters--}}
+{{--              </button>--}}
+{{--            </div>--}}
             <!-- End Dropdown -->
           </div>
         </div>
@@ -821,7 +821,7 @@
             title: '',
             message: '',
             exportOptions: {
-              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8))',
+              columns: ':not(:nth-child(0)):not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(6)):not(:nth-child(7)):not(:nth-child(10))',
             },
             customize: function(win) {
 
@@ -845,7 +845,7 @@
                     </div>
                     <div style="font-size: 10px;">${currentDate}</div> <!-- Add current date without right alignment -->
                   </div>
-                  <h2 style="font-size: 12px; margin: 5px 0;">Colegio De Sta. Teresa De Avila - Stock Masterlist</h2> <!-- Custom print title -->
+                  <h2 style="font-size: 12px; margin: 5px 0;">Colegio De Sta. Teresa De Avila - Item Management</h2> <!-- Custom print title -->
                 `);
               $(win.document.body).find('table')
                 .css({

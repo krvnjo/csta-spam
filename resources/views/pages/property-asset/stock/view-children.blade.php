@@ -233,11 +233,11 @@
             <!-- End Dropdown -->
 
             <!-- Dropdown -->
-            <div class="dropdown">
-              <button class="btn btn-white" data-bs-toggle="offcanvas" data-bs-target="#propertyStockFilter" type="button" aria-controls="propertyStockFilter">
-                <i class="bi-filter me-1"></i> Filters
-              </button>
-            </div>
+{{--            <div class="dropdown">--}}
+{{--              <button class="btn btn-white" data-bs-toggle="offcanvas" data-bs-target="#propertyStockFilter" type="button" aria-controls="propertyStockFilter">--}}
+{{--                <i class="bi-filter me-1"></i> Filters--}}
+{{--              </button>--}}
+{{--            </div>--}}
             <!-- End Dropdown -->
           </div>
         </div>

@@ -389,7 +389,7 @@ class PropertyChildController extends Controller
             return response()->json([
                 'success' => true,
                 'title' => 'Item Deployed Successfully!',
-                'text' => 'The item has been deployed to the selected designation.',
+                'text' => 'The item has been assigned to the selected designation.',
             ]);
 
         } catch (Throwable $e) {
