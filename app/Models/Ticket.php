@@ -10,13 +10,13 @@ class Ticket extends Model
     protected $table = 'tickets';
 
     protected $fillable = [
+        'ticket_num',
         'name',
         'description',
         'total_cost',
         'prio_id',
         'prog_id',
         'remarks',
-        'is_active',
     ];
 
     public function priority(): HasOne
