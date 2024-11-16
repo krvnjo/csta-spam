@@ -6,7 +6,6 @@
 
 @push('styles')
   <link href="{{ Vite::asset('resources/vendor/tom-select/dist/css/tom-select.bootstrap5.css') }}" rel="stylesheet">
-  <link href="{{ Vite::asset('resources/vendor/quill/dist/quill.snow.css') }}" rel="stylesheet">
 @endpush
 
 @section('main-content')
@@ -250,7 +249,6 @@
 @push('scripts')
   <script src="{{ Vite::asset('resources/vendor/tom-select/dist/js/tom-select.complete.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/hs-add-field/dist/hs-add-field.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/quill/dist/quill.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables/media/js/jquery.dataTables.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables.net.extensions/select/select.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
@@ -362,11 +360,6 @@
             HSCore.components.HSTomSelect.init(field.querySelector('.js-select-dynamic'))
           }
         })
-
-
-        // INITIALIZATION OF QUILLJS EDITOR
-        // =======================================================
-        HSCore.components.HSQuill.init('.js-quill')
       };
     })();
   </script>

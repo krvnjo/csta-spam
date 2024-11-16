@@ -91,7 +91,6 @@ class UserSeeder extends Seeder
                 'Item Management',
                 'Borrow & Reservation',
                 'Repair & Maintenance',
-                'Analytics Reports',
             ],
             'Administrative Permissions' => [
                 'User Management',

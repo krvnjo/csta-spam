@@ -41,7 +41,7 @@ $(document).ready(function () {
     const brandId = $(this).closest('tr').find('td[data-brand-id]').data('brand-id');
 
     $.ajax({
-      url: '/file-maintenance/brands/show',
+      url: '/file-maintenance/brands/view',
       method: 'GET',
       data: { id: brandId },
       success: function (response) {

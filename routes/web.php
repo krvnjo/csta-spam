@@ -5,14 +5,12 @@ use App\Http\Controllers\AuditController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\ConsumptionLogsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\HelpController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\PropertyChildController;
-use App\Http\Controllers\PropertyConsumableController;
 use App\Http\Controllers\PropertyOverviewController;
 use App\Http\Controllers\PropertyParentController;
 use App\Http\Controllers\RequesterController;
@@ -77,7 +75,7 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
     Route::middleware('checkPermission:Item Management')->prefix('properties-assets/stocks')->name('prop-asset.')->controller(PropertyParentController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('store');
-        Route::get('/show', 'show')->name('show')->middleware('expectsJson');
+        Route::get('/view', 'show')->name('view')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
         Route::patch('/', 'update')->name('update');
         Route::delete('/', 'destroy')->name('delete');
@@ -90,7 +88,7 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
     Route::middleware('checkPermission:Item Management')->prefix('properties-assets/{propertyParent}/child-stocks')->name('prop-asset.child.')->controller(PropertyChildController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('store');
-        Route::get('/show', 'show')->name('show')->middleware('expectsJson');
+        Route::get('/view', 'show')->name('view')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
         Route::patch('/', 'update')->name('update');
         Route::delete('/', 'destroy')->name('delete');
@@ -105,35 +103,7 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
     Route::middleware('checkPermission:Item Management')->prefix('properties-assets/overview')->name('prop-overview.')->controller(PropertyOverviewController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('store');
-        Route::get('/show', 'show')->name('show')->middleware('expectsJson');
-        Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
-        Route::patch('/', 'update')->name('update');
-        Route::delete('/', 'destroy')->name('delete');
-        Route::fallback(function () {
-            abort(404);
-        });
-    });
-
-    // Consumable Routes
-    Route::middleware('checkPermission:Item Management')->prefix('properties-assets/consumable')->name('prop-consumable.')->controller(PropertyConsumableController::class)->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::post('/', 'store')->name('store');
-        Route::get('/show', 'show')->name('show')->middleware('expectsJson');
-        Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
-        Route::patch('/', 'update')->name('update');
-        Route::delete('/', 'destroy')->name('delete');
-        Route::patch('/restock', 'restock')->name('restock');
-        Route::patch('/use', 'use')->name('use');
-        Route::fallback(function () {
-            abort(404);
-        });
-    });
-
-    // Consumption Routes
-    Route::middleware('checkPermission:Item Management')->prefix('properties-assets/consumption-logs')->name('prop-consumption.')->controller(ConsumptionLogsController::class)->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::post('/', 'store')->name('store');
-        Route::get('/show', 'show')->name('show')->middleware('expectsJson');
+        Route::get('/view', 'show')->name('view')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
         Route::patch('/', 'update')->name('update');
         Route::delete('/', 'destroy')->name('delete');
@@ -153,7 +123,7 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
     Route::middleware('checkPermission:Repair & Maintenance')->prefix('repair-maintenance/ticket-requests')->name('request.')->controller(TicketRequestController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('create');
-        Route::get('/show', 'show')->name('view')->middleware('expectsJson');
+        Route::get('/view', 'show')->name('view')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
         Route::patch('/', 'update')->name('update');
         Route::delete('/', 'destroy')->name('delete');
@@ -161,16 +131,13 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
 
     // ============ End Repair & Maintenance Routes ============ //
 
-    // ============ Analytics Reports Routes ============ //
-    // ============ End Analytics Reports Routes ============ //
-
     // ============ User Management Routes ============ //
 
     // User Routes
     Route::middleware('checkPermission:User Management')->prefix('user-management/users')->name('user.')->controller(UserController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('create');
-        Route::get('/show', 'show')->name('view')->middleware('expectsJson');
+        Route::get('/view', 'show')->name('view')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
         Route::patch('/', 'update')->name('update');
         Route::delete('/', 'destroy')->name('delete');
@@ -180,7 +147,7 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
     Route::middleware('checkPermission:User Management')->prefix('user-management/roles')->name('role.')->controller(RoleController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('create');
-        Route::get('/show', 'show')->name('view')->middleware('expectsJson');
+        Route::get('/view', 'show')->name('view')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
         Route::patch('/', 'update')->name('update');
         Route::delete('/', 'destroy')->name('delete');
@@ -194,7 +161,7 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
     Route::middleware('checkPermission:File Maintenance')->prefix('file-maintenance/brands')->name('brand.')->controller(BrandController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('create');
-        Route::get('/show', 'show')->name('view')->middleware('expectsJson');
+        Route::get('/view', 'show')->name('view')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
         Route::patch('/', 'update')->name('update');
         Route::delete('/', 'destroy')->name('delete');
@@ -204,7 +171,7 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
     Route::middleware('checkPermission:File Maintenance')->prefix('file-maintenance/categories')->name('category.')->controller(CategoryController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('create');
-        Route::get('/show', 'show')->name('view')->middleware('expectsJson');
+        Route::get('/view', 'show')->name('view')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
         Route::patch('/', 'update')->name('update');
         Route::delete('/', 'destroy')->name('delete');
@@ -214,7 +181,7 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
     Route::middleware('checkPermission:File Maintenance')->prefix('file-maintenance/departments')->name('department.')->controller(DepartmentController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('create');
-        Route::get('/show', 'show')->name('view')->middleware('expectsJson');
+        Route::get('/view', 'show')->name('view')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
         Route::patch('/', 'update')->name('update');
         Route::delete('/', 'destroy')->name('delete');
@@ -224,7 +191,7 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
     Route::middleware('checkPermission:File Maintenance')->prefix('file-maintenance/designations')->name('designation.')->controller(DesignationController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('create');
-        Route::get('/show', 'show')->name('view')->middleware('expectsJson');
+        Route::get('/view', 'show')->name('view')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
         Route::patch('/', 'update')->name('update');
         Route::delete('/', 'destroy')->name('delete');
@@ -234,7 +201,7 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
     Route::middleware('checkPermission:File Maintenance')->prefix('file-maintenance/requesters')->name('requester.')->controller(RequesterController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('create');
-        Route::get('/show', 'show')->name('view')->middleware('expectsJson');
+        Route::get('/view', 'show')->name('view')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
         Route::patch('/', 'update')->name('update');
         Route::delete('/', 'destroy')->name('delete');
@@ -247,7 +214,7 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
     // Audit History Routes
     Route::middleware('checkPermission:Audit History')->prefix('audit-history')->name('audit.')->controller(AuditController::class)->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::get('/show', 'show')->name('show')->middleware('expectsJson');
+        Route::get('/view', 'show')->name('view')->middleware('expectsJson');
     });
 
     // ============ End Other Routes ============ //

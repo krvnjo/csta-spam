@@ -233,11 +233,11 @@
             <!-- End Dropdown -->
 
             <!-- Dropdown -->
-{{--            <div class="dropdown">--}}
-{{--              <button class="btn btn-white" data-bs-toggle="offcanvas" data-bs-target="#propertyStockFilter" type="button" aria-controls="propertyStockFilter">--}}
-{{--                <i class="bi-filter me-1"></i> Filters--}}
-{{--              </button>--}}
-{{--            </div>--}}
+            {{--            <div class="dropdown"> --}}
+            {{--              <button class="btn btn-white" data-bs-toggle="offcanvas" data-bs-target="#propertyStockFilter" type="button" aria-controls="propertyStockFilter"> --}}
+            {{--                <i class="bi-filter me-1"></i> Filters --}}
+            {{--              </button> --}}
+            {{--            </div> --}}
             <!-- End Dropdown -->
           </div>
         </div>
@@ -291,14 +291,12 @@
               </tr>
             </thead>
             <tbody>
-            @php
-              $focusedChildId = request('focus');
-            @endphp
+              @php
+                $focusedChildId = request('focus');
+              @endphp
               @foreach ($propertyChildren->sortByDesc('updated_at') as $propertyChild)
-                <tr id="child-{{ $propertyChild->id }}"
-                    class="{{ $focusedChildId == $propertyChild->id ? 'table-success' : '' }}"
-                    data-stats-id="{{ $propertyChild->status->id ?? '0' }}"
-                    data-inventory-date="{{ $propertyChild->inventory_date ? \Carbon\Carbon::parse($propertyChild->inventory_date)->format('Y-m-d') : '' }}">
+                <tr class="{{ $focusedChildId == $propertyChild->id ? 'table-success' : '' }}" id="child-{{ $propertyChild->id }}" data-stats-id="{{ $propertyChild->status->id ?? '0' }}"
+                  data-inventory-date="{{ $propertyChild->inventory_date ? \Carbon\Carbon::parse($propertyChild->inventory_date)->format('Y-m-d') : '' }}">
 
                   @if ($propertyParents->is_consumable)
                     <td class="table-column-pe-0"></td>
@@ -343,15 +341,17 @@
                       {{ Str::limit(!empty($propertyChild->remarks) ? $propertyChild->remarks : 'No remarks provided', 20) }}
                     </span>
                   </td>
-                  <td data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="Date Acquired: {{ \Carbon\Carbon::parse($propertyChild->acq_date)->format('F j, Y') }}">
-                    <i class="bi-calendar-event me-1"></i>
-                    @if ($propertyChild->is_consumable)
-                      Added {{ \Carbon\Carbon::parse($propertyChild->stock_date)->diffForHumans() }}
-                    @elseif($propertyChild->inventory_date != null)
-                      Assigned {{ \Carbon\Carbon::parse($propertyChild->inventory_date)->diffForHumans() }}
-                    @else
-                      Added {{ \Carbon\Carbon::parse($propertyChild->stock_date)->diffForHumans() }}
-                    @endif
+                  <td>
+                    <div data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="top" title="Date Acquired: {{ \Carbon\Carbon::parse($propertyChild->acq_date)->format('F j, Y') }}">
+                      <i class="bi-calendar-event me-1"></i>
+                      @if ($propertyChild->is_consumable)
+                        Added {{ \Carbon\Carbon::parse($propertyChild->stock_date)->diffForHumans() }}
+                      @elseif($propertyChild->inventory_date != null)
+                        Assigned {{ \Carbon\Carbon::parse($propertyChild->inventory_date)->diffForHumans() }}
+                      @else
+                        Added {{ \Carbon\Carbon::parse($propertyChild->stock_date)->diffForHumans() }}
+                      @endif
+                    </div>
                   </td>
                   <td>
                     <div class="btn-group position-static">
@@ -750,12 +750,15 @@
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>
 
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
       const focusedRowId = "{{ request('focus') }}";
       if (focusedRowId) {
         const focusedRow = document.getElementById(`child-${focusedRowId}`);
         if (focusedRow) {
-          focusedRow.scrollIntoView({ behavior: "smooth", block: "center" });
+          focusedRow.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+          });
 
           focusedRow.classList.add("table-warning");
           setTimeout(() => focusedRow.classList.remove("table-warning"), 10000);

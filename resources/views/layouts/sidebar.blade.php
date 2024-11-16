@@ -45,7 +45,6 @@
                 <div class="nav-collapse collapse" id="navbarVerticalMenuPagesItemManagement" data-bs-parent="#navbarVerticalMenuMainMenu">
                   <a class="nav-link" data-route="prop-overview.index" href="{{ route('prop-overview.index') }}">Overview</a>
                   <a class="nav-link" data-route="prop-asset.index" href="{{ route('prop-asset.index') }}">Item Masterlist</a>
-                  <a class="nav-link" data-route="" href="">Consumption Logs</a>
                 </div>
               </div>
               <!-- End Item Management -->
@@ -84,16 +83,16 @@
               <!-- End Repair & Maintenance -->
             @endaccess
 
-            @access('Analytics Reports', 'View Only, Read and Write, Full Access')
-              <!-- Analytics Reports -->
-              <div class="nav-item">
-                <a class="nav-link" data-placement="left" href="#">
-                  <i class="bi-clipboard-data nav-icon"></i>
-                  <span class="nav-link-title">Analytics Reports</span>
-                </a>
-              </div>
-              <!-- End Analytics Reports -->
-            @endaccess
+            {{--            @access('Analytics Reports', 'View Only, Read and Write, Full Access') --}}
+            {{--              <!-- Analytics Reports --> --}}
+            {{--              <div class="nav-item"> --}}
+            {{--                <a class="nav-link" data-placement="left" href="#"> --}}
+            {{--                  <i class="bi-clipboard-data nav-icon"></i> --}}
+            {{--                  <span class="nav-link-title">Analytics Reports</span> --}}
+            {{--                </a> --}}
+            {{--              </div> --}}
+            {{--              <!-- End Analytics Reports --> --}}
+            {{--            @endaccess --}}
           </div>
           <!-- End Main Menu -->
 
