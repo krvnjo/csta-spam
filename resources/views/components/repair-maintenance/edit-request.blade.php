@@ -1,10 +1,10 @@
 <!-- Edit Request Modal -->
 <div class="modal fade" id="modalEditRequest" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered modal-xl">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <!-- Header -->
       <div class="modal-header">
-        <h4 class="modal-title">Create Ticket Request</h4>
+        <h4 class="modal-title">Edit Ticket Request: <span id="lblTicketNumber"></span></h4>
         <button class="btn-close" data-bs-dismiss="modal" type="button"></button>
       </div>
       <!-- End Header -->
@@ -16,150 +16,82 @@
           @method('PATCH')
           <input id="txtEditId" name="id" type="hidden">
 
+          <!-- Ticket Name -->
+          <div class="form-group mb-2">
+            <label class="col col-form-label form-label" for="txtEditTicket">Ticket Name</label>
+            <input class="form-control" id="txtEditTicket" name="ticket" type="text" placeholder="Enter a ticket name">
+            <span class="invalid-feedback" id="valEditTicket"></span>
+          </div>
+          <!-- End Ticket Name -->
+
+          <!-- Description -->
+          <div class="form-group mb-2">
+            <label class="col col-form-label form-label" for="txtEditDescription">Description</label>
+            <textarea class="form-control" id="txtEditDescription" name="description" rows="4" placeholder="Type ticket description"></textarea>
+            <span class="invalid-feedback" id="valEditDescription"></span>
+          </div>
+          <!-- End Description -->
+
           <div class="row">
-            <div class="mb-3">
-              <!-- Card -->
-              <div class="card mb-3 mb-lg-5">
-                <!-- Header -->
-                <div class="card-header">
-                  <h4 class="card-header-title">Ticket Information</h4>
-                </div>
-                <!-- End Header -->
-
-                <!-- Body -->
-                <div class="card-body">
-                  <div class="row">
-                    <!-- Name -->
-                    <div class="col-sm-5">
-                      <div class="mb-4">
-                        <label class="form-label" for="txtEditTicket">Name</label>
-                        <input class="form-control" id="txtEditTicket" name="ticket" type="text" placeholder="Enter ticket name">
-                        <span class="invalid-feedback" id="valEditTicket"></span>
-                      </div>
-                    </div>
-                    <!-- End Name -->
-
-                    <!-- Estimated Cost -->
-                    <div class="col-sm">
-                      <div class="mb-4">
-                        <label class="form-label" for="txtEditCost">Estimated Cost</label>
-                        <div class="input-group">
-                          <span class="input-group-text">₱</span>
-                          <input class="form-control text-end" id="txtEditCost" name="cost" type="number" min="0" placeholder="Enter estimated cost">
-                          <span class="invalid-feedback" id="valEditCost"></span>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- End Estimated Cost -->
-
-                    <!-- Priority -->
-                    <div class="col-sm">
-                      <div class="mb-4">
-                        <label class="form-label" for="selEditPriority">Priority</label>
-                        <div class="tom-select-custom">
-                          <select class="js-select form-select" id="selEditPriority" name="priority"
-                            data-hs-tom-select-options='{
-                              "hideSearch": true,
-                              "placeholder": "Select priority level"
-                            }'
-                            autocomplete="off">
-                            <option value=""></option>
-                            @foreach ($priorities as $priority)
-                              <option data-option-template='<span class="d-flex align-items-center"><span class="{{ $priority->color->class }}"></span>{{ $priority->name }}</span>'
-                                value="{{ $priority->id }}">
-                              </option>
-                            @endforeach
-                          </select>
-                          <span class="invalid-feedback" id="valEditPriority"></span>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- End Priority -->
-                  </div>
-                  <!-- End Row -->
-
-                  <div class="form-group">
-                    <label class="form-label">Description</label>
-                    <textarea class="form-control" name="description" rows="4" placeholder="Enter ticket description"></textarea>
-                    <span class="invalid-feedback" id="valEditDescription"></span>
-                  </div>
-                </div>
-                <!-- Body -->
-              </div>
-              <!-- End Card -->
-
-              <!-- Items Card -->
-              <div class="card">
-                <!-- Header -->
-                <div class="card-header">
-                  <h4 class="card-header-title">Items</h4>
-                </div>
-                <!-- End Header -->
-
-                <!-- Body -->
-                <div class="card-body">
-                  <div class="js-add-field"
-                    data-hs-add-field-options='{
-                      "template": "#addItemFieldTemplate",
-                      "container": "#addItemFieldContainer",
-                      "defaultCreated": 0,
-                      "limit": 10
+            <!-- Priority -->
+            <div class="col-md-6">
+              <div class="form-group mb-2">
+                <label class="col col-form-label form-label" for="selEditPriority">Priority</label>
+                <div class="tom-select-custom">
+                  <select class="js-select form-select" id="selEditPriority" name="priority"
+                    data-hs-tom-select-options='{
+                      "hideSearch": "true",
+                      "placeholder": "Select a priority"
                     }'>
-                    <!-- Item Field -->
-                    <div class="row mb-4">
-                      <div class="col-sm-11">
-                        <div class="tom-select-custom">
-                          <select class="js-select form-select" id="selEditItem1"
-                            data-hs-tom-select-options='{
-                              "placeholder": "Select an item"
-                            }' autocomplete="off">
-                            <option value=""></option>
-                            @foreach ($items as $item)
-                              <option value="{{ $item->id }}">
-                                {{ $item->prop_code . ' | ' . $item->property->name . ' | ' . $item->department->name . ' | ' . $item->designation->name . ' | ' . $item->condition->name . ' | ' . $item->status->name }}
-                              </option>
-                            @endforeach
-                          </select>
-                          <span class="invalid-feedback" id="valEditItem1"></span>
-                        </div>
-                      </div>
-                      <div class="col-sm"><button class="btn btn-white" type="button"><i class="bi-trash"></i></button></div>
-                    </div>
-                    <!-- End Item Field -->
-
-                    <!-- Add Item Field Container -->
-                    <div id="addItemFieldContainer"></div>
-                    <a class="js-create-field form-link" href="javascript:"><i class="bi-plus"></i> Add another item</a>
-                    <!-- End Add Item Field Container -->
-                  </div>
-
-                  <!-- Add Item Field Template -->
-                  <div id="addItemFieldTemplate" style="display: none;">
-                    <div class="row mb-4">
-                      <div class="col-sm-11">
-                        <div class="tom-select-custom">
-                          <select class="js-select-dynamic form-select" data-hs-tom-select-options='{
-                              "placeholder": "Select an item"
-                            }'
-                            autocomplete="off">
-                            <option value=""></option>
-                            @foreach ($items as $item)
-                              <option value="{{ $item->id }}">{{ $item->property->name . ' | ' . $item->prop_code }}</option>
-                            @endforeach
-                          </select>
-                          <span class="invalid-feedback"></span>
-                        </div>
-                      </div>
-                      <div class="col-sm"><button class="btn btn-white js-delete-field" type="button"><i class="bi-trash"></i></button></div>
-                    </div>
-                  </div>
-                  <!-- End Add Item Field Template -->
+                    <option value=""></option>
+                    @foreach ($priorities as $priority)
+                      <option data-option-template='<span class="d-flex align-items-center"><span class="{{ $priority->color->class }}"></span>{{ $priority->name }}</span>'
+                        value="{{ $priority->id }}">
+                        {{ $priority->name }}
+                      </option>
+                    @endforeach
+                  </select>
+                  <span class="invalid-feedback" id="valEditPriority"></span>
                 </div>
-                <!-- End Body -->
               </div>
-              <!-- End Items Card -->
+            </div>
+            <!-- End Priority -->
+
+            <!-- Estimated Cost -->
+            <div class="col-md-6">
+              <div class="form-group mb-2">
+                <label class="col col-form-label form-label" for="txtEditCost">Estimated Cost</label>
+                <div class="input-group">
+                  <span class="input-group-text">₱</span>
+                  <input class="form-control text-end" id="txtEditCost" name="cost" type="number" min="0" placeholder="Enter estimated cost">
+                  <span class="invalid-feedback" id="valEditCost"></span>
+                </div>
+              </div>
+            </div>
+            <!-- End Estimated Cost -->
+          </div>
+
+          <!-- Items -->
+          <div class="form-group mb-2">
+            <label class="col col-form-label form-label" for="selEditItems">Items</label>
+            <div class="tom-select-custom tom-select-custom-with-tags">
+              <select class="js-select form-select" id="selEditItems" name="items[]"
+                data-hs-tom-select-options='{
+                  "hideSelected": true,
+                  "placeholder": "Select an item"
+                }' autocomplete="off" multiple>
+                @foreach ($items as $item)
+                  @if ($item->is_active)
+                    <option value="{{ $item->id }}">
+                      {{ $item->prop_code . ' | ' . $item->property->name . ' | ' . $item->property->category->name . ' | ' . $item->property->brand->name . ' | ' . $item->designation->name . ' | ' . $item->condition->name }}
+                    </option>
+                  @endif
+                @endforeach
+              </select>
+              <span class="invalid-feedback" id="valEditItems"></span>
             </div>
           </div>
+          <!-- End Items -->
         </form>
       </div>
       <!-- End Body -->

@@ -31,6 +31,7 @@ class TicketRequest extends FormRequest
             'cost' => $this->input('cost'),
             'priority' => $this->input('priority'),
             'progress' => $this->input('status'),
+            'items' => $this->input('items'),
         ]);
     }
 
@@ -52,7 +53,7 @@ class TicketRequest extends FormRequest
             'description' => [
                 'required',
                 'min:10',
-                'max:255',
+                'max:500',
             ],
             'cost' => [
                 'required',
@@ -60,6 +61,9 @@ class TicketRequest extends FormRequest
                 'regex:/^\d+(\.\d{1,2})?$/',
                 'min:1'],
             'priority' => [
+                'required',
+            ],
+            'items' => [
                 'required',
             ],
         ];
@@ -97,6 +101,8 @@ class TicketRequest extends FormRequest
             'cost.min' => 'The estimated cost must be at least :min.',
 
             'priority.required' => 'The priority is required.',
+
+            'items.required' => 'Please select at least one item!',
         ];
     }
 

@@ -75,8 +75,7 @@
 
                 <div class="nav-collapse collapse" id="navbarVerticalMenuPagesRepairMaintenance" data-bs-parent="#navbarVerticalMenuMainMenu">
                   <a class="nav-link" data-route="request.index" href="{{ route('request.index') }}">Ticket Requests</a>
-                  <a class="nav-link" data-route="" href="">Ticket Approvals</a>
-                  <a class="nav-link" data-route="" href="">Ongoing Repairs</a>
+                  <a class="nav-link" data-route="ongoing.index" href="{{ route('ongoing.index') }}">Ongoing Repairs</a>
                   <a class="nav-link" data-route="" href="">Repair History</a>
                 </div>
               </div>

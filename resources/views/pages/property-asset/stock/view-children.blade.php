@@ -326,10 +326,10 @@
                     <td class="d-none"></td>
                   @else
                     <td>
-                      <span class="{{ $propertyChild->status->color->class ?? '' }} fs-6">{{ $propertyChild->status->name ?? '' }}</span>
+                      <span class="{{ $propertyChild->condition->color->class ?? '' }}"></span>{{ $propertyChild->condition->name ?? '' }}
                     </td>
                     <td>
-                      <span class="{{ $propertyChild->condition->color->class ?? '' }}"></span>{{ $propertyChild->condition->name ?? '' }}
+                      <span class="{{ $propertyChild->status->color->class ?? '' }} fs-6">{{ $propertyChild->status->name ?? '' }}</span>
                     </td>
                   @endif
                   <td>

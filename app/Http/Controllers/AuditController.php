@@ -46,9 +46,6 @@ class AuditController extends Controller
         try {
             $audit = Audit::findOrFail(Crypt::decryptString($request->input('id')));
 
-            $createdBy = Audit::where('subject_type', Audit::class)->where('subject_id', $audit->id)->where('event_id', 1)->first();
-            $createdDetails = $this->getUserAuditDetails($createdBy);
-
             return response()->json([
                 'success' => true,
                 'audit' => $audit->name,
