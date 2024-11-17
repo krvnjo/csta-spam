@@ -12,7 +12,7 @@ use Illuminate\Database\Seeder;
 
 class ItemSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         $units = [
             'PIECE/S',

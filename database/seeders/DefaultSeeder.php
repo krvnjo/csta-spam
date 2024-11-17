@@ -99,10 +99,6 @@ class DefaultSeeder extends Seeder
                 'badge_id' => 5,
                 'legend_id' => 17,
             ],
-            'Disapproved' => [
-                'badge_id' => 7,
-                'legend_id' => 20,
-            ],
             'In Progress' => [
                 'badge_id' => 2,
                 'legend_id' => 16,
@@ -122,13 +118,16 @@ class DefaultSeeder extends Seeder
         }
 
         $types = [
-            'Ticket Request',
+            'Item',
+            'Borrowing Ticket',
+            'Repair Ticket',
             'User',
             'Role',
             'Brand',
             'Category',
             'Department',
             'Designation',
+            'Requester',
         ];
 
         foreach ($types as $type) {
