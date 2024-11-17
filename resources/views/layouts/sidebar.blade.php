@@ -59,7 +59,9 @@
                 </a>
 
                 <div class="nav-collapse collapse" id="navbarVerticalMenuPagesBorrowReservation" data-bs-parent="#navbarVerticalMenuMainMenu">
-                  <a class="nav-link" data-route="" href="">Overview</a>
+                  <a class="nav-link" data-route="new-request.index" href="{{ route('new-request.index') }}">New Requests</a>
+                  <a class="nav-link" data-route="" href="">Ongoing Borrowings</a>
+                  <a class="nav-link" data-route="" href="">Return History</a>
                 </div>
               </div>
               <!-- End Borrow & Reservation -->
