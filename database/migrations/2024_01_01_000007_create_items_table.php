@@ -8,7 +8,6 @@ use App\Models\Department;
 use App\Models\Designation;
 use App\Models\PropertyParent;
 use App\Models\Status;
-use App\Models\Ticket;
 use App\Models\Unit;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -20,13 +19,6 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('units', function (Blueprint $table) {
-            $table->id();
-            $table->string('name', 50)->unique();
-            $table->unsignedTinyInteger('is_active')->default(1);
-            $table->timestamps();
-        });
-
         Schema::create('property_parents', function (Blueprint $table) {
             $table->id();
             $table->string('name', 255)->unique();
@@ -59,7 +51,6 @@ return new class extends Migration {
             $table->foreignIdFor(Designation::class, 'desig_id')->nullable()->constrained('designations')->cascadeOnDelete();
             $table->foreignIdFor(Condition::class, 'condi_id')->nullable()->constrained('conditions')->cascadeOnDelete();
             $table->foreignIdFor(Status::class, 'status_id')->nullable()->constrained('statuses')->cascadeOnDelete();
-            $table->foreignIdFor(Ticket::class, 'ticket_id')->nullable()->constrained('tickets')->nullOnDelete();
             $table->string('remarks')->nullable();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
@@ -73,6 +64,5 @@ return new class extends Migration {
     {
         Schema::dropIfExists('property_children');
         Schema::dropIfExists('property_parents');
-        Schema::dropIfExists('units');
     }
 };

@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Condition;
-use App\Models\Priority;
 use App\Models\Status;
 use Illuminate\Database\Seeder;
 
@@ -16,10 +15,10 @@ class StatusSeeder extends Seeder
     {
         $conditions = [
             'Fully Functional' => [
-                'description' => 'Item is fully working.',
+                'description' => 'Item is fully working and usable.',
                 'color_id' => 16,
             ],
-            'Partially Working' => [
+            'Working with Minor Issues' => [
                 'description' => 'Item has small issues but still usable.',
                 'color_id' => 17,
             ],
@@ -28,7 +27,7 @@ class StatusSeeder extends Seeder
                 'color_id' => 19,
             ],
             'Not Working' => [
-                'description' => 'Item not usable and needs repair or replacement.',
+                'description' => 'Item unusable and needs repair or replacement.',
                 'color_id' => 20,
             ],
         ];
@@ -36,33 +35,6 @@ class StatusSeeder extends Seeder
         foreach ($conditions as $condition => $data) {
             Condition::create([
                 'name' => $condition,
-                'description' => $data['description'],
-                'color_id' => $data['color_id'],
-            ]);
-        }
-
-        $priorities = [
-            'Urgent' => [
-                'description' => 'Needs immediate action and attention.',
-                'color_id' => 20,
-            ],
-            'High' => [
-                'description' => 'Should be addressed soon.',
-                'color_id' => 19,
-            ],
-            'Medium' => [
-                'description' => 'Can be scheduled but important.',
-                'color_id' => 17,
-            ],
-            'Low' => [
-                'description' => 'Can be addressed later without urgency.',
-                'color_id' => 16,
-            ],
-        ];
-
-        foreach ($priorities as $priority => $data) {
-            Priority::create([
-                'name' => $priority,
                 'description' => $data['description'],
                 'color_id' => $data['color_id'],
             ]);

@@ -17,8 +17,7 @@ class LocationSeeder extends Seeder
             'CSTA Administration' => 'ADMIN',
             'Information Technology' => 'SIT',
             'Education' => 'SED',
-            'Tourism Management' => 'STM',
-            'Hospitality Management' => 'SHM',
+            'Hospitality and Tourism Management' => 'SHTM',
             'Accounting' => 'ACC',
             'Registar' => 'REG',
         ];

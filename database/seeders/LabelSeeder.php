@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Acquisition;
 use App\Models\Brand;
 use App\Models\Category;
 use Illuminate\Database\Seeder;
@@ -14,17 +13,6 @@ class LabelSeeder extends Seeder
      */
     public function run(): void
     {
-        $acquisitions = [
-            'Purchased',
-            'Donation'
-        ];
-
-        foreach ($acquisitions as $acquisition) {
-            Acquisition::create([
-                'name' => $acquisition,
-            ]);
-        }
-
         $brands = [
             'GENERIC',
             'A4TECH',

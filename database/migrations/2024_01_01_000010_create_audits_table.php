@@ -13,7 +13,7 @@ return new class extends Migration {
     {
         Schema::create('audits', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 75);
+            $table->string('name', 50);
             $table->string('description', 150);
             $table->nullableMorphs('subject', 'subject');
             $table->foreignIdFor(Event::class, 'event_id')->constrained('events')->cascadeOnDelete();

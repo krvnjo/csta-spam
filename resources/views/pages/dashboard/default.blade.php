@@ -48,7 +48,7 @@
             <div class="d-flex">
               <div class="flex-grow-1">
                 <h6 class="card-subtitle mb-3">Total Items in CSTA</h6>
-                <h3 class="card-title">{{$totalItems}}</h3>
+                <h3 class="card-title"></h3>
 
                 <div class="d-flex align-items-center">
                   <a class="nav-link" data-route="prop-overview.index" href="{{ route('prop-overview.index') }}">Overview</a>
@@ -68,13 +68,12 @@
             <div class="d-flex">
               <div class="flex-grow-1">
                 <h6 class="card-subtitle mb-3">Items on Site</h6>
-                <h3 class="card-title">{{ $itemsAssigned }}</h3>
-
+                <h3 class="card-title"></h3>
 
               </div>
 
               <span class="icon icon-soft-secondary icon-sm icon-circle ms-3">
-               <i class="bi bi-building"></i>
+                <i class="bi bi-building"></i>
               </span>
             </div>
             <!-- End Media -->
@@ -87,7 +86,6 @@
               <div class="flex-grow-1">
                 <h6 class="card-subtitle mb-3">Total Repair Tickets</h6>
                 <h3 class="card-title">5</h3>
-
 
               </div>
 
@@ -106,11 +104,10 @@
                 <h6 class="card-subtitle mb-3">Total Item on Stock</h6>
                 <h3 class="card-title">0</h3>
 
-
               </div>
 
               <span class="icon icon-soft-secondary icon-sm icon-circle ms-3">
-               <i class="bi bi-box"></i>
+                <i class="bi bi-box"></i>
               </span>
             </div>
             <!-- End Media -->
@@ -232,8 +229,6 @@
               <!-- End Row -->
             </div>
 
-
-
             <div class="col-lg-3">
               <div class="row">
                 <div class="col-sm-6 col-lg-12">
@@ -299,7 +294,7 @@
               <!-- Pie Chart -->
               <div class="chartjs-custom mb-3 mb-sm-5" style="height: 14rem;">
                 <canvas id="updatingDoughnutChart"
-                        data-hs-chartjs-options='{
+                  data-hs-chartjs-options='{
                           "type": "doughnut",
                           "data": {
                             "labels": ["USD", "USD", "USD"],
@@ -355,8 +350,7 @@
         </div>
         <!-- End Col -->
 
-
-            <!-- Body -->
+        <!-- Body -->
         <div class="col-lg-7 mb-3 mb-lg-5">
           <!-- Card -->
 

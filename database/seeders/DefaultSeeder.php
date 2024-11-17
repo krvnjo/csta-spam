@@ -2,11 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Models\Acquisition;
 use App\Models\Color;
 use App\Models\Dashboard;
 use App\Models\Event;
 use App\Models\Progress;
-use App\Models\Type;
+use App\Models\Subject;
+use App\Models\Unit;
 use Illuminate\Database\Seeder;
 
 class DefaultSeeder extends Seeder
@@ -16,6 +18,17 @@ class DefaultSeeder extends Seeder
      */
     public function run(): void
     {
+        $acquisitions = [
+            'Purchased',
+            'Donation'
+        ];
+
+        foreach ($acquisitions as $acquisition) {
+            Acquisition::create([
+                'name' => $acquisition,
+            ]);
+        }
+
         $colors = [
             'Primary' => 'badge text-bg-primary',
             'Primary-soft' => 'badge bg-soft-primary text-primary',
@@ -48,8 +61,8 @@ class DefaultSeeder extends Seeder
         }
 
         $dashboards = [
-            'Admin Dashboard' => 'Comprehensive dashboard for administrative details.',
-            'Default Dashboard' => 'Manage and track property and asset details.',
+            'Admin Dashboard' => 'Administrative tools and system overview.',
+            'Default Dashboard' => 'Monitor and manage property and assets.',
         ];
 
         foreach ($dashboards as $dashboard => $description) {
@@ -99,6 +112,10 @@ class DefaultSeeder extends Seeder
                 'badge_id' => 5,
                 'legend_id' => 17,
             ],
+            'Released' => [
+                'badge_id' => 2,
+                'legend_id' => 16,
+            ],
             'In Progress' => [
                 'badge_id' => 2,
                 'legend_id' => 16,
@@ -106,6 +123,14 @@ class DefaultSeeder extends Seeder
             'Completed' => [
                 'badge_id' => 5,
                 'legend_id' => 17,
+            ],
+            'Cancelled' => [
+                'badge_id' => 7,
+                'legend_id' => 20,
+            ],
+            'Closed' => [
+                'badge_id' => 14,
+                'legend_id' => 21,
             ],
         ];
 
@@ -117,10 +142,10 @@ class DefaultSeeder extends Seeder
             ]);
         }
 
-        $types = [
+        $subjects = [
             'Item',
             'Borrowing Ticket',
-            'Repair Ticket',
+            'Maintenance Ticket',
             'User',
             'Role',
             'Brand',
@@ -130,9 +155,27 @@ class DefaultSeeder extends Seeder
             'Requester',
         ];
 
-        foreach ($types as $type) {
-            Type::create([
-                'name' => $type,
+        foreach ($subjects as $subject) {
+            Subject::create([
+                'name' => $subject,
+            ]);
+        }
+
+        $units = [
+            'PIECE/S',
+            'GALLON',
+            'REAM',
+            'PLASTIC',
+            'BOX',
+            'BUNDLE',
+            'PACK',
+            'SET',
+            'UNIT/S',
+        ];
+
+        foreach ($units as $unit) {
+            Unit::create([
+                'name' => $unit,
             ]);
         }
     }

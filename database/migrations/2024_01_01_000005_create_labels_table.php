@@ -10,13 +10,6 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('acquisitions', function (Blueprint $table) {
-            $table->id();
-            $table->string('name', 50)->unique();
-            $table->unsignedTinyInteger('is_active')->default(1);
-            $table->timestamps();
-        });
-
         Schema::create('brands', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50)->unique();
@@ -39,6 +32,5 @@ return new class extends Migration {
     {
         Schema::dropIfExists('categories');
         Schema::dropIfExists('brands');
-        Schema::dropIfExists('acquisitions');
     }
 };

@@ -11,6 +11,13 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        Schema::create('acquisitions', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 50)->unique();
+            $table->unsignedTinyInteger('is_active')->default(1);
+            $table->timestamps();
+        });
+
         Schema::create('colors', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50)->unique();
@@ -22,7 +29,7 @@ return new class extends Migration {
         Schema::create('dashboards', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50)->unique();
-            $table->string('description', 75)->unique();
+            $table->string('description', 50)->unique();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
         });
@@ -45,18 +52,16 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-        Schema::create('types', function (Blueprint $table) {
+        Schema::create('subjects', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50)->unique();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
         });
 
-        Schema::create('borrowing_progresses', function (Blueprint $table) {
+        Schema::create('units', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50)->unique();
-            $table->foreignIdFor(Color::class, 'badge_id')->constrained('colors')->cascadeOnDelete();
-            $table->foreignIdFor(Color::class, 'legend_id')->constrained('colors')->cascadeOnDelete();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
         });
@@ -67,11 +72,12 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('borrowing_progresses');
-        Schema::dropIfExists('types');
+        Schema::dropIfExists('units');
+        Schema::dropIfExists('subjects');
         Schema::dropIfExists('progresses');
         Schema::dropIfExists('events');
         Schema::dropIfExists('dashboards');
         Schema::dropIfExists('colors');
+        Schema::dropIfExists('acquisitions');
     }
 };
