@@ -18,8 +18,7 @@ class Access extends Model
 
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(Role::class, 'role_permissions')
-            ->withPivot('perm_id');
+        return $this->belongsToMany(Role::class, 'role_permissions')->withPivot('perm_id');
     }
 
     public function rolePermissions(): HasMany

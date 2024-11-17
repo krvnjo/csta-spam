@@ -23,11 +23,6 @@ class Ticket extends Model
         'remarks',
     ];
 
-    public function priority(): HasOne
-    {
-        return $this->HasOne(Priority::class, 'id', 'prio_id');
-    }
-
     public function progress(): HasOne
     {
         return $this->HasOne(Progress::class, 'id', 'prog_id');
