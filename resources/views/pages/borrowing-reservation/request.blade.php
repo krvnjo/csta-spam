@@ -26,7 +26,7 @@
           </div>
 
           <div class="col-sm-auto mt-2 mt-sm-0">
-            <button class="btn btn-primary w-100 w-sm-auto" id="btnAddRequestModal" data-bs-toggle="modal" data-bs-target="#modalAddRequest">
+            <button class="btn btn-primary w-100 w-sm-auto" id="btnAddNewRequestModal" data-bs-toggle="modal" data-bs-target="#modalAddNewRequest">
               <i class="bi-plus-lg me-1"></i> Create Request
             </button>
           </div>
@@ -41,7 +41,7 @@
           <div class="mb-2 mb-md-0">
             <div class="input-group input-group-merge input-group-flush">
               <div class="input-group-prepend input-group-text"><i class="bi-search"></i></div>
-              <input class="form-control" id="requestsDatatableSearch" type="search" placeholder="Search">
+              <input class="form-control" id="newRequestsDatatableSearch" type="search" placeholder="Search">
             </div>
           </div>
 
@@ -73,8 +73,8 @@
             <!-- End Export Dropdown -->
 
             <!-- Filter Collapse Trigger -->
-            <a class="btn btn-white btn-sm dropdown-toggle" data-bs-toggle="collapse" href="#requestFilterSearchCollapse">
-              <i class="bi-funnel me-1"></i> Filters <span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="requestsFilterCount"></span>
+            <a class="btn btn-white btn-sm dropdown-toggle" data-bs-toggle="collapse" href="#newRequestFilterSearchCollapse">
+              <i class="bi-funnel me-1"></i> Filters <span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="newRequestsFilterCount"></span>
             </a>
             <!-- End Filter Collapse Trigger -->
           </div>
@@ -82,7 +82,7 @@
         <!-- End Header -->
 
         <!-- Filter Search Collapse -->
-        <div class="collapse" id="requestFilterSearchCollapse">
+        <div class="collapse" id="newRequestFilterSearchCollapse">
           <div class="card-body">
             <div class="row">
               <!-- Priorities -->
@@ -98,11 +98,11 @@
                         "placeholder": "All Priorities"
                       }'
                             multiple>
-                      @foreach ($priorities as $priority)
-                        <option data-option-template='<span class="d-flex align-items-center"><span class="{{ $priority->color->class }}"></span>{{ $priority->name }}</span>'
-                                value="{{ $priority->name }}">
-                        </option>
-                      @endforeach
+{{--                      @foreach ($priorities as $priority)--}}
+{{--                        <option data-option-template='<span class="d-flex align-items-center"><span class="{{ $priority->color->class }}"></span>{{ $priority->name }}</span>'--}}
+{{--                                value="{{ $priority->name }}">--}}
+{{--                        </option>--}}
+{{--                      @endforeach--}}
                     </select>
                   </div>
                 </div>
@@ -121,11 +121,11 @@
                         "placeholder": "All Users"
                       }'
                             autocomplete="off" multiple>
-                      @foreach ($users as $user)
-                        <option
-                          data-option-template='<span class="d-flex align-items-center"><img class="avatar avatar-xss avatar-circle me-2" src="{{ asset('storage/img/user-images/' . $user->user_image) }}" alt="User Image" /><span class="text-truncate">{{ $user->name }}</span></span>'
-                          value="{{ $user->name }}">{{ $user->name }}</option>
-                      @endforeach
+{{--                      @foreach ($users as $user)--}}
+{{--                        <option--}}
+{{--                          data-option-template='<span class="d-flex align-items-center"><img class="avatar avatar-xss avatar-circle me-2" src="{{ asset('storage/img/user-images/' . $user->user_image) }}" alt="User Image" /><span class="text-truncate">{{ $user->name }}</span></span>'--}}
+{{--                          value="{{ $user->name }}">{{ $user->name }}</option>--}}
+{{--                      @endforeach--}}
                     </select>
                   </div>
                 </div>
@@ -154,91 +154,96 @@
 
         <!-- Body -->
         <div class="table-responsive datatable-custom">
-          <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100" id="requestsDatatable"
+          <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100" id="newRequestsDatatable"
                  data-hs-datatables-options='{
               "columnDefs": [{
-                 "targets": [3, 6, 9],
+                 "targets": [9],
                  "orderable": false
                }],
-              "order": [7, "desc"],
+              "order": [8, "desc"],
               "info": {
-                "totalQty": "#requestsDatatableWithPagination"
+                "totalQty": "#newRequestsDatatableWithPagination"
               },
-              "search": "#requestsDatatableSearch",
-              "entries": "#requestsDatatableEntries",
+              "search": "#newRequestsDatatableSearch",
+              "entries": "#newRequestsDatatableEntries",
               "pageLength": 10,
               "isResponsive": false,
               "isShowPaging": false,
-              "pagination": "requestsDatatablePagination"
+              "pagination": "newRequestsDatatablePagination"
             }'>
             <thead class="thead-light">
             <tr>
-              <th class="w-th" style="width: 5%;">#</th>
               <th class="d-none"></th>
-              <th>Ticket No.</th>
-              <th>Description</th>
-              <th>Estimated Cost</th>
-              <th>Priority</th>
+              <th>Borrow No.</th>
+              <th>Requester</th>
+              <th>Requested Items</th>
+              <th>Quantity</th>
+              <th>Remarks</th>
               <th>Status</th>
-              <th>Created At</th>
-              <th>Updated At</th>
+              <th>Borrow Date</th>
+              <th>Date Created</th>
               <th>Action</th>
             </tr>
             </thead>
-
             <tbody>
-            @foreach ($tickets as $ticket)
+            @foreach($borrowings as $borrowing)
               <tr>
-                <td>{{ $loop->iteration }}</td>
-                <td class="d-none" data-brand-id="{{ Crypt::encryptString($ticket->id) }}"></td>
-                <td><a class="h5 btnViewRequest">{{ $ticket->name }}</a></td>
+                <td class="d-none" data-borrow-id="{{ Crypt::encryptString($borrowing->id) }}"></td>
+                <td>{{ $borrowing->borrow_num }}</td>
+                <td>{{ $borrowing->requester->name }} | {{ $borrowing->requester->department->code }}</td>
                 <td>
-                  {{ Str::limit($ticket->description, 50, '...') }}
-                </td>
-                <td class="text-end">
-                  @php
-                    $purchasePrice = number_format($ticket->total_cost, 2);
-                  @endphp
-                  <strong>₱{{ $purchasePrice }}</strong>
-                </td>
-                <td data-order="{{ $ticket->priority->name }}">
-                  <span class="{{ $ticket->priority->color->class }}"></span>{{ $ticket->priority->name }}
+                  @foreach ($borrowing->requestItems as $item)
+                    {{ $item->property->name }}<br>
+                  @endforeach
                 </td>
                 <td>
-                    <span class="{{ $ticket->progress->badge->class }}">
-                      <span class="{{ $ticket->progress->legend->class }}"></span>{{ $ticket->progress->name }}
-                    </span>
+                  @foreach ($borrowing->requestItems as $item)
+                    {{ $item->quantity }} - {{ $item->property->unit->name }}<br>
+                  @endforeach
                 </td>
-                <td data-order="{{ $ticket->created_at }}">
-                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $ticket->created_at->format('D, M d, Y | h:i A') }}">
-                      <i class="bi-calendar-plus me-1"></i> {{ $ticket->created_at->format('F d, Y') }}
-                    </span>
+                <td>{{ $borrowing->remarks }}</td>
+                <td>
+                  @if($borrowing->status == 'Pending')
+                    <span class="legend-indicator bg-warning"></span>{{ $borrowing->status }}
+                  @elseif($borrowing->status == 'Approved')
+                    <span class="legend-indicator bg-success"></span>{{ $borrowing->status }}
+                  @elseif($borrowing->status == 'Rejected')
+                    <span class="legend-indicator bg-danger"></span>{{ $borrowing->status }}
+                  @elseif($borrowing->status == 'Released')
+                    <span class="legend-indicator bg-info"></span>{{ $borrowing->status }}
+                  @endif
                 </td>
-                <td data-order="{{ $ticket->updated_at }}">
-                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $ticket->updated_at->format('D, M d, Y | h:i A') }}">
-                      <i class="bi-calendar2-event me-1"></i> Updated {{ $ticket->updated_at->diffForHumans() }}
-                    </span>
-                </td>
+                <td><i class="bi-calendar-event me-1"></i>{{ \Carbon\Carbon::parse($borrowing->borrow_date)->format('F j, Y') }}</td>
+                <td><i class="bi-calendar-plus me-1"></i>Created {{ \Carbon\Carbon::parse($borrowing->created_at)->diffForHumans() }}</td>
                 <td>
                   <div class="btn-group position-static">
-                    <button class="btn btn-white btn-sm btnViewRequest" type="button"><i class="bi-eye"></i> View</button>
+                    <button class="btn btn-white btn-sm" type="button"><i class="bi-eye"></i> View</button>
 
-                    @access('File Maintenance', 'Read and Write, Full Access')
                     <div class="btn-group position-static">
                       <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" data-bs-toggle="dropdown" type="button"></button>
                       <div class="dropdown-menu dropdown-menu-end mt-1">
-                        <button class="dropdown-item btnEditRequest" type="button">
+                        @if($borrowing->status == 'Pending')')
+                          <button class="dropdown-item btnApproveRequest" type="button" data-borrow-num="{{ $borrowing->borrow_num }}" data-requester-name="{{ $borrowing->requester->name }}">
+                            <i class="bi bi-check2-circle dropdown-item-icon text-success"></i> Approve
+                          </button>
+                          <button class="dropdown-item" type="button">
+                            <i class="bi bi-x-circle dropdown-item-icon text-danger"></i> Reject
+                          </button>
+                        @endif
+                        @if($borrowing->status == 'Approved')
+                          <button class="dropdown-item btnReleaseRequest" type="button">
+                            <i class="bi bi-eject dropdown-item-icon text-warning"></i> Release
+                          </button>
+                        @endif
+                        <button class="dropdown-item" type="button">
                           <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
                         </button>
-
-                        @access('File Maintenance', 'Full Access')
-                        <button class="dropdown-item text-danger btnDeleteRequest" type="button">
+                        <div class="dropdown-divider"></div>
+                        <button class="dropdown-item text-danger" type="button">
                           <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
                         </button>
-                        @endaccess
                       </div>
                     </div>
-                    @endaccess
                   </div>
                 </td>
               </tr>
@@ -255,7 +260,7 @@
               <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
                 <span class="me-2">Showing:</span>
                 <div class="tom-select-custom tom-page-w">
-                  <select class="js-select form-select form-select-borderless" id="requestsDatatableEntries"
+                  <select class="js-select form-select form-select-borderless" id="newRequestsDatatableEntries"
                           data-hs-tom-select-options='{
                       "hideSearch": true,
                       "searchInDropdown": false
@@ -266,13 +271,13 @@
                   </select>
                 </div>
                 <span class="text-secondary me-2">of</span>
-                <span id="requestsDatatableWithPagination"></span>
+                <span id="newRequestsDatatableWithPagination"></span>
                 <span class="text-secondary ms-2">records</span>
               </div>
             </div>
             <div class="col-sm-auto">
               <div class="d-flex justify-content-center justify-content-sm-end">
-                <nav id="requestsDatatablePagination"></nav>
+                <nav id="newRequestsDatatablePagination"></nav>
               </div>
             </div>
           </div>
@@ -285,17 +290,108 @@
 @endsection
 
 @section('sec-content')
-  {{-- Secondary Content --}}
+  <x-borrow-reservation.add-request :items="$items"  :requesters="$requesters" />
 @endsection
 
 @push('scripts')
-  {{-- Scripts --}}
+  <script src="{{ Vite::asset('resources/js/modules/borrow-reservation/request.js') }}"></script>
+
+  <script src="{{ Vite::asset('resources/vendor/tom-select/dist/js/tom-select.complete.min.js') }}"></script>
+  <script src="{{ Vite::asset('resources/vendor/hs-add-field/dist/hs-add-field.min.js') }}"></script>
+  <script src="{{ Vite::asset('resources/vendor/daterangepicker/moment.min.js') }}"></script>
+  <script src="{{ Vite::asset('resources/vendor/daterangepicker/daterangepicker.js') }}"></script>
+  <script src="{{ Vite::asset('resources/vendor/datatables/media/js/jquery.dataTables.min.js') }}"></script>
+  <script src="{{ Vite::asset('resources/vendor/datatables.net.extensions/select/select.min.js') }}"></script>
+  <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
+  <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.flash.min.js') }}"></script>
+  <script src="{{ Vite::asset('resources/vendor/jszip/dist/jszip.min.js') }}"></script>
+  <script src="{{ Vite::asset('resources/vendor/pdfmake/build/pdfmake.min.js') }}"></script>
+  <script src="{{ Vite::asset('resources/vendor/pdfmake/build/vfs_fonts.js') }}"></script>
+  <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
+  <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
+  <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
 
   <!-- JS Themes -->
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>
 
   <!-- JS Plugins Initialization -->
   <script>
+    // Initialization of DataTable
+    $(document).on("ready", function() {
+      HSCore.components.HSDaterangepicker.init('.js-daterangepicker-clear');
+
+      const daterangepickerClear = $('.js-daterangepicker-clear');
+
+      daterangepickerClear.on('apply.daterangepicker', function(ev, picker) {
+        $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+        filterDatatableAndCount(newRequestsDatatable, "#requestsFilterCount");
+      });
+
+      daterangepickerClear.on('cancel.daterangepicker', function() {
+        $(this).val('');
+        filterDatatableAndCount(newRequestsDatatable, "#requestsFilterCount");
+      });
+
+      HSCore.components.HSDatatables.init($("#newRequestsDatatable"), {
+        dom: "Bfrtip",
+        buttons: [{
+          extend: "copy",
+          className: "d-none",
+          exportOptions: {
+            columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(5)):not(:nth-child(7))'
+          }
+        },
+          {
+            extend: "print",
+            className: "d-none",
+            exportOptions: {
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(5)):not(:nth-child(7))'
+            }
+          },
+          {
+            extend: "excel",
+            className: "d-none",
+            exportOptions: {
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(5)):not(:nth-child(7))'
+            }
+          },
+          {
+            extend: "pdf",
+            className: "d-none",
+            exportOptions: {
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(5)):not(:nth-child(7))'
+            }
+          }
+        ],
+        language: {
+          zeroRecords: `<div class="text-center p-4">
+              <img class="mb-3" src="{{ Vite::asset('resources/svg/illustrations/oc-error.svg') }}" alt="No records to display." style="width: 10rem;" data-hs-theme-appearance="default">
+              <img class="mb-3" src="{{ Vite::asset('resources/svg/illustrations-light/oc-error.svg') }}" alt="No records to display." style="width: 10rem;" data-hs-theme-appearance="dark">
+            <p class="mb-0">No records to display.</p>
+          </div>`
+        }
+      });
+
+      const newRequestsDatatable = HSCore.components.HSDatatables.getItem(0);
+
+      const exportButtons = {
+        "#requestExportCopy": ".buttons-copy",
+        "#requestExportPrint": ".buttons-print",
+        "#requestExportExcel": ".buttons-excel",
+        "#requestExportPdf": ".buttons-pdf"
+      };
+
+      $.each(exportButtons, function(exportId, exportClass) {
+        $(exportId).click(function() {
+          newRequestsDatatable.button(exportClass).trigger();
+        });
+      });
+
+      $(".js-datatable-filter").on("change", function() {
+        filterDatatableAndCount(newRequestsDatatable, "#newRequestsFilterCount");
+      });
+    });
+
     // Initialization of Other Plugins
     (function() {
       window.onload = function() {
@@ -312,7 +408,50 @@
         // INITIALIZATION OF BOOTSTRAP DROPDOWN
         // =======================================================
         HSBsDropdown.init();
+
+
+        // INITIALIZATION OF SELECT
+        // =======================================================
+        HSCore.components.HSTomSelect.init(".js-select");
+
+
+        // INITIALIZATION OF ADD FIELD
+        // =======================================================
+        new HSAddField('.js-add-field', {
+          addedField: field => {
+            HSCore.components.HSTomSelect.init(field.querySelector('.js-select-dynamic'))
+          }
+        });
+
       };
     })();
+
+    $(document).ready(function () {
+      const itemSelects = $(".js-select-dynamic");
+
+      itemSelects.on("change", function () {
+        const selectedItems = [];
+
+        itemSelects.each(function () {
+          const value = $(this).val();
+          if (value) {
+            selectedItems.push(value);
+          }
+        });
+
+        itemSelects.each(function () {
+          const currentItemValue = $(this).val();
+          $(this).find("option").each(function () {
+            const optionValue = $(this).val();
+            if (selectedItems.includes(optionValue) && optionValue !== currentItemValue) {
+              $(this).attr("disabled", "disabled");
+            } else {
+              $(this).removeAttr("disabled");
+            }
+          });
+        });
+      });
+    });
+
   </script>
 @endpush

@@ -6,11 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Borrowing extends Model
 {
+    protected $table = 'borrowings';
+
     protected $fillable = [
         'borrow_num',
         'requester_id',
         'status',
         'remarks',
+        'borrow_date',
     ];
 
     public function requester()

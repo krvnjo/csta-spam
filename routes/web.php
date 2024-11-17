@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BorrowingRequestController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ConsumptionLogsController;
@@ -119,12 +120,13 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
     // ============ Borrow & Reservation Routes ============ //
 
     // New Request Routes
-    Route::middleware('checkPermission:Borrow & Reservation')->prefix('borrow-reservation/new-requests')->name('new-request.')->controller(PropertyOverviewController::class)->group(function () {
+    Route::middleware('checkPermission:Borrow & Reservation')->prefix('borrow-reservation/new-requests')->name('new-request.')->controller(BorrowingRequestController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('store');
         Route::get('/show', 'show')->name('show')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
         Route::patch('/', 'update')->name('update');
+        Route::patch('/release', 'release')->name('release');
         Route::delete('/', 'destroy')->name('delete');
         Route::fallback(function () {
             abort(404);

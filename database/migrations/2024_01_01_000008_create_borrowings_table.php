@@ -1,8 +1,6 @@
 <?php
 
 use App\Models\Borrowing;
-use App\Models\BorrowingProgress;
-use App\Models\PropertyChild;
 use App\Models\PropertyParent;
 use App\Models\Requester;
 use Illuminate\Database\Migrations\Migration;
@@ -23,6 +21,8 @@ return new class extends Migration
             $table->string('status')->default('pending');
             $table->text('remarks')->nullable();
             $table->date('borrow_date')->nullable();
+            $table->dateTime('approved_at')->nullable();
+            $table->dateTime('released_at')->nullable();
             $table->timestamps();
         });
 
@@ -30,9 +30,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Borrowing::class, 'borrow_id')->constrained('borrowings')->cascadeOnDelete();
             $table->foreignIdFor(PropertyParent::class, 'parent_id')->nullable()->constrained('property_parents')->cascadeOnDelete();
-            $table->foreignIdFor(PropertyChild::class, 'child_id')->nullable()->constrained('property_children')->cascadeOnDelete();
             $table->unsignedInteger('quantity')->nullable();
-            $table->boolean('is_consumable');
             $table->timestamps();
         });
     }
