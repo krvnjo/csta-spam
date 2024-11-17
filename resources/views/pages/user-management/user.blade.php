@@ -156,10 +156,10 @@
           <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100" id="usersDatatable"
             data-hs-datatables-options='{
               "columnDefs": [{
-                "targets": [5, 9],
+                "targets": [8],
                 "orderable": false
               }],
-              "order": [7, "desc"],
+              "order": [6, "desc"],
               "info": {
                 "totalQty": "#usersDatatableWithPagination"
               },
@@ -175,9 +175,8 @@
                 <th class="w-th" style="width: 5%;">#</th>
                 <th class="d-none"></th>
                 <th>Name</th>
-                <th>Username</th>
                 <th>Role & Department</th>
-                <th>Phone</th>
+                <th>Contacts</th>
                 <th>Created At</th>
                 <th>Updated At</th>
                 <th>Status</th>
@@ -195,16 +194,18 @@
                       <div class="avatar avatar-circle"><img class="avatar-img" src="{{ asset('storage/img/user-images/' . $user->user_image) }}" alt="User Image"></div>
                       <div class="ms-3">
                         <span class="d-block h5 text-inherit mb-0">{{ $user->name }}</span>
-                        <span class="d-block fs-5 text-body">{{ $user->email }}</span>
+                        <span class="d-block fs-5 text-body user-name">{{ $user->user_name }}</span>
                       </div>
                     </a>
                   </td>
-                  <td class="user-name">{{ $user->user_name }}</td>
                   <td data-full-value="{{ implode(', ', [$user->role->name, $user->department->name]) }}">
                     <span class="d-block h5 mb-0">{{ $user->role->name }}</span>
                     <span class="d-block fs-5">{{ $user->department->name }}</span>
                   </td>
-                  <td>{{ $user->phone_num }}</td>
+                  <td data-order="{{ $user->email }}">
+                    <span class="d-block h5 mb-0">{{ $user->email }}</span>
+                    <span class="d-block fs-5">{{ $user->phone_num ?? 'N/A' }}</span>
+                  </td>
                   <td data-order="{{ $user->created_at }}">
                     <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $user->created_at->format('D, M d, Y | h:i A') }}">
                       <i class="bi-calendar-plus me-1"></i>
@@ -302,8 +303,6 @@
 @endsection
 
 @push('scripts')
-  <script src="{{ Vite::asset('resources/vendor/hs-counter/dist/hs-counter.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/appear/dist/appear.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/tom-select/dist/js/tom-select.complete.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/hs-file-attach/dist/hs-file-attach.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/imask/dist/imask.min.js') }}"></script>
@@ -405,11 +404,6 @@
         // INITIALIZATION OF BOOTSTRAP DROPDOWN
         // =======================================================
         HSBsDropdown.init();
-
-
-        // INITIALIZATION OF COUNTER
-        // =======================================================
-        new HSCounter('.js-counter')
 
 
         // INITIALIZATION OF SELECT
