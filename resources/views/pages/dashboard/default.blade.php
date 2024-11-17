@@ -48,18 +48,15 @@
             <div class="d-flex">
               <div class="flex-grow-1">
                 <h6 class="card-subtitle mb-3">Total Items in CSTA</h6>
-                <h3 class="card-title">1,234</h3>
+                <h3 class="card-title">{{$totalItems}}</h3>
 
                 <div class="d-flex align-items-center">
-                  <span class="d-block fs-6">5k orders</span>
-                  <span class="badge bg-soft-success text-success ms-2">
-                    <i class="bi-graph-up"></i> 4.3%
-                  </span>
+                  <a class="nav-link" data-route="prop-overview.index" href="{{ route('prop-overview.index') }}">Overview</a>
                 </div>
               </div>
 
               <span class="icon icon-soft-secondary icon-sm icon-circle ms-3">
-                <i class="bi-shop"></i>
+                <i class="bi bi-archive"></i>
               </span>
             </div>
             <!-- End Media -->
@@ -70,19 +67,14 @@
             <!-- Media -->
             <div class="d-flex">
               <div class="flex-grow-1">
-                <h6 class="card-subtitle mb-3">Total Borrowing Requests</h6>
-                <h3 class="card-title">10</h3>
+                <h6 class="card-subtitle mb-3">Items on Site</h6>
+                <h3 class="card-title">{{ $itemsAssigned }}</h3>
 
-                <div class="d-flex align-items-center">
-                  <span class="d-block fs-6">21k orders</span>
-                  <span class="badge bg-soft-success text-success ms-2">
-                    <i class="bi-graph-up"></i> 12.5%
-                  </span>
-                </div>
+
               </div>
 
               <span class="icon icon-soft-secondary icon-sm icon-circle ms-3">
-                <i class="bi-layout-text-window-reverse"></i>
+               <i class="bi bi-building"></i>
               </span>
             </div>
             <!-- End Media -->
@@ -93,16 +85,14 @@
             <!-- Media -->
             <div class="d-flex">
               <div class="flex-grow-1">
-                <h6 class="card-subtitle mb-3">Total Maintenance Requests</h6>
+                <h6 class="card-subtitle mb-3">Total Repair Tickets</h6>
                 <h3 class="card-title">5</h3>
 
-                <div class="d-flex align-items-center">
-                  <span class="d-block fs-6">6k orders</span>
-                </div>
+
               </div>
 
               <span class="icon icon-soft-secondary icon-sm icon-circle ms-3">
-                <i class="bi-percent"></i>
+                <i class="bi bi-calendar-check"></i>
               </span>
             </div>
             <!-- End Media -->
@@ -113,19 +103,14 @@
             <!-- Media -->
             <div class="d-flex">
               <div class="flex-grow-1">
-                <h6 class="card-subtitle mb-3">Affiliate</h6>
-                <h3 class="card-title">$3,982.53</h3>
+                <h6 class="card-subtitle mb-3">Total Item on Stock</h6>
+                <h3 class="card-title">0</h3>
 
-                <div class="d-flex align-items-center">
-                  <span class="d-block fs-6">150 orders</span>
-                  <span class="badge bg-soft-danger text-danger ms-2">
-                    <i class="bi-graph-down"></i> 4.4%
-                  </span>
-                </div>
+
               </div>
 
               <span class="icon icon-soft-secondary icon-sm icon-circle ms-3">
-                <i class="bi-people"></i>
+               <i class="bi bi-box"></i>
               </span>
             </div>
             <!-- End Media -->
@@ -140,8 +125,8 @@
       <div class="card mb-3 mb-lg-5">
         <!-- Header -->
         <div class="card-header card-header-content-sm-between">
-          <h4 class="card-header-title mb-2 mb-sm-0">Item Stocks <i class="bi-question-circle text-body ms-1" data-bs-toggle="tooltip" data-bs-placement="top"
-              title="Net sales (gross sales minus discounts and returns) plus taxes and shipping. Includes orders from all sales channels."></i></h4>
+          <h4 class="card-header-title mb-2 mb-sm-0">Items Requisition Tracker<i class="bi-question-circle text-body ms-1" data-bs-toggle="tooltip" data-bs-placement="top"
+              title="(Borrowing Trend) Indicates the timely item borrowing movements. "></i></h4>
 
           <div class="d-grid d-sm-flex gap-2">
             <!-- Daterangepicker -->
@@ -164,7 +149,7 @@
                   data-hs-chartjs-options='{
                           "type": "bar",
                           "data": {
-                            "labels": ["1AM","2AM","3AM","4AM","5AM","6AM","7AM","8AM","9AM","10AM","11AM"],
+                            "labels": ["8AM","9AM","10AM","11AM","1PM","2PM","3PM","4PM","5PM"],
                             "datasets": [{
                               "data": [200, 300, 290, 350, 150, 350, 300, 100, 125, 220, 200, 300, 290, 350, 150, 350, 300, 100, 125, 220, 225],
                               "backgroundColor": "#377dff",
@@ -235,27 +220,29 @@
 
               <div class="row justify-content-center">
                 <div class="col-auto">
-                  <span class="legend-indicator"></span> Revenue
+                  <span class="legend-indicator"></span> Consumables
                 </div>
                 <!-- End Col -->
 
                 <div class="col-auto">
-                  <span class="legend-indicator bg-primary"></span> Orders
+                  <span class="legend-indicator bg-primary"></span> Non-Consumables
                 </div>
                 <!-- End Col -->
               </div>
               <!-- End Row -->
             </div>
 
+
+
             <div class="col-lg-3">
               <div class="row">
                 <div class="col-sm-6 col-lg-12">
                   <!-- Stats -->
                   <div class="d-flex justify-content-center flex-column" style="min-height: 9rem;">
-                    <h6 class="card-subtitle">Revenue</h6>
-                    <span class="d-block display-4 text-dark mb-1 me-3">$97,458.20</span>
+                    <h6 class="card-subtitle">Non Consumables Dispatched</h6>
+                    <span class="d-block display-4 text-dark mb-1 me-3">4</span>
                     <span class="d-block text-success">
-                      <i class="bi-graph-up me-1"></i> $2,401.02 (3.7%)
+                      <i class="bi-graph-up me-1"></i> 2,401.02 (3.7%)
                     </span>
                   </div>
                   <!-- End Stats -->
@@ -267,8 +254,8 @@
                 <div class="col-sm-6 col-lg-12">
                   <!-- Stats -->
                   <div class="d-flex justify-content-center flex-column" style="min-height: 9rem;">
-                    <h6 class="card-subtitle">Orders</h6>
-                    <span class="d-block display-4 text-dark mb-1 me-3">67,893</span>
+                    <h6 class="card-subtitle">Consumables Dispatched</h6>
+                    <span class="d-block display-4 text-dark mb-1 me-3">10</span>
                     <span class="d-block text-danger">
                       <i class="bi-graph-down me-1"></i> +3,301 (1.2%)
                     </span>
@@ -287,261 +274,12 @@
       <!-- End Card -->
 
       <div class="row">
-        <div class="col-lg-4 mb-3 mb-lg-5">
-          <div class="d-grid gap-2 gap-lg-4">
-            <!-- Card -->
-            <a class="card card-hover-shadow" href="#">
-              <div class="card-body">
-                <div class="d-flex align-items-center">
-                  <div class="flex-shrink-0">
-                    <img class="avatar avatar-lg avatar-4x3" data-hs-theme-appearance="default" src="{{ Vite::asset('resources/svg/illustrations/oc-megaphone.svg') }}" alt="Image Description"
-                      style="min-height: 5rem;">
-                    <img class="avatar avatar-lg avatar-4x3" data-hs-theme-appearance="dark" src="{{ Vite::asset('resources/svg/illustrations-light/oc-megaphone.svg') }}" alt="Image Description"
-                      style="min-height: 5rem;">
-                  </div>
-
-                  <div class="flex-grow-1 ms-4">
-                    <h3 class="text-inherit mb-1">Product</h3>
-                    <span class="text-body">Create a new product</span>
-                  </div>
-
-                  <div class="ms-2 text-end">
-                    <i class="bi-chevron-right text-body text-inherit"></i>
-                  </div>
-                </div>
-              </div>
-            </a>
-            <!-- End Card -->
-
-            <!-- Card -->
-            <a class="card card-hover-shadow" href="#">
-              <div class="card-body">
-                <div class="d-flex align-items-center">
-                  <div class="flex-shrink-0">
-                    <img class="avatar avatar-lg avatar-4x3" data-hs-theme-appearance="default" src="{{ Vite::asset('resources/svg/illustrations/oc-collection.svg') }}" alt="Image Description"
-                      style="min-height: 5rem;">
-                    <img class="avatar avatar-lg avatar-4x3" data-hs-theme-appearance="dark" src="{{ Vite::asset('resources/svg/illustrations-light/oc-collection.svg') }}" alt="Image Description"
-                      style="min-height: 5rem;">
-                  </div>
-
-                  <div class="flex-grow-1 ms-4">
-                    <h3 class="text-inherit mb-1">Collection</h3>
-                    <span class="text-body">Create a new collection</span>
-                  </div>
-
-                  <div class="ms-2 text-end">
-                    <i class="bi-chevron-right text-body text-inherit"></i>
-                  </div>
-                </div>
-              </div>
-            </a>
-            <!-- End Card -->
-
-            <!-- Card -->
-            <a class="card card-hover-shadow" href="#">
-              <div class="card-body">
-                <div class="d-flex align-items-center">
-                  <div class="flex-shrink-0">
-                    <img class="avatar avatar-lg avatar-4x3" data-hs-theme-appearance="default" src="{{ Vite::asset('resources/svg/illustrations/oc-discount.svg') }}" alt="Image Description"
-                      style="min-height: 5rem;">
-                    <img class="avatar avatar-lg avatar-4x3" data-hs-theme-appearance="dark" src="{{ Vite::asset('resources/svg/illustrations-light/oc-discount.svg') }}" alt="Image Description"
-                      style="min-height: 5rem;">
-                  </div>
-
-                  <div class="flex-grow-1 ms-4">
-                    <h3 class="text-inherit mb-1">Discount</h3>
-                    <span class="text-body">Create a new discount</span>
-                  </div>
-
-                  <div class="ms-2 text-end">
-                    <i class="bi-chevron-right text-body text-inherit"></i>
-                  </div>
-                </div>
-              </div>
-            </a>
-            <!-- End Card -->
-          </div>
-        </div>
-        <!-- End Col -->
-
-        <div class="col-lg-8 mb-3 mb-lg-5">
-          <!-- Card -->
-          <div class="card h-100">
-            <!-- Header -->
-            <div class="card-header card-header-content-between">
-              <h4 class="card-header-title">Top products</h4>
-
-              <a class="btn btn-ghost-secondary btn-sm" href="#">View all</a>
-            </div>
-            <!-- End Header -->
-
-            <!-- Body -->
-            <div class="card-body-height">
-              <!-- Table -->
-              <div class="table-responsive">
-                <table class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
-                  <thead class="thead-light">
-                    <tr>
-                      <th scope="col">Item</th>
-                      <th scope="col">Change</th>
-                      <th scope="col">Price</th>
-                      <th scope="col">Sold</th>
-                      <th scope="col">Sales</th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    <tr>
-                      <td>
-                        <!-- Media -->
-                        <a class="d-flex align-items-center" href="./ecommerce-product-details.html">
-                          <div class="flex-shrink-0">
-                            <img class="avatar" src="./assets/img/400x400/img4.jpg" alt="Image Description">
-                          </div>
-
-                          <div class="flex-grow-1 ms-3">
-                            <h5 class="text-inherit mb-0">Photive wireless speakers</h5>
-                          </div>
-                        </a>
-                        <!-- End Media -->
-                      </td>
-                      <td><i class="bi-graph-down text-danger me-1"></i> 72%</td>
-                      <td>$65</td>
-                      <td>7,545</td>
-                      <td>
-                        <h4 class="mb-0">$15,302.00</h4>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td>
-                        <!-- Media -->
-                        <a class="d-flex align-items-center" href="./ecommerce-product-details.html">
-                          <div class="flex-shrink-0">
-                            <img class="avatar" src="./assets/img/400x400/img26.jpg" alt="Image Description">
-                          </div>
-
-                          <div class="flex-grow-1 ms-3">
-                            <h5 class="text-inherit mb-0">Topman shoe in green</h5>
-                          </div>
-                        </a>
-                        <!-- End Media -->
-                      </td>
-                      <td><i class="bi-graph-up text-success me-1"></i> 69%</td>
-                      <td>$21</td>
-                      <td>6,643</td>
-                      <td>
-                        <h4 class="mb-0">$12,492.21</h4>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td>
-                        <!-- Media -->
-                        <a class="d-flex align-items-center" href="./ecommerce-product-details.html">
-                          <div class="flex-shrink-0">
-                            <img class="avatar" src="./assets/img/400x400/img25.jpg" alt="Image Description">
-                          </div>
-
-                          <div class="flex-grow-1 ms-3">
-                            <h5 class="text-inherit mb-0">RayBan black sunglasses</h5>
-                          </div>
-                        </a>
-                        <!-- End Media -->
-                      </td>
-                      <td><i class="bi-graph-down text-danger me-1"></i> 65%</td>
-                      <td>$37</td>
-                      <td>5,951</td>
-                      <td>
-                        <h4 class="mb-0">$10,351.71</h4>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td>
-                        <!-- Media -->
-                        <a class="d-flex align-items-center" href="./ecommerce-product-details.html">
-                          <div class="flex-shrink-0">
-                            <img class="avatar" src="./assets/img/400x400/img6.jpg" alt="Image Description">
-                          </div>
-
-                          <div class="flex-grow-1 ms-3">
-                            <h5 class="text-inherit mb-0">Mango Women's shoe</h5>
-                          </div>
-                        </a>
-                        <!-- End Media -->
-                      </td>
-                      <td><i class="bi-graph-down text-danger me-1"></i> 53%</td>
-                      <td>$65</td>
-                      <td>5,002</td>
-                      <td>
-                        <h4 class="mb-0">$9,917.45</h4>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td>
-                        <!-- Media -->
-                        <a class="d-flex align-items-center" href="./ecommerce-product-details.html">
-                          <div class="flex-shrink-0">
-                            <img class="avatar" src="./assets/img/400x400/img3.jpg" alt="Image Description">
-                          </div>
-
-                          <div class="flex-grow-1 ms-3">
-                            <h5 class="text-inherit mb-0">Calvin Klein t-shirts</h5>
-                          </div>
-                        </a>
-                        <!-- End Media -->
-                      </td>
-                      <td><i class="bi-graph-up text-success me-1"></i> 50%</td>
-                      <td>$89</td>
-                      <td>4,714</td>
-                      <td>
-                        <h4 class="mb-0">$8,466.02</h4>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td>
-                        <!-- Media -->
-                        <a class="d-flex align-items-center" href="./ecommerce-product-details.html">
-                          <div class="flex-shrink-0">
-                            <img class="avatar" src="./assets/img/400x400/img5.jpg" alt="Image Description">
-                          </div>
-
-                          <div class="flex-grow-1 ms-3">
-                            <h5 class="text-inherit mb-0">Givenchy perfume</h5>
-                          </div>
-                        </a>
-                        <!-- End Media -->
-                      </td>
-                      <td><i class="bi-graph-up text-success me-1"></i> 50%</td>
-                      <td>$99</td>
-                      <td>4,155</td>
-                      <td>
-                        <h4 class="mb-0">$7,715.89</h4>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!-- End Table -->
-            </div>
-            <!-- End Body -->
-          </div>
-          <!-- End Card -->
-        </div>
-        <!-- End Col -->
-      </div>
-      <!-- End Row -->
-
-      <div class="row">
         <div class="col-lg-5 mb-3 mb-lg-5">
           <!-- Card -->
           <div class="card">
             <!-- Header -->
             <div class="card-header card-header-content-between">
-              <h4 class="card-header-title">Expenses</h4>
+              <h4 class="card-header-title">Total Item Distribution</h4>
 
               <!-- Nav -->
               <ul class="nav nav-segment" id="expensesTab" role="tablist">
@@ -561,7 +299,7 @@
               <!-- Pie Chart -->
               <div class="chartjs-custom mb-3 mb-sm-5" style="height: 14rem;">
                 <canvas id="updatingDoughnutChart"
-                  data-hs-chartjs-options='{
+                        data-hs-chartjs-options='{
                           "type": "doughnut",
                           "data": {
                             "labels": ["USD", "USD", "USD"],
@@ -592,20 +330,20 @@
 
               <div class="row justify-content-center">
                 <div class="col-auto mb-3 mb-sm-0">
-                  <h4 class="card-title">$2,332.00</h4>
-                  <span class="legend-indicator bg-primary"></span> Marketing
+                  <h4 class="card-title">1</h4>
+                  <span class="legend-indicator bg-primary"></span> BSIT Department
                 </div>
                 <!-- End Col -->
 
                 <div class="col-auto mb-3 mb-sm-0">
-                  <h4 class="card-title">$10,452.00</h4>
-                  <span class="legend-indicator bg-info"></span> Bills
+                  <h4 class="card-title">0</h4>
+                  <span class="legend-indicator bg-info"></span> BSED Department
                 </div>
                 <!-- End Col -->
 
                 <div class="col-auto">
-                  <h4 class="card-title">$56,856.00</h4>
-                  <span class="legend-indicator"></span> Others
+                  <h4 class="card-title">0</h4>
+                  <span class="legend-indicator"></span> BSHTM Department
                 </div>
                 <!-- End Col -->
               </div>
@@ -617,12 +355,15 @@
         </div>
         <!-- End Col -->
 
+
+            <!-- Body -->
         <div class="col-lg-7 mb-3 mb-lg-5">
           <!-- Card -->
+
           <div class="card h-100">
             <!-- Header -->
             <div class="card-header card-header-content-between">
-              <h4 class="card-header-title">Events</h4>
+              <h4 class="card-header-title">Pending Approvals Schedule</h4>
 
               <!-- Nav -->
               <ul class="nav nav-segment" id="eventsTab" role="tablist">
@@ -654,30 +395,12 @@
                         <div class="row">
                           <div class="col-sm mb-2 mb-sm-0">
                             <h2 class="fw-normal mb-1">12:00 - 03:00 <span class="fs-5 text-body text-uppercase">pm</span></h2>
-                            <h5 class="text-inherit mb-0">Weekly overview</h5>
-                            <span class="text-body small">24 May, 2020</span>
+                            <h5 class="text-inherit mb-0">Request for Tables and Chairs: IT Department</h5>
+                            <span class="text-body small">20 December, 2024</span>
                           </div>
 
                           <div class="col-sm-auto align-self-sm-end">
-                            <!-- Avatar Group -->
-                            <div class="avatar-group avatar-group-sm avatar-circle">
-                              <span class="avatar">
-                                <img class="avatar-img" src="./assets/img/160x160/img9.jpg" alt="Image Description">
-                              </span>
-                              <span class="avatar">
-                                <img class="avatar-img" src="./assets/img/160x160/img3.jpg" alt="Image Description">
-                              </span>
-                              <span class="avatar avatar-soft-dark">
-                                <span class="avatar-initials">A</span>
-                              </span>
-                              <span class="avatar avatar-soft-info">
-                                <span class="avatar-initials">S</span>
-                              </span>
-                              <span class="avatar">
-                                <img class="avatar-img" src="./assets/img/160x160/img5.jpg" alt="Image Description">
-                              </span>
-                            </div>
-                            <!-- End Avatar Group -->
+
                           </div>
                         </div>
                         <!-- End Row -->
@@ -691,23 +414,13 @@
                         <div class="row">
                           <div class="col-sm mb-2 mb-sm-0">
                             <h2 class="fw-normal mb-1">04:30 - 04:50 <span class="fs-5 text-body text-uppercase">pm</span></h2>
-                            <h5 class="text-inherit mb-0">Project tasks</h5>
-                            <span class="text-body small">25 May, 2020</span>
+                            <h5 class="text-inherit mb-0">Request for Atheletics Gear: Sports Fest</h5>
+                            <span class="text-body small">26 December, 2020</span>
                           </div>
 
                           <div class="col-sm-auto align-self-sm-end">
                             <!-- Avatar Group -->
-                            <div class="avatar-group avatar-group-sm avatar-circle">
-                              <span class="avatar">
-                                <img class="avatar-img" src="./assets/img/160x160/img6.jpg" alt="Image Description">
-                              </span>
-                              <span class="avatar">
-                                <img class="avatar-img" src="./assets/img/160x160/img7.jpg" alt="Image Description">
-                              </span>
-                              <span class="avatar avatar-soft-danger">
-                                <span class="avatar-initials">A</span>
-                              </span>
-                            </div>
+
                             <!-- End Avatar Group -->
                           </div>
                         </div>
@@ -721,26 +434,13 @@
                         <div class="row">
                           <div class="col-sm mb-2 mb-sm-0">
                             <h2 class="fw-normal mb-1">12:00 - 03:00 <span class="fs-5 text-body text-uppercase">pm</span></h2>
-                            <h5 class="text-inherit mb-0">Monthly reports</h5>
-                            <span class="text-body small">27 May, 2020</span>
+                            <h5 class="text-inherit mb-0">Request for Approval: Loan Table Tennis </h5>
+                            <span class="text-body small">28 December, 2020</span>
                           </div>
 
                           <div class="col-sm-auto align-self-sm-end">
                             <!-- Avatar Group -->
-                            <div class="avatar-group avatar-group-sm avatar-circle">
-                              <span class="avatar">
-                                <img class="avatar-img" src="./assets/img/160x160/img5.jpg" alt="Image Description">
-                              </span>
-                              <span class="avatar avatar-soft-dark">
-                                <span class="avatar-initials">B</span>
-                              </span>
-                              <span class="avatar">
-                                <img class="avatar-img" src="./assets/img/160x160/img8.jpg" alt="Image Description">
-                              </span>
-                              <span class="avatar">
-                                <img class="avatar-img" src="./assets/img/160x160/img9.jpg" alt="Image Description">
-                              </span>
-                            </div>
+
                             <!-- End Avatar Group -->
                           </div>
                         </div>
@@ -756,7 +456,7 @@
                           <div class="col-sm mb-2 mb-sm-0">
                             <h2 class="fw-normal mb-1">02:00 - 03:00 <span class="fs-5 text-body text-uppercase">pm</span></h2>
                             <h5 class="text-inherit mb-0">Monthly reports to the client</h5>
-                            <span class="text-body small">29 May, 2020</span>
+                            <span class="text-body small">29 December, 2020</span>
                           </div>
 
                           <div class="col-sm-auto align-self-sm-end">

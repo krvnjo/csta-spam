@@ -19,4 +19,9 @@ class Dashboard extends Model
     {
         return $this->hasMany(Role::class, 'dash_id', 'id');
     }
+
+    public function propertyOverview()
+    {
+        return $this->hasOne(PropertyOverviewController::class); // Adjust based on your relationship type
+    }
 }
