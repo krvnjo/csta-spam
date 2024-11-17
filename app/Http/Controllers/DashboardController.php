@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PropertyChild;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -14,10 +15,20 @@ class DashboardController extends Controller
         $user = auth()->user();
 
         if ($user && $user->role->dash_id == 1) {
-            return view('pages.dashboard.admin');
+            return view('pages.dashboard.default'); // Pass $totalItems to the view
         }
+        $propertyOverview = new PropertyOverviewController();
+        $propertyChildren = PropertyChild::with(['property', 'department', 'designation', 'condition', 'status'])
+            ->where('is_active', 1)
+            ->get();
+        $totalItems = $propertyChildren->count();
+        $itemsAssigned = $propertyChildren->filter(function ($item) {
+            return !is_null($item->inventory_date);
+        })->count();
 
-        return view('pages.dashboard.default');
+        return view('pages.dashboard.default', compact('totalItems','itemsAssigned'));
+
+
     }
 
     /**

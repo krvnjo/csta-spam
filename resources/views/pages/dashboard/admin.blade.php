@@ -46,7 +46,7 @@
       <div class="card mb-3 mb-lg-5">
         <!-- Header -->
         <div class="card-header card-header-content-sm-between">
-          <h4 class="card-header-title mb-2 mb-sm-0">Recent projects</h4>
+          <h4 class="card-header-title mb-2 mb-sm-0">Recent Statistics</h4>
 
           <!-- Nav -->
           <ul class="nav nav-segment nav-fill" id="projectsTab" role="tablist">
@@ -66,7 +66,7 @@
           <div class="row align-items-sm-center mb-4">
             <div class="col-sm mb-3 mb-sm-0">
               <div class="d-flex align-items-center">
-                <span class="h1 mb-0">$7,431.14 USD</span>
+                <span class="h1 mb-0">₱7,431.14 PHP</span>
 
                 <span class="text-success ms-2">
                   <i class="bi-graph-up"></i> 25.3%
@@ -181,7 +181,7 @@
           <table class="table table-borderless table-thead-bordered table-align-middle card-table">
             <thead class="thead-light">
               <tr>
-                <th>Project name</th>
+                <th>Items on Repair</th>
                 <th>Members</th>
                 <th>Spent</th>
                 <th>Hours</th>
