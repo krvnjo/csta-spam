@@ -184,7 +184,7 @@ $(document).ready(function () {
     const editFormData = new FormData(propertyEditForm[0]);
 
     if (propertyDropzoneEdit.files.length > 0) {
-      editFormData.append("image", propertyDropzoneEdit.files[0]);
+      editFormData.append('image', propertyDropzoneEdit.files[0]);
     }
 
     $.ajax({
@@ -207,7 +207,6 @@ $(document).ready(function () {
     });
   });
 
-
   // ============ End Update a Stock Item ============ //
 
   // ============ View a Stock Item ============ //
@@ -215,7 +214,7 @@ $(document).ready(function () {
     const propertyViewId = $(this).closest('tr').find('td[data-property-id]').data('property-id');
 
     $.ajax({
-      url: '/properties-assets/stocks/show',
+      url: '/properties-assets/stocks/view',
       method: 'GET',
       data: { id: propertyViewId },
       success: function (response) {
@@ -317,8 +316,8 @@ document.addEventListener('DOMContentLoaded', function () {
       },
       placeholder: (data) => {
         return 'Select Condition...';
-      }
-    }
+      },
+    },
   });
 
   const tomSelectAcquiredType = new TomSelect('#cbxAcquiredType', {

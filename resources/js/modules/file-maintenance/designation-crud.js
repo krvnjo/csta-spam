@@ -41,7 +41,7 @@ $(document).ready(function () {
     const designationId = $(this).closest('tr').find('td[data-designation-id]').data('designation-id');
 
     $.ajax({
-      url: '/file-maintenance/designations/show',
+      url: '/file-maintenance/designations/view',
       method: 'GET',
       data: { id: designationId },
       success: function (response) {

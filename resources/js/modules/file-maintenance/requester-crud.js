@@ -41,7 +41,7 @@ $(document).ready(function () {
     const requesterId = $(this).closest('tr').find('td[data-requester-id]').data('requester-id');
 
     $.ajax({
-      url: '/file-maintenance/requesters/show',
+      url: '/file-maintenance/requesters/view',
       method: 'GET',
       data: { id: requesterId },
       success: function (response) {

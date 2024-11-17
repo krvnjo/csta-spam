@@ -39,7 +39,7 @@ $(document).ready(function () {
     const roleId = $(this).closest('.row').find('span[data-role-id]').data('role-id');
 
     $.ajax({
-      url: '/user-management/roles/show',
+      url: '/user-management/roles/view',
       method: 'GET',
       data: { id: roleId },
       success: function (response) {

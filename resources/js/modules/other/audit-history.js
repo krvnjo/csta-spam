@@ -6,7 +6,7 @@ $(document).ready(function () {
     console.log(auditId);
 
     $.ajax({
-      url: '/audit-history/show',
+      url: '/audit-history/view',
       method: 'GET',
       data: { id: auditId },
       success: function (response) {

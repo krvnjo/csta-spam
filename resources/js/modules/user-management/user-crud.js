@@ -41,7 +41,7 @@ $(document).ready(function () {
     const userId = $(this).closest('tr').find('td[data-user-id]').data('user-id');
 
     $.ajax({
-      url: '/user-management/users/show',
+      url: '/user-management/users/view',
       method: 'GET',
       data: { id: userId },
       success: function (response) {

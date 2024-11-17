@@ -41,7 +41,7 @@ $(document).ready(function () {
     const categoryId = $(this).closest('tr').find('td[data-category-id]').data('category-id');
 
     $.ajax({
-      url: '/file-maintenance/categories/show',
+      url: '/file-maintenance/categories/view',
       method: 'GET',
       data: { id: categoryId },
       success: function (response) {

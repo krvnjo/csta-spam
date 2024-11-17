@@ -77,24 +77,23 @@
 
                 <div class="nav-collapse collapse" id="navbarVerticalMenuPagesRepairMaintenance" data-bs-parent="#navbarVerticalMenuMainMenu">
                   <a class="nav-link" data-route="request.index" href="{{ route('request.index') }}">Ticket Requests</a>
-                  <a class="nav-link" data-route="approval.index" href="{{ route('approval.index') }}">Ticket Approvals</a>
-                  <a class="nav-link" data-route="" href="">Ongoing Repairs</a>
-                  <a class="nav-link" data-route="" href="">Repair History</a>
+                  <a class="nav-link" data-route="ongoing.index" href="{{ route('ongoing.index') }}">Ongoing Maintenance</a>
+                  <a class="nav-link" data-route="history.index" href="{{ route('history.index') }}">Maintenance Logs</a>
                 </div>
               </div>
               <!-- End Repair & Maintenance -->
             @endaccess
 
-            @access('Analytics Reports', 'View Only, Read and Write, Full Access')
-              <!-- Analytics Reports -->
-              <div class="nav-item">
-                <a class="nav-link" data-placement="left" href="#">
-                  <i class="bi-clipboard-data nav-icon"></i>
-                  <span class="nav-link-title">Analytics Reports</span>
-                </a>
-              </div>
-              <!-- End Analytics Reports -->
-            @endaccess
+            {{--            @access('Analytics Reports', 'View Only, Read and Write, Full Access') --}}
+            {{--              <!-- Analytics Reports --> --}}
+            {{--              <div class="nav-item"> --}}
+            {{--                <a class="nav-link" data-placement="left" href="#"> --}}
+            {{--                  <i class="bi-clipboard-data nav-icon"></i> --}}
+            {{--                  <span class="nav-link-title">Analytics Reports</span> --}}
+            {{--                </a> --}}
+            {{--              </div> --}}
+            {{--              <!-- End Analytics Reports --> --}}
+            {{--            @endaccess --}}
           </div>
           <!-- End Main Menu -->
 

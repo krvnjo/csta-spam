@@ -79,27 +79,31 @@ class StatusSeeder extends Seeder
             ],
             'Needs Maintenance' => [
                 'description' => 'Item needs repairs before use.',
-                'color_id' => 8,
+                'color_id' => 9,
             ],
             'Under Maintenance' => [
                 'description' => 'Item is currently being repaired.',
-                'color_id' => 9,
+                'color_id' => 8,
             ],
             'Reserved' => [
                 'description' => 'Item is reserved and not available.',
-                'color_id' => 10,
+                'color_id' => 11,
             ],
             'Borrowed' => [
                 'description' => 'Item is currently borrowed and in use.',
-                'color_id' => 9,
+                'color_id' => 10,
             ],
             'Missing' => [
                 'description' => 'Item is missing and unaccounted for.',
                 'color_id' => 6,
             ],
+            'For Replacement' => [
+                'description' => 'Item needs replacement and can be disposed.',
+                'color_id' => 12,
+            ],
             'For Disposal' => [
                 'description' => 'Item is no longer usable and EOL.',
-                'color_id' => 12,
+                'color_id' => 14,
             ],
             'Disposed' => [
                 'description' => 'Item has been permanently removed from CSTA.',

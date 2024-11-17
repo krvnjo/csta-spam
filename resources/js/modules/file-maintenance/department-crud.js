@@ -41,7 +41,7 @@ $(document).ready(function () {
     const departmentId = $(this).closest('tr').find('td[data-department-id]').data('department-id');
 
     $.ajax({
-      url: '/file-maintenance/departments/show',
+      url: '/file-maintenance/departments/view',
       method: 'GET',
       data: { id: departmentId },
       success: function (response) {
