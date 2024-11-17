@@ -1,6 +1,6 @@
 <!-- Edit Request Modal -->
 <div class="modal fade" id="modalEditRequest" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 900px">
     <div class="modal-content">
       <!-- Header -->
       <div class="modal-header">
@@ -14,7 +14,7 @@
         <form id="frmEditRequest" method="POST" novalidate>
           @csrf
           @method('PATCH')
-          <input id="txtEditId" name="id" type="hidden">
+          <input id="txtEditId" name="id" type="hidden" value="{{ old('id', $ticketId ?? '') }}">
 
           <!-- Ticket Name -->
           <div class="form-group mb-2">
@@ -83,7 +83,7 @@
                 @foreach ($items as $item)
                   @if ($item->is_active)
                     <option value="{{ $item->id }}">
-                      {{ $item->prop_code . ' | ' . $item->property->name . ' | ' . $item->property->category->name . ' | ' . $item->property->brand->name . ' | ' . $item->designation->name . ' | ' . $item->condition->name }}
+                      {{ $item->prop_code . ' | ' . $item->property->name . ' | ' . $item->property->category->name . ' | ' . $item->property->brand->name . ' | ' . $item->designation->name . ' | ' . $item->condition->name . ' | ' . $item->status->name }}
                     </option>
                   @endif
                 @endforeach

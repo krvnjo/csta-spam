@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-  Ticket Request
+  Ticket Requests
 @endsection
 
 @push('styles')
@@ -17,7 +17,8 @@
           <div class="col-sm mb-2 mb-sm-0">
             <ol class="breadcrumb breadcrumb-no-gutter">
               <li class="breadcrumb-item"><a class="breadcrumb-link" data-route="dashboard.index" href="{{ route('dashboard.index') }}">Home</a></li>
-              <li class="breadcrumb-item active">Repair & Maintenance</li>
+              <li class="breadcrumb-item"><a class="breadcrumb-link">Repair & Maintenance</a></li>
+              <li class="breadcrumb-item active">Ticket Requests</li>
             </ol>
             <h1 class="page-header-title">Ticket Requests</h1>
             <p class="page-header-text">Create and monitor repair and maintenance requests for approval.</p>
@@ -157,7 +158,7 @@
                 <th class="w-th" style="width: 5%;">#</th>
                 <th class="d-none"></th>
                 <th>Ticket No.</th>
-                <th>Ticket Name</th>
+                <th>Subject</th>
                 <th>Estimated Cost</th>
                 <th>Priority</th>
                 <th>Created At</th>
@@ -212,7 +213,7 @@
                                 </button>
                               @endaccess
                             @else
-                              <button class="dropdown-item btnSetStatus" data-status="4" type="button">
+                              <button class="dropdown-item btnSetStatus" data-status="3" type="button">
                                 <i class="bi bi-play-circle-fill text-primary dropdown-item-icon fs-7"></i> Start Request
                               </button>
                               <button class="dropdown-item btnSetStatus" data-status="1" type="button">

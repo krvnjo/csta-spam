@@ -20,8 +20,9 @@ class PropertyChild extends Model
         'inventory_date',
         'dept_id',
         'desig_id',
-        'status_id',
         'condi_id',
+        'status_id',
+        'ticket_id',
         'remarks',
         'is_active'
     ];
@@ -57,5 +58,10 @@ class PropertyChild extends Model
     public function property(): BelongsTo
     {
         return $this->belongsTo(PropertyParent::class, 'prop_id');
+    }
+
+    public function ticket(): BelongsTo
+    {
+        return $this->belongsTo(Ticket::class, 'ticket_id');
     }
 }

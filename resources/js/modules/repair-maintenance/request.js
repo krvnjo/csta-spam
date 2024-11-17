@@ -145,7 +145,7 @@ $(document).ready(function () {
     const requestId = $(this).closest('tr').find('td[data-request-id]').data('request-id');
     const requestName = $(this).closest('tr').find('.request-name').text().trim();
     const requestStatus = $(this).data('status');
-    const statusName = requestStatus === 2 ? 'approve' : requestStatus === 4 ? 'start' : 'unapprove';
+    const statusName = requestStatus === 2 ? 'approve' : requestStatus === 3 ? 'start' : 'unapprove';
 
     Swal.fire({
       title: 'Update request status?',
@@ -159,7 +159,7 @@ $(document).ready(function () {
         popup: 'bg-light rounded-3 shadow fs-4',
         title: 'text-dark fs-1',
         htmlContainer: 'text-body text-center fs-4',
-        confirmButton: `btn btn-sm ${requestStatus === 2 || requestStatus === 4 ? 'btn-success' : 'btn-danger'}`,
+        confirmButton: `btn btn-sm ${requestStatus === 2 || requestStatus === 3 ? 'btn-success' : 'btn-danger'}`,
         cancelButton: 'btn btn-sm btn-secondary',
       },
     }).then((result) => {

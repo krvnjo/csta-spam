@@ -22,12 +22,15 @@ class TicketRequestController extends Controller
      */
     public function index()
     {
-        $tickets = Ticket::with('priority', 'progress')->whereIn('prog_id', [1, 2])->orderBy('created_at', 'desc')->get();
+        $tickets = Ticket::with('priority', 'progress')->whereIn('prog_id', [1, 2])->orderBy('created_at')->get();
         $priorities = Priority::with('color')->get();
         $progresses = Progress::with('legend')->whereIn('id', [1, 2])->get();
         $items = PropertyChild::whereHas('property', function ($query) {
             $query->where('is_consumable', 0);
-        })->with('property')->get();
+        })
+            ->whereIn('status_id', [1, 2, 3])
+            ->with('property')
+            ->get();
 
         return view('pages.repair-maintenance.request',
             compact(
@@ -65,7 +68,14 @@ class TicketRequestController extends Controller
                 'prio_id' => $validated['priority'],
                 'prog_id' => 1,
             ]);
-            $ticket->items()->sync($validated['items']);
+
+            foreach ($validated['items'] as $itemId) {
+                $item = PropertyChild::findOrFail($itemId);
+                $item->update([
+                    'ticket_id' => $ticket->id,
+                    'status_id' => 3,
+                ]);
+            }
 
             return response()->json([
                 'success' => true,
@@ -146,7 +156,7 @@ class TicketRequestController extends Controller
             $validated = $request->validated();
 
             $ticket = Ticket::findOrFail($validated['id']);
-            $items = $ticket->items()->orderBy('prop_code')->pluck('item_id')->toArray();
+            $items = $ticket->items()->orderBy('prop_code')->pluck('id')->toArray();
 
             return response()->json([
                 'success' => true,
@@ -178,13 +188,32 @@ class TicketRequestController extends Controller
             $ticket = Ticket::findOrFail($validated['id']);
 
             if (!isset($validated['progress'])) {
-                $ticket->update([
-                    'name' => ucwords(trim($validated['ticket'])),
-                    'description' => $validated['description'],
-                    'estimated_cost' => $validated['cost'],
-                    'prio_id' => $validated['priority'],
-                ]);
-                $ticket->items()->sync($validated['items']);
+                $currentItems = $ticket->items->pluck('id')->toArray();
+
+                // Sync the new items by updating the ticket_id of the items
+                foreach ($validated['items'] as $newItemId) {
+                    $item = PropertyChild::find($newItemId);
+                    $item?->update([
+                        'ticket_id' => $ticket->id,  // Assign the current ticket ID
+                        'status_id' => 3, // Set status_id to 3 for newly added items
+                    ]);
+                }
+
+                // Determine the removed items by comparing the current items with the new ones
+                $removedItems = array_diff($currentItems, $validated['items']);
+
+                // Update the status_id and ticket_id for removed items
+                foreach ($removedItems as $removedItemId) {
+                    $item = PropertyChild::find($removedItemId);
+                    if ($item) {
+                        // Set status_id based on inventory_date
+                        $statusId = $item->inventory_date ? 2 : 1;
+                        $item->update([
+                            'status_id' => $statusId,  // Update status_id
+                            'ticket_id' => null, // Set ticket_id to null for removed items
+                        ]);
+                    }
+                }
             } else {
                 $ticket->update([
                     'prog_id' => $validated['progress'],
@@ -223,6 +252,13 @@ class TicketRequestController extends Controller
             $validated = $request->validated();
 
             $ticket = Ticket::findOrFail($validated['id']);
+
+            $ticket->items()->each(function ($item) {
+                $statusId = $item->inventory_date ? 2 : 1;
+                $item->update([
+                    'status_id' => $statusId,
+                ]);
+            });
 
             $ticket->forceDelete();
 
