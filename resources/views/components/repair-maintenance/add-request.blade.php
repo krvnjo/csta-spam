@@ -1,6 +1,6 @@
 <!-- Add Request Modal -->
 <div class="modal fade" id="modalAddRequest" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 900px">
     <div class="modal-content">
       <!-- Header -->
       <div class="modal-header">
@@ -79,9 +79,9 @@
                   "placeholder": "Select an item"
                 }' autocomplete="off" multiple>
                 @foreach ($items as $item)
-                  @if ($item->is_active)
+                  @if ($item->is_active && $item->ticket_id == null)
                     <option value="{{ $item->id }}">
-                      {{ $item->prop_code . ' | ' . $item->property->name . ' | ' . $item->property->category->name . ' | ' . $item->property->brand->name . ' | ' . $item->designation->name . ' | ' . $item->condition->name }}
+                      {{ $item->prop_code . ' | ' . $item->property->name . ' | ' . $item->property->category->name . ' | ' . $item->property->brand->name . ' | ' . $item->designation->name . ' | ' . $item->condition->name . ' | ' . $item->status->name }}
                     </option>
                   @endif
                 @endforeach

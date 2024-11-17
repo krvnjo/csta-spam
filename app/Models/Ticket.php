@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Ticket extends Model
@@ -17,6 +17,9 @@ class Ticket extends Model
         'estimated_cost',
         'prio_id',
         'prog_id',
+        'approved_at',
+        'started_at',
+        'completed_at',
         'remarks',
     ];
 
@@ -30,8 +33,8 @@ class Ticket extends Model
         return $this->HasOne(Progress::class, 'id', 'prog_id');
     }
 
-    public function items(): BelongsToMany
+    public function items(): HasMany
     {
-        return $this->belongsToMany(PropertyChild::class, 'ticket_items', 'ticket_id', 'item_id');
+        return $this->hasMany(PropertyChild::class, 'ticket_id');
     }
 }

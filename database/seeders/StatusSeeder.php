@@ -69,7 +69,7 @@ class StatusSeeder extends Seeder
         }
 
         $statuses = [
-            'Ready to Deploy' => [
+            'Available' => [
                 'description' => 'Item is ready for immediate use.',
                 'color_id' => 4,
             ],

@@ -8,6 +8,7 @@ use App\Models\Department;
 use App\Models\Designation;
 use App\Models\Requester;
 use App\Models\Role;
+use App\Models\Ticket;
 use App\Models\User;
 use App\Observers\BrandObserver;
 use App\Observers\CategoryObserver;
@@ -15,6 +16,7 @@ use App\Observers\DepartmentObserver;
 use App\Observers\DesignationObserver;
 use App\Observers\RequesterObserver;
 use App\Observers\RoleObserver;
+use App\Observers\TicketRequestObserver;
 use App\Observers\UserObserver;
 use App\Services\AccessService;
 use Illuminate\Support\Facades\Blade;
@@ -45,6 +47,7 @@ class AppServiceProvider extends ServiceProvider
             return "<?php endif; ?>";
         });
 
+        Ticket::observe(TicketRequestObserver::class);
         User::observe(UserObserver::class);
         Role::observe(RoleObserver::class);
         Brand::observe(BrandObserver::class);

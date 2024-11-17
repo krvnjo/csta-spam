@@ -1,6 +1,6 @@
 <!-- View Request Modal -->
 <div class="modal fade" id="modalViewRequest" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 900px">
     <div class="modal-content">
       <!-- Header -->
       <div class="modal-header">

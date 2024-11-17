@@ -170,7 +170,7 @@
                         <div class="btn-group position-static">
                           <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" data-bs-toggle="dropdown" type="button"></button>
                           <div class="dropdown-menu dropdown-menu-end mt-1">
-                            <button class="dropdown-item btnSetStatus" data-status="2" type="button">
+                            <button class="dropdown-item btnSetStatus" data-status="4" type="button">
                               <i class="bi bi-check-circle-fill text-success dropdown-item-icon fs-7"></i> Mark as Completed
                             </button>
                             <button class="dropdown-item btnEditOngoing" type="button">

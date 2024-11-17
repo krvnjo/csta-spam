@@ -8,6 +8,7 @@ use App\Models\Department;
 use App\Models\Designation;
 use App\Models\PropertyParent;
 use App\Models\Status;
+use App\Models\Ticket;
 use App\Models\Unit;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -58,6 +59,7 @@ return new class extends Migration {
             $table->foreignIdFor(Designation::class, 'desig_id')->nullable()->constrained('designations')->cascadeOnDelete();
             $table->foreignIdFor(Condition::class, 'condi_id')->nullable()->constrained('conditions')->cascadeOnDelete();
             $table->foreignIdFor(Status::class, 'status_id')->nullable()->constrained('statuses')->cascadeOnDelete();
+            $table->foreignIdFor(Ticket::class, 'ticket_id')->nullable()->constrained('tickets')->nullOnDelete();
             $table->string('remarks')->nullable();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();

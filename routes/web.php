@@ -15,6 +15,7 @@ use App\Http\Controllers\PropertyOverviewController;
 use App\Http\Controllers\PropertyParentController;
 use App\Http\Controllers\RequesterController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\TicketHistoryController;
 use App\Http\Controllers\TicketOngoingController;
 use App\Http\Controllers\TicketRequestController;
 use App\Http\Controllers\UserController;
@@ -120,7 +121,7 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
 
     // ============ Repair & Maintenance Routes ============ //
 
-    // Ticket Request Routes
+    // Ticket Requests Routes
     Route::middleware('checkPermission:Repair & Maintenance')->prefix('repair-maintenance/ticket-requests')->name('request.')->controller(TicketRequestController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('create');
@@ -130,12 +131,18 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
         Route::delete('/', 'destroy')->name('delete');
     });
 
-    // Ticket Ongoing Routes
-    Route::middleware('checkPermission:Repair & Maintenance')->prefix('repair-maintenance/ongoing-repairs')->name('ongoing.')->controller(TicketOngoingController::class)->group(function () {
+    // Ongoing Maintenance Routes
+    Route::middleware('checkPermission:Repair & Maintenance')->prefix('repair-maintenance/ongoing-maintenance')->name('ongoing.')->controller(TicketOngoingController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/view', 'show')->name('view')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
         Route::patch('/', 'update')->name('update');
+    });
+
+    // Maintenance History Routes
+    Route::middleware('checkPermission:Repair & Maintenance')->prefix('repair-maintenance/maintenance-history')->name('history.')->controller(TicketHistoryController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/view', 'show')->name('view')->middleware('expectsJson');
     });
 
     // ============ End Repair & Maintenance Routes ============ //
