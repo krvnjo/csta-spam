@@ -17,7 +17,7 @@ export default defineConfig({
         'resources/js/hs-window-config.js',
         'resources/js/theme.min.js',
       ],
-      refresh: false,
+      refresh: true,
     }),
   ],
 });

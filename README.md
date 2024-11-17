@@ -10,12 +10,12 @@ efficiency, reduces errors, and supports optimal resource allocation.
 
 ## Main Features
 
-- Dashboard w/ Prescriptive Analytic
+- Dashboard w/ Prescriptive Analytics
 - Item Inventory Management
 - Borrowing and Reservation
-- Repair Management
+- Repair and Maintenance
 - Reports Generation
-- User Management
+- User and Role Management
 - File Maintenance
 - Audit Trailing
 
