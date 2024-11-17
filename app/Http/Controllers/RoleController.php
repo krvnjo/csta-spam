@@ -312,10 +312,12 @@ class RoleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request)
+    public function destroy(RoleRequest $request)
     {
         try {
-            $role = Role::findOrFail(Crypt::decryptString($request->input('id')));
+            $validated = $request->validated();
+
+            $role = Role::findOrFail($validated['id']);
 
             if ($role->users->count() > 0) {
                 return response()->json([
