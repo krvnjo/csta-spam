@@ -59,7 +59,7 @@
 
           <!-- Middle Name -->
           <div class="row mb-4">
-            <label class="col-sm-3 col-form-label form-label" for="txtEditMname">Middle Name <span class="form-label-secondary">(Optional)</span></label>
+            <label class="col-sm-3 col-form-label form-label" for="txtEditMname">Middle Name</label>
             <div class="col-sm-9">
               <input class="form-control" id="txtEditMname" name="mname" type="text" placeholder="Enter your middle name">
               <span class="invalid-feedback" id="valEditMname"></span>
@@ -135,7 +135,7 @@
 
           <!-- Phone -->
           <div class="row">
-            <label class="col-sm-3 col-form-label form-label" for="txtEditPhone">Phone <span class="form-label-secondary">(Optional)</span></label>
+            <label class="col-sm-3 col-form-label form-label" for="txtEditPhone">Phone Number</label>
             <div class="col-sm-9">
               <div class="input-group">
                 <input class="js-input-mask form-control" id="txtEditPhone" name="phone" data-hs-mask-options='{

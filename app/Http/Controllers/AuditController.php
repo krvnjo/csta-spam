@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Audit;
 use App\Models\Event;
-use App\Models\Type;
+use App\Models\Subject;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -24,7 +24,7 @@ class AuditController extends Controller
             'subject',
             'causer.role'
         ])->orderBy('name')->get();
-        $types = Type::get();
+        $types = Subject::get();
         $events = Event::with('badge', 'legend')->get();
         $users = User::with('role')->where('role_id', '!=', 1)->orderBy('lname')->get();
 
