@@ -3,7 +3,6 @@
 use App\Models\Priority;
 use App\Models\Progress;
 use App\Models\PropertyChild;
-use App\Models\Status;
 use App\Models\Ticket;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -31,7 +30,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignIdFor(Ticket::class, 'ticket_id')->constrained('tickets')->cascadeOnDelete();
             $table->foreignIdFor(PropertyChild::class, 'item_id')->constrained('property_children')->cascadeOnDelete();
-            $table->foreignIdFor(Status::class, 'status_id')->nullable()->constrained('statuses')->cascadeOnDelete();
+            $table->text('notes')->nullable();
         });
     }
 

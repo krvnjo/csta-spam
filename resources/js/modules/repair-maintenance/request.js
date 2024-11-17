@@ -59,6 +59,15 @@ $(document).ready(function () {
             { key: 'updated_at', selector: '#lblViewUpdatedAt' },
           ],
 
+          dropdownFields: [
+            {
+              key: 'items',
+              container: '#dropdownMenuViewItems',
+              countSelector: '#lblViewItems',
+              label: 'items in this ticket',
+            },
+          ],
+
           priorityFields: { key: 'priority', selector: '#lblViewPriority' },
           progressFields: { key: 'progress', selector: '#lblViewProgress' },
 
@@ -78,83 +87,79 @@ $(document).ready(function () {
   });
   // ============ End View Ticket Request ============ //
 
-  // // ============ Edit a User ============ //
-  // usersDatatable.on('click', '.btnEditUser', function () {
-  //   const userId = $(this).closest('tr').find('td[data-user-id]').data('user-id');
-  //
-  //   $.ajax({
-  //     url: '/user-management/users/edit',
-  //     method: 'GET',
-  //     data: { id: userId },
-  //     success: function (response) {
-  //       userEditModal.modal('toggle');
-  //
-  //       if (response.auth) {
-  //         $('#userEditRoleContainer').hide();
-  //       } else {
-  //         $('#userEditRoleContainer').show();
-  //       }
-  //
-  //       populateEditForm(response);
-  //     },
-  //     error: function (response) {
-  //       showResponseAlert(response, 'error');
-  //     },
-  //   });
-  // });
-  // // ============ End Edit a User ============ //
-  //
-  // // ============ Update a User ============ //
-  // const userEditModal = $('#modalEditUser');
-  // const userEditForm = $('#frmEditUser');
-  // const userEditSaveBtn = $('#btnEditSaveUser');
-  //
-  // handleUnsavedChanges(userEditModal, userEditForm, userEditSaveBtn);
-  //
-  // userEditForm.on('submit', function (e) {
-  //   e.preventDefault();
-  //   toggleButtonState(userEditSaveBtn, true);
-  //
-  //   const editFormData = new FormData(userEditForm[0]);
-  //
-  //   $.ajax({
-  //     url: '/user-management/users',
-  //     method: 'POST',
-  //     data: editFormData,
-  //     processData: false,
-  //     contentType: false,
-  //     success: function (response) {
-  //       if (response.success) {
-  //         toggleButtonState(userEditSaveBtn, false);
-  //         showResponseAlert(response, 'success', userEditModal, userEditForm);
-  //       } else {
-  //         handleValidationErrors(response, 'Edit');
-  //         toggleButtonState(userEditSaveBtn, false);
-  //       }
-  //     },
-  //     error: function (response) {
-  //       showResponseAlert(response, 'error', userEditModal, userEditForm);
-  //     },
-  //   });
-  // });
+  // ============ Edit Ticket Request ============ //
+  requestsDatatable.on('click', '.btnEditRequest', function () {
+    const requestId = $(this).closest('tr').find('td[data-request-id]').data('request-id');
+
+    $.ajax({
+      url: '/repair-maintenance/ticket-requests/edit',
+      method: 'GET',
+      data: { id: requestId },
+      success: function (response) {
+        requestEditModal.modal('toggle');
+        $('#lblTicketNumber').text(response.num);
+        populateEditForm(response);
+      },
+      error: function (response) {
+        showResponseAlert(response, 'error');
+      },
+    });
+  });
+  // ============ End Edit Ticket Request ============ //
+
+  // ============ Update a Ticket Request ============ //
+  const requestEditModal = $('#modalEditRequest');
+  const requestEditForm = $('#frmEditRequest');
+  const requestEditSaveBtn = $('#btnEditSaveRequest');
+
+  handleUnsavedChanges(requestEditModal, requestEditForm, requestEditSaveBtn);
+
+  requestEditForm.on('submit', function (e) {
+    e.preventDefault();
+    toggleButtonState(requestEditSaveBtn, true);
+
+    const editFormData = new FormData(requestEditForm[0]);
+
+    $.ajax({
+      url: '/repair-maintenance/ticket-requests',
+      method: 'POST',
+      data: editFormData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        if (response.success) {
+          toggleButtonState(requestEditSaveBtn, false);
+          showResponseAlert(response, 'success', requestEditModal, requestEditForm);
+        } else {
+          handleValidationErrors(response, 'Edit');
+          toggleButtonState(requestEditSaveBtn, false);
+        }
+      },
+      error: function (response) {
+        showResponseAlert(response, 'error', requestEditModal, requestEditForm);
+      },
+    });
+  });
 
   requestsDatatable.on('click', '.btnSetStatus', function () {
     const requestId = $(this).closest('tr').find('td[data-request-id]').data('request-id');
+    const requestName = $(this).closest('tr').find('.request-name').text().trim();
     const requestStatus = $(this).data('status');
+    const statusName = requestStatus === 2 ? 'approve' : requestStatus === 4 ? 'start' : 'unapprove';
 
     Swal.fire({
-      title: 'Approve the Ticket Request?',
-      text: `Are you sure you want to approve the request?`,
+      title: 'Update request status?',
+      text: `Are you sure you want to ${statusName} the ticket request "${requestName}"?`,
       icon: 'warning',
       showCancelButton: true,
       focusCancel: true,
-      confirmButtonText: `Yes, set I approve it!`,
+      confirmButtonText: `Yes, ${statusName}!`,
       cancelButtonText: 'No, cancel!',
       customClass: {
         popup: 'bg-light rounded-3 shadow fs-4',
         title: 'text-dark fs-1',
         htmlContainer: 'text-body text-center fs-4',
-        confirmButton: `btn btn-sm btn-success`,
+        confirmButton: `btn btn-sm ${requestStatus === 2 || requestStatus === 4 ? 'btn-success' : 'btn-danger'}`,
         cancelButton: 'btn btn-sm btn-secondary',
       },
     }).then((result) => {
@@ -178,7 +183,7 @@ $(document).ready(function () {
   });
   // ============ End Update Ticket Request ============ //
 
-  // ============ Delete a User ============ //
+  // ============ Delete a Ticket Request ============ //
   requestsDatatable.on('click', '.btnDeleteRequest', function () {
     const requestId = $(this).closest('tr').find('td[data-request-id]').data('request-id');
     const requestName = $(this).closest('tr').find('.request-name').text().trim();
@@ -214,5 +219,5 @@ $(document).ready(function () {
       }
     });
   });
-  // ============ End Delete a User ============ //
+  // ============ End Delete a Ticket Request ============ //
 });

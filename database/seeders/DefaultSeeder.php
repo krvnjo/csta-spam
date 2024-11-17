@@ -122,6 +122,7 @@ class DefaultSeeder extends Seeder
         }
 
         $types = [
+            'Ticket Request',
             'User',
             'Role',
             'Brand',

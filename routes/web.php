@@ -15,6 +15,7 @@ use App\Http\Controllers\PropertyOverviewController;
 use App\Http\Controllers\PropertyParentController;
 use App\Http\Controllers\RequesterController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\TicketOngoingController;
 use App\Http\Controllers\TicketRequestController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -127,6 +128,14 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
         Route::patch('/', 'update')->name('update');
         Route::delete('/', 'destroy')->name('delete');
+    });
+
+    // Ticket Ongoing Routes
+    Route::middleware('checkPermission:Repair & Maintenance')->prefix('repair-maintenance/ongoing-repairs')->name('ongoing.')->controller(TicketOngoingController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/view', 'show')->name('view')->middleware('expectsJson');
+        Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
+        Route::patch('/', 'update')->name('update');
     });
 
     // ============ End Repair & Maintenance Routes ============ //

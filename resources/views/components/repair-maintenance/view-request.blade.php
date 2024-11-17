@@ -1,6 +1,6 @@
 <!-- View Request Modal -->
 <div class="modal fade" id="modalViewRequest" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <!-- Header -->
       <div class="modal-header">
@@ -12,6 +12,17 @@
       <!-- Body -->
       <div class="modal-body">
         <div class="col">
+          <!-- Ticket Number -->
+          <div class="row mb-4">
+            <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
+              <p class="form-label fw-semibold mb-0">Ticket Number:</p>
+            </div>
+            <div class="col-12 col-md-7 d-flex align-items-center">
+              <p class="fw-semibold mb-0" id="lblViewNum"></p>
+            </div>
+          </div>
+          <!-- End Ticket Number -->
+
           <!-- Ticket Name -->
           <div class="row mb-4">
             <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
@@ -44,6 +55,20 @@
             </div>
           </div>
           <!-- End Estimated Cost -->
+
+          <!-- Items -->
+          <div class="row mb-4">
+            <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
+              <p class="form-label fw-semibold mb-0">Items:</p>
+            </div>
+            <div class="col-12 col-md-7 d-flex align-items-center">
+              <div class="btn-group w-100">
+                <button class="btn btn-sm btn-white dropdown-toggle" id="lblViewItems" data-bs-toggle="dropdown" type="button"></button>
+                <div class="dropdown-menu w-100 scrollable-dropdown-menu" id="dropdownMenuViewItems"></div>
+              </div>
+            </div>
+          </div>
+          <!-- End Items -->
 
           <!-- Priority -->
           <div class="row mb-4">
