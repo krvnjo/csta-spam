@@ -180,7 +180,7 @@ class PropertyChildController extends Controller
 
             return response()->json([
                 'success' => true,
-                'prop code' => $child->prop_code,
+                'propcode' => $child->prop_code,
                 'serialNum' => $child->serial_num ?? "-",
                 'department' => $child->department->name,
                 'designation' => $child->designation->name,
@@ -453,5 +453,28 @@ class PropertyChildController extends Controller
         return view('pages.property-asset.stock.generate-qr', compact('propertyChild', 'qr'));
     }
 
+    public function dispose(Request $request)
+    {
+        try {
+            $propertyChild = PropertyChild::query()->findOrFail(Crypt::decryptString($request->input('id')));
+
+
+            $propertyChild->is_active = 0;
+            $propertyChild->status_id = 10;
+            $propertyChild->save();
+
+            return response()->json([
+                'success' => true,
+                'title' => 'Item Disposed Successfully!',
+                'text' => 'The item has been disposed.',
+            ]);
+        } catch (Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Oops! Something went wrong.',
+                'message' => 'An error occurred while disposing the item.' . $e->getMessage(),
+            ], 500);
+        }
+    }
 
 }

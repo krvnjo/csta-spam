@@ -149,8 +149,11 @@ $(document).ready(function () {
       confirmButtonText: 'Yes, set it to ' + statusName + '!',
       cancelButtonText: 'No, cancel!',
       customClass: {
-        confirmButton: 'btn btn-primary',
-        cancelButton: 'btn btn-secondary',
+        popup: 'bg-light rounded-3 shadow fs-4',
+        title: 'fs-1',
+        htmlContainer: 'text-muted text-center fs-4',
+        confirmButton: 'btn btn-sm btn-primary',
+        cancelButton: 'btn btn-sm btn-secondary',
       },
     }).then((result) => {
       if (result.isConfirmed) {
@@ -407,6 +410,46 @@ $(document).ready(function () {
   });
 
   // ============ End Move Stock to Inventory ============ //
+
+  // ============ Dispose a Item ============ //
+
+  childDatatable.on('click', '.btnDisposed', function () {
+    const childId = $(this).closest('tr').find('td[data-child-id]').data('child-id');
+    console.log('Dispose Child ID:', childId);
+    Swal.fire({
+      title: 'Dispose Item Variation?',
+      text: 'Are you sure you want to dispose this item?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, dispose it!',
+      cancelButtonText: 'No, cancel!',
+      customClass: {
+        popup: 'bg-light rounded-3 shadow fs-4',
+        title: 'fs-1',
+        htmlContainer: 'text-muted text-center fs-4',
+        confirmButton: 'btn btn-sm btn-danger',
+        cancelButton: 'btn btn-sm btn-secondary',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: '/properties-assets/' + parentId + '/child-stocks/dispose',
+          method: 'PATCH',
+          data: {
+            id: childId,
+          },
+          success: function (response) {
+            showResponseAlert(response, 'success');
+          },
+          error: function (response) {
+            showResponseAlert(response, 'error');
+          },
+        });
+      }
+    });
+  });
+
+  // ============ End Dispose a Item ============ //
 });
 document.addEventListener('DOMContentLoaded', function () {
   new TomSelect('#cbxEditAcquiredType', {
