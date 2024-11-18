@@ -10,6 +10,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\HelpController;
+use App\Http\Controllers\OngoingBorrowController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\PropertyChildController;
 use App\Http\Controllers\PropertyOverviewController;
@@ -126,6 +127,19 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
         Route::patch('/', 'update')->name('update');
         Route::patch('/release', 'release')->name('release');
+        Route::delete('/', 'destroy')->name('delete');
+        Route::fallback(function () {
+            abort(404);
+        });
+    });
+
+    // Ongoing Borrowings Routes
+    Route::middleware('checkPermission:Borrow & Reservation')->prefix('borrow-reservation/ongoing-borrows')->name('ongoing-borrow.')->controller(OngoingBorrowController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+        Route::get('/view', 'show')->name('view')->middleware('expectsJson');
+        Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
+        Route::patch('/', 'update')->name('update');
         Route::delete('/', 'destroy')->name('delete');
         Route::fallback(function () {
             abort(404);
