@@ -122,6 +122,7 @@ class OngoingBorrowController extends Controller
                 }
             }
 
+            $borrowing->returned_at = now();
             $borrowing->prog_id = 7;
             $borrowing->save();
 

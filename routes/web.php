@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BorrowingLogsController;
 use App\Http\Controllers\BorrowingRequestController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
@@ -135,6 +136,19 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
 
     // Ongoing Borrowings Routes
     Route::middleware('checkPermission:Borrow & Reservation')->prefix('borrow-reservation/ongoing-borrows')->name('ongoing-borrow.')->controller(OngoingBorrowController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+        Route::get('/view', 'show')->name('view')->middleware('expectsJson');
+        Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
+        Route::patch('/', 'update')->name('update');
+        Route::delete('/', 'destroy')->name('delete');
+        Route::fallback(function () {
+            abort(404);
+        });
+    });
+
+    // Borrowing Logs Routes
+    Route::middleware('checkPermission:Borrow & Reservation')->prefix('borrow-reservation/borrow-logs')->name('borrow-logs.')->controller(BorrowingLogsController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('store');
         Route::get('/view', 'show')->name('view')->middleware('expectsJson');
