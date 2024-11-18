@@ -36,7 +36,7 @@
                             data-hs-tom-select-options='{
                               "placeholder": "Select requester"
                             }' autocomplete="off">
-                            <option value=""></option>
+                            <option value="" disabled selected>Select requester</option>
                             @foreach ($requesters as $requester)
                               <option value="{{ $requester->id }}"> {{ $requester->department->code }} | {{ $requester->req_num }} | {{ $requester->name }}</option>
                             @endforeach

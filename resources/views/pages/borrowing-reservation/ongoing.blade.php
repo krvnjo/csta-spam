@@ -39,13 +39,13 @@
             </div>
           </div>
 
-          <div class="d-grid d-sm-flex justify-content-sm-center justify-content-md-end align-items-sm-center gap-2">
-            <!-- Filter Collapse Trigger -->
-            <a class="btn btn-white btn-sm dropdown-toggle" data-bs-toggle="collapse" href="#ongoingBorrowFilterSearchCollapse">
-              <i class="bi-funnel me-1"></i> Filters <span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="ongoingBorrowFilterCount"></span>
-            </a>
-            <!-- End Filter Collapse Trigger -->
-          </div>
+{{--          <div class="d-grid d-sm-flex justify-content-sm-center justify-content-md-end align-items-sm-center gap-2">--}}
+{{--            <!-- Filter Collapse Trigger -->--}}
+{{--            <a class="btn btn-white btn-sm dropdown-toggle" data-bs-toggle="collapse" href="#ongoingBorrowFilterSearchCollapse">--}}
+{{--              <i class="bi-funnel me-1"></i> Filters <span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="ongoingBorrowFilterCount"></span>--}}
+{{--            </a>--}}
+{{--            <!-- End Filter Collapse Trigger -->--}}
+{{--          </div>--}}
         </div>
         <!-- End Header -->
 
@@ -252,10 +252,11 @@
 @endsection
 
 @section('sec-content')
+  <x-borrow-reservation.return-item :conditions="$conditions" />
 @endsection
 
 @push('scripts')
-  <script src="{{ Vite::asset('resources/js/modules/borrow-reservation/request.js') }}"></script>
+  <script src="{{ Vite::asset('resources/js/modules/borrow-reservation/ongoing.js') }}"></script>
 
   <script src="{{ Vite::asset('resources/vendor/tom-select/dist/js/tom-select.complete.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/hs-add-field/dist/hs-add-field.min.js') }}"></script>
