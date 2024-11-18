@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Borrowing extends Model
 {
@@ -25,4 +26,10 @@ class Borrowing extends Model
     {
         return $this->hasMany(BorrowingItem::class, 'borrow_id');
     }
+
+    public function progress(): HasOne
+    {
+        return $this->HasOne(Progress::class, 'id', 'prog_id');
+    }
+
 }

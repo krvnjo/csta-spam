@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-  New Requests
+  Borrowing Logs
 @endsection
 
 @push('styles')
@@ -21,14 +21,8 @@
               <li class="breadcrumb-item"><a class="breadcrumb-link" data-route="dashboard.index" href="{{ route('dashboard.index') }}">Home</a></li>
               <li class="breadcrumb-item active">Borrow & Reservation</li>
             </ol>
-            <h1 class="page-header-title">New Request</h1>
-            <p class="page-header-text">Create and monitor borrow and reservation requests for approval.</p>
-          </div>
-
-          <div class="col-sm-auto mt-2 mt-sm-0">
-            <button class="btn btn-primary w-100 w-sm-auto" id="btnAddNewRequestModal" data-bs-toggle="modal" data-bs-target="#modalAddNewRequest">
-              <i class="bi-plus-lg me-1"></i> Create Request
-            </button>
+            <h1 class="page-header-title">Borrow Logs</h1>
+            <p class="page-header-text">Monitor borrow and reservation borrowing logs.</p>
           </div>
         </div>
       </div>
@@ -41,7 +35,7 @@
           <div class="mb-2 mb-md-0">
             <div class="input-group input-group-merge input-group-flush">
               <div class="input-group-prepend input-group-text"><i class="bi-search"></i></div>
-              <input class="form-control" id="newRequestsDatatableSearch" type="search" placeholder="Search">
+              <input class="form-control" id="borrowLogsDatatableSearch" type="search" placeholder="Search">
             </div>
           </div>
 
@@ -54,18 +48,18 @@
 
               <div class="dropdown-menu dropdown-menu-sm-end w-100">
                 <span class="dropdown-header">Options</span>
-                <button class="dropdown-item" id="newRequestExportCopy" type="button">
+                <button class="dropdown-item" id="borrowLogsExportCopy" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/copy-icon.svg') }}" alt="Copy Icon"> Copy
                 </button>
-                <button class="dropdown-item" id="newRequestExportPrint" type="button">
+                <button class="dropdown-item" id="borrowLogsExportPrint" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/print-icon.svg') }}" alt="Print Icon"> Print
                 </button>
                 <div class="dropdown-divider"></div>
                 <span class="dropdown-header">Download</span>
-                <button class="dropdown-item" id="newRequestExportExcel" type="button">
+                <button class="dropdown-item" id="borrowLogsExportExcel" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/excel-icon.svg') }}" alt="Excel Icon"> Excel
                 </button>
-                <button class="dropdown-item" id="newRequestExportPdf" type="button">
+                <button class="dropdown-item" id="borrowLogsExportPdf" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/pdf-icon.svg') }}" alt="PDF Icon"> PDF
                 </button>
               </div>
@@ -73,7 +67,7 @@
             <!-- End Export Dropdown -->
 
             <!-- Filter Collapse Trigger -->
-            <a class="btn btn-white btn-sm dropdown-toggle" data-bs-toggle="collapse" href="#newRequestFilterSearchCollapse">
+            <a class="btn btn-white btn-sm dropdown-toggle" data-bs-toggle="collapse" href="#borrowLogsFilterSearchCollapse">
               <i class="bi-funnel me-1"></i> Filters <span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="newRequestsFilterCount"></span>
             </a>
             <!-- End Filter Collapse Trigger -->
@@ -82,7 +76,7 @@
         <!-- End Header -->
 
         <!-- Filter Search Collapse -->
-        <div class="collapse" id="newRequestFilterSearchCollapse">
+        <div class="collapse" id="borrowLogsFilterSearchCollapse">
           <div class="card-body">
             <div class="row">
               <!-- Priorities -->
@@ -98,9 +92,9 @@
                         "placeholder": "All Status"
                       }'
                       multiple>
-                      @foreach ($progresses as $status)
-                        <option value="{{ $status->name }}">{{ $status->name }}</option>
-                      @endforeach
+                      {{--                      @foreach ($progresses as $status) --}}
+                      {{--                        <option value="{{ $status->name }}">{{ $status->name }}</option> --}}
+                      {{--                      @endforeach --}}
                     </select>
                   </div>
                 </div>
@@ -119,9 +113,9 @@
                         "placeholder": "All Requesters"
                       }'
                       autocomplete="off" multiple>
-                      @foreach ($requesters as $request)
-                        <option value="{{ $request->name }}">{{ $request->name }}</option>
-                      @endforeach
+                      {{--                      @foreach ($requesters as $request) --}}
+                      {{--                        <option value="{{ $request->name }}">{{ $request->name }}</option> --}}
+                      {{--                      @endforeach --}}
                     </select>
                   </div>
                 </div>
@@ -150,39 +144,38 @@
 
         <!-- Body -->
         <div class="table-responsive datatable-custom">
-          <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100" id="newRequestsDatatable"
+          <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100" id="borrowLogsDatatable"
             data-hs-datatables-options='{
               "columnDefs": [{
-                 "targets": [9],
+                 "targets": [0],
                  "orderable": false
                }],
               "order": [8, "desc"],
               "info": {
-                "totalQty": "#newRequestsDatatableWithPagination"
+                "totalQty": "#borrowLogsDatatableWithPagination"
               },
-              "search": "#newRequestsDatatableSearch",
-              "entries": "#newRequestsDatatableEntries",
+              "search": "#borrowLogsDatatableSearch",
+              "entries": "#borrowLogsDatatableEntries",
               "pageLength": 10,
               "isResponsive": false,
               "isShowPaging": false,
-              "pagination": "newRequestsDatatablePagination"
+              "pagination": "borrowLogsDatatablePagination"
             }'>
             <thead class="thead-light">
               <tr>
                 <th class="d-none"></th>
                 <th>Borrow No.</th>
-                <th>Requester</th>
-                <th>Requested Items</th>
+                <th>Borrower Name</th>
+                <th>Borrowed Items</th>
                 <th>Quantity</th>
                 <th>Remarks</th>
                 <th>Status</th>
                 <th>Requested Date</th>
-                <th>Date Created/Approved</th>
-                <th>Action</th>
+                <th>Date Returned</th>
               </tr>
             </thead>
             <tbody>
-              @foreach ($borrowings->whereIn('prog_id', [1, 2]) as $borrowing)
+              @foreach ($borrowings->whereIn('prog_id', [7]) as $borrowing)
                 <tr>
                   <td class="d-none" data-borrow-id="{{ Crypt::encryptString($borrowing->id) }}"></td>
                   <td>{{ $borrowing->borrow_num }}</td>
@@ -191,9 +184,9 @@
                     @foreach ($borrowing->requestItems as $item)
                       <span style="color:gray"
                         @if (!empty($borrowing->remarks) && strlen($item->property->name) > 25) data-bs-toggle="tooltip"
-                            data-bs-html="true"
-                            data-bs-placement="top"
-                            title="{{ $item->property->name }}" @endif>
+                          data-bs-html="true"
+                          data-bs-placement="top"
+                          title="{{ $item->property->name }}" @endif>
                         {{ Str::limit(!empty($item->property->name) ? $item->property->name : 'No remarks provided', 30) }}
                       </span><br>
                     @endforeach
@@ -206,9 +199,9 @@
                   <td>
                     <span style="color:gray"
                       @if (!empty($borrowing->remarks) && strlen($borrowing->remarks) > 20) data-bs-toggle="tooltip"
-                                            data-bs-html="true"
-                                            data-bs-placement="top"
-                                            title="{{ $borrowing->remarks }}" @endif>
+                          data-bs-html="true"
+                          data-bs-placement="top"
+                          title="{{ $borrowing->remarks }}" @endif>
                       {{ Str::limit(!empty($borrowing->remarks) ? $borrowing->remarks : 'No remarks provided', 20) }}
                     </span>
                   </td>
@@ -219,44 +212,8 @@
                   </td>
                   <td><i class="bi-calendar-event me-1"></i>{{ \Carbon\Carbon::parse($borrowing->borrow_date)->format('F j, Y') }}</td>
                   <td>
-                    @if ($borrowing->prog_id == 1)
-                      <i class="bi-calendar-plus me-1"></i>
-                      Created {{ \Carbon\Carbon::parse($borrowing->created_at)->diffForHumans() }}
-                    @else
-                      <i class="bi bi-calendar-check me-1"></i>
-                      Approved {{ \Carbon\Carbon::parse($borrowing->approved_at)->diffForHumans() }}
-                    @endif
-                  </td>
-                  <td>
-                    <div class="btn-group position-static">
-                      <button class="btn btn-white btn-sm" type="button"><i class="bi-eye"></i> View</button>
-
-                      <div class="btn-group position-static">
-                        <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" data-bs-toggle="dropdown" type="button"></button>
-                        <div class="dropdown-menu dropdown-menu-end mt-1">
-                          @if ($borrowing->prog_id == 1)
-                            <button class="dropdown-item btnApproveRequest" data-borrow-num="{{ $borrowing->borrow_num }}" data-requester-name="{{ $borrowing->requester->name }}" type="button">
-                              <i class="bi bi-check2-circle dropdown-item-icon text-success"></i> Approve
-                            </button>
-                            <button class="dropdown-item" type="button">
-                              <i class="bi bi-x-circle dropdown-item-icon text-danger"></i> Reject
-                            </button>
-                          @endif
-                          @if ($borrowing->prog_id == 2)
-                            <button class="dropdown-item btnReleaseRequest" type="button">
-                              <i class="bi bi-eject dropdown-item-icon text-warning"></i> Release
-                            </button>
-                          @endif
-                          <button class="dropdown-item" type="button">
-                            <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
-                          </button>
-                          <div class="dropdown-divider"></div>
-                          <button class="dropdown-item text-danger" type="button">
-                            <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
-                          </button>
-                        </div>
-                      </div>
-                    </div>
+                    <i class="bi bi-calendar-check me-1"></i>
+                    Returned {{ \Carbon\Carbon::parse($borrowing->returned_at)->diffForHumans() }}
                   </td>
                 </tr>
               @endforeach
@@ -272,7 +229,7 @@
               <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
                 <span class="me-2">Showing:</span>
                 <div class="tom-select-custom tom-page-w">
-                  <select class="js-select form-select form-select-borderless" id="newRequestsDatatableEntries"
+                  <select class="js-select form-select form-select-borderless" id="borrowLogsDatatableEntries"
                     data-hs-tom-select-options='{
                       "hideSearch": true,
                       "searchInDropdown": false
@@ -283,13 +240,13 @@
                   </select>
                 </div>
                 <span class="text-secondary me-2">of</span>
-                <span id="newRequestsDatatableWithPagination"></span>
+                <span id="borrowLogsDatatableWithPagination"></span>
                 <span class="text-secondary ms-2">records</span>
               </div>
             </div>
             <div class="col-sm-auto">
               <div class="d-flex justify-content-center justify-content-sm-end">
-                <nav id="newRequestsDatatablePagination"></nav>
+                <nav id="borrowLogsDatatablePagination"></nav>
               </div>
             </div>
           </div>
@@ -302,12 +259,9 @@
 @endsection
 
 @section('sec-content')
-  <x-borrow-reservation.add-request :items="$items" :requesters="$requesters" />
 @endsection
 
 @push('scripts')
-  <script src="{{ Vite::asset('resources/js/modules/borrow-reservation/request.js') }}"></script>
-
   <script src="{{ Vite::asset('resources/vendor/tom-select/dist/js/tom-select.complete.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/hs-add-field/dist/hs-add-field.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/daterangepicker/moment.min.js') }}"></script>
@@ -344,7 +298,7 @@
         filterDatatableAndCount(newRequestsDatatable, "#newRequestsFilterCount");
       });
 
-      HSCore.components.HSDatatables.init($("#newRequestsDatatable"), {
+      HSCore.components.HSDatatables.init($("#borrowLogsDatatable"), {
         dom: "Bfrtip",
         buttons: [{
             extend: "copy",
@@ -387,10 +341,10 @@
       const newRequestsDatatable = HSCore.components.HSDatatables.getItem(0);
 
       const exportButtons = {
-        "#newRequestExportCopy": ".buttons-copy",
-        "#newRequestExportPrint": ".buttons-print",
-        "#newRequestExportExcel": ".buttons-excel",
-        "#newRequestExportPdf": ".buttons-pdf"
+        "#borrowLogsExportCopy": ".buttons-copy",
+        "#borrowLogsExportPrint": ".buttons-print",
+        "#borrowLogsExportExcel": ".buttons-excel",
+        "#borrowLogsExportPdf": ".buttons-pdf"
       };
 
       $.each(exportButtons, function(exportId, exportClass) {
@@ -400,7 +354,7 @@
       });
 
       $(".js-datatable-filter").on("change", function() {
-        filterDatatableAndCount(newRequestsDatatable, "#newRequestsFilterCount");
+        filterDatatableAndCount(newRequestsDatatable, "#borrowLogsFilterCount");
       });
     });
 
@@ -437,32 +391,5 @@
 
       };
     })();
-
-    $(document).ready(function() {
-      const itemSelects = $(".js-select-dynamic");
-
-      itemSelects.on("change", function() {
-        const selectedItems = [];
-
-        itemSelects.each(function() {
-          const value = $(this).val();
-          if (value) {
-            selectedItems.push(value);
-          }
-        });
-
-        itemSelects.each(function() {
-          const currentItemValue = $(this).val();
-          $(this).find("option").each(function() {
-            const optionValue = $(this).val();
-            if (selectedItems.includes(optionValue) && optionValue !== currentItemValue) {
-              $(this).attr("disabled", "disabled");
-            } else {
-              $(this).removeAttr("disabled");
-            }
-          });
-        });
-      });
-    });
   </script>
 @endpush

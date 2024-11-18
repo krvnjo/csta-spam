@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Borrowing;
 use App\Models\BorrowingItem;
+use App\Models\Progress;
 use App\Models\PropertyChild;
 use App\Models\PropertyParent;
 use App\Models\Requester;
@@ -23,11 +24,12 @@ class BorrowingRequestController extends Controller
     {
         $requesters = Requester::where('is_active', 1)->get();
         $items = PropertyParent::where('is_active', 1)->with('propertyChildren')->get();
+        $progresses = Progress::where('is_active', 1)->whereIn('id', [1,2])->get();
 
         $borrowings = Borrowing::with('requester', 'requestItems.property')->get();
 
 
-        return view('pages.borrowing-reservation.request', compact( 'requesters', 'items', 'borrowings'));
+        return view('pages.borrowing-reservation.request', compact( 'requesters', 'items', 'borrowings','progresses'));
     }
 
 
@@ -100,7 +102,7 @@ class BorrowingRequestController extends Controller
                 'requester_id' => $request->requester,
                 'borrow_num' => $code,
                 'remarks' => $request->remarks,
-                'status' => 'Pending',
+                'prog_id' => 1,
                 'borrow_date' => $request->when,
             ]);
 
@@ -113,7 +115,6 @@ class BorrowingRequestController extends Controller
                     'borrow_id' => $borrowing->id,
                     'parent_id' => $propertyParent->id,
                     'quantity' => $quantities[$index],
-                    'is_consumable' => $propertyParent->is_consumable,
                 ]);
             }
 
@@ -157,7 +158,7 @@ class BorrowingRequestController extends Controller
         try {
             $borrowing = Borrowing::query()->findOrFail(Crypt::decryptString($request->input('id')));
 
-            $borrowing->status = 'Approved';
+            $borrowing->prog_id = 2;
             $borrowing->approved_at = now();
             $borrowing->save();
 
@@ -200,12 +201,22 @@ class BorrowingRequestController extends Controller
                     }
 
                     $childrenToBorrow = $availableChildren->take($borrowingItem->quantity);
+
                     foreach ($childrenToBorrow as $child) {
                         $child->status_id = 6;
                         $child->save();
+                        $borrowingItem->propertyChildren()->attach($child->id);
                     }
 
                 } else {
+
+                    if ($propertyParent->count() < $borrowingItem->quantity) {
+                        return response()->json([
+                            'success' => false,
+                            'title' => 'Insufficient Items!',
+                            'text' => 'Not enough available items to fulfill the request!',
+                        ], 500);
+                    }
 
                     $propertyParent->quantity -= $borrowingItem->quantity;
                     $propertyParent->save();
@@ -213,7 +224,8 @@ class BorrowingRequestController extends Controller
 
             }
 
-            $borrowing->status = 'Released';
+            $borrowing->released_at = now();
+            $borrowing->prog_id = 3;
             $borrowing->save();
 
             return response()->json([

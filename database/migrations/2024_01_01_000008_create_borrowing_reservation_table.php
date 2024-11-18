@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Borrowing;
+use App\Models\Progress;
 use App\Models\PropertyParent;
 use App\Models\Requester;
 use Illuminate\Database\Migrations\Migration;
@@ -18,11 +19,12 @@ return new class extends Migration
             $table->id();
             $table->string('borrow_num')->unique();
             $table->foreignIdFor(Requester::class, 'requester_id')->constrained('requesters')->cascadeOnDelete();
-            $table->string('status')->default('pending');
+            $table->foreignIdFor(Progress::class, 'prog_id')->default(1)->constrained('progresses')->cascadeOnDelete();
             $table->text('remarks')->nullable();
             $table->date('borrow_date')->nullable();
             $table->dateTime('approved_at')->nullable();
             $table->dateTime('released_at')->nullable();
+            $table->dateTime('returned_at')->nullable();
             $table->timestamps();
         });
 
@@ -33,6 +35,14 @@ return new class extends Migration
             $table->unsignedInteger('quantity')->nullable();
             $table->timestamps();
         });
+
+        Schema::create('request_item_children', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('request_item_id')->constrained('request_items')->cascadeOnDelete();
+            $table->foreignId('child_id')->constrained('property_children')->cascadeOnDelete();
+            $table->timestamps();
+        });
+
     }
 
     /**
@@ -40,6 +50,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('request_item_children');
         Schema::dropIfExists('request_items');
         Schema::dropIfExists('borrowings');
     }
