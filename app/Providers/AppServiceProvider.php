@@ -7,6 +7,8 @@ use App\Models\Category;
 use App\Models\Department;
 use App\Models\Designation;
 use App\Models\MaintenanceTicket;
+use App\Models\PropertyChild;
+use App\Models\PropertyParent;
 use App\Models\Requester;
 use App\Models\Role;
 use App\Models\User;
@@ -14,6 +16,8 @@ use App\Observers\BrandObserver;
 use App\Observers\CategoryObserver;
 use App\Observers\DepartmentObserver;
 use App\Observers\DesignationObserver;
+use App\Observers\PropertyChildObserver;
+use App\Observers\PropertyParentObserver;
 use App\Observers\RequesterObserver;
 use App\Observers\RoleObserver;
 use App\Observers\TicketRequestObserver;
@@ -47,6 +51,8 @@ class AppServiceProvider extends ServiceProvider
             return "<?php endif; ?>";
         });
 
+        PropertyParent::observe(PropertyParentObserver::class);
+        PropertyChild::observe(PropertyChildObserver::class);
         MaintenanceTicket::observe(TicketRequestObserver::class);
         User::observe(UserObserver::class);
         Role::observe(RoleObserver::class);

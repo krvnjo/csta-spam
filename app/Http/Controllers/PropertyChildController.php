@@ -3,21 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Models\Acquisition;
+use App\Models\Audit;
 use App\Models\Condition;
 use App\Models\Department;
 use App\Models\Designation;
 use App\Models\PropertyChild;
 use App\Models\PropertyParent;
 use App\Models\Status;
+use App\Observers\PropertyChildObserver;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Throwable;
 
+#[ObservedBy([PropertyChildObserver::class])]
 class PropertyChildController extends Controller
 {
     /**
@@ -36,20 +39,21 @@ class PropertyChildController extends Controller
 
         $propertyChildren = $propertyParents->propertyChildren;
 
-        $conditions = Condition::query()->select('id','name')->where('is_active', 1)->get();
-        $acquisitions = Acquisition::query()->select('id','name')->where('is_active', 1)->get();
+        $conditions = Condition::with('color')->select('id', 'name', 'color_id')->where('is_active', 1)->get();
+        $acquisitions = Acquisition::query()->select('id', 'name')->where('is_active', 1)->get();
 
-        $departments = Department::query()->select('id','name')->where('is_active', 1)->get();
-        $designations = Designation::query()->select('id','name')->where('is_active', 1)->get();
-        $statuses = Status::query()->select('id','name')->where('is_active', 1)->get();
+        $departments = Department::query()->select('id', 'name')->where('is_active', 1)->get();
+        $designations = Designation::query()->select('id', 'name')->where('is_active', 1)->get();
+        $statuses = Status::with('color')->select('id', 'name', 'color_id')->where('is_active', 1)->get();
 
-        $propertyInInventory = $propertyChildren->whereNotNull('inventory_date')->where('is_active',1)->count();
-        $propertyInactiveStock = $propertyChildren->whereNull('inventory_date')->where('is_active',0)->count();
-        $propertyActiveStock = $propertyChildren->whereNull('inventory_date')->where('is_active',1)->count();
-        $propertyQuantity = $propertyChildren->where('is_active',1)->count();
+        $propertyInInventory = $propertyChildren->whereNotNull('inventory_date')->where('is_active', 1)->count();
+        $propertyInactiveStock = $propertyChildren->whereNull('inventory_date')->where('is_active', 0)->count();
+        $propertyActiveStock = $propertyChildren->whereNull('inventory_date')->where('is_active', 1)->count();
+        $propertyQuantity = $propertyChildren->where('is_active', 1)->count();
 
         return view('pages.property-asset.stock.view-children',
-            compact('propertyChildren',
+            compact(
+                'propertyChildren',
                 'propertyParents',
                 'propertyInInventory',
                 'propertyActiveStock',
@@ -59,15 +63,9 @@ class PropertyChildController extends Controller
                 'acquisitions',
                 'designations',
                 'statuses',
-                'departments'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+                'departments',
+            )
+        );
     }
 
     /**
@@ -110,7 +108,7 @@ class PropertyChildController extends Controller
                         'text' => 'The consumable item has been added successfully!',
                     ]);
 
-                } else{
+                } else {
                     $parentProperty->update(['quantity' => $newQuantity]);
 
                     $propertyQuantity = request('VarQuantity');
@@ -122,11 +120,12 @@ class PropertyChildController extends Controller
                         ->value('prop_code');
 
                     $nextNumber = $lastCode ? (int)substr($lastCode, 4) + 1 : 1;
+                    $newItemCodes = [];
 
                     for ($i = 0; $i < $propertyQuantity; $i++) {
                         $code = $currentYear . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
                         $nextNumber++;
-                        PropertyChild::create([
+                        $newItem = PropertyChild::create([
                             'prop_id' => $parentProperty->id,
                             'prop_code' => $code,
                             'type_id' => 1,
@@ -138,7 +137,22 @@ class PropertyChildController extends Controller
                             'desig_id' => 1,
                             'condi_id' => 1,
                         ]);
+                        $newItemCodes[] = $newItem->prop_code;
                     }
+
+                    $addedCount = count($newItemCodes);
+
+                    (new Audit())
+                        ->logName('Add Item Stock')
+                        ->logDesc("Added $addedCount new items for '{$parentProperty->name}'")
+                        ->performedOn($parentProperty)
+                        ->logEvent(1)
+                        ->logProperties([
+                            'name' => $parentProperty->name,
+                            'quantity added' => $addedCount,
+                            'status' => 'Available',
+                        ])
+                        ->log();
                 }
                 return response()->json([
                     'success' => true,
@@ -303,8 +317,6 @@ class PropertyChildController extends Controller
             } else {
                 $children->is_active = $request->input('status');
             }
-
-            $children->updated_at = now();
             $children->save();
 
             return response()->json([
@@ -376,6 +388,7 @@ class PropertyChildController extends Controller
             }
 
             $deptId = Designation::query()->findOrFail($designation)->dept_id;
+            $designationRecord = Designation::query()->findOrFail($designation);
 
             PropertyChild::whereIn('id', $propertyChildIds)->update([
                 'desig_id' => $designation,
@@ -386,13 +399,26 @@ class PropertyChildController extends Controller
                 'updated_at' => now(),
             ]);
 
+            $movedCount = count($propertyChildIds);
+            (new Audit())
+                ->logName('Deploy Item(s)')
+                ->logDesc("$movedCount item(s) has been moved to $designationRecord->name with remarks: '$remarks'.")
+                ->performedOn(new PropertyChild())
+                ->logEvent(2)
+                ->logProperties([
+                    'items count' => $movedCount,
+                    'designation' => $designation,
+                    'remarks' => $remarks,
+                ])
+                ->log();
+
             return response()->json([
                 'success' => true,
                 'title' => 'Item Deployed Successfully!',
                 'text' => 'The item has been assigned to the selected designation.',
             ]);
 
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
@@ -400,6 +426,7 @@ class PropertyChildController extends Controller
             ], 500);
         }
     }
+
     public function generate($id)
     {
         $propertyChild = PropertyChild::with([
@@ -425,8 +452,6 @@ class PropertyChildController extends Controller
 
         return view('pages.property-asset.stock.generate-qr', compact('propertyChild', 'qr'));
     }
-
-
 
 
 }

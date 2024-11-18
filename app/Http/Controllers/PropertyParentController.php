@@ -9,15 +9,15 @@ use App\Models\Condition;
 use App\Models\PropertyChild;
 use App\Models\PropertyParent;
 use App\Models\Unit;
+use App\Observers\PropertyParentObserver;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use Throwable;
 
+#[ObservedBy([PropertyParentObserver::class])]
 class PropertyParentController extends Controller
 {
     /**
@@ -35,7 +35,7 @@ class PropertyParentController extends Controller
                     $acquisitionDate = $property->propertyChildren->first()->acq_date ?? null;
 
                     $yearsInUse = $acquisitionDate
-                        ? round(\Carbon\Carbon::parse($acquisitionDate)->diffInMonths(\Carbon\Carbon::now()) / 12, 2)
+                        ? round(Carbon::parse($acquisitionDate)->diffInMonths(Carbon::now()) / 12, 2)
                         : 0;
 
                     $totalDepreciationSoFar = $annualDepreciation * $yearsInUse;
@@ -69,7 +69,6 @@ class PropertyParentController extends Controller
 
                 return $property;
             });
-
 
 
         $categories = Category::where('is_active', 1)->get();
@@ -137,7 +136,7 @@ class PropertyParentController extends Controller
                 'acquiredType' => ['required'],
                 'acquiredDate' => ['required', 'date', 'before_or_equal:today', 'after_or_equal:2007-01-01'],
                 'condition' => ['required'],
-                'residualValue' => ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/', 'min:1','max:'.$purchasePrice],
+                'residualValue' => ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/', 'min:1', 'max:' . $purchasePrice],
                 'usefulLife' => ['required', 'integer', 'min:1', 'max:500'],
             ]);
 
@@ -278,9 +277,9 @@ class PropertyParentController extends Controller
 
             $propertyChildren = $propertyParent->propertyChildren;
 
-            $propertyInStock = $propertyChildren->whereNull('inventory_date')->where('is_active',1)->count();
-            $propertyInInventory = $propertyChildren->whereNotNull('inventory_date')->where('is_active',1)->count();
-            $propertyTotal = $propertyChildren->where('is_active',1)->count();
+            $propertyInStock = $propertyChildren->whereNull('inventory_date')->where('is_active', 1)->count();
+            $propertyInInventory = $propertyChildren->whereNotNull('inventory_date')->where('is_active', 1)->count();
+            $propertyTotal = $propertyChildren->where('is_active', 1)->count();
             return response()->json([
                 'success' => true,
                 'name' => $propertyParent->name,
@@ -291,13 +290,13 @@ class PropertyParentController extends Controller
                 'category' => $propertyParent->category ? $propertyParent->category->name : 'Consumable Item',
                 'purchasePrice' => $propertyParent->purchase_price ?? 'No price provided',
                 'residualValue' => $propertyParent->residual_value
-                    ? '₱'.$propertyParent->residual_value
+                    ? '₱' . $propertyParent->residual_value
                     : ($propertyParent->is_consumable == 1 ? 'Consumable Item' : 'No residual value provided'),
                 'usefulLife' => $propertyParent->useful_life
                     ? $propertyParent->useful_life
                     : ($propertyParent->is_consumable == 1 ? 'Consumable Item' : 'No useful life provided'),
                 'inStock' => $propertyInStock,
-                'inventory' => $propertyInInventory ,
+                'inventory' => $propertyInInventory,
                 'quantity' => $propertyTotal,
                 'created' => $propertyParent->created_at->format('D, F d, Y | h:i:s A'),
                 'updated' => $propertyParent->updated_at->format('D, F d, Y | h:i:s A'),
@@ -350,7 +349,6 @@ class PropertyParentController extends Controller
             ], 500);
         }
     }
-
 
 
     /**
@@ -455,7 +453,7 @@ class PropertyParentController extends Controller
                 }
             }
 
-            if (!$property->is_consumable){
+            if (!$property->is_consumable) {
                 $property->update([
                     'name' => ucwords(strtolower(trim($request->input('property')))),
                     'specification' => ucwords(strtolower(trim($request->input('specification')))),

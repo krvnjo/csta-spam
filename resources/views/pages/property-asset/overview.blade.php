@@ -38,12 +38,13 @@
           </div>
           <!-- End Col -->
 
-          <div class="col-sm-auto">
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPropertyModal" type="button">
-              <i class="bi bi-plus-lg me-1"></i> Add Item
-            </button>
-          </div>
-          <!-- End Col -->
+          @access('Item Management', 'Read and Write, Full Access')
+            <div class="col-sm-auto">
+              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPropertyModal" type="button">
+                <i class="bi bi-plus-lg me-1"></i> Add Item
+              </button>
+            </div>
+          @endaccess
         </div>
         <!-- End Row -->
       </div>
@@ -215,11 +216,11 @@
             <!-- End Dropdown -->
 
             <!-- Dropdown -->
-{{--            <div class="dropdown">--}}
-{{--              <button class="btn btn-white" data-bs-toggle="offcanvas" data-bs-target="#offcanvasPropertyFilter" type="button" aria-controls="offcanvasPropertyFilter">--}}
-{{--                <i class="bi-filter me-1"></i> Filters--}}
-{{--              </button>--}}
-{{--            </div>--}}
+            {{--            <div class="dropdown"> --}}
+            {{--              <button class="btn btn-white" data-bs-toggle="offcanvas" data-bs-target="#offcanvasPropertyFilter" type="button" aria-controls="offcanvasPropertyFilter"> --}}
+            {{--                <i class="bi-filter me-1"></i> Filters --}}
+            {{--              </button> --}}
+            {{--            </div> --}}
             <!-- End Dropdown -->
           </div>
         </div>
@@ -289,11 +290,12 @@
                         <img class="avatar-img" src="{{ $imageUrl }}" alt="Image Description">
                       </div>
                       <div class="ms-3">
-                        <span class="d-block h5 mb-0 text-inherit" @if (!empty($propertyParent->name) && strlen($propertyParent->name) > 25) data-bs-toggle="tooltip"
+                        <span class="d-block h5 mb-0 text-inherit"
+                          @if (!empty($propertyParent->name) && strlen($propertyParent->name) > 25) data-bs-toggle="tooltip"
                               data-bs-html="true"
                               data-bs-placement="bottom"
                               title="{{ $propertyParent->name }}" @endif>
-                        {{ Str::limit(!empty($propertyParent->name) ? $propertyParent->name : 'No item name provided', 25) }}
+                          {{ Str::limit(!empty($propertyParent->name) ? $propertyParent->name : 'No item name provided', 25) }}
                       </div>
                     </a>
                   </td>
@@ -324,7 +326,6 @@
                       ₱{{ $depreciatedValue }}
                     </strong>
                   </td>
-
                   <td class="text-center">
                     @if ($propertyParent->depreciationRate > 0)
                       @php
@@ -340,7 +341,6 @@
                       </span>
                     @endif
                   </td>
-
                   <td class="text-center">
                     {{ $propertyParent->quantity }}
                   </td>
@@ -358,9 +358,11 @@
                           aria-expanded="false"></button>
 
                         <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="productsEditDropdown1">
-                          <button class="dropdown-item btnEditPropParent" type="button">
-                            <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Item
-                          </button>
+                          @access('Item Management', 'Read and Write, Full Access')
+                            <button class="dropdown-item btnEditPropParent" type="button">
+                              <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Item
+                            </button>
+                          @endaccess
                           <button class="dropdown-item btnViewProperty" type="button">
                             <i class="bi bi-info-square-fill dropdown-item-icon"></i> View Details
                           </button>
