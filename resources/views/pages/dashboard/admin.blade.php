@@ -48,16 +48,16 @@
         <div class="card-header card-header-content-sm-between">
           <h4 class="card-header-title mb-2 mb-sm-0">Recent Statistics</h4>
 
-          <!-- Nav -->
-          <ul class="nav nav-segment nav-fill" id="projectsTab" role="tablist">
-            <li class="nav-item" data-bs-toggle="chart" data-datasets="0" data-trigger="click" data-action="toggle">
-              <a class="nav-link active" data-bs-toggle="tab" href="javascript:">This week</a>
-            </li>
-            <li class="nav-item" data-bs-toggle="chart" data-datasets="1" data-trigger="click" data-action="toggle">
-              <a class="nav-link" data-bs-toggle="tab" href="javascript:">Last week</a>
-            </li>
-          </ul>
-          <!-- End Nav -->
+          {{--          <!-- Nav --> --}}
+          {{--          <ul class="nav nav-segment nav-fill" id="projectsTab" role="tablist"> --}}
+          {{--            <li class="nav-item" data-bs-toggle="chart" data-datasets="0" data-trigger="click" data-action="toggle"> --}}
+          {{--              <a class="nav-link active" data-bs-toggle="tab" href="javascript:">This week</a> --}}
+          {{--            </li> --}}
+          {{--            <li class="nav-item" data-bs-toggle="chart" data-datasets="1" data-trigger="click" data-action="toggle"> --}}
+          {{--              <a class="nav-link" data-bs-toggle="tab" href="javascript:">Last week</a> --}}
+          {{--            </li> --}}
+          {{--          </ul> --}}
+          {{--          <!-- End Nav --> --}}
         </div>
         <!-- End Header -->
 
@@ -66,10 +66,22 @@
           <div class="row align-items-sm-center mb-4">
             <div class="col-sm mb-3 mb-sm-0">
               <div class="d-flex align-items-center">
-                <span class="h1 mb-0">₱7,431.14 PHP</span>
-
-                <span class="text-success ms-2">
-                  <i class="bi-graph-up"></i> 25.3%
+                <span
+                  class="h1 mb-0">₱{{ number_format(
+                      $propertyParents->sum(function ($property) {
+                          return $property->purchase_price * $property->quantity;
+                      }),
+                      2,
+                  ) }}
+                  PHP</span>
+                <span class="{{ $percentageChange > 0 ? 'text-danger' : 'text-success' }} ms-2">
+                  @if ($percentageChange > 0)
+                    <i class="bi-graph-up text-danger"></i> {{ number_format($percentageChange, 2) }}%
+                  @elseif ($percentageChange < 0)
+                    <i class="bi-graph-down text-success"></i> {{ number_format(abs($percentageChange), 2) }}%
+                  @else
+                    <i class="bi-graph-up text-muted"></i> 0%
+                  @endif
                 </span>
               </div>
             </div>
@@ -79,10 +91,10 @@
               <!-- Legend Indicators -->
               <div class="row fs-6">
                 <div class="col-auto">
-                  <span class="legend-indicator bg-primary"></span> Income
+                  <span class="legend-indicator bg-primary"></span> Non-consumable Items
                 </div>
                 <div class="col-auto">
-                  <span class="legend-indicator bg-info"></span> Expenses
+                  <span class="legend-indicator bg-info"></span> Consumable Items
                 </div>
               </div>
               <!-- End Legend Indicators -->
@@ -95,81 +107,80 @@
           <div class="chartjs-custom" style="height: 18rem;">
             <canvas id="updatingLineChart"
               data-hs-chartjs-options='{
-                      "type": "line",
-                      "data": {
-                         "labels": ["Feb","Jan","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
-                         "datasets": [{
-                          "backgroundColor": ["rgba(55,125,255, .5)", "rgba(255, 255, 255, .2)"],
-                          "borderColor": "#377dff",
-                          "borderWidth": 2,
-                          "pointRadius": 0,
-                          "hoverBorderColor": "#377dff",
-                          "pointBackgroundColor": "#377dff",
-                          "pointBorderColor": "#fff",
-                          "pointHoverRadius": 0,
-                          "tension": 0.4
+                "type": "line",
+                "data": {
+                   "labels": ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+                   "datasets": [{
+                    "backgroundColor": ["rgba(55,125,255, .5)", "rgba(255, 255, 255, .2)"],
+                    "borderColor": "#377dff",
+                    "borderWidth": 2,
+                    "pointRadius": 0,
+                    "hoverBorderColor": "#377dff",
+                    "pointBackgroundColor": "#377dff",
+                    "pointBorderColor": "#fff",
+                    "pointHoverRadius": 0,
+                    "tension": 0.4
+                  },
+                  {
+                    "backgroundColor": ["rgba(0, 201, 219, .5)", "rgba(255, 255, 255, .2)"],
+                    "borderColor": "#00c9db",
+                    "borderWidth": 2,
+                    "pointRadius": 0,
+                    "hoverBorderColor": "#00c9db",
+                    "pointBackgroundColor": "#00c9db",
+                    "pointBorderColor": "#fff",
+                    "pointHoverRadius": 0,
+                    "tension": 0.4
+                  }]
+                },
+                "options": {
+                  "gradientPosition": {"y1": 200},
+                   "scales": {
+                      "y": {
+                        "grid": {
+                          "color": "#e7eaf3",
+                          "drawBorder": false,
+                          "zeroLineColor": "#e7eaf3"
                         },
-                        {
-                          "backgroundColor": ["rgba(0, 201, 219, .5)", "rgba(255, 255, 255, .2)"],
-                          "borderColor": "#00c9db",
-                          "borderWidth": 2,
-                          "pointRadius": 0,
-                          "hoverBorderColor": "#00c9db",
-                          "pointBackgroundColor": "#00c9db",
-                          "pointBorderColor": "#fff",
-                          "pointHoverRadius": 0,
-                          "tension": 0.4
-                        }]
+                        "ticks": {
+                          "min": 0,
+                          "max": 100,
+                          "stepSize": 20,
+                          "fontColor": "#97a4af",
+                          "fontFamily": "Open Sans, sans-serif",
+                          "padding": 10,
+                          "postfix": " PHP"
+                        }
                       },
-                      "options": {
-                        "gradientPosition": {"y1": 200},
-                         "scales": {
-                            "y": {
-                              "grid": {
-                                "color": "#e7eaf3",
-                                "drawBorder": false,
-                                "zeroLineColor": "#e7eaf3"
-                              },
-                              "ticks": {
-                                "min": 0,
-                                "max": 100,
-                                "stepSize": 20,
-                                "fontColor": "#97a4af",
-                                "fontFamily": "Open Sans, sans-serif",
-                                "padding": 10,
-                                "postfix": "k"
-                              }
-                            },
-                            "x": {
-                              "grid": {
-                                "display": false,
-                                "drawBorder": false
-                              },
-                              "ticks": {
-                                "fontSize": 12,
-                                "fontColor": "#97a4af",
-                                "fontFamily": "Open Sans, sans-serif",
-                                "padding": 5
-                              }
-                            }
+                      "x": {
+                        "grid": {
+                          "display": false,
+                          "drawBorder": false
                         },
-                        "plugins": {
-                          "tooltip": {
-                            "prefix": "$",
-                            "postfix": "k",
-                            "hasIndicator": true,
-                            "mode": "index",
-                            "intersect": false,
-                            "lineMode": true,
-                            "lineWithLineColor": "rgba(19, 33, 68, 0.075)"
-                          }
-                        },
-                        "hover": {
-                          "mode": "nearest",
-                          "intersect": true
+                        "ticks": {
+                          "fontSize": 12,
+                          "fontColor": "#97a4af",
+                          "fontFamily": "Open Sans, sans-serif",
+                          "padding": 5
                         }
                       }
-                    }'>
+                  },
+                  "plugins": {
+                    "tooltip": {
+                      "postfix": " PHP",
+                      "hasIndicator": true,
+                      "mode": "index",
+                      "intersect": false,
+                      "lineMode": true,
+                      "lineWithLineColor": "rgba(19, 33, 68, 0.075)"
+                    }
+                  },
+                  "hover": {
+                    "mode": "nearest",
+                    "intersect": true
+                  }
+                }
+              }'>
             </canvas>
           </div>
           <!-- End Bar Chart -->
@@ -178,478 +189,214 @@
 
         <!-- Table -->
         <div class="table-responsive">
-          <table class="table table-borderless table-thead-bordered table-align-middle card-table">
+          <table class="table table-borderless table-thead-bordered table-align-middle card-table table-hover">
             <thead class="thead-light">
               <tr>
-                <th>Items on Repair</th>
-                <th>Members</th>
-                <th>Spent</th>
-                <th>Hours</th>
-                <th>Completion</th>
+                <th>Highest Purchase Value Items</th>
+                <th>Specification & Description</th>
+                <th>Brand</th>
+                <th>Category</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Item Type</th>
               </tr>
             </thead>
-
             <tbody>
-              <tr>
-                <td>
-                  <a class="d-flex align-items-center" href="#">
-                    <div class="flex-shrink-0">
-                      <img class="avatar avatar-sm" src="{{ Vite::asset('resources/svg/brands/spec-icon.svg') }}" alt="Image Description">
-                    </div>
-                    <div class="flex-grow-1 ms-3">
-                      <span class="d-block h5 text-inherit mb-0">Install Front pay</span>
-                    </div>
-                  </a>
-                </td>
-                <td>
-                  <!-- Avatar Group -->
-                  <div class="avatar-group avatar-group-xs avatar-circle">
-                    <a class="avatar" data-bs-toggle="tooltip" data-bs-placement="top" href="#" title="Amanda Harvey">
-                      <img class="avatar-img" src="{{ Vite::asset('resources/img/160x160/img10.jpg') }}" alt="Image Description">
-                    </a>
-                    <a class="avatar" data-bs-toggle="tooltip" data-bs-placement="top" href="#" title="David Harrison">
-                      <img class="avatar-img" src="{{ Vite::asset('resources/img/160x160/img3.jpg') }}" alt="Image Description">
-                    </a>
-                    <a class="avatar avatar-soft-info" data-bs-toggle="tooltip" data-bs-placement="top" href="#" title="Lisa Iston">
-                      <span class="avatar-initials">L</span>
-                    </a>
-                    <a class="avatar avatar-light avatar-circle" data-bs-toggle="tooltip" data-bs-placement="top" href=".#"
-                      title="Lewis Clarke, Chris Mathew and 3 more">
-                      <span class="avatar-initials">+5</span>
-                    </a>
-                  </div>
-                  <!-- End Avatar Group -->
-                </td>
-                <td>
-                  <div class="d-flex align-items-center">
-                    <span class="mb-0">$25,000</span>
-                  </div>
-                </td>
-                <td>
-                  <div class="d-flex align-items-center">
-                    <span class="mb-0">34</span>
-                    <span class="badge bg-soft-danger text-danger p-1 ms-2">
-                      <i class="bi-graph-down"></i> 1.8
-                    </span>
-                  </div>
-                </td>
-                <td>
-                  <div class="d-flex align-items-center">
-                    <span class="mb-0 me-2">26%</span>
-                    <div class="progress table-progress">
-                      <div class="progress-bar" role="progressbar" aria-valuenow="26" aria-valuemin="0" aria-valuemax="100" style="width: 26%">
+              @foreach ($propertyParents as $property)
+                <tr>
+                  <td>
+                    <a class="d-flex align-items-center">
+                      <div class="flex-shrink-0">
+                        <img class="avatar avatar-sm" src="{{ asset('storage/img/prop-asset/' . $property->image) }}" alt="Item Image">
                       </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-
-              <tr>
-                <td>
-                  <a class="d-flex align-items-center" href="#">
-                    <div class="flex-shrink-0">
-                      <img class="avatar avatar-sm" src="{{ Vite::asset('resources/svg/brands/mailchimp-icon.svg') }}" alt="Image Description">
-                    </div>
-                    <div class="flex-grow-1 ms-3">
-                      <span class="d-block h5 text-inherit mb-0">Update subscription method <i class="bi-patch-check-fill text-primary"
-                          data-bs-toggle="tooltip" data-bs-placement="top" title="Earned extra bonus"></i></span>
-                    </div>
-                  </a>
-                </td>
-                <td>
-                  <!-- Avatar Group -->
-                  <div class="avatar-group avatar-group-xs avatar-circle">
-                    <a class="avatar" data-bs-toggle="tooltip" data-bs-placement="top" href="#" title="Costa Quinn">
-                      <img class="avatar-img" src="{{ Vite::asset('resources/img/160x160/img6.jpg') }}" alt="Image Description">
+                      <div class="flex-grow-1 ms-3">
+                        <span class="d-block h5 text-inherit mb-0">{{ $property->name }}</span>
+                      </div>
                     </a>
-                    <a class="avatar" data-bs-toggle="tooltip" data-bs-placement="top" href="#" title="Clarice Boone">
-                      <img class="avatar-img" src="{{ Vite::asset('resources/img/160x160/img7.jpg') }}" alt="Image Description">
-                    </a>
-                    <a class="avatar avatar-soft-danger" data-bs-toggle="tooltip" data-bs-placement="top" href="#" title="Adam Keep">
-                      <span class="avatar-initials">A</span>
-                    </a>
-                  </div>
-                  <!-- End Avatar Group -->
-                </td>
-                <td>
-                  <div class="d-flex align-items-center">
-                    <span class="mb-0">$5,783</span>
-                    <span class="badge bg-soft-success text-success p-1 ms-2">
-                      <i class="bi-graph-up"></i> 7.3%
-                    </span>
-                  </div>
-                </td>
-                <td>
-                  <div class="d-flex align-items-center">
-                    <span class="mb-0">73.1</span>
-                    <span class="badge bg-soft-success text-success p-1 ms-2">
-                      <i class="bi-graph-up"></i> 5.0
-                    </span>
-                  </div>
-                </td>
-                <td>
-                  <div class="d-flex align-items-center">
-                    <span class="mb-0 me-2">100%</span>
-                    <div class="progress table-progress">
-                      <div class="progress-bar bg-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"
-                        style="width: 100%"></div>
+                  </td>
+                  <td>
+                    <span class="d-block h5 mb-0">{{ $property->specification }}</span>
+                    <span class="d-block fs-5">{{ $property->description ?? 'N/A' }}</span>
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <span class="mb-0">{{ $property->brand->name ?? 'GENERIC' }}</span>
                     </div>
-                  </div>
-                </td>
-              </tr>
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <span class="mb-0">{{ $property->category->name ?? 'GENERIC' }}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <span class="mb-0">{{ $property->quantity ?? '₱0 PHP' }}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <span class="mb-0">₱{{ number_format($property->purchase_price, 2) }} PHP</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <span class="mb-0">
+                        <span class="legend-indicator {{ $property->is_consumable == 1 ? 'bg-info' : 'bg-primary' }}"></span>
+                        {{ $property->is_consumable == 1 ? 'Consumable' : 'Non-consumable' }}
+                      </span>
+                    </div>
+                  </td>
+                </tr>
+              @endforeach
             </tbody>
           </table>
         </div>
         <!-- End Table -->
 
         <!-- Card Footer -->
-        <a class="card-footer text-center" href="#">
-          View all projects <i class="bi-chevron-right"></i>
-        </a>
+        <a class="card-footer text-center" data-route="prop-asset.index" href="{{ route('prop-asset.index') }}">View all items <i class="bi-chevron-right"></i></a>
         <!-- End Card Footer -->
       </div>
       <!-- End Card -->
 
       <div class="row">
         <div class="col-lg-4 mb-3 mb-lg-5">
-          <!-- Card -->
-          <div class="card h-100">
-            <!-- Header -->
-            <div class="card-header card-header-content-between">
-              <h4 class="card-header-title">Payments</h4>
+          <div class="d-grid gap-2 gap-lg-4">
+            <!-- Card -->
+            <a class="card card-hover-shadow" data-route="prop-overview.index" href="{{ route('prop-overview.index') }}">
+              <div class="card-body">
+                <div class="d-flex align-items-center">
+                  <div class="flex-shrink-0">
+                    <img class="avatar avatar-lg avatar-4x3" data-hs-theme-appearance="default" src="{{ Vite::asset('resources/svg/illustrations/oc-megaphone.svg') }}" alt="Image Description"
+                      style="min-height: 5rem;">
+                    <img class="avatar avatar-lg avatar-4x3" data-hs-theme-appearance="dark" src="{{ Vite::asset('resources/svg/illustrations-light/oc-megaphone.svg') }}" alt="Image Description"
+                      style="min-height: 5rem;">
+                  </div>
 
-              <!-- Dropdown -->
-              <div class="dropdown">
-                <button class="btn btn-ghost-secondary btn-icon btn-sm rounded-circle" id="reportsOverviewDropdown1" data-bs-toggle="dropdown"
-                  type="button" aria-expanded="false">
-                  <i class="bi-three-dots-vertical"></i>
-                </button>
+                  <div class="flex-grow-1 ms-4">
+                    <h3 class="text-inherit mb-1">Item Management</h3>
+                    <span class="text-body">Create a new item</span>
+                  </div>
 
-                <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="reportsOverviewDropdown1">
-                  <span class="dropdown-header">Settings</span>
-
-                  <a class="dropdown-item" href="#">
-                    <i class="bi-share-fill dropdown-item-icon"></i> Share reports
-                  </a>
-                  <a class="dropdown-item" href="#">
-                    <i class="bi-download dropdown-item-icon"></i> Download
-                  </a>
-                  <a class="dropdown-item" href="#">
-                    <i class="bi-alt dropdown-item-icon"></i> Connect other apps
-                  </a>
-
-                  <div class="dropdown-divider"></div>
-
-                  <span class="dropdown-header">Feedback</span>
-
-                  <a class="dropdown-item" href="#">
-                    <i class="bi-chat-left-dots dropdown-item-icon"></i> Report
-                  </a>
+                  <div class="ms-2 text-end">
+                    <i class="bi-chevron-right text-body text-inherit"></i>
+                  </div>
                 </div>
               </div>
-              <!-- End Dropdown -->
-            </div>
-            <!-- End Header -->
+            </a>
+            <!-- End Card -->
 
-            <!-- Body -->
-            <div class="card-body text-center">
-              <!-- Badge -->
-              <div class="h3">
-                <span class="badge bg-soft-info text-info rounded-pill">
-                  <i class="bi-check-circle-fill me-1"></i> On track
-                </span>
-              </div>
-              <!-- End Badge -->
+            <!-- Card -->
+            <a class="card card-hover-shadow" data-route="new-request.index" href="{{ route('new-request.index') }}">
+              <div class="card-body">
+                <div class="d-flex align-items-center">
+                  <div class="flex-shrink-0">
+                    <img class="avatar avatar-lg avatar-4x3" data-hs-theme-appearance="default" src="{{ Vite::asset('resources/svg/illustrations/oc-collection.svg') }}" alt="Image Description"
+                      style="min-height: 5rem;">
+                    <img class="avatar avatar-lg avatar-4x3" data-hs-theme-appearance="dark" src="{{ Vite::asset('resources/svg/illustrations-light/oc-collection.svg') }}" alt="Image Description"
+                      style="min-height: 5rem;">
+                  </div>
 
-              <!-- Chart Half -->
-              <div class="chartjs-doughnut-custom" style="height: 12rem;">
-                <canvas class="js-chartjs-doughnut-half" id="doughnutHalfChart"
-                  data-hs-chartjs-options='{
-                        "type": "doughnut",
-                        "data": {
-                          "labels": ["Current status", "Goal"],
-                          "datasets": [{
-                            "data": [64, 35],
-                            "backgroundColor": ["#377dff", "rgba(55,125,255,.35)"],
-                            "borderWidth": 4,
-                            "borderColor": "#fff",
-                            "hoverBorderColor": "#ffffff"
-                          }]
-                        }
-                      }'></canvas>
+                  <div class="flex-grow-1 ms-4">
+                    <h3 class="text-inherit mb-1">Borrowing & Reservation</h3>
+                    <span class="text-body">Create a new borrowing request</span>
+                  </div>
 
-                <div class="chartjs-doughnut-custom-stat">
-                  <small class="text-cap">Project balance</small>
-                  <span class="h1">$150,238.00</span>
+                  <div class="ms-2 text-end">
+                    <i class="bi-chevron-right text-body text-inherit"></i>
+                  </div>
                 </div>
               </div>
-              <!-- End Chart Half -->
+            </a>
+            <!-- End Card -->
 
-              <hr>
+            <!-- Card -->
+            <a class="card card-hover-shadow" data-route="user.index" href="{{ route('user.index') }}">
+              <div class="card-body">
+                <div class="d-flex align-items-center">
+                  <div class="flex-shrink-0">
+                    <img class="avatar avatar-lg avatar-4x3" data-hs-theme-appearance="default" src="{{ Vite::asset('resources/svg/illustrations/oc-hi-five.svg') }}" alt="Image Description"
+                      style="min-height: 5rem;">
+                    <img class="avatar avatar-lg avatar-4x3" data-hs-theme-appearance="dark" src="{{ Vite::asset('resources/svg/illustrations-light/oc-hi-five.svg') }}" alt="Image Description"
+                      style="min-height: 5rem;">
+                  </div>
 
-              <div class="row col-divider">
-                <div class="col text-end">
-                  <span class="d-block h4 mb-0">$72.46</span>
-                  <span class="d-block">last transaction</span>
-                </div>
+                  <div class="flex-grow-1 ms-4">
+                    <h3 class="text-inherit mb-1">Repair & Maintenance</h3>
+                    <span class="text-body">Create a new ticket request</span>
+                  </div>
 
-                <div class="col text-start">
-                  <span class="d-block h4 text-success mb-0">
-                    <i class="bi-graph-up"></i> 12%
-                  </span>
-                  <span class="d-block">since last visit</span>
+                  <div class="ms-2 text-end">
+                    <i class="bi-chevron-right text-body text-inherit"></i>
+                  </div>
                 </div>
               </div>
-              <!-- End Row -->
-            </div>
-            <!-- End Body -->
+            </a>
+            <!-- End Card -->
           </div>
-          <!-- End Card -->
         </div>
+        <!-- End Col -->
 
         <div class="col-lg-8 mb-3 mb-lg-5">
           <!-- Card -->
           <div class="card h-100">
             <!-- Header -->
             <div class="card-header card-header-content-between">
-              <h4 class="card-header-title">Latest transactions</h4>
-
-              <!-- Dropdown -->
-              <div class="dropdown">
-                <button class="btn btn-ghost-secondary btn-icon btn-sm rounded-circle" id="reportsOverviewDropdown3" data-bs-toggle="dropdown"
-                  type="button" aria-expanded="false">
-                  <i class="bi-three-dots-vertical"></i>
-                </button>
-
-                <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="reportsOverviewDropdown3">
-                  <span class="dropdown-header">Settings</span>
-
-                  <a class="dropdown-item" href="#">
-                    <i class="bi-share-fill dropdown-item-icon"></i> Share reports
-                  </a>
-                  <a class="dropdown-item" href="#">
-                    <i class="bi-download dropdown-item-icon"></i> Download
-                  </a>
-                  <a class="dropdown-item" href="#">
-                    <i class="bi-alt dropdown-item-icon"></i> Connect other apps
-                  </a>
-
-                  <div class="dropdown-divider"></div>
-
-                  <span class="dropdown-header">Feedback</span>
-
-                  <a class="dropdown-item" href="#">
-                    <i class="bi-chat-left-dots dropdown-item-icon"></i> Report
-                  </a>
-                </div>
-              </div>
-              <!-- End Dropdown -->
+              <h4 class="card-header-title">Low on Stock Items</h4>
             </div>
             <!-- End Header -->
 
             <!-- Body -->
-            <div class="card-body card-body-height">
-              <ul class="list-group list-group-flush list-group-no-gutters">
-                <!-- List Item -->
-                <li class="list-group-item">
-                  <div class="d-flex">
-                    <div class="flex-shrink-0">
-                      <!-- Avatar -->
-                      <div class="avatar avatar-sm avatar-soft-dark avatar-circle">
-                        <span class="avatar-initials">B</span>
-                      </div>
-                      <!-- End Avatar -->
-                    </div>
+            <div class="card-body-height">
+              <!-- Table -->
+              <div class="table-responsive">
+                <table class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
+                  <thead class="thead-light">
+                    <tr>
+                      <th scope="col">Items</th>
+                      <th scope="col">Specification</th>
+                      <th scope="col">Description</th>
+                      <th scope="col">Price</th>
+                      <th scope="col">Quantity</th>
+                      <th scope="col">Unit</th>
+                    </tr>
+                  </thead>
 
-                    <div class="flex-grow-1 ms-3">
-                      <div class="row">
-                        <div class="col-7 col-md-5 order-md-1">
-                          <h5 class="mb-0">Bob Dean</h5>
-                          <span class="fs-6 text-body">Transfer to bank account</span>
-                        </div>
-
-                        <div class="col-5 col-md-4 order-md-3 text-end mt-2 mt-md-0">
-                          <h5 class="mb-0">-$290.00 USD</h5>
-                          <span class="fs-6 text-body">15 May, 2020</span>
-                        </div>
-
-                        <div class="col-auto col-md-3 order-md-2">
-                          <span class="badge bg-soft-warning text-warning rounded-pill">Pending</span>
-                        </div>
-                      </div>
-                      <!-- End Row -->
-                    </div>
-                  </div>
-                </li>
-                <!-- End List Item -->
-
-                <!-- List Item -->
-                <li class="list-group-item">
-                  <div class="d-flex">
-                    <div class="flex-shrink-0">
-                      <!-- Avatar -->
-                      <img class="avatar avatar-sm avatar-circle" src="{{ Vite::asset('resources/svg/brands/slack-icon.svg') }}"
-                        alt="Image Description">
-                      <!-- End Avatar -->
-                    </div>
-
-                    <div class="flex-grow-1 ms-3">
-                      <div class="row">
-                        <div class="col-7 col-md-5 order-md-1">
-                          <h5 class="mb-0">Slack</h5>
-                          <span class="fs-6 text-body">Subscription payment</span>
-                        </div>
-
-                        <div class="col-5 col-md-4 order-md-3 text-end mt-2 mt-md-0">
-                          <h5 class="mb-0">-$11.00 USD</h5>
-                          <span class="fs-6 text-body">12 May, 2020</span>
-                        </div>
-
-                        <div class="col-auto col-md-3 order-md-2">
-                          <span class="badge bg-soft-success text-success rounded-pill">Completed</span>
-                        </div>
-                      </div>
-                      <!-- End Row -->
-                    </div>
-                  </div>
-                </li>
-                <!-- End List Item -->
-
-                <!-- List Item -->
-                <li class="list-group-item">
-                  <div class="d-flex">
-                    <div class="flex-shrink-0">
-                      <!-- Avatar -->
-                      <img class="avatar avatar-sm avatar-circle" src="{{ Vite::asset('resources/svg/brands/bank-of-america-icon.svg') }}"
-                        alt="Image Description">
-                      <!-- End Avatar -->
-                    </div>
-
-                    <div class="flex-grow-1 ms-3">
-                      <div class="row">
-                        <div class="col-7 col-md-5 order-md-1">
-                          <h5 class="mb-0">Bank of America</h5>
-                          <span class="fs-6 text-body">Withdrawal to bank account</span>
-                        </div>
-
-                        <div class="col-5 col-md-4 order-md-3 text-end mt-2 mt-md-0">
-                          <h5 class="text-success mb-0">$3500.00 USD</h5>
-                          <span class="fs-6 text-body">10 May, 2020</span>
-                        </div>
-
-                        <div class="col-auto col-md-3 order-md-2">
-                          <span class="badge bg-soft-success text-success rounded-pill">Completed</span>
-                        </div>
-                      </div>
-                      <!-- End Row -->
-                    </div>
-                  </div>
-                </li>
-                <!-- End List Item -->
-
-                <!-- List Item -->
-                <li class="list-group-item">
-                  <div class="d-flex">
-                    <div class="flex-shrink-0">
-                      <!-- Avatar -->
-                      <img class="avatar avatar-sm avatar-circle" src="{{ Vite::asset('resources/svg/brands/spotify-icon.svg') }}"
-                        alt="Image Description">
-                      <!-- End Avatar -->
-                    </div>
-
-                    <div class="flex-grow-1 ms-3">
-                      <div class="row">
-                        <div class="col-7 col-md-5 order-md-1">
-                          <h5 class="mb-0">Spotify</h5>
-                          <span class="fs-6 text-body">Subscription payment</span>
-                        </div>
-
-                        <div class="col-5 col-md-4 order-md-3 text-end mt-2 mt-md-0">
-                          <h5 class="mb-0">-$10.00 USD</h5>
-                          <span class="fs-6 text-body">12 May, 2020</span>
-                        </div>
-
-                        <div class="col-auto col-md-3 order-md-2">
-                          <span class="badge bg-soft-danger text-danger rounded-pill">Failed</span>
-                        </div>
-                      </div>
-                      <!-- End Row -->
-                    </div>
-                  </div>
-                </li>
-                <!-- End List Item -->
-
-                <!-- List Item -->
-                <li class="list-group-item">
-                  <div class="d-flex">
-                    <div class="flex-shrink-0">
-                      <!-- Avatar -->
-                      <div class="avatar avatar-sm avatar-soft-dark avatar-circle">
-                        <span class="avatar-initials">R</span>
-                      </div>
-                      <!-- End Avatar -->
-                    </div>
-
-                    <div class="flex-grow-1 ms-3">
-                      <div class="row">
-                        <div class="col-7 col-md-5 order-md-1">
-                          <h5 class="mb-0">Rachel Doe</h5>
-                          <span class="fs-6 text-body">Transfer to bank account</span>
-                        </div>
-
-                        <div class="col-5 col-md-4 order-md-3 text-end mt-2 mt-md-0">
-                          <h5 class="text-success mb-0">$290.00 USD</h5>
-                          <span class="fs-6 text-body">28 April, 2020</span>
-                        </div>
-
-                        <div class="col-auto col-md-3 order-md-2">
-                          <span class="badge bg-soft-success text-success rounded-pill">Completed</span>
-                        </div>
-                      </div>
-                      <!-- End Row -->
-                    </div>
-                  </div>
-                </li>
-                <!-- End List Item -->
-
-                <!-- List Item -->
-                <li class="list-group-item">
-                  <div class="d-flex">
-                    <div class="flex-shrink-0">
-                      <!-- Avatar -->
-                      <img class="avatar avatar-sm avatar-circle" src="{{ Vite::asset('resources/img/160x160/img9.jpg') }}" alt="Image Description">
-                      <!-- End Avatar -->
-                    </div>
-
-                    <div class="flex-grow-1 ms-3">
-                      <div class="row">
-                        <div class="col-7 col-md-5 order-md-1">
-                          <h5 class="mb-0">Ella Lauda</h5>
-                          <span class="fs-6 text-body">Transfer to bank account</span>
-                        </div>
-
-                        <div class="col-5 col-md-4 order-md-3 text-end mt-2 mt-md-0">
-                          <h5 class="mb-0">-$250.00 USD</h5>
-                          <span class="fs-6 text-body">01 May, 2020</span>
-                        </div>
-
-                        <div class="col-auto col-md-3 order-md-2">
-                          <span class="badge bg-soft-success text-success rounded-pill">Completed</span>
-                        </div>
-                      </div>
-                      <!-- End Row -->
-                    </div>
-                  </div>
-                </li>
-                <!-- End List Item -->
-              </ul>
+                  <tbody>
+                    @foreach ($lowStockConsumables as $lowStockConsumable)
+                      <tr>
+                        <td>
+                          <span class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                              <img class="avatar" src="{{ asset('storage/img/prop-asset/' . $lowStockConsumable->image) }}" alt="Image Description">
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                              <h5 class="text-inherit mb-0">{{ $lowStockConsumable->name }}</h5>
+                            </div>
+                          </span>
+                        </td>
+                        <td>{{ $lowStockConsumable->specification }}</td>
+                        <td>{{ $lowStockConsumable->description ?? 'N/A' }}</td>
+                        <td>
+                          <h4 class="mb-0">₱{{ number_format($lowStockConsumable->purchase_price, 2) }} PHP</h4>
+                        </td>
+                        <td>
+                          <h4 class="mb-0">{{ $lowStockConsumable->quantity }}</h4>
+                        </td>
+                        <td>{{ $lowStockConsumable->unit->name }}</td>
+                      </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+              </div>
+              <!-- End Table -->
             </div>
             <!-- End Body -->
           </div>
           <!-- End Card -->
         </div>
+        <!-- End Col -->
       </div>
-      <!-- End Row -->
     </div>
     <!-- End Content -->
   </main>
@@ -711,79 +458,80 @@
       window.onload = function() {
         // INITIALIZATION OF NAVBAR VERTICAL ASIDE
         // =======================================================
-        new HSSideNav('.js-navbar-vertical-aside').init()
-
+        new HSSideNav('.js-navbar-vertical-aside').init();
 
         // INITIALIZATION OF FORM SEARCH
         // =======================================================
-        new HSFormSearch('.js-form-search')
-
+        new HSFormSearch('.js-form-search');
 
         // INITIALIZATION OF BOOTSTRAP DROPDOWN
         // =======================================================
-        HSBsDropdown.init()
+        HSBsDropdown.init();
 
 
         // INITIALIZATION OF CHARTJS
         // =======================================================
-        var updatingChartDatasets = [
-          [
-            [18, 51, 60, 38, 88, 50, 40, 52, 88, 80, 60, 70],
-            [27, 38, 60, 77, 40, 50, 49, 29, 42, 27, 42, 50]
-          ],
-          [
-            [77, 40, 50, 49, 27, 38, 60, 42, 50, 29, 42, 27],
-            [60, 38, 18, 51, 88, 50, 40, 52, 60, 70, 88, 80]
-          ]
-        ]
+        const updatingChartDatasets = @json($updatingChartDatasets);
+        const currentDate = new Date();
+        const currentMonth = currentDate.toLocaleString('default', {
+          month: 'short'
+        });
+        const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
 
+        const currentMonthLabels = [];
+        $.each(Array.from({
+          length: daysInMonth
+        }, (_, i) => i + 1), function(index, day) {
+          currentMonthLabels.push(currentMonth + ' ' + day);
+        });
+
+        // Add missing days if there is no data for consumable or non-consumable for that day
+        const nonConsumableData = updatingChartDatasets[0][0].map((total, index) => total || 0);
+        const consumableData = updatingChartDatasets[0][1].map((total, index) => total || 0);
+
+        // Find the highest total price from both non-consumable and consumable data
+        const allData = [...nonConsumableData, ...consumableData];
+        const maxDataValue = Math.max(...allData);
+
+        // Define an excess factor (e.g., 10% increase over the max value)
+        const excessFactor = 0.1; // This means a 10% excess
+        const chartMaxValue = maxDataValue * (1 + excessFactor);
 
         // INITIALIZATION OF CHARTJS
         // =======================================================
-        HSCore.components.HSChartJS.init(document.querySelector('#updatingLineChart'), {
+        HSCore.components.HSChartJS.init($('#updatingLineChart')[0], {
           data: {
+            labels: currentMonthLabels,
             datasets: [{
-                data: updatingChartDatasets[0][0]
+                label: "Non-Consumable",
+                data: nonConsumableData // Non-consumable total prices per day
               },
               {
-                data: updatingChartDatasets[0][1]
+                label: "Consumable",
+                data: consumableData // Consumable total prices per day
               }
             ]
-          }
-        })
-
-        const updatingLineChart = HSCore.components.HSChartJS.getItem(0)
-
-        // Call when tab is clicked
-        document.querySelectorAll('[data-bs-toggle="chart"]')
-          .forEach($item => {
-            $item.addEventListener('click', e => {
-              let keyDataset = e.currentTarget.getAttribute('data-datasets')
-
-              // Update datasets for chart
-              updatingLineChart.data.datasets.forEach((dataset, key) => {
-                dataset.data = updatingChartDatasets[keyDataset][key];
-              });
-              updatingLineChart.update();
-            })
-          })
-
-
-        // INITIALIZATION OF CHARTJS
-        // =======================================================
-        HSCore.components.HSChartJS.init(document.querySelector('.js-chartjs-doughnut-half'), {
+          },
           options: {
-            plugins: {
-              tooltip: {
-                postfix: "%"
+            scales: {
+              y: {
+                suggestedMax: chartMaxValue, // Set the y-axis maximum based on the calculated excess value
+                beginAtZero: true // Ensure the chart starts from 0
               }
-            },
-            cutout: '85%',
-            rotation: '270',
-            circumference: '180'
+            }
           }
         });
-      }
-    })()
+
+        const updatingLineChart = HSCore.components.HSChartJS.getItem(0);
+
+        $('[data-bs-toggle="chart"]').on('click', function(e) {
+          const keyDataset = $(this).data('datasets');
+          $.each(updatingLineChart.data.datasets, function(key, dataset) {
+            dataset.data = updatingChartDatasets[keyDataset][key];
+          });
+          updatingLineChart.update();
+        });
+      };
+    })();
   </script>
 @endpush
