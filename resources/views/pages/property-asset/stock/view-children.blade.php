@@ -52,16 +52,18 @@
           </div>
           <!-- End Col -->
 
-          <div class="col-sm-auto">
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPropertyChild" type="button">
-              <i class="bi bi-plus-lg me-1"></i>
-              @if ($propertyParents->is_consumable)
-                Restock
-              @else
-                Add Variation
-              @endif
-            </button>
-          </div>
+          @access('Item Management', 'Read and Write, Full Access')
+            <div class="col-sm-auto">
+              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPropertyChild" type="button">
+                <i class="bi bi-plus-lg me-1"></i>
+                @if ($propertyParents->is_consumable)
+                  Restock
+                @else
+                  Add Variation
+                @endif
+              </button>
+            </div>
+          @endaccess
           <!-- End Col -->
         </div>
         <!-- End Row -->
@@ -202,43 +204,130 @@
             </div>
             <!-- End Datatable Info -->
 
-            <!-- Dropdown -->
+            <!-- Export Dropdown -->
             <div class="dropdown">
-              <button class="btn btn-white btn-md dropdown-toggle w-100" id="usersExportDropdown" data-bs-toggle="dropdown" type="button" aria-expanded="false">
+              <button class="btn btn-white btn-sm dropdown-toggle w-100" data-bs-toggle="dropdown" data-bs-auto-close="outside" type="button">
                 <i class="bi-download me-2"></i> Export
               </button>
 
-              <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="usersExportDropdown">
+              <div class="dropdown-menu dropdown-menu-sm-end w-100">
                 <span class="dropdown-header">Options</span>
-                <a class="dropdown-item" id="export-copy" href="">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/copy-icon.svg') }}" alt="Image Description">
-                  Copy
-                </a>
-                <a class="dropdown-item" id="export-print" href="">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/print-icon.svg') }}" alt="Image Description">
-                  Print
-                </a>
+                <button class="dropdown-item" id="propertyChildExportCopy" type="button">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/copy-icon.svg') }}" alt="Copy Icon"> Copy
+                </button>
+                <button class="dropdown-item" id="propertyChildExportPrint" type="button">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/print-icon.svg') }}" alt="Print Icon"> Print
+                </button>
                 <div class="dropdown-divider"></div>
-                <span class="dropdown-header">Download options</span>
-                <a class="dropdown-item" id="export-excel" href="">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/excel-icon.svg') }}" alt="Image Description">
-                  Excel
-                </a>
-                <a class="dropdown-item" id="export-pdf" href="">
-                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/pdf-icon.svg') }}" alt="Image Description">
-                  PDF
-                </a>
+                <span class="dropdown-header">Download</span>
+                <button class="dropdown-item" id="propertyChildExportExcel" type="button">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/excel-icon.svg') }}" alt="Excel Icon"> Excel
+                </button>
+                <button class="dropdown-item" id="propertyChildExportPdf" type="button">
+                  <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/pdf-icon.svg') }}" alt="PDF Icon"> PDF
+                </button>
               </div>
             </div>
-            <!-- End Dropdown -->
+            <!-- End Export Dropdown -->
 
-            <!-- Dropdown -->
-            {{--            <div class="dropdown"> --}}
-            {{--              <button class="btn btn-white" data-bs-toggle="offcanvas" data-bs-target="#propertyStockFilter" type="button" aria-controls="propertyStockFilter"> --}}
-            {{--                <i class="bi-filter me-1"></i> Filters --}}
-            {{--              </button> --}}
-            {{--            </div> --}}
-            <!-- End Dropdown -->
+            <!-- Filter Dropdown -->
+            <div class="dropdown">
+              <button class="btn btn-white btn-sm dropdown-toggle w-100" data-bs-toggle="dropdown" data-bs-auto-close="outside" type="button">
+                <i class="bi-filter me-2"></i> Filter <span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="propertyChildFilterCount"></span>
+              </button>
+
+              <div class="dropdown-menu dropdown-menu-sm-end custom-dropdown">
+                <div class="card">
+                  <div class="card-header card-header-content-between">
+                    <h5 class="card-header-title">Item Filters</h5>
+                  </div>
+                  <div class="card-body">
+                    <!-- Departments Filter -->
+                    <div class="mb-4">
+                      <small class="text-cap text-body">Departments</small>
+                      <div class="tom-select-custom">
+                        <select class="js-select js-datatable-filter form-select" data-target-column-index="4"
+                          data-hs-tom-select-options='{
+                            "singleMultiple": true,
+                            "hideSearch": true,
+                            "hideSelected": false,
+                            "placeholder": "All Departments"
+                          }'
+                          multiple>
+                          @foreach ($departments as $department)
+                            <option value="{{ $department->name }}">{{ $department->name }}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                    </div>
+                    <!-- End Departments Filter -->
+
+                    <!-- Designations Filter -->
+                    <div class="mb-4">
+                      <small class="text-cap text-body">Designations</small>
+                      <div class="tom-select-custom">
+                        <select class="js-select js-datatable-filter form-select" data-target-column-index="3"
+                          data-hs-tom-select-options='{
+                            "singleMultiple": true,
+                            "hideSearch": true,
+                            "hideSelected": false,
+                            "placeholder": "All Designations"
+                          }'
+                          multiple>
+                          @foreach ($designations as $designation)
+                            <option value="{{ $designation->name }}">{{ $designation->name }}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                    </div>
+                    <!-- End Designations Filter -->
+
+                    <!-- Conditions Filter -->
+                    <div class="mb-4">
+                      <small class="text-cap text-body">Conditions</small>
+                      <div class="tom-select-custom">
+                        <select class="js-select js-datatable-filter form-select" data-target-column-index="5"
+                          data-hs-tom-select-options='{
+                            "singleMultiple": true,
+                            "hideSearch": true,
+                            "hideSelected": false,
+                            "placeholder": "All Conditions"
+                          }'
+                          multiple>
+                          @foreach ($conditions as $condition)
+                            <option data-option-template='<span class="d-flex align-items-center"><span class="{{ $condition->color->class }}"></span>{{ $condition->name }}</span>'
+                              value="{{ $condition->name }}"></option>
+                          @endforeach
+                        </select>
+                      </div>
+                    </div>
+                    <!-- End Conditions Filter -->
+
+                    <!-- Statuses Filter -->
+                    <div class="mb-4">
+                      <small class="text-cap text-body">Statuses</small>
+                      <div class="tom-select-custom">
+                        <select class="js-select js-datatable-filter form-select" data-target-column-index="6"
+                          data-hs-tom-select-options='{
+                            "singleMultiple": true,
+                            "hideSearch": true,
+                            "hideSelected": false,
+                            "placeholder": "All Statuses"
+                          }'
+                          multiple>
+                          @foreach ($statuses as $status)
+                            <option data-option-template='<span class="d-flex align-items-center fs-6 m-1 {{ $status->color->class }}">{{ $status->name }}</span>' value="{{ $status->name }}">
+                              {{ $status->name }}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                    </div>
+                    <!-- End Statuses Filter -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- End Filter Dropdown -->
           </div>
         </div>
         <!-- End Header -->
@@ -248,7 +337,7 @@
           <table class="table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table table table-hover w-100" id="propertyChildDatatable"
             data-hs-datatables-options='{
                    "columnDefs": [{
-                      "targets": [0, 8],
+                      "targets": [0, 7, 9],
                       "orderable": false
                     }],
                    "order": [],
@@ -275,7 +364,7 @@
                   </th>
                 @endif
                 <th class="d-none w-auto">Child Id</th>
-                <th class="table-column-ps-0">Item Number</th>
+                <th>Item Number</th>
                 <th>Designation</th>
                 <th>Department</th>
                 @if ($propertyParents->is_consumable)
@@ -320,7 +409,7 @@
                     @endif
                   </td>
                   <td>{{ $propertyChild->designation->name }}</td>
-                  <td>{{ $propertyChild->designation->department->code }}</td>
+                  <td data-full-value="{{ $propertyChild->designation->department->name }}">{{ $propertyChild->designation->department->code }}</td>
                   @if ($propertyParents->is_consumable)
                     <td class="d-none"></td>
                     <td class="d-none"></td>
@@ -344,13 +433,11 @@
                   <td>
                     <div data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="top" title="Date Acquired: {{ \Carbon\Carbon::parse($propertyChild->acq_date)->format('F j, Y') }}">
                       <i class="bi-calendar-event me-1"></i>
-                      @if ($propertyChild->is_consumable)
-                        Added {{ \Carbon\Carbon::parse($propertyChild->stock_date)->diffForHumans() }}
-                      @elseif($propertyChild->inventory_date != null)
-                        Assigned {{ \Carbon\Carbon::parse($propertyChild->inventory_date)->diffForHumans() }}
-                      @else
-                        Added {{ \Carbon\Carbon::parse($propertyChild->stock_date)->diffForHumans() }}
-                      @endif
+                      @php
+                        $stockDate = \Carbon\Carbon::parse($propertyChild->stock_date);
+                        $inventoryDate = $propertyChild->inventory_date ? \Carbon\Carbon::parse($propertyChild->inventory_date) : null;
+                      @endphp
+                      {{ $propertyChild->is_consumable ? "Added {$stockDate->diffForHumans()}" : ($inventoryDate ? "Assigned {$inventoryDate->diffForHumans()}" : "Added {$stockDate->diffForHumans()}") }}
                     </div>
                   </td>
                   <td>
@@ -359,50 +446,54 @@
                         <i class="bi-eye me-1"></i> View
                       </button>
                       <!-- Button Group -->
-                      <div class="btn-group position-static">
-                        <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="childEditDropdown" data-bs-toggle="dropdown" type="button"
-                          aria-expanded="false"></button>
+                      @access('Item Management', 'Read and Write, Full Access')
+                        <div class="btn-group position-static">
+                          <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" id="childEditDropdown" data-bs-toggle="dropdown" type="button"
+                            aria-expanded="false"></button>
 
-                        <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="childEditDropdown">
-                          @if ($propertyChild->property->is_consumable)
-                            <button class="dropdown-item btnStatusChild" data-status="{{ $propertyChild->is_active ? 0 : 1 }}" type="button">
-                              <i class="bi {{ $propertyChild->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
-                              {{ $propertyChild->is_active ? 'Set to Inactive' : 'Set to Active' }}
-                            </button>
-                          @else
-                            <button class="dropdown-item btnEditPropChild" type="button">
-                              <i class="bi-pencil-fill me-1 dropdown-item-icon"></i>Edit
-                            </button>
-                            @if ($propertyChild->status->id == 1 && $propertyChild->is_active == 1 && $propertyChild->inventory_date == null)
-                              <button class="dropdown-item btnMoveToInventory" data-childmove-id="{{ $propertyChild->id }}" type="button">
-                                <i class="bi bi-arrow-left-right dropdown-item-icon text-info"></i> Move to Inventory
-                              </button>
+                          <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="childEditDropdown">
+                            @if ($propertyChild->property->is_consumable)
                               <button class="dropdown-item btnStatusChild" data-status="{{ $propertyChild->is_active ? 0 : 1 }}" type="button">
                                 <i class="bi {{ $propertyChild->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
                                 {{ $propertyChild->is_active ? 'Set to Inactive' : 'Set to Active' }}
-                              </button>
-                              <button class="dropdown-item text-danger btnDeleteChild" data-childdel-id="{{ $propertyChild->id }}" type="button">
-                                <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
-                              </button>
-                            @elseif($propertyChild->status->id == 1 && $propertyChild->is_active == 0 && $propertyChild->inventory_date == null)
-                              <button class="dropdown-item btnStatusChild" data-status="{{ $propertyChild->is_active ? 0 : 1 }}" type="button">
-                                <i class="bi {{ $propertyChild->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
-                                {{ $propertyChild->is_active ? 'Set to Inactive' : 'Set to Active' }}
-                              </button>
-                              <button class="dropdown-item text-danger btnDeleteChild" data-childdel-id="{{ $propertyChild->id }}" type="button">
-                                <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
                               </button>
                             @else
-                              @php
-                                $encryptedId = \Illuminate\Support\Facades\Crypt::encryptString($propertyChild->id);
-                              @endphp
-                              <a class="dropdown-item" href="{{ route('prop-asset.child.generate', ['propertyParent' => $propertyParents->id, 'id' => $encryptedId]) }}">
-                                <i class="bi bi-qr-code dropdown-item-icon"></i> Generate QR
-                              </a>
+                              <button class="dropdown-item btnEditPropChild" type="button">
+                                <i class="bi-pencil-fill me-1 dropdown-item-icon"></i>Edit
+                              </button>
+                              @if ($propertyChild->status->id == 1 && $propertyChild->is_active == 1 && $propertyChild->inventory_date == null)
+                                <button class="dropdown-item btnMoveToInventory" data-childmove-id="{{ $propertyChild->id }}" type="button">
+                                  <i class="bi bi-arrow-left-right dropdown-item-icon text-info"></i> Move to Inventory
+                                </button>
+                                <button class="dropdown-item btnStatusChild" data-status="{{ $propertyChild->is_active ? 0 : 1 }}" type="button">
+                                  <i class="bi {{ $propertyChild->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
+                                  {{ $propertyChild->is_active ? 'Set to Inactive' : 'Set to Active' }}
+                                </button>
+                                <button class="dropdown-item text-danger btnDeleteChild" data-childdel-id="{{ $propertyChild->id }}" type="button">
+                                  <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
+                                </button>
+                              @elseif($propertyChild->status->id == 1 && $propertyChild->is_active == 0 && $propertyChild->inventory_date == null)
+                                <button class="dropdown-item btnStatusChild" data-status="{{ $propertyChild->is_active ? 0 : 1 }}" type="button">
+                                  <i class="bi {{ $propertyChild->is_active ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success' }} dropdown-item-icon fs-7"></i>
+                                  {{ $propertyChild->is_active ? 'Set to Inactive' : 'Set to Active' }}
+                                </button>
+                                @access('Item Management', 'Full Access')
+                                  <button class="dropdown-item text-danger btnDeleteChild" data-childdel-id="{{ $propertyChild->id }}" type="button">
+                                    <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
+                                  </button>
+                                @endaccess
+                              @else
+                                @php
+                                  $encryptedId = \Illuminate\Support\Facades\Crypt::encryptString($propertyChild->id);
+                                @endphp
+                                <a class="dropdown-item" href="{{ route('prop-asset.child.generate', ['propertyParent' => $propertyParents->id, 'id' => $encryptedId]) }}">
+                                  <i class="bi bi-qr-code dropdown-item-icon"></i> Generate QR
+                                </a>
+                              @endif
                             @endif
-                          @endif
+                          </div>
                         </div>
-                      </div>
+                      @endaccess
                       <!-- End Button Group -->
                     </div>
                   </td>
@@ -432,11 +523,7 @@
                     <option value="20">20</option>
                   </select>
                 </div>
-                <!-- End Select -->
-
                 <span class="text-secondary me-2">of</span>
-
-                <!-- Pagination Quantity -->
                 <span id="propertyStockDatatableWithPaginationInfoTotalQty"></span>
                 <span class="text-secondary ms-2">records</span>
               </div>
@@ -445,7 +532,6 @@
 
             <div class="col-sm-auto">
               <div class="d-flex justify-content-center justify-content-sm-end">
-                <!-- Pagination -->
                 <nav id="propertyStockDatatablePagination" aria-label="Activity pagination"></nav>
               </div>
             </div>
@@ -759,7 +845,6 @@
             behavior: "smooth",
             block: "center"
           });
-
           focusedRow.classList.add("table-warning");
           setTimeout(() => focusedRow.classList.remove("table-warning"), 10000);
         }
@@ -779,10 +864,6 @@
           const row = $(this).closest("tr");
           const usageStatus = parseInt(row.data("stats-id"), 10);
           const inventoryDate = row.data("inventory-date");
-
-          console.log("Row ID:", row.attr("id"));
-          console.log("Usage Status:", usageStatus);
-          console.log("Inventory Date:", inventoryDate);
 
           if (usageStatus !== 1 || (inventoryDate && inventoryDate !== "")) {
             showButtons = false;
@@ -817,19 +898,31 @@
         dom: 'Bfrtip',
         buttons: [{
             extend: 'copy',
-            className: 'd-none'
+            className: 'd-none',
+            exportOptions: {
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(9)):not(:nth-child(10))'
+            }
           },
           {
             extend: 'excel',
-            className: 'd-none'
+            className: 'd-none',
+            exportOptions: {
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(9)):not(:nth-child(10))'
+            }
           },
           {
             extend: 'pdf',
-            className: 'd-none'
+            className: 'd-none',
+            exportOptions: {
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(9)):not(:nth-child(10))'
+            }
           },
           {
             extend: 'print',
-            className: 'd-none'
+            className: 'd-none',
+            exportOptions: {
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(9)):not(:nth-child(10))'
+            }
           },
         ],
         select: {
@@ -846,40 +939,27 @@
               <img class="mb-3" src="{{ Vite::asset('resources/svg/illustrations/oc-error.svg') }}" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
               <img class="mb-3" src="{{ Vite::asset('resources/svg/illustrations-light/oc-error.svg') }}" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="dark">
             <p class="mb-0">No data to show</p>
-            </div>`
+          </div>`
         }
       })
 
-      const datatable = HSCore.components.HSDatatables.getItem(0)
+      const propertyChildDatatable = HSCore.components.HSDatatables.getItem(0)
 
-      $('#export-copy').click(function() {
-        datatable.button('.buttons-copy').trigger()
+      const exportButtons = {
+        "#propertyChildExportCopy": ".buttons-copy",
+        "#propertyChildExportPrint": ".buttons-print",
+        "#propertyChildExportExcel": ".buttons-excel",
+        "#propertyChildExportPdf": ".buttons-pdf"
+      };
+
+      $.each(exportButtons, function(exportId, exportClass) {
+        $(exportId).click(function() {
+          propertyChildDatatable.button(exportClass).trigger();
+        });
       });
 
-      $('#export-excel').click(function() {
-        datatable.button('.buttons-excel').trigger()
-      });
-
-      $('#export-csv').click(function() {
-        datatable.button('.buttons-csv').trigger()
-      });
-
-      $('#export-pdf').click(function() {
-        datatable.button('.buttons-pdf').trigger()
-      });
-
-      $('#export-print').click(function() {
-        datatable.button('.buttons-print').trigger()
-      });
-
-      $('.js-datatable-filter').on('change', function() {
-        var $this = $(this),
-          elVal = $this.val(),
-          targetColumnIndex = $this.data('target-column-index');
-
-        if (elVal === 'null') elVal = ''
-
-        datatable.column(targetColumnIndex).search(elVal).draw();
+      $(".js-datatable-filter").on("change", function() {
+        filterDatatableAndCount(propertyChildDatatable, "#propertyChildFilterCount");
       });
     });
   </script>
@@ -897,6 +977,16 @@
         // INITIALIZATION OF FORM SEARCH
         // =======================================================
         new HSFormSearch('.js-form-search');
+
+
+        // INITIALIZATION OF BOOTSTRAP DROPDOWN
+        // =======================================================
+        HSBsDropdown.init();
+
+
+        // INITIALIZATION OF SELECT
+        // =======================================================
+        HSCore.components.HSTomSelect.init(".js-select");
       }
     })()
   </script>
