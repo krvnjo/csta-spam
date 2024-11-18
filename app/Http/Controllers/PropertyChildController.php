@@ -180,7 +180,7 @@ class PropertyChildController extends Controller
 
             return response()->json([
                 'success' => true,
-                'prop code' => $child->prop_code,
+                'propcode' => $child->prop_code,
                 'serialNum' => $child->serial_num ?? "-",
                 'department' => $child->department->name,
                 'designation' => $child->designation->name,
@@ -453,5 +453,123 @@ class PropertyChildController extends Controller
         return view('pages.property-asset.stock.generate-qr', compact('propertyChild', 'qr'));
     }
 
+    public function dispose(Request $request)
+    {
+        try {
+            $propertyChild = PropertyChild::query()->findOrFail(Crypt::decryptString($request->input('id')));
+
+
+            $propertyChild->is_active = 0;
+            $propertyChild->status_id = 10;
+            $propertyChild->save();
+
+            return response()->json([
+                'success' => true,
+                'title' => 'Item Disposed Successfully!',
+                'text' => 'The item has been disposed.',
+            ]);
+        } catch (Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Oops! Something went wrong.',
+                'message' => 'An error occurred while disposing the item.' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function missing(Request $request)
+    {
+        try {
+            $propertyChild = PropertyChild::query()->findOrFail(Crypt::decryptString($request->input('id')));
+
+            $propertyChild->is_active = 0;
+            $propertyChild->dept_id = null;
+            $propertyChild->desig_id = null;
+            $propertyChild->status_id = 7;
+            $propertyChild->save();
+
+            return response()->json([
+                'success' => true,
+                'title' => 'Item Status Changed to Missing!',
+                'text' => 'The item status has been changed to missing.',
+            ]);
+        } catch (Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Oops! Something went wrong.',
+                'message' => 'An error occurred while changing the item status to missing.' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function turn(Request $request)
+    {
+        try {
+            $propertyChild = PropertyChild::query()->findOrFail(Crypt::decryptString($request->input('id')));
+
+            return response()->json([
+                'success' => true,
+                'id' => $request->input('id'),
+                'propCode' => $propertyChild->prop_code,
+            ]);
+        } catch (Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Oops! Something went wrong.',
+                'message' => 'An error occurred while fetching the property variant.' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function return(Request $request)
+    {
+        try {
+            $children = PropertyChild::query()->findOrFail(Crypt::decryptString($request->input('id')));
+
+                $childrenValidationMessages = [
+                    'remarks.regex' => 'The remarks may only contain letters, spaces, and hyphens.',
+                    'remarks.min' => 'The remarks must be at least :min characters.',
+                    'remarks.max' => 'The remarks may not be greater than :max characters.',
+
+                    'condition.required' => 'Please choose a condition!',
+                ];
+
+                $childrenValidator = Validator::make($request->all(), [
+                    'remarks' => [
+                        'nullable',
+                        'regex:/^[A-Za-z0-9%,\- ×"]+$/',
+                        'min:3',
+                        'max:70'
+                    ],
+                    'condition' => [
+                        'required'
+                    ],
+                ], $childrenValidationMessages);
+
+                if ($childrenValidator->fails()) {
+                    return response()->json([
+                        'success' => false,
+                        'errors' => $childrenValidator->errors(),
+                    ]);
+                } else {
+                    $children->remarks = $request->input('remarks');
+                    $children->condi_id = $request->input('condition');
+                    $children->status_id = 1;
+                }
+            $children->save();
+
+            return response()->json([
+                'success' => true,
+                'title' => 'Item Returned Successfully!',
+                'text' => 'The item has been returned successfully!',
+            ]);
+        } catch (Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Oops! Something went wrong.',
+                'text' => 'An error occurred while returning the item.' . $e->getMessage(),
+            ], 500);
+        }
+    }
 
 }

@@ -99,6 +99,10 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
         Route::patch('/', 'update')->name('update');
         Route::delete('/', 'destroy')->name('delete');
         Route::patch('/move', 'move')->name('move');
+        Route::patch('/dispose', 'dispose')->name('dispose');
+        Route::patch('/missing', 'missing')->name('missing');
+        Route::get('/turn', 'turn')->name('turn');
+        Route::patch('/return', 'return')->name('return');
         Route::get('/generate-qr/{id}', 'generate')->name('generate');
         Route::fallback(function () {
             abort(404);

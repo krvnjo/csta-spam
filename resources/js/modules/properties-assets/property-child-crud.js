@@ -149,8 +149,11 @@ $(document).ready(function () {
       confirmButtonText: 'Yes, set it to ' + statusName + '!',
       cancelButtonText: 'No, cancel!',
       customClass: {
-        confirmButton: 'btn btn-primary',
-        cancelButton: 'btn btn-secondary',
+        popup: 'bg-light rounded-3 shadow fs-4',
+        title: 'fs-1',
+        htmlContainer: 'text-muted text-center fs-4',
+        confirmButton: 'btn btn-sm btn-primary',
+        cancelButton: 'btn btn-sm btn-secondary',
       },
     }).then((result) => {
       if (result.isConfirmed) {
@@ -407,6 +410,141 @@ $(document).ready(function () {
   });
 
   // ============ End Move Stock to Inventory ============ //
+
+  // ============ Dispose a Item ============ //
+
+  childDatatable.on('click', '.btnDisposed', function () {
+    const childId = $(this).closest('tr').find('td[data-child-id]').data('child-id');
+    Swal.fire({
+      title: 'Dispose Item Variation?',
+      text: 'Are you sure you want to dispose this item?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, dispose it!',
+      cancelButtonText: 'No, cancel!',
+      customClass: {
+        popup: 'bg-light rounded-3 shadow fs-4',
+        title: 'fs-1',
+        htmlContainer: 'text-muted text-center fs-4',
+        confirmButton: 'btn btn-sm btn-danger',
+        cancelButton: 'btn btn-sm btn-secondary',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: '/properties-assets/' + parentId + '/child-stocks/dispose',
+          method: 'PATCH',
+          data: {
+            id: childId,
+          },
+          success: function (response) {
+            showResponseAlert(response, 'success');
+          },
+          error: function (response) {
+            showResponseAlert(response, 'error');
+          },
+        });
+      }
+    });
+  });
+  // ============ End Dispose a Item ============ //
+
+  // ============ Missing a Item ============ //
+
+  childDatatable.on('click', '.btnMissing', function () {
+    const childId = $(this).closest('tr').find('td[data-child-id]').data('child-id');
+    Swal.fire({
+      title: 'Item Variation Missing?',
+      text: 'Are you sure you want to change the status of this item to missing?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, change it!',
+      cancelButtonText: 'No, cancel!',
+      customClass: {
+        popup: 'bg-light rounded-3 shadow fs-4',
+        title: 'fs-1',
+        htmlContainer: 'text-muted text-center fs-4',
+        confirmButton: 'btn btn-sm btn-danger',
+        cancelButton: 'btn btn-sm btn-secondary',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: '/properties-assets/' + parentId + '/child-stocks/missing',
+          method: 'PATCH',
+          data: {
+            id: childId,
+          },
+          success: function (response) {
+            showResponseAlert(response, 'success');
+          },
+          error: function (response) {
+            showResponseAlert(response, 'error');
+          },
+        });
+      }
+    });
+  });
+
+  // ============ End Missing a Item ============ //
+
+
+  const childReturnModal = $('#modalReturnChild');
+  const childReturnForm = $('#frmReturnChild');
+  const childReturnSaveBtn = $('#btnReturnSaveChild');
+
+  handleUnsavedChanges(childReturnModal, childReturnForm, childReturnSaveBtn);
+
+  childDatatable.on('click', '.btnReturn', function () {
+    const childId = $(this).closest('tr').find('td[data-child-id]').data('child-id');
+    $.ajax({
+      url: '/properties-assets/' + parentId + '/child-stocks/turn',
+      method: 'GET',
+      data: { id: childId },
+      success: function (response) {
+        childReturnModal.modal('toggle');
+        $('#txtReturnChildId').val(response.id);
+        $('#returnPropCode').text(response.propCode);
+      },
+      error: function (response) {
+        showResponseAlert(response, 'error');
+      },
+    });
+  });
+
+  childReturnForm.on('submit', function (e) {
+    e.preventDefault();
+    toggleButtonState(childReturnSaveBtn, true);
+
+    const editFormData = new FormData(childReturnForm[0]);
+
+    $.ajax({
+      url: '/properties-assets/' + parentId + '/child-stocks/return',
+      method: 'POST',
+      data: editFormData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        if (response.success) {
+          showResponseAlert(response, 'success', childReturnModal, childReturnForm);
+        } else {
+          toggleButtonState(childReturnSaveBtn, false);
+          if (response.errors.remarks) {
+            $('#txtReturnRemarks').addClass('is-invalid');
+            $('#valReturnRemarks').text(response.errors.remarks[0]);
+          }
+          if (response.errors.condition) {
+            $('#selReturnCondition').next('.ts-wrapper').addClass('is-invalid');
+            $('#valReturnCondition').text(response.errors.condition[0]);
+          }
+        }
+      },
+      error: function (response) {
+        showResponseAlert(response, 'error', childReturnModal, childReturnForm);
+      },
+    });
+  });
+
 });
 document.addEventListener('DOMContentLoaded', function () {
   new TomSelect('#cbxEditAcquiredType', {
@@ -429,6 +567,13 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     },
   });
+
+  new TomSelect('#selReturnCondition', {
+    controlInput: false,
+    hideSearch: true,
+    allowEmptyOption: true,
+  });
+
 
   new TomSelect('#cbxEditCondition', {
     controlInput: false,

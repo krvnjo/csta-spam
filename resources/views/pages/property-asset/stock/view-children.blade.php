@@ -408,8 +408,8 @@
                       {{ $propertyChild->prop_code }}
                     @endif
                   </td>
-                  <td>{{ $propertyChild->designation->name }}</td>
-                  <td data-full-value="{{ $propertyChild->designation->department->name }}">{{ $propertyChild->designation->department->code }}</td>
+                  <td>{{ $propertyChild->designation->name ?? 'No designation provided' }}</td>
+                  <td data-full-value="{{ $propertyChild->designation->department->name ?? 'No designation provided' }}">{{ $propertyChild->designation->department->code ?? 'No department provided' }}</td>
                   @if ($propertyParents->is_consumable)
                     <td class="d-none"></td>
                     <td class="d-none"></td>
@@ -461,6 +461,11 @@
                               <button class="dropdown-item btnEditPropChild" type="button">
                                 <i class="bi-pencil-fill me-1 dropdown-item-icon"></i>Edit
                               </button>
+                              @if($propertyChild->status->id == 9)
+                                <button class="dropdown-item btnDisposed" data-dispose-id="{{ $propertyChild->id }}" type="button">
+                                  <i class="bi bi-database-exclamation dropdown-item-icon text-danger"></i> Dispose
+                                </button>
+                              @endif
                               @if ($propertyChild->status->id == 1 && $propertyChild->is_active == 1 && $propertyChild->inventory_date == null)
                                 <button class="dropdown-item btnMoveToInventory" data-childmove-id="{{ $propertyChild->id }}" type="button">
                                   <i class="bi bi-arrow-left-right dropdown-item-icon text-info"></i> Move to Inventory
@@ -482,13 +487,19 @@
                                     <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
                                   </button>
                                 @endaccess
-                              @else
+                              @elseif($propertyChild->status->id == 2 && $propertyChild->is_active == 1 && $propertyChild->inventory_date != null)
                                 @php
                                   $encryptedId = \Illuminate\Support\Facades\Crypt::encryptString($propertyChild->id);
                                 @endphp
                                 <a class="dropdown-item" href="{{ route('prop-asset.child.generate', ['propertyParent' => $propertyParents->id, 'id' => $encryptedId]) }}">
                                   <i class="bi bi-qr-code dropdown-item-icon"></i> Generate QR
                                 </a>
+                                <button class="dropdown-item btnMissing" type="button">
+                                  <i class="bi bi-question-octagon dropdown-item-icon text-danger"></i> Missing
+                                </button>
+                                <button class="dropdown-item btnReturn" type="button">
+                                  <i class="bi bi-box-arrow-in-right dropdown-item-icon text-info"></i> Return
+                                </button>
                               @endif
                             @endif
                           </div>
@@ -552,261 +563,10 @@
   <x-property-asset.stock.edit-children :propertyParents="$propertyParents" :propertyChildren="$propertyChildren" :conditions="$conditions" :acquisitions="$acquisitions" />
   <x-property-asset.stock.view-details-children />
   <x-property-asset.stock.move-children :designations="$designations" />
+  <x-property-asset.stock.return-children :conditions="$conditions"  />
+
   {{--  <x-modals.edit-property-child :propertyParents="$propertyParents" :conditions="$conditions" :acquisitions="$acquisitions" :propertyChildren="$propertyChildren" /> --}}
   {{--  <x-modals.move-property :designations="$designations" :departments="$departments" :statuses="$statuses"/> --}}
-
-  <!-- Product Filter Modal -->
-  <div class="offcanvas offcanvas-end" id="propertyStockFilter" aria-labelledby="propertyStockFilterLabel" tabindex="-1">
-    <div class="offcanvas-header">
-      <h4 class="mb-0" id="offcanvasEcommerceProductFilterLabel">Filters</h4>
-      <button class="btn-close" data-bs-dismiss="offcanvas" type="button" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-      <span class="text-cap small">Product vendor</span>
-
-      <div class="row">
-        <div class="col-6">
-          <div class="d-grid mb-2 gap-2">
-            <!-- Form Check -->
-            <div class="form-check">
-              <input class="form-check-input" id="productVendorFilterRadio1" name="productAvailabilityFilterRadio" type="radio" value="">
-              <label class="form-check-label" for="productVendorFilterRadio1">Google</label>
-            </div>
-            <!-- End Form Check -->
-
-            <!-- Form Check -->
-            <div class="form-check">
-              <input class="form-check-input" id="productVendorFilterRadio2" name="productAvailabilityFilterRadio" type="radio" value="">
-              <label class="form-check-label" for="productVendorFilterRadio2">Topman</label>
-            </div>
-            <!-- End Form Check -->
-
-            <!-- Form Check -->
-            <div class="form-check">
-              <input class="form-check-input" id="productVendorFilterRadio3" name="productAvailabilityFilterRadio" type="radio" value="">
-              <label class="form-check-label" for="productVendorFilterRadio3">RayBan</label>
-            </div>
-            <!-- End Form Check -->
-
-            <!-- Form Check -->
-            <div class="form-check">
-              <input class="form-check-input" id="productVendorFilterRadio4" name="productAvailabilityFilterRadio" type="radio" value="">
-              <label class="form-check-label" for="productVendorFilterRadio4">Mango</label>
-            </div>
-            <!-- End Form Check -->
-
-            <!-- Form Check -->
-            <div class="form-check">
-              <input class="form-check-input" id="productVendorFilterRadio5" name="productAvailabilityFilterRadio" type="radio" value="">
-              <label class="form-check-label" for="productVendorFilterRadio5">Calvin Klein</label>
-            </div>
-            <!-- End Form Check -->
-
-            <!-- Form Check -->
-            <div class="form-check">
-              <input class="form-check-input" id="productVendorFilterRadio6" name="productAvailabilityFilterRadio" type="radio" value="">
-              <label class="form-check-label" for="productVendorFilterRadio6">Givenchy</label>
-            </div>
-            <!-- End Form Check -->
-
-            <!-- Form Check -->
-            <div class="form-check">
-              <input class="form-check-input" id="productVendorFilterRadio7" name="productAvailabilityFilterRadio" type="radio" value="">
-              <label class="form-check-label" for="productVendorFilterRadio7">Asos</label>
-            </div>
-            <!-- End Form Check -->
-
-            <!-- Form Check -->
-            <div class="form-check">
-              <input class="form-check-input" id="productVendorFilterRadio8" name="productAvailabilityFilterRadio" type="radio" value="">
-              <label class="form-check-label" for="productVendorFilterRadio8">Apple</label>
-            </div>
-            <!-- End Form Check -->
-          </div>
-        </div>
-
-        <div class="col-6">
-          <div class="d-grid mb-2 gap-2">
-            <!-- Form Check -->
-            <div class="form-check">
-              <input class="form-check-input" id="productVendorFilterRadio9" name="productAvailabilityFilterRadio" type="radio" value="">
-              <label class="form-check-label" for="productVendorFilterRadio9">Times</label>
-            </div>
-            <!-- End Form Check -->
-
-            <!-- Form Check -->
-            <div class="form-check">
-              <input class="form-check-input" id="productVendorFilterRadio10" name="productAvailabilityFilterRadio" type="radio" value="">
-              <label class="form-check-label" for="productVendorFilterRadio10">Asos</label>
-            </div>
-            <!-- End Form Check -->
-
-            <!-- Form Check -->
-            <div class="form-check">
-              <input class="form-check-input" id="productVendorFilterRadio11" name="productAvailabilityFilterRadio" type="radio" value="">
-              <label class="form-check-label" for="productVendorFilterRadio11">Nike Jordan</label>
-            </div>
-            <!-- End Form Check -->
-
-            <!-- Form Check -->
-            <div class="form-check">
-              <input class="form-check-input" id="productVendorFilterRadio12" name="productAvailabilityFilterRadio" type="radio" value="">
-              <label class="form-check-label" for="productVendorFilterRadio12">VA RVCA</label>
-            </div>
-            <!-- End Form Check -->
-
-            <!-- Form Check -->
-            <div class="form-check">
-              <input class="form-check-input" id="productVendorFilterRadio13" name="productAvailabilityFilterRadio" type="radio" value="">
-              <label class="form-check-label" for="productVendorFilterRadio13">Levis</label>
-            </div>
-            <!-- End Form Check -->
-
-            <!-- Form Check -->
-            <div class="form-check">
-              <input class="form-check-input" id="productVendorFilterRadio14" name="productAvailabilityFilterRadio" type="radio" value="">
-              <label class="form-check-label" for="productVendorFilterRadio14">Beats</label>
-            </div>
-            <!-- End Form Check -->
-
-            <!-- Form Check -->
-            <div class="form-check">
-              <input class="form-check-input" id="productVendorFilterRadio15" name="productAvailabilityFilterRadio" type="radio" value="">
-              <label class="form-check-label" for="productVendorFilterRadio15">Clarks</label>
-            </div>
-            <!-- End Form Check -->
-          </div>
-        </div>
-      </div>
-      <!-- End Row -->
-
-      <a class="link mt-2" href="">
-        <i class="bi-x"></i> Clear
-      </a>
-
-      <hr>
-
-      <span class="text-cap small">Availability</span>
-
-      <div class="d-grid mb-2 gap-2">
-        <!-- Form Check -->
-        <div class="form-check">
-          <input class="form-check-input" id="productAvailabilityFilterRadio1" name="productAvailabilityFilterRadio" type="radio" value="">
-          <label class="form-check-label" for="productAvailabilityFilterRadio1">Available on Online Store</label>
-        </div>
-        <!-- End Form Check -->
-
-        <!-- Form Check -->
-        <div class="form-check">
-          <input class="form-check-input" id="productAvailabilityFilterRadio2" name="productAvailabilityFilterRadio" type="radio" value="">
-          <label class="form-check-label" for="productAvailabilityFilterRadio2">Unavailable on Online Store</label>
-        </div>
-        <!-- End Form Check -->
-      </div>
-
-      <a class="link mt-2" href="">
-        <i class="bi-x"></i> Clear
-      </a>
-
-      <hr>
-
-      <span class="text-cap small">Tagged with</span>
-
-      <div class="mb-2">
-        <input class="form-control" id="tagsLabel" name="tagsName" type="text" aria-label="Enter tags here" placeholder="Enter tags here">
-      </div>
-
-      <a class="link mt-2" href="">
-        <i class="bi-x"></i> Clear
-      </a>
-
-      <hr>
-
-      <span class="text-cap small">Product type</span>
-
-      <div class="d-grid mb-2 gap-2">
-        <!-- Form Check -->
-        <div class="form-check">
-          <input class="form-check-input" id="productTypeFilterRadio1" name="productTypeFilterRadio" type="radio" value="">
-          <label class="form-check-label" for="productTypeFilterRadio1">Shoes</label>
-        </div>
-        <!-- End Form Check -->
-
-        <!-- Form Check -->
-        <div class="form-check">
-          <input class="form-check-input" id="productTypeFilterRadio2" name="productTypeFilterRadio" type="radio" value="">
-          <label class="form-check-label" for="productTypeFilterRadio2">Accessories</label>
-        </div>
-        <!-- End Form Check -->
-
-        <!-- Form Check -->
-        <div class="form-check">
-          <input class="form-check-input" id="productTypeFilterRadio3" name="productTypeFilterRadio" type="radio" value="">
-          <label class="form-check-label" for="productTypeFilterRadio3">Clothing</label>
-        </div>
-        <!-- End Form Check -->
-
-        <!-- Form Check -->
-        <div class="form-check">
-          <input class="form-check-input" id="productTypeFilterRadio4" name="productTypeFilterRadio" type="radio" value="">
-          <label class="form-check-label" for="productTypeFilterRadio4">Electronics</label>
-        </div>
-        <!-- End Form Check -->
-      </div>
-
-      <a class="link mt-2" href="">
-        <i class="bi-x"></i> Clear
-      </a>
-
-      <hr>
-
-      <span class="text-cap small">Collection</span>
-
-      <!-- Input Group -->
-      <div class="input-group input-group-merge mb-2">
-        <div class="input-group-prepend input-group-text">
-          <i class="bi-search"></i>
-        </div>
-
-        <input class="form-control" type="search" aria-label="Search for collections" placeholder="Search for collections">
-      </div>
-      <!-- End Input Group -->
-
-      <!-- Form Check -->
-      <div class="form-check mb-2">
-        <input class="form-check-input" id="productCollectionFilterRadio1" type="radio" value="">
-        <label class="form-check-label" for="productCollectionFilterRadio1">Home page</label>
-      </div>
-      <!-- End Form Check -->
-
-      <a class="link mt-2" href="">
-        <i class="bi-x"></i> Clear
-      </a>
-    </div>
-    <!-- End Body -->
-
-    <!-- Footer -->
-    <div class="offcanvas-footer">
-      <div class="row gx-2">
-        <div class="col">
-          <div class="d-grid">
-            <button class="btn btn-white" type="button">Clear all filters</button>
-          </div>
-        </div>
-        <!-- End Col -->
-
-        <div class="col">
-          <div class="d-grid">
-            <button class="btn btn-primary" type="button">Save</button>
-          </div>
-        </div>
-        <!-- End Col -->
-      </div>
-      <!-- End Row -->
-    </div>
-    <!-- End Footer -->
-  </div>
-  <!-- End Product Filter Modal -->
 @endsection
 
 @push('scripts')
