@@ -19,7 +19,7 @@ class LocationSeeder extends Seeder
             'Education' => 'SED',
             'Hospitality and Tourism Management' => 'SHTM',
             'Accounting' => 'ACC',
-            'Registar' => 'REG',
+            'Registrar' => 'REG',
         ];
 
         foreach ($departments as $department => $code) {
