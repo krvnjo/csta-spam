@@ -289,7 +289,11 @@
                         <img class="avatar-img" src="{{ $imageUrl }}" alt="Image Description">
                       </div>
                       <div class="ms-3">
-                        <span class="d-block h5 mb-0 text-inherit">{{ $propertyParent->name }}</span>
+                        <span class="d-block h5 mb-0 text-inherit" @if (!empty($propertyParent->name) && strlen($propertyParent->name) > 25) data-bs-toggle="tooltip"
+                              data-bs-html="true"
+                              data-bs-placement="bottom"
+                              title="{{ $propertyParent->name }}" @endif>
+                        {{ Str::limit(!empty($propertyParent->name) ? $propertyParent->name : 'No item name provided', 25) }}
                       </div>
                     </a>
                   </td>
@@ -299,16 +303,16 @@
                           data-bs-html="true"
                           data-bs-placement="bottom"
                           title="{{ $propertyParent->specification }}" @endif>
-                      {{ Str::limit(!empty($propertyParent->specification) ? $propertyParent->specification : 'No specification provided', 30) }}
+                      {{ Str::limit(!empty($propertyParent->specification) ? $propertyParent->specification : 'No specification provided', 25) }}
                     </span>
                   </td>
                   <td>
                     <span style="color:gray"
-                      @if (!empty($propertyParent->description) && strlen($propertyParent->description) > 25) data-bs-toggle="tooltip"
+                      @if (!empty($propertyParent->description) && strlen($propertyParent->description) > 20) data-bs-toggle="tooltip"
                         data-bs-html="true"
                         data-bs-placement="bottom"
                         title="{{ $propertyParent->description }}" @endif>
-                      {{ Str::limit(!empty($propertyParent->description) ? $propertyParent->description : 'No description provided', 30) }}
+                      {{ Str::limit(!empty($propertyParent->description) ? $propertyParent->description : 'No description provided', 20) }}
                     </span>
                   </td>
                   <td class="text-end">

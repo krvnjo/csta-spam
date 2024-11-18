@@ -23,7 +23,7 @@
               <p class="form-label fw-semibold mb-0">Item Name:</p>
             </div>
             <div class="col-7 d-flex align-items-center">
-              <p class="mb-0" id="lblViewItemName"></p>
+              <p class="mb-0 text-break" id="lblViewItemName" style="word-wrap: break-word;"></p>
             </div>
           </div>
 
@@ -32,15 +32,16 @@
               <p class="form-label fw-semibold mb-0">Specification:</p>
             </div>
             <div class="col-7 d-flex align-items-center">
-              <p class="mb-0" id="lblViewSpecification"></p>
+              <p class="mb-0 text-break" id="lblViewSpecification" style="word-wrap: break-word;"></p>
             </div>
           </div>
+
           <div class="row mb-4">
             <div class="col-5 d-flex align-items-center">
               <p class="form-label fw-semibold mb-0">Description:</p>
             </div>
             <div class="col-7 d-flex align-items-center">
-              <p class="mb-0" id="lblViewDescription"></p>
+              <p class="mb-0 text-break" id="lblViewDescription" style="word-wrap: break-word;"></p>
             </div>
           </div>
 

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-   New Requests
+  New Requests
 @endsection
 
 @push('styles')
@@ -91,18 +91,18 @@
                   <label class="form-label" for="requestPriorityFilter">Priorities</label>
                   <div class="tom-select-custom">
                     <select class="js-select js-datatable-filter form-select" id="requestPriorityFilter" data-target-column-index="5"
-                            data-hs-tom-select-options='{
+                      data-hs-tom-select-options='{
                         "singleMultiple": true,
                         "hideSearch": true,
                         "hideSelected": false,
                         "placeholder": "All Priorities"
                       }'
-                            multiple>
-{{--                      @foreach ($priorities as $priority)--}}
-{{--                        <option data-option-template='<span class="d-flex align-items-center"><span class="{{ $priority->color->class }}"></span>{{ $priority->name }}</span>'--}}
-{{--                                value="{{ $priority->name }}">--}}
-{{--                        </option>--}}
-{{--                      @endforeach--}}
+                      multiple>
+                      {{--                      @foreach ($priorities as $priority) --}}
+                      {{--                        <option data-option-template='<span class="d-flex align-items-center"><span class="{{ $priority->color->class }}"></span>{{ $priority->name }}</span>' --}}
+                      {{--                                value="{{ $priority->name }}"> --}}
+                      {{--                        </option> --}}
+                      {{--                      @endforeach --}}
                     </select>
                   </div>
                 </div>
@@ -115,17 +115,17 @@
                   <label class="form-label" for="requestUserFilter">Users</label>
                   <div class="tom-select-custom">
                     <select class="js-select js-datatable-filter form-select" id="requestUserFilter" data-target-column-index="5"
-                            data-hs-tom-select-options='{
+                      data-hs-tom-select-options='{
                         "singleMultiple": true,
                         "hideSelected": false,
                         "placeholder": "All Users"
                       }'
-                            autocomplete="off" multiple>
-{{--                      @foreach ($users as $user)--}}
-{{--                        <option--}}
-{{--                          data-option-template='<span class="d-flex align-items-center"><img class="avatar avatar-xss avatar-circle me-2" src="{{ asset('storage/img/user-images/' . $user->user_image) }}" alt="User Image" /><span class="text-truncate">{{ $user->name }}</span></span>'--}}
-{{--                          value="{{ $user->name }}">{{ $user->name }}</option>--}}
-{{--                      @endforeach--}}
+                      autocomplete="off" multiple>
+                      {{--                      @foreach ($users as $user) --}}
+                      {{--                        <option --}}
+                      {{--                          data-option-template='<span class="d-flex align-items-center"><img class="avatar avatar-xss avatar-circle me-2" src="{{ asset('storage/img/user-images/' . $user->user_image) }}" alt="User Image" /><span class="text-truncate">{{ $user->name }}</span></span>' --}}
+                      {{--                          value="{{ $user->name }}">{{ $user->name }}</option> --}}
+                      {{--                      @endforeach --}}
                     </select>
                   </div>
                 </div>
@@ -137,13 +137,13 @@
                 <div class="mb-3">
                   <label class="form-label" for="requestDateRangeFilter">Date Range</label>
                   <input class="js-daterangepicker-clear js-datatable-filter form-control daterangepicker-custom-input" data-target-column-index="6"
-                         data-hs-daterangepicker-options='{
+                    data-hs-daterangepicker-options='{
                       "autoUpdateInput": false,
                       "locale": {
                         "cancelLabel": "Clear"
                       }
                     }'
-                         type="text" placeholder="Select date range">
+                    type="text" placeholder="Select date range">
                 </div>
               </div>
               <!-- End Date Range -->
@@ -155,7 +155,7 @@
         <!-- Body -->
         <div class="table-responsive datatable-custom">
           <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100" id="newRequestsDatatable"
-                 data-hs-datatables-options='{
+            data-hs-datatables-options='{
               "columnDefs": [{
                  "targets": [9],
                  "orderable": false
@@ -172,82 +172,96 @@
               "pagination": "newRequestsDatatablePagination"
             }'>
             <thead class="thead-light">
-            <tr>
-              <th class="d-none"></th>
-              <th>Borrow No.</th>
-              <th>Requester</th>
-              <th>Requested Items</th>
-              <th>Quantity</th>
-              <th>Remarks</th>
-              <th>Status</th>
-              <th>Borrow Date</th>
-              <th>Date Created</th>
-              <th>Action</th>
-            </tr>
+              <tr>
+                <th class="d-none"></th>
+                <th>Borrow No.</th>
+                <th>Requester</th>
+                <th>Requested Items</th>
+                <th>Quantity</th>
+                <th>Remarks</th>
+                <th>Status</th>
+                <th>Borrow Date</th>
+                <th>Date Created</th>
+                <th>Action</th>
+              </tr>
             </thead>
             <tbody>
-            @foreach($borrowings as $borrowing)
-              <tr>
-                <td class="d-none" data-borrow-id="{{ Crypt::encryptString($borrowing->id) }}"></td>
-                <td>{{ $borrowing->borrow_num }}</td>
-                <td>{{ $borrowing->requester->name }} | {{ $borrowing->requester->department->code }}</td>
-                <td>
-                  @foreach ($borrowing->requestItems as $item)
-                    {{ $item->property->name }}<br>
-                  @endforeach
-                </td>
-                <td>
-                  @foreach ($borrowing->requestItems as $item)
-                    {{ $item->quantity }} - {{ $item->property->unit->name }}<br>
-                  @endforeach
-                </td>
-                <td>{{ $borrowing->remarks }}</td>
-                <td>
-                  @if($borrowing->status == 'Pending')
-                    <span class="legend-indicator bg-warning"></span>{{ $borrowing->status }}
-                  @elseif($borrowing->status == 'Approved')
-                    <span class="legend-indicator bg-success"></span>{{ $borrowing->status }}
-                  @elseif($borrowing->status == 'Rejected')
-                    <span class="legend-indicator bg-danger"></span>{{ $borrowing->status }}
-                  @elseif($borrowing->status == 'Released')
-                    <span class="legend-indicator bg-info"></span>{{ $borrowing->status }}
-                  @endif
-                </td>
-                <td><i class="bi-calendar-event me-1"></i>{{ \Carbon\Carbon::parse($borrowing->borrow_date)->format('F j, Y') }}</td>
-                <td><i class="bi-calendar-plus me-1"></i>Created {{ \Carbon\Carbon::parse($borrowing->created_at)->diffForHumans() }}</td>
-                <td>
-                  <div class="btn-group position-static">
-                    <button class="btn btn-white btn-sm" type="button"><i class="bi-eye"></i> View</button>
-
+              @foreach ($borrowings as $borrowing)
+                <tr>
+                  <td class="d-none" data-borrow-id="{{ Crypt::encryptString($borrowing->id) }}"></td>
+                  <td>{{ $borrowing->borrow_num }}</td>
+                  <td>{{ $borrowing->requester->name }} | {{ $borrowing->requester->department->code }}</td>
+                  <td>
+                    @foreach ($borrowing->requestItems as $item)
+                      <span style="color:gray"
+                            @if (!empty($borrowing->remarks) && strlen($item->property->name) > 25) data-bs-toggle="tooltip"
+                            data-bs-html="true"
+                            data-bs-placement="top"
+                            title="{{ $item->property->name }}" @endif>
+                      {{ Str::limit(!empty($item->property->name) ? $item->property->name : 'No remarks provided', 30) }}
+                    </span><br>
+                    @endforeach
+                  </td>
+                  <td>
+                    @foreach ($borrowing->requestItems as $item)
+                      {{ $item->quantity }} - {{ $item->property->unit->name }}<br>
+                    @endforeach
+                  </td>
+                  <td>
+                    <span style="color:gray"
+                      @if (!empty($borrowing->remarks) && strlen($borrowing->remarks) > 25) data-bs-toggle="tooltip"
+                                            data-bs-html="true"
+                                            data-bs-placement="top"
+                                            title="{{ $borrowing->remarks }}" @endif>
+                      {{ Str::limit(!empty($borrowing->remarks) ? $borrowing->remarks : 'No remarks provided', 30) }}
+                    </span>
+                  </td>
+                  <td>
+                    @if ($borrowing->status == 'Pending')
+                      <span class="legend-indicator bg-warning"></span>{{ $borrowing->status }}
+                    @elseif($borrowing->status == 'Approved')
+                      <span class="legend-indicator bg-success"></span>{{ $borrowing->status }}
+                    @elseif($borrowing->status == 'Rejected')
+                      <span class="legend-indicator bg-danger"></span>{{ $borrowing->status }}
+                    @elseif($borrowing->status == 'Released')
+                      <span class="legend-indicator bg-info"></span>{{ $borrowing->status }}
+                    @endif
+                  </td>
+                  <td><i class="bi-calendar-event me-1"></i>{{ \Carbon\Carbon::parse($borrowing->borrow_date)->format('F j, Y') }}</td>
+                  <td><i class="bi-calendar-plus me-1"></i>Created {{ \Carbon\Carbon::parse($borrowing->created_at)->diffForHumans() }}</td>
+                  <td>
                     <div class="btn-group position-static">
-                      <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" data-bs-toggle="dropdown" type="button"></button>
-                      <div class="dropdown-menu dropdown-menu-end mt-1">
-                        @if($borrowing->status == 'Pending')
-                          <button class="dropdown-item btnApproveRequest" type="button" data-borrow-num="{{ $borrowing->borrow_num }}" data-requester-name="{{ $borrowing->requester->name }}">
-                            <i class="bi bi-check2-circle dropdown-item-icon text-success"></i> Approve
-                          </button>
+                      <button class="btn btn-white btn-sm" type="button"><i class="bi-eye"></i> View</button>
+
+                      <div class="btn-group position-static">
+                        <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" data-bs-toggle="dropdown" type="button"></button>
+                        <div class="dropdown-menu dropdown-menu-end mt-1">
+                          @if ($borrowing->status == 'Pending')
+                            <button class="dropdown-item btnApproveRequest" data-borrow-num="{{ $borrowing->borrow_num }}" data-requester-name="{{ $borrowing->requester->name }}" type="button">
+                              <i class="bi bi-check2-circle dropdown-item-icon text-success"></i> Approve
+                            </button>
+                            <button class="dropdown-item" type="button">
+                              <i class="bi bi-x-circle dropdown-item-icon text-danger"></i> Reject
+                            </button>
+                          @endif
+                          @if ($borrowing->status == 'Approved')
+                            <button class="dropdown-item btnReleaseRequest" type="button">
+                              <i class="bi bi-eject dropdown-item-icon text-warning"></i> Release
+                            </button>
+                          @endif
                           <button class="dropdown-item" type="button">
-                            <i class="bi bi-x-circle dropdown-item-icon text-danger"></i> Reject
+                            <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
                           </button>
-                        @endif
-                        @if($borrowing->status == 'Approved')
-                          <button class="dropdown-item btnReleaseRequest" type="button">
-                            <i class="bi bi-eject dropdown-item-icon text-warning"></i> Release
+                          <div class="dropdown-divider"></div>
+                          <button class="dropdown-item text-danger" type="button">
+                            <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
                           </button>
-                        @endif
-                        <button class="dropdown-item" type="button">
-                          <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
-                        </button>
-                        <div class="dropdown-divider"></div>
-                        <button class="dropdown-item text-danger" type="button">
-                          <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
-                        </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </td>
-              </tr>
-            @endforeach
+                  </td>
+                </tr>
+              @endforeach
             </tbody>
           </table>
         </div>
@@ -261,7 +275,7 @@
                 <span class="me-2">Showing:</span>
                 <div class="tom-select-custom tom-page-w">
                   <select class="js-select form-select form-select-borderless" id="newRequestsDatatableEntries"
-                          data-hs-tom-select-options='{
+                    data-hs-tom-select-options='{
                       "hideSearch": true,
                       "searchInDropdown": false
                     }'>
@@ -290,7 +304,7 @@
 @endsection
 
 @section('sec-content')
-  <x-borrow-reservation.add-request :items="$items"  :requesters="$requesters" />
+  <x-borrow-reservation.add-request :items="$items" :requesters="$requesters" />
 @endsection
 
 @push('scripts')
@@ -335,12 +349,12 @@
       HSCore.components.HSDatatables.init($("#newRequestsDatatable"), {
         dom: "Bfrtip",
         buttons: [{
-          extend: "copy",
-          className: "d-none",
-          exportOptions: {
-            columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(5)):not(:nth-child(7))'
-          }
-        },
+            extend: "copy",
+            className: "d-none",
+            exportOptions: {
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(5)):not(:nth-child(7))'
+            }
+          },
           {
             extend: "print",
             className: "d-none",
@@ -426,22 +440,22 @@
       };
     })();
 
-    $(document).ready(function () {
+    $(document).ready(function() {
       const itemSelects = $(".js-select-dynamic");
 
-      itemSelects.on("change", function () {
+      itemSelects.on("change", function() {
         const selectedItems = [];
 
-        itemSelects.each(function () {
+        itemSelects.each(function() {
           const value = $(this).val();
           if (value) {
             selectedItems.push(value);
           }
         });
 
-        itemSelects.each(function () {
+        itemSelects.each(function() {
           const currentItemValue = $(this).val();
-          $(this).find("option").each(function () {
+          $(this).find("option").each(function() {
             const optionValue = $(this).val();
             if (selectedItems.includes(optionValue) && optionValue !== currentItemValue) {
               $(this).attr("disabled", "disabled");
@@ -452,6 +466,5 @@
         });
       });
     });
-
   </script>
 @endpush
