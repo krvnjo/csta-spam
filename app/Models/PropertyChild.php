@@ -64,4 +64,11 @@ class PropertyChild extends Model
     {
         return $this->belongsTo(Ticket::class, 'ticket_id');
     }
+
+    public function requestItems()
+    {
+        return $this->belongsToMany(BorrowingItem::class, 'request_item_children', 'child_id', 'request_item_id')
+            ->withTimestamps();
+    }
+
 }

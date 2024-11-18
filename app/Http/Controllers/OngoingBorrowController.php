@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Borrowing;
+use App\Models\Condition;
 use Illuminate\Http\Request;
 
 class OngoingBorrowController extends Controller
@@ -12,13 +13,15 @@ class OngoingBorrowController extends Controller
      */
     public function index()
     {
-        $borrowings = Borrowing::with(['requester', 'requestItems.property'])
+        $borrowings = Borrowing::with(['requester', 'requestItems.property.propertyChildren'])
             ->whereHas('requestItems.property', function ($query) {
                 $query->where('is_consumable', 0);
             })
             ->get();
 
-        return view('pages.borrowing-reservation.ongoing', compact('borrowings'));
+        $conditions = Condition::where('is_active', 1)->get();
+
+        return view('pages.borrowing-reservation.ongoing', compact('borrowings', 'conditions'));
     }
 
 

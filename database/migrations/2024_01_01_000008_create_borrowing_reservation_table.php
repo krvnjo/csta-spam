@@ -34,6 +34,14 @@ return new class extends Migration
             $table->unsignedInteger('quantity')->nullable();
             $table->timestamps();
         });
+
+        Schema::create('request_item_children', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('request_item_id')->constrained('request_items')->cascadeOnDelete();
+            $table->foreignId('child_id')->constrained('property_children')->cascadeOnDelete();
+            $table->timestamps();
+        });
+
     }
 
     /**
@@ -41,6 +49,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('request_item_children');
         Schema::dropIfExists('request_items');
         Schema::dropIfExists('borrowings');
     }

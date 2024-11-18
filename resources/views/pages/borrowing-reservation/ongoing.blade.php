@@ -139,8 +139,8 @@
               <tr>
                 <th class="d-none"></th>
                 <th>Borrow No.</th>
-                <th>Requester</th>
-                <th>Requested Items</th>
+                <th>Borrower Name</th>
+                <th>Borrowed Items</th>
                 <th>Quantity</th>
                 <th>Remarks</th>
                 <th>Status</th>
@@ -158,11 +158,15 @@
                   <td>
                     @foreach ($borrowing->requestItems->where('property.is_consumable', 0) as $item)
                       <span style="color:gray"
-                        @if (!empty($borrowing->remarks) && strlen($item->property->name) > 25) data-bs-toggle="tooltip"
-                          data-bs-html="true"
-                          data-bs-placement="top"
-                          title="{{ $item->property->name }}" @endif>
-                        {{ Str::limit(!empty($item->property->name) ? $item->property->name : 'No remarks provided', 30) }}
+                        @if (!empty($borrowing->remarks) && strlen($item->property->name) > 20) data-bs-toggle="tooltip"
+                            data-bs-html="true"
+                            data-bs-placement="top"
+                            title="{{ $item->property->name }}" @endif>
+                        {{ Str::limit(!empty($item->property->name) ? $item->property->name : 'No remarks provided', 20) }}
+                        @foreach ($item->propertyChildren as $child)
+                          <br>
+                          {{ $child->prop_code }}
+                        @endforeach
                       </span><br>
                     @endforeach
                   </td>
@@ -187,13 +191,8 @@
                   </td>
                   <td><i class="bi-calendar-event me-1"></i>{{ \Carbon\Carbon::parse($borrowing->borrow_date)->format('F j, Y') }}</td>
                   <td>
-                    @if ($borrowing->prog_id == 1)
-                      <i class="bi-calendar-plus me-1"></i>
-                      Created {{ \Carbon\Carbon::parse($borrowing->created_at)->diffForHumans() }}
-                    @else
-                      <i class="bi bi-calendar-check me-1"></i>
-                      Approved {{ \Carbon\Carbon::parse($borrowing->approved_at)->diffForHumans() }}
-                    @endif
+                    <i class="bi bi-calendar-check me-1"></i>
+                    Released {{ \Carbon\Carbon::parse($borrowing->released_at)->diffForHumans() }}
                   </td>
                   <td>
                     <div class="btn-group position-static">
@@ -202,25 +201,8 @@
                       <div class="btn-group position-static">
                         <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" data-bs-toggle="dropdown" type="button"></button>
                         <div class="dropdown-menu dropdown-menu-end mt-1">
-                          @if ($borrowing->prog_id == 1)
-                            <button class="dropdown-item btnApproveRequest" data-borrow-num="{{ $borrowing->borrow_num }}" data-requester-name="{{ $borrowing->requester->name }}" type="button">
-                              <i class="bi bi-check2-circle dropdown-item-icon text-success"></i> Approve
-                            </button>
-                            <button class="dropdown-item" type="button">
-                              <i class="bi bi-x-circle dropdown-item-icon text-danger"></i> Reject
-                            </button>
-                          @endif
-                          @if ($borrowing->prog_id == 2)
-                            <button class="dropdown-item btnReleaseRequest" type="button">
-                              <i class="bi bi-eject dropdown-item-icon text-warning"></i> Release
-                            </button>
-                          @endif
-                          <button class="dropdown-item" type="button">
-                            <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record
-                          </button>
-                          <div class="dropdown-divider"></div>
-                          <button class="dropdown-item text-danger" type="button">
-                            <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete
+                          <button class="dropdown-item btnReturnItem" type="button">
+                            <i class="bi bi-arrow-right-circle dropdown-item-icon text-info"></i> Return
                           </button>
                         </div>
                       </div>

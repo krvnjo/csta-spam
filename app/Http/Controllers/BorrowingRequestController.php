@@ -201,9 +201,11 @@ class BorrowingRequestController extends Controller
                     }
 
                     $childrenToBorrow = $availableChildren->take($borrowingItem->quantity);
+
                     foreach ($childrenToBorrow as $child) {
                         $child->status_id = 6;
                         $child->save();
+                        $borrowingItem->propertyChildren()->attach($child->id);
                     }
 
                 } else {

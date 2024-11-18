@@ -24,4 +24,11 @@ class BorrowingItem extends Model
     {
         return $this->belongsTo(PropertyParent::class, 'parent_id');
     }
+
+    public function propertyChildren()
+    {
+        return $this->belongsToMany(PropertyChild::class, 'request_item_children', 'request_item_id', 'child_id')
+            ->withTimestamps();
+    }
+
 }
