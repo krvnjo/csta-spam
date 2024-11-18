@@ -115,7 +115,7 @@ class PropertyChildController extends Controller
                     $currentYear = Carbon::now()->year;
 
                     $lastCode = PropertyChild::query()
-                        ->where('prop_code', 'LIKE', "{$currentYear}%")
+                        ->where('prop_code', 'LIKE', "$currentYear%")
                         ->orderBy('prop_code', 'desc')
                         ->value('prop_code');
 
@@ -144,7 +144,7 @@ class PropertyChildController extends Controller
 
                     (new Audit())
                         ->logName('Add Item Stock')
-                        ->logDesc("Added $addedCount new items for '{$parentProperty->name}'")
+                        ->logDesc("Added $addedCount new items for '$parentProperty->name'")
                         ->performedOn($parentProperty)
                         ->logEvent(1)
                         ->logProperties([
@@ -180,7 +180,7 @@ class PropertyChildController extends Controller
 
             return response()->json([
                 'success' => true,
-                'propcode' => $child->prop_code,
+                'prop code' => $child->prop_code,
                 'serialNum' => $child->serial_num ?? "-",
                 'department' => $child->department->name,
                 'designation' => $child->designation->name,
@@ -350,7 +350,7 @@ class PropertyChildController extends Controller
                 'title' => 'Deleted Successfully!',
                 'text' => 'The item has been deleted and can be restored from the bin.',
             ]);
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
