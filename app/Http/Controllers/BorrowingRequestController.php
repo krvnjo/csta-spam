@@ -100,7 +100,7 @@ class BorrowingRequestController extends Controller
                 'requester_id' => $request->requester,
                 'borrow_num' => $code,
                 'remarks' => $request->remarks,
-                'status' => 'Pending',
+                'prog_id' => 1,
                 'borrow_date' => $request->when,
             ]);
 
@@ -113,7 +113,6 @@ class BorrowingRequestController extends Controller
                     'borrow_id' => $borrowing->id,
                     'parent_id' => $propertyParent->id,
                     'quantity' => $quantities[$index],
-                    'is_consumable' => $propertyParent->is_consumable,
                 ]);
             }
 
@@ -157,7 +156,7 @@ class BorrowingRequestController extends Controller
         try {
             $borrowing = Borrowing::query()->findOrFail(Crypt::decryptString($request->input('id')));
 
-            $borrowing->status = 'Approved';
+            $borrowing->prog_id = 2;
             $borrowing->approved_at = now();
             $borrowing->save();
 
@@ -213,7 +212,7 @@ class BorrowingRequestController extends Controller
 
             }
 
-            $borrowing->status = 'Released';
+            $borrowing->prog_id = 3;
             $borrowing->save();
 
             return response()->json([

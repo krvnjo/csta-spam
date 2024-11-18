@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Borrowing;
+use App\Models\Progress;
 use App\Models\PropertyParent;
 use App\Models\Requester;
 use Illuminate\Database\Migrations\Migration;
@@ -18,7 +19,7 @@ return new class extends Migration
             $table->id();
             $table->string('borrow_num')->unique();
             $table->foreignIdFor(Requester::class, 'requester_id')->constrained('requesters')->cascadeOnDelete();
-            $table->string('status')->default('pending');
+            $table->foreignIdFor(Progress::class, 'prog_id')->default(1)->constrained('progresses')->cascadeOnDelete();
             $table->text('remarks')->nullable();
             $table->date('borrow_date')->nullable();
             $table->dateTime('approved_at')->nullable();

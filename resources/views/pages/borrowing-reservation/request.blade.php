@@ -217,15 +217,9 @@
                     </span>
                   </td>
                   <td>
-                    @if ($borrowing->status == 'Pending')
-                      <span class="legend-indicator bg-warning"></span>{{ $borrowing->status }}
-                    @elseif($borrowing->status == 'Approved')
-                      <span class="legend-indicator bg-success"></span>{{ $borrowing->status }}
-                    @elseif($borrowing->status == 'Rejected')
-                      <span class="legend-indicator bg-danger"></span>{{ $borrowing->status }}
-                    @elseif($borrowing->status == 'Released')
-                      <span class="legend-indicator bg-info"></span>{{ $borrowing->status }}
-                    @endif
+                    <span class="{{ $borrowing->progress->badge->class }}">
+                      <span class="{{ $borrowing->progress->legend->class }}"></span>{{ $borrowing->progress->name }}
+                    </span>
                   </td>
                   <td><i class="bi-calendar-event me-1"></i>{{ \Carbon\Carbon::parse($borrowing->borrow_date)->format('F j, Y') }}</td>
                   <td><i class="bi-calendar-plus me-1"></i>Created {{ \Carbon\Carbon::parse($borrowing->created_at)->diffForHumans() }}</td>
@@ -236,7 +230,7 @@
                       <div class="btn-group position-static">
                         <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" data-bs-toggle="dropdown" type="button"></button>
                         <div class="dropdown-menu dropdown-menu-end mt-1">
-                          @if ($borrowing->status == 'Pending')
+                          @if ($borrowing->prog_id == 1)
                             <button class="dropdown-item btnApproveRequest" data-borrow-num="{{ $borrowing->borrow_num }}" data-requester-name="{{ $borrowing->requester->name }}" type="button">
                               <i class="bi bi-check2-circle dropdown-item-icon text-success"></i> Approve
                             </button>
@@ -244,7 +238,7 @@
                               <i class="bi bi-x-circle dropdown-item-icon text-danger"></i> Reject
                             </button>
                           @endif
-                          @if ($borrowing->status == 'Approved')
+                          @if ($borrowing->prog_id == 2)
                             <button class="dropdown-item btnReleaseRequest" type="button">
                               <i class="bi bi-eject dropdown-item-icon text-warning"></i> Release
                             </button>
