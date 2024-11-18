@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 class PropertyChild extends Model
 {
@@ -60,8 +61,15 @@ class PropertyChild extends Model
         return $this->belongsTo(PropertyParent::class, 'prop_id');
     }
 
-    public function ticket(): BelongsTo
+    public function ticket(): HasOneThrough
     {
-        return $this->belongsTo(Ticket::class, 'ticket_id');
+        return $this->hasOneThrough(
+            MaintenanceTicket::class,
+            MaintenanceTicketItem::class,
+            'item_id',     // Foreign key on the pivot table
+            'id',          // Foreign key on the tickets table
+            'id',          // Local key on the items table
+            'ticket_id'    // Local key on the pivot table
+        );
     }
 }

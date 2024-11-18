@@ -12,7 +12,7 @@
 @section('main-content')
   <main class="main" id="content">
     <div class="content container-fluid">
-      <!-- Audits Header -->
+      <!-- Histories Header -->
       <div class="page-header">
         <div class="row align-items-center">
           <div class="col-sm mb-2 mb-sm-0">
@@ -20,21 +20,21 @@
               <li class="breadcrumb-item"><a class="breadcrumb-link" data-route="dashboard.index" href="{{ route('dashboard.index') }}">Home</a></li>
               <li class="breadcrumb-item active">Maintenance Logs</li>
             </ol>
-            <h1 class="page-header-title">Audit History</h1>
-            <p class="page-header-text">Monitor and track system activity for accountability.</p>
+            <h1 class="page-header-title">Maintenance Logs</h1>
+            <p class="page-header-text">Monitor and track completed repair and maintenance requests.</p>
           </div>
         </div>
       </div>
-      <!-- End Audits Header -->
+      <!-- End Histories Header -->
 
-      <!-- Audits DataTable Card -->
+      <!-- Histories DataTable Card -->
       <div class="card">
         <!-- Header -->
         <div class="card-header card-header-content-md-between">
           <div class="mb-2 mb-md-0">
             <div class="input-group input-group-merge input-group-flush">
               <div class="input-group-prepend input-group-text"><i class="bi-search"></i></div>
-              <input class="form-control" id="auditsDatatableSearch" type="search" placeholder="Search">
+              <input class="form-control" id="historiesDatatableSearch" type="search" placeholder="Search">
             </div>
           </div>
 
@@ -47,190 +47,85 @@
 
               <div class="dropdown-menu dropdown-menu-sm-end w-100">
                 <span class="dropdown-header">Options</span>
-                <button class="dropdown-item" id="auditExportCopy" type="button">
+                <button class="dropdown-item" id="historyExportCopy" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/copy-icon.svg') }}" alt="Copy Icon"> Copy
                 </button>
-                <button class="dropdown-item" id="auditExportPrint" type="button">
+                <button class="dropdown-item" id="historyExportPrint" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/print-icon.svg') }}" alt="Print Icon"> Print
                 </button>
                 <div class="dropdown-divider"></div>
                 <span class="dropdown-header">Download</span>
-                <button class="dropdown-item" id="auditExportExcel" type="button">
+                <button class="dropdown-item" id="historyExportExcel" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/excel-icon.svg') }}" alt="Excel Icon"> Excel
                 </button>
-                <button class="dropdown-item" id="auditExportPdf" type="button">
+                <button class="dropdown-item" id="historyExportPdf" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/pdf-icon.svg') }}" alt="PDF Icon"> PDF
                 </button>
               </div>
             </div>
             <!-- End Export Dropdown -->
-
-            <!-- Filter Collapse Trigger -->
-            <a class="btn btn-white btn-sm dropdown-toggle" data-bs-toggle="collapse" href="#auditFilterSearchCollapse">
-              <i class="bi-funnel me-1"></i> Filters <span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="auditsFilterCount"></span>
-            </a>
-            <!-- End Filter Collapse Trigger -->
           </div>
         </div>
         <!-- End Header -->
 
-        <!-- Filter Search Collapse -->
-        <div class="collapse" id="auditFilterSearchCollapse">
-          <div class="card-body">
-            <div class="row">
-              <!-- Subjects -->
-              <div class="col-sm-12 col-md-6 col-lg-3">
-                <div class="mb-3">
-                  <label class="form-label" for="auditSubjectFilter">Subjects</label>
-                  <div class="tom-select-custom">
-                    <select class="js-select js-datatable-filter form-select" id="auditSubjectFilter" data-target-column-index="2"
-                      data-hs-tom-select-options='{
-                        "singleMultiple": true,
-                        "hideSelected": false,
-                        "placeholder": "All Subjects"
-                      }'
-                      autocomplete="off" multiple>
-                      @foreach ($types as $type)
-                        <option value="{{ $type->name }}">{{ $type->name }}</option>
-                      @endforeach
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <!-- End Subjects -->
-
-              <!-- Events -->
-              <div class="col-sm-12 col-md-6 col-lg-3">
-                <div class="mb-3">
-                  <label class="form-label" for="auditEventFilter">Events</label>
-                  <div class="tom-select-custom">
-                    <select class="js-select js-datatable-filter form-select" id="auditEventFilter" data-target-column-index="4"
-                      data-hs-tom-select-options='{
-                        "singleMultiple": true,
-                        "hideSelected": false,
-                        "placeholder": "All Events"
-                      }'
-                      autocomplete="off" multiple>
-                      @foreach ($events as $event)
-                        <option data-option-template='<span class="d-flex align-items-center"><span class="{{ $event->legend->class }}"></span>{{ $event->name }}</span>' value="{{ $event->name }}">
-                        </option>
-                      @endforeach
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <!-- End Events -->
-
-              <!-- Users -->
-              <div class="col-sm-12 col-md-6 col-lg-3">
-                <div class="mb-3">
-                  <label class="form-label" for="auditUserFilter">Users</label>
-                  <div class="tom-select-custom">
-                    <select class="js-select js-datatable-filter form-select" id="auditUserFilter" data-target-column-index="5"
-                      data-hs-tom-select-options='{
-                        "singleMultiple": true,
-                        "hideSelected": false,
-                        "placeholder": "All Users"
-                      }'
-                      autocomplete="off" multiple>
-                      @foreach ($users as $user)
-                        <option
-                          data-option-template='<span class="d-flex align-items-center"><img class="avatar avatar-xss avatar-circle me-2" src="{{ asset('storage/img/user-images/' . $user->user_image) }}" alt="User Image" /><span class="text-truncate">{{ $user->name }}</span></span>'
-                          value="{{ $user->name }}">{{ $user->name }}</option>
-                      @endforeach
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <!-- End Users -->
-
-              <!-- Date Range -->
-              <div class="col-sm-12 col-md-6 col-lg-3">
-                <div class="mb-3">
-                  <label class="form-label" for="auditDateRangeFilter">Date Range</label>
-                  <input class="js-daterangepicker-clear js-datatable-filter form-control daterangepicker-custom-input" data-target-column-index="6"
-                    data-hs-daterangepicker-options='{
-                      "autoUpdateInput": false,
-                      "locale": {
-                        "cancelLabel": "Clear"
-                      }
-                    }'
-                    type="text" placeholder="Select date range">
-                </div>
-              </div>
-              <!-- End Date Range -->
-            </div>
-          </div>
-        </div>
-        <!-- End Filter Search Collapse -->
-
         <!-- Body -->
         <div class="table-responsive datatable-custom">
-          <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100" id="auditsDatatable"
+          <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100" id="historiesDatatable"
             data-hs-datatables-options='{
               "columnDefs": [{
-                 "targets": [3, 7],
+                 "targets": [3, 8],
                  "orderable": false
                }],
               "order": [6, "desc"],
               "info": {
-                "totalQty": "#auditsDatatableWithPagination"
+                "totalQty": "#historiesDatatableWithPagination"
               },
-              "search": "#auditsDatatableSearch",
-              "entries": "#auditsDatatableEntries",
+              "search": "#historiesDatatableSearch",
+              "entries": "#historiesDatatableEntries",
               "pageLength": 10,
               "isResponsive": false,
               "isShowPaging": false,
-              "pagination": "auditsDatatablePagination"
+              "pagination": "historiesDatatablePagination"
             }'>
             <thead class="thead-light">
               <tr>
-                <th class="w-th" style="width: 7%;">#</th>
+                <th class="w-th" style="width: 5%;">#</th>
                 <th class="d-none"></th>
-                <th>Log Name</th>
+                <th>Ticket No.</th>
+                <th>Subject</th>
                 <th>Description</th>
-                <th>Event</th>
-                <th>Performed By</th>
-                <th>Date Logged</th>
+                <th>Estimated Cost</th>
+                <th>Completed At</th>
+                <th>Status</th>
                 <th>Action</th>
               </tr>
             </thead>
 
             <tbody>
-              @foreach ($audits as $audit)
+              @foreach ($tickets as $ticket)
                 <tr>
                   <td>{{ $loop->iteration }}</td>
-                  <td class="d-none" data-audit-id="{{ Crypt::encryptString($audit->id) }}"></td>
-                  <td data-full-value="{{ $audit->name }}">
-                    <a class="d-block h5 mb-0 btnViewAudit">{{ $audit->name }}</a>
-                    <span class="d-block fs-5">{{ $audit->subject->name ?? '' }}</span>
+                  <td class="d-none" data-history-id="{{ Crypt::encryptString($ticket->id) }}"></td>
+                  <td><a class="h5 btnViewHistory">{{ $ticket->ticket_num }}</a></td>
+                  <td class="history-name">{{ $ticket->name }}</td>
+                  <td>{{ Str::limit($ticket->description, 30, '...') }}</td>
+                  <td class="text-end">
+                    <strong>₱{{ number_format($ticket->cost, 2) }}</strong>
                   </td>
-                  <td>{{ \Illuminate\Support\Str::limit($audit->description, 50, '...') }}</td>
-                  <td data-order="{{ $audit->event }}">
-                    <span class="{{ $audit->event->badge->class }}">
-                      <span class="{{ $audit->event->legend->class }}"></span>{{ $audit->event->name }}
+                  <td data-order="{{ $ticket->completed_at }}">
+                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ \Carbon\Carbon::parse($ticket->completed_at)->format('D, M d, Y | h:i A') }}">
+                      <i class="bi-calendar-plus me-1"></i> {{ \Carbon\Carbon::parse($ticket->completed_at)->format('F d, Y') }}
                     </span>
                   </td>
                   <td>
-                    <span class="d-flex align-items-center">
-                      <div class="avatar avatar-circle">
-                        <img class="avatar-img" src="{{ Vite::asset('resources/img/uploads/user-images/' . $audit->causer->user_image) }}" alt="User Avatar">
-                      </div>
-                      <div class="ms-3">
-                        <span class="d-block h5 text-inherit mb-0">{{ $audit->causer->name }}</span>
-                        <span class="d-block fs-5 text-body">{{ $audit->causer->role->name }}</span>
-                      </div>
-                    </span>
-                  </td>
-                  <td data-full-value="{{ $audit->created_at->format('m/d/Y') }}" data-order="{{ $audit->created_at }}">
-                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $audit->created_at->format('D, M d, Y | h:i A') }}">
-                      <i class="bi-calendar-event me-1"></i> Logged {{ $audit->created_at->diffForHumans() }}
+                    <span class="{{ $ticket->progress->badge->class }}">
+                      <span class="{{ $ticket->progress->legend->class }}"></span>{{ $ticket->progress->name }}
                     </span>
                   </td>
                   <td>
-                    <button class="btn btn-white btn-sm btnViewAudit" type="button">
-                      <i class="bi-eye me-1"></i> View
-                    </button>
+                    <div class="btn-group position-static">
+                      <button class="btn btn-white btn-sm btnViewHistory" type="button"><i class="bi-eye"></i> View</button>
+                    </div>
                   </td>
                 </tr>
               @endforeach
@@ -246,7 +141,7 @@
               <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
                 <span class="me-2">Showing:</span>
                 <div class="tom-select-custom tom-page-w">
-                  <select class="js-select form-select form-select-borderless" id="auditsDatatableEntries"
+                  <select class="js-select form-select form-select-borderless" id="historiesDatatableEntries"
                     data-hs-tom-select-options='{
                       "hideSearch": true,
                       "searchInDropdown": false
@@ -257,26 +152,26 @@
                   </select>
                 </div>
                 <span class="text-secondary me-2">of</span>
-                <span id="auditsDatatableWithPagination"></span>
+                <span id="historiesDatatableWithPagination"></span>
                 <span class="text-secondary ms-2">records</span>
               </div>
             </div>
             <div class="col-sm-auto">
               <div class="d-flex justify-content-center justify-content-sm-end">
-                <nav id="auditsDatatablePagination"></nav>
+                <nav id="historiesDatatablePagination"></nav>
               </div>
             </div>
           </div>
         </div>
         <!-- End Footer -->
       </div>
-      <!-- End Audits DataTable Card -->
+      <!-- End Histories DataTable Card -->
     </div>
   </main>
 @endsection
 
 @section('sec-content')
-  <x-other.view-audit />
+  <x-repair-maintenance.view-history />
 @endsection
 
 @push('scripts')
@@ -295,7 +190,7 @@
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
 
   <!-- JS Modules -->
-  <script src="{{ Vite::asset('resources/js/modules/other/audit-history.js') }}"></script>
+  <script src="{{ Vite::asset('resources/js/modules/repair-maintenance/history.js') }}"></script>
 
   <!-- JS Themes -->
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>
@@ -304,21 +199,7 @@
   <script>
     // Initialization of DataTable
     $(document).on("ready", function() {
-      HSCore.components.HSDaterangepicker.init('.js-daterangepicker-clear');
-
-      const daterangepickerClear = $('.js-daterangepicker-clear');
-
-      daterangepickerClear.on('apply.daterangepicker', function(ev, picker) {
-        $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
-        filterDatatableAndCount(auditsDatatable, "#auditsFilterCount");
-      });
-
-      daterangepickerClear.on('cancel.daterangepicker', function() {
-        $(this).val('');
-        filterDatatableAndCount(auditsDatatable, "#auditsFilterCount");
-      });
-
-      HSCore.components.HSDatatables.init($("#auditsDatatable"), {
+      HSCore.components.HSDatatables.init($("#historiesDatatable"), {
         dom: "Bfrtip",
         buttons: [{
             extend: "copy",
@@ -358,23 +239,23 @@
         }
       });
 
-      const auditsDatatable = HSCore.components.HSDatatables.getItem(0);
+      const historiesDatatable = HSCore.components.HSDatatables.getItem(0);
 
       const exportButtons = {
-        "#auditExportCopy": ".buttons-copy",
-        "#auditExportPrint": ".buttons-print",
-        "#auditExportExcel": ".buttons-excel",
-        "#auditExportPdf": ".buttons-pdf"
+        "#historyExportCopy": ".buttons-copy",
+        "#historyExportPrint": ".buttons-print",
+        "#historyExportExcel": ".buttons-excel",
+        "#historyExportPdf": ".buttons-pdf"
       };
 
       $.each(exportButtons, function(exportId, exportClass) {
         $(exportId).click(function() {
-          auditsDatatable.button(exportClass).trigger();
+          historiesDatatable.button(exportClass).trigger();
         });
       });
 
       $(".js-datatable-filter").on("change", function() {
-        filterDatatableAndCount(auditsDatatable, "#auditsFilterCount");
+        filterDatatableAndCount(historiesDatatable, "#historiesFilterCount");
       });
     });
 

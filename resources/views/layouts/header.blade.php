@@ -33,7 +33,7 @@
               <i class="bi-search"></i>
             </div>
             <input class="search form-control form-control-sm" type="search" placeholder="Search in CSTA-SPAM">
-            <a class="input-group-append input-group-text" href="javascript:;"><i class="bi-x" id="clearSearchResultsIcon" style="display: none;"></i></a>
+            <a class="input-group-append input-group-text" href="javascript:"><i class="bi-x" id="clearSearchResultsIcon" style="display: none;"></i></a>
           </div>
           <!-- End Input Group -->
 
@@ -224,17 +224,17 @@
               </div>
               <!-- End System Appearance -->
 
-              <!-- Help Resources -->
-              <div class="dropdown">
-                <button class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" id="helpResourcesDropdown" data-bs-toggle="dropdown" data-bs-dropdown-animation type="button">
-                  Help Resources
-                </button>
-                <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu">
-                  <a class="dropdown-item" href="{{ route('help.about') }}"><i class="bi-question-circle me-2"></i>About Us</a>
-                  <a class="dropdown-item" href="{{ route('help.guide') }}"><i class="bi-journal-text me-2"></i>User Guide</a>
-                </div>
-              </div>
-              <!-- End Help Resources -->
+              {{--              <!-- Help Resources --> --}}
+              {{--              <div class="dropdown"> --}}
+              {{--                <button class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" id="helpResourcesDropdown" data-bs-toggle="dropdown" data-bs-dropdown-animation type="button"> --}}
+              {{--                  Help Resources --}}
+              {{--                </button> --}}
+              {{--                <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu"> --}}
+              {{--                  <a class="dropdown-item" href="{{ route('help.about') }}"><i class="bi-question-circle me-2"></i>About Us</a> --}}
+              {{--                  <a class="dropdown-item" href="{{ route('help.guide') }}"><i class="bi-journal-text me-2"></i>User Guide</a> --}}
+              {{--                </div> --}}
+              {{--              </div> --}}
+              {{--              <!-- End Help Resources --> --}}
 
               <div class="dropdown-divider"></div>
 

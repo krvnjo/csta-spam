@@ -177,19 +177,19 @@
           </li>
           <!-- End System Appearance -->
 
-          <!-- Help Resources -->
-          <li class="navbar-vertical-footer-list-item">
-            <div class="dropdown dropup">
-              <button class="btn btn-ghost-secondary btn-icon rounded-circle" id="helpResourcesDropdown" data-bs-toggle="dropdown" data-bs-dropdown-animation type="button">
-                <i class="bi-info-circle"></i>
-              </button>
-              <div class="dropdown-menu navbar-dropdown-menu-borderless">
-                <a class="dropdown-item" href="{{ route('help.about') }}"><i class="bi-question-circle me-2"></i>About Us</a>
-                <a class="dropdown-item" href="{{ route('help.guide') }}"><i class="bi-journal-text me-2"></i>User Guide</a>
-              </div>
-            </div>
-          </li>
-          <!-- End Help Resources -->
+          {{--          <!-- Help Resources --> --}}
+          {{--          <li class="navbar-vertical-footer-list-item"> --}}
+          {{--            <div class="dropdown dropup"> --}}
+          {{--              <button class="btn btn-ghost-secondary btn-icon rounded-circle" id="helpResourcesDropdown" data-bs-toggle="dropdown" data-bs-dropdown-animation type="button"> --}}
+          {{--                <i class="bi-info-circle"></i> --}}
+          {{--              </button> --}}
+          {{--              <div class="dropdown-menu navbar-dropdown-menu-borderless"> --}}
+          {{--                <a class="dropdown-item" href="{{ route('help.about') }}"><i class="bi-question-circle me-2"></i>About Us</a> --}}
+          {{--                <a class="dropdown-item" href="{{ route('help.guide') }}"><i class="bi-journal-text me-2"></i>User Guide</a> --}}
+          {{--              </div> --}}
+          {{--            </div> --}}
+          {{--          </li> --}}
+          {{--          <!-- End Help Resources --> --}}
         </ul>
       </div>
       <!-- End Footer -->

@@ -4,10 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TicketRequest;
 use App\Models\Audit;
-use App\Models\Priority;
+use App\Models\MaintenanceTicket;
 use App\Models\Progress;
 use App\Models\PropertyChild;
-use App\Models\Ticket;
 use App\Observers\TicketRequestObserver;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
@@ -22,20 +21,18 @@ class TicketRequestController extends Controller
      */
     public function index()
     {
-        $tickets = Ticket::with('priority', 'progress')->whereIn('prog_id', [1, 2])->orderBy('created_at')->get();
-        $priorities = Priority::with('color')->get();
+        $tickets = MaintenanceTicket::with('progress')->whereIn('prog_id', [1, 2])->orderBy('created_at')->get();
         $progresses = Progress::with('legend')->whereIn('id', [1, 2])->get();
         $items = PropertyChild::whereHas('property', function ($query) {
             $query->where('is_consumable', 0);
         })
-            ->whereIn('status_id', [1, 2, 3])
+            ->whereIn('status_id', [1, 2])
             ->with('property')
             ->get();
 
         return view('pages.repair-maintenance.request',
             compact(
                 'tickets',
-                'priorities',
                 'progresses',
                 'items',
             )
@@ -52,7 +49,7 @@ class TicketRequestController extends Controller
 
             $currentYear = Carbon::now()->year;
 
-            $lastCode = Ticket::query()
+            $lastCode = MaintenanceTicket::query()
                 ->where('ticket_num', 'LIKE', "RMT{$currentYear}%")
                 ->orderBy('ticket_num', 'desc')
                 ->value('ticket_num');
@@ -60,22 +57,16 @@ class TicketRequestController extends Controller
             $nextNumber = $lastCode ? (int)substr($lastCode, 7) + 1 : 1;
             $code = 'RMT' . $currentYear . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
 
-            $ticket = Ticket::create([
+            $ticket = MaintenanceTicket::create([
                 'ticket_num' => $code,
                 'name' => ucwords(trim($validated['ticket'])),
                 'description' => $validated['description'],
-                'estimated_cost' => $validated['cost'],
-                'prio_id' => $validated['priority'],
+                'cost' => $validated['cost'],
                 'prog_id' => 1,
             ]);
 
-            foreach ($validated['items'] as $itemId) {
-                $item = PropertyChild::findOrFail($itemId);
-                $item->update([
-                    'ticket_id' => $ticket->id,
-                    'status_id' => 3,
-                ]);
-            }
+            $ticket->items()->sync($validated['items']);
+            PropertyChild::whereIn('id', $validated['items'])->update(['status_id' => 3]);
 
             return response()->json([
                 'success' => true,
@@ -86,7 +77,7 @@ class TicketRequestController extends Controller
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
-                'text' => 'An error occurred while creating the request. Please try again later.',
+                'text' => 'An error occurred while creating the ticket request. Please try again later.',
             ], 500);
         }
     }
@@ -99,7 +90,7 @@ class TicketRequestController extends Controller
         try {
             $validated = $request->validated();
 
-            $ticket = Ticket::findOrFail($validated['id']);
+            $ticket = MaintenanceTicket::findOrFail($validated['id']);
             $items = $ticket->items()
                 ->with('property')
                 ->orderBy('prop_code')
@@ -109,14 +100,15 @@ class TicketRequestController extends Controller
                     $category = $item->property->category->name;
                     $brand = $item->property->brand->name;
                     $designation = $item->designation->name;
-                    return "{$item->prop_code} | {$parentName} | {$category} | {$brand} | {$designation}";
+                    $status = $item->status->name;
+                    return "{$item->prop_code} | {$parentName} | {$category} | {$brand} | {$designation} | {$status}";
                 })
                 ->toArray();
 
-            $createdBy = Audit::where('subject_type', Ticket::class)->where('subject_id', $ticket->id)->where('event_id', 1)->first();
+            $createdBy = Audit::where('subject_type', MaintenanceTicket::class)->where('subject_id', $ticket->id)->where('event_id', 1)->first();
             $createdDetails = $this->getUserAuditDetails($createdBy);
 
-            $updatedBy = Audit::where('subject_type', Ticket::class)->where('subject_id', $ticket->id)->where('event_id', 2)->latest()->first() ?? $createdBy;
+            $updatedBy = Audit::where('subject_type', MaintenanceTicket::class)->where('subject_id', $ticket->id)->where('event_id', 2)->latest()->first() ?? $createdBy;
             $updatedDetails = $this->getUserAuditDetails($updatedBy);
 
             return response()->json([
@@ -124,9 +116,7 @@ class TicketRequestController extends Controller
                 'num' => $ticket->ticket_num,
                 'ticket' => $ticket->name,
                 'description' => $ticket->description,
-                'cost' => '₱' . number_format($ticket->estimated_cost, 2, '.', ','),
-                'priority_name' => $ticket->priority->name,
-                'priority_color' => $ticket->priority->color->class,
+                'cost' => '₱' . number_format($ticket->cost, 2, '.', ','),
                 'progress_name' => $ticket->progress->name,
                 'progress_badge' => $ticket->progress->badge->class,
                 'progress_legend' => $ticket->progress->legend->class,
@@ -155,8 +145,22 @@ class TicketRequestController extends Controller
         try {
             $validated = $request->validated();
 
-            $ticket = Ticket::findOrFail($validated['id']);
-            $items = $ticket->items()->orderBy('prop_code')->pluck('id')->toArray();
+            $ticket = MaintenanceTicket::findOrFail($validated['id']);
+            $itemsInTicket = $ticket->items()->pluck('item_id')->toArray();
+
+            $availableItems = PropertyChild::whereDoesntHave('ticket', function ($query) use ($validated) {
+                $query->where('ticket_id', '!=', $validated['id']);
+            })
+                ->orWhereIn('id', $itemsInTicket)
+                ->where('is_active', true)
+                ->get();
+
+            $items = $availableItems->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'text' => $item->prop_code . ' | ' . $item->property->name . ' | ' . $item->property->category->name . ' | ' . $item->property->brand->name . ' | ' . $item->designation->name . ' | ' . $item->condition->name . ' | ' . $item->status->name,
+                ];
+            });
 
             return response()->json([
                 'success' => true,
@@ -164,9 +168,9 @@ class TicketRequestController extends Controller
                 'num' => $ticket->ticket_num,
                 'ticket' => $ticket->name,
                 'description' => $ticket->description,
-                'cost' => $ticket->estimated_cost,
-                'priority' => $ticket->prio_id,
+                'cost' => $ticket->cost,
                 'items' => $items,
+                'selectedItems' => $itemsInTicket,
             ]);
         } catch (Throwable) {
             return response()->json([
@@ -185,34 +189,32 @@ class TicketRequestController extends Controller
         try {
             $validated = $request->validated();
 
-            $ticket = Ticket::findOrFail($validated['id']);
+            $ticket = MaintenanceTicket::findOrFail($validated['id']);
 
             if (!isset($validated['progress'])) {
+                $ticket->update([
+                    'name' => $validated['ticket'],
+                    'description' => $validated['description'],
+                    'cost' => $validated['cost'],
+                ]);
+
                 $currentItems = $ticket->items->pluck('id')->toArray();
 
-                // Sync the new items by updating the ticket_id of the items
-                foreach ($validated['items'] as $newItemId) {
-                    $item = PropertyChild::find($newItemId);
-                    $item?->update([
-                        'ticket_id' => $ticket->id,  // Assign the current ticket ID
-                        'status_id' => 3, // Set status_id to 3 for newly added items
-                    ]);
+                $ticket->items()->sync($validated['items']);
+
+                $newItems = array_diff($validated['items'], $currentItems);
+
+                if (!empty($newItems)) {
+                    PropertyChild::whereIn('id', $newItems)->update(['status_id' => 3]);
                 }
 
-                // Determine the removed items by comparing the current items with the new ones
                 $removedItems = array_diff($currentItems, $validated['items']);
 
-                // Update the status_id and ticket_id for removed items
-                foreach ($removedItems as $removedItemId) {
-                    $item = PropertyChild::find($removedItemId);
-                    if ($item) {
-                        // Set status_id based on inventory_date
+                if (!empty($removedItems)) {
+                    PropertyChild::whereIn('id', $removedItems)->get()->each(function ($item) {
                         $statusId = $item->inventory_date ? 2 : 1;
-                        $item->update([
-                            'status_id' => $statusId,  // Update status_id
-                            'ticket_id' => null, // Set ticket_id to null for removed items
-                        ]);
-                    }
+                        $item->update(['status_id' => $statusId]);
+                    });
                 }
             } else {
                 $ticket->update([
@@ -220,11 +222,15 @@ class TicketRequestController extends Controller
                 ]);
 
                 if ($ticket->prog_id == 4) {
-                    $ticket->items()->orderBy('prop_code')->each(function ($item) {
+                    $ticket->items()->each(function ($item) {
                         $item->update([
+                            'condi_id' => null,
                             'status_id' => 4,
                         ]);
                     });
+                    $ticket->update([
+                        'started_at' => now(),
+                    ]);
                 }
             }
 
@@ -240,7 +246,6 @@ class TicketRequestController extends Controller
                 'text' => 'An error occurred while updating the ticket request. Please try again later.',
             ], 500);
         }
-
     }
 
     /**
@@ -251,7 +256,7 @@ class TicketRequestController extends Controller
         try {
             $validated = $request->validated();
 
-            $ticket = Ticket::findOrFail($validated['id']);
+            $ticket = MaintenanceTicket::findOrFail($validated['id']);
 
             $ticket->items()->each(function ($item) {
                 $statusId = $item->inventory_date ? 2 : 1;

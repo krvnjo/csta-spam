@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TicketOngoingRequest;
-use App\Models\Priority;
+use App\Models\Audit;
+use App\Models\MaintenanceTicket;
 use App\Models\Progress;
-use App\Models\PropertyChild;
-use App\Models\Ticket;
+use App\Observers\TicketRequestObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Support\Facades\Crypt;
 use Throwable;
 
+#[ObservedBy([TicketRequestObserver::class])]
 class TicketOngoingController extends Controller
 {
     /**
@@ -16,19 +19,13 @@ class TicketOngoingController extends Controller
      */
     public function index()
     {
-        $tickets = Ticket::with('priority', 'progress')->whereIn('prog_id', [3, 4])->orderBy('created_at', 'desc')->get();
-        $priorities = Priority::with('color')->get();
-        $progresses = Progress::with('legend')->whereIn('id', [1, 2])->get();
-        $items = PropertyChild::whereHas('property', function ($query) {
-            $query->where('is_consumable', 0);
-        })->with('property')->get();
+        $tickets = MaintenanceTicket::with('progress')->whereIn('prog_id', [4])->orderBy('started_at', 'desc')->get();
+        $progresses = Progress::with('legend')->whereIn('id', [4, 5])->get();
 
         return view('pages.repair-maintenance.ongoing',
             compact(
                 'tickets',
-                'priorities',
                 'progresses',
-                'items',
             )
         );
     }
@@ -38,7 +35,54 @@ class TicketOngoingController extends Controller
      */
     public function show(TicketOngoingRequest $request)
     {
-        //
+        try {
+            $validated = $request->validated();
+
+            $ticket = MaintenanceTicket::findOrFail($validated['id']);
+            $items = $ticket->items()
+                ->with('property')
+                ->orderBy('prop_code')
+                ->get()
+                ->map(function ($item) {
+                    $parentName = $item->property->name;
+                    $category = $item->property->category->name;
+                    $brand = $item->property->brand->name;
+                    $designation = $item->designation->name;
+                    $status = $item->status->name;
+                    return "{$item->prop_code} | {$parentName} | {$category} | {$brand} | {$designation} | {$status}";
+                })
+                ->toArray();
+
+            $createdBy = Audit::where('subject_type', MaintenanceTicket::class)->where('subject_id', $ticket->id)->where('event_id', 1)->first();
+            $createdDetails = $this->getUserAuditDetails($createdBy);
+
+            $updatedBy = Audit::where('subject_type', MaintenanceTicket::class)->where('subject_id', $ticket->id)->where('event_id', 2)->latest()->first() ?? $createdBy;
+            $updatedDetails = $this->getUserAuditDetails($updatedBy);
+
+            return response()->json([
+                'success' => true,
+                'num' => $ticket->ticket_num,
+                'ticket' => $ticket->name,
+                'description' => $ticket->description,
+                'cost' => '₱' . number_format($ticket->cost, 2, '.', ','),
+                'progress_name' => $ticket->progress->name,
+                'progress_badge' => $ticket->progress->badge->class,
+                'progress_legend' => $ticket->progress->legend->class,
+                'items' => $items,
+                'created_img' => $createdDetails['image'],
+                'created_by' => $createdDetails['name'],
+                'created_at' => $ticket->created_at->format('D, M d, Y | h:i A'),
+                'updated_img' => $updatedDetails['image'],
+                'updated_by' => $updatedDetails['name'],
+                'updated_at' => $ticket->updated_at->format('D, M d, Y | h:i A'),
+            ]);
+        } catch (Throwable) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Oops! Something went wrong.',
+                'message' => 'An error occurred while fetching the ticket request. Please try again later.',
+            ], 500);
+        }
     }
 
     /**
@@ -49,44 +93,69 @@ class TicketOngoingController extends Controller
         try {
             $validated = $request->validated();
 
-            $ticket = Ticket::findOrFail($validated['id']);
+            $ticket = MaintenanceTicket::findOrFail($validated['id']);
 
-            if (!isset($validated['progress'])) {
-                $currentItems = $ticket->items->pluck('id')->toArray();
+            $items = $ticket->items()
+                ->with(['property', 'property.category', 'property.brand', 'designation'])
+                ->orderBy('prop_code')
+                ->get()
+                ->map(function ($item) {
+                    return [
+                        'id' => $item->id,
+                        'name' => "{$item->prop_code} | {$item->property->name} | {$item->property->category->name} | {$item->property->brand->name} | {$item->designation->name}",
+                    ];
+                })
+                ->toArray();
 
-                foreach ($validated['items'] as $newItemId) {
-                    $item = PropertyChild::find($newItemId);
-                    $item?->update([
-                        'ticket_id' => $ticket->id,
-                        'status_id' => 3,
-                    ]);
-                }
+            return response()->json([
+                'success' => true,
+                'id' => Crypt::encryptString($ticket->id),
+                'num' => $ticket->ticket_num,
+                'items' => $items,
+            ]);
+        } catch (Throwable) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Oops! Something went wrong.',
+                'message' => 'An error occurred while fetching the ticket request. Please try again later.',
+            ], 500);
+        }
+    }
 
-                $removedItems = array_diff($currentItems, $validated['items']);
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(TicketOngoingRequest $request)
+    {
+        try {
+            $validated = $request->validated();
 
-                foreach ($removedItems as $removedItemId) {
-                    $item = PropertyChild::find($removedItemId);
-                    if ($item) {
-                        $statusId = $item->inventory_date ? 2 : 1;
-                        $item->update([
-                            'status_id' => $statusId,
-                            'ticket_id' => null,
-                        ]);
+            $ticket = MaintenanceTicket::findOrFail($validated['id']);
+
+            $ticket->update([
+                'remarks' => $validated['remarks'],
+                'prog_id' => 5,
+                'completed_at' => now(),
+            ]);
+
+            $requestData = $request->all();
+
+            $ticket->items()->each(function ($item) use ($requestData) {
+                foreach ($requestData as $key => $value) {
+                    if (preg_match('/^(condition|status)(\d+)$/', $key, $matches)) {
+                        $type = $matches[1];
+                        $itemId = $matches[2];
+
+                        if ((int)$itemId === (int)$item->id) {
+                            if ($type === 'condition') {
+                                $item->update(['condi_id' => $value]);
+                            } elseif ($type === 'status') {
+                                $item->update(['status_id' => $value]);
+                            }
+                        }
                     }
                 }
-            } else {
-                $ticket->update([
-                    'prog_id' => $validated['progress'],
-                ]);
-
-                if ($ticket->prog_id == 4) {
-                    $ticket->items()->orderBy('prop_code')->each(function ($item) {
-                        $item->update([
-                            'status_id' => 4,
-                        ]);
-                    });
-                }
-            }
+            });
 
             return response()->json([
                 'success' => true,
@@ -100,13 +169,5 @@ class TicketOngoingController extends Controller
                 'text' => 'An error occurred while updating the ticket request. Please try again later.',
             ], 500);
         }
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(TicketOngoingRequest $request)
-    {
-        //
     }
 }

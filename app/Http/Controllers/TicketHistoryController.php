@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Audit;
-use App\Models\Event;
-use App\Models\Ticket;
-use App\Models\Type;
-use App\Models\User;
+use App\Models\MaintenanceTicket;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
+use Throwable;
 
 class TicketHistoryController extends Controller
 {
@@ -16,72 +15,68 @@ class TicketHistoryController extends Controller
      */
     public function index()
     {
-        $audits = Audit::with([
-            'event' => function ($query) {
-                $query->with(['badge', 'legend']);
-            },
-            'subject',
-            'causer.role'
-        ])->orderBy('name')->get();
-        $types = Type::get();
-        $events = Event::with('badge', 'legend')->get();
-        $users = User::with('role')->where('role_id', '!=', 1)->orderBy('lname')->get();
+        $tickets = MaintenanceTicket::with('progress')->whereIn('prog_id', [5])->orderBy('started_at', 'desc')->get();
 
-        return view('pages.other.audit-history',
+        return view('pages.repair-maintenance.history',
             compact(
-                'audits',
-                'types',
-                'events',
-                'users',
+                'tickets',
             )
         );
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      */
-    public function show(Ticket $ticket)
+    public function show(Request $request)
     {
-        //
-    }
+        try {
+            $ticket = MaintenanceTicket::findOrFail(Crypt::decryptString($request->input('id')));
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Ticket $ticket)
-    {
-        //
-    }
+            $items = $ticket->items()
+                ->with('property')
+                ->orderBy('prop_code')
+                ->get()
+                ->map(function ($item) {
+                    $parentName = $item->property->name;
+                    $category = $item->property->category->name;
+                    $brand = $item->property->brand->name;
+                    $designation = $item->designation->name;
+                    $status = $item->status->name;
+                    $condition = $item->condition->name;
+                    return "{$item->prop_code} | {$parentName} | {$category} | {$brand} | {$designation} | {$status} | {$condition}";
+                })
+                ->toArray();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Ticket $ticket)
-    {
-        //
-    }
+            $createdBy = Audit::where('subject_type', MaintenanceTicket::class)->where('subject_id', $ticket->id)->where('event_id', 1)->first();
+            $createdDetails = $this->getUserAuditDetails($createdBy);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Ticket $ticket)
-    {
-        //
+            $updatedBy = Audit::where('subject_type', MaintenanceTicket::class)->where('subject_id', $ticket->id)->where('event_id', 2)->latest()->first() ?? $createdBy;
+            $updatedDetails = $this->getUserAuditDetails($updatedBy);
+
+            return response()->json([
+                'success' => true,
+                'num' => $ticket->ticket_num,
+                'ticket' => $ticket->name,
+                'description' => $ticket->description,
+                'cost' => '₱' . number_format($ticket->cost, 2, '.', ','),
+                'progress_name' => $ticket->progress->name,
+                'progress_badge' => $ticket->progress->badge->class,
+                'progress_legend' => $ticket->progress->legend->class,
+                'items' => $items,
+                'remarks' => $ticket->remarks,
+                'created_img' => $createdDetails['image'],
+                'created_by' => $createdDetails['name'],
+                'created_at' => $ticket->created_at->format('D, M d, Y | h:i A'),
+                'updated_img' => $updatedDetails['image'],
+                'updated_by' => $updatedDetails['name'],
+                'updated_at' => $ticket->updated_at->format('D, M d, Y | h:i A'),
+            ]);
+        } catch (Throwable) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Oops! Something went wrong.',
+                'message' => 'An error occurred while fetching the ticket request. Please try again later.',
+            ], 500);
+        }
     }
 }

@@ -1,5 +1,5 @@
 <!-- View Request Modal -->
-<div class="modal fade" id="modalViewRequest" data-bs-backdrop="static" tabindex="-1">
+<div class="modal fade" id="modalViewHistory" data-bs-backdrop="static" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered" style="max-width: 900px">
     <div class="modal-content">
       <!-- Header -->
@@ -69,6 +69,17 @@
             </div>
           </div>
           <!-- End Items -->
+
+          <!-- Remarks -->
+          <div class="row mb-4">
+            <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
+              <p class="form-label fw-semibold mb-0">Remarks:</p>
+            </div>
+            <div class="col-12 col-md-7 d-flex align-items-center">
+              <p class="fw-semibold mb-0" id="lblViewRemarks"></p>
+            </div>
+          </div>
+          <!-- End Remarks -->
 
           <!-- Status -->
           <div class="row mb-4">

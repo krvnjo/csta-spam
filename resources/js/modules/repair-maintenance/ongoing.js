@@ -2,17 +2,17 @@ $(document).ready(function () {
   const ongoingsDatatable = $('#ongoingsDatatable').DataTable();
 
   // ============ View Ongoing Request ============ //
-  ongoingsDatatable.on('click', '.btnViewRequest', function () {
+  ongoingsDatatable.on('click', '.btnViewOngoing', function () {
     const ongoingId = $(this).closest('tr').find('td[data-ongoing-id]').data('ongoing-id');
 
     $.ajax({
-      url: '/repair-maintenance/ticket-ongoings/view',
+      url: '/repair-maintenance/ongoing-maintenance/view',
       method: 'GET',
       data: { id: ongoingId },
       success: function (response) {
         $('#modalViewRequest').modal('toggle');
 
-        const userConfig = {
+        const ongoingConfig = {
           textFields: [
             { key: 'num', selector: '#lblViewNum' },
             { key: 'ticket', selector: '#lblViewTicket' },
@@ -33,7 +33,6 @@ $(document).ready(function () {
             },
           ],
 
-          priorityFields: { key: 'priority', selector: '#lblViewPriority' },
           progressFields: { key: 'progress', selector: '#lblViewProgress' },
 
           imageFields: [
@@ -43,7 +42,7 @@ $(document).ready(function () {
           ],
         };
 
-        displayViewResponseData(response, userConfig);
+        displayViewResponseData(response, ongoingConfig);
       },
       error: function (response) {
         showResponseAlert(response, 'error');
@@ -53,17 +52,95 @@ $(document).ready(function () {
   // ============ End View Ticket Request ============ //
 
   // ============ Edit Ticket Request ============ //
-  ongoingsDatatable.on('click', '.btnEditRequest', function () {
+  ongoingsDatatable.on('click', '.btnEditOngoing', function () {
     const ongoingId = $(this).closest('tr').find('td[data-ongoing-id]').data('ongoing-id');
 
     $.ajax({
-      url: '/repair-maintenance/ticket-ongoings/edit',
+      url: '/repair-maintenance/ongoing-maintenance/edit',
       method: 'GET',
       data: { id: ongoingId },
       success: function (response) {
         ongoingEditModal.modal('toggle');
-        $('#lblTicketNumber').text(response.num);
+        $('#lblEditTicketNumber').text(response.num);
         populateEditForm(response);
+
+        const itemsContainer = $('#itemsContainer');
+        itemsContainer.empty();
+
+        response.items.forEach((item) => {
+          const itemTemplate = `
+            <div class="item mb-4">
+                <span class="col col-form-label form-label fw-semibold">Item Name: ${item.name}</span>
+                <div class="form-group mb-4">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="col col-form-label form-label" for="selCondition${item.id}">Condition</label>
+                            <div class="tom-select-custom">
+                                <select class="js-select form-select" id="selCondition${item.id}" name="condition${item.id}" required
+                                    data-hs-tom-select-options='{
+                                        "hideSearch": "true",
+                                        "placeholder": "Select a condition"
+                                    }'>
+                                    <option value=""></option>
+                                    <option value="1">Fully Functional</option>
+                                    <option value="2">Working with Minor Issues</option>
+                                    <option value="3">Working with Major Issues</option>
+                                    <option value="4">Not Working</option>
+                                </select>
+                                <span class="invalid-feedback" id="valEditCondition${item.id}"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col col-form-label form-label" for="selStatus${item.id}">Status</label>
+                            <div class="tom-select-custom">
+                                <select class="js-select form-select" id="selStatus${item.id}" name="status${item.id}" required
+                                    data-hs-tom-select-options='{
+                                        "hideSearch": "true",
+                                        "placeholder": "Select a status"
+                                    }'>
+                                    <option value=""></option>
+                                    <option value="1">Available</option>
+                                    <option value="8">For Replacement</option>
+                                    <option value="9">For Disposal</option>
+                                </select>
+                                <span class="invalid-feedback" id="valAddStatus"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+
+          itemsContainer.append(itemTemplate);
+
+          // Get the condition and status elements
+          const conditionSelect = $(`#selCondition${item.id}`);
+          const statusSelect = $(`#selStatus${item.id}`);
+
+          // Event listener for condition change to hide/show status options
+          conditionSelect.on('change', function () {
+            const selectedCondition = conditionSelect.val();
+
+            if (selectedCondition === '4') {
+              // "Not Working" condition
+              statusSelect.find('option[value="1"]').hide(); // Hide "Available"
+            } else {
+              statusSelect.find('option[value="1"]').show(); // Show "Available"
+            }
+          });
+
+          // Event listener for status change to restrict conditions based on status
+          statusSelect.on('change', function () {
+            const selectedStatus = statusSelect.val();
+
+            if (selectedStatus === '8' || selectedStatus === '9') {
+              // "For Replacement" or "For Disposal"
+              conditionSelect.val('4'); // Automatically set to "Not Working"
+              conditionSelect.prop('disabled', true); // Disable condition select
+            } else {
+              conditionSelect.prop('disabled', false); // Enable condition select
+            }
+          });
+        });
       },
       error: function (response) {
         showResponseAlert(response, 'error');
@@ -73,9 +150,9 @@ $(document).ready(function () {
   // ============ End Edit Ticket Request ============ //
 
   // ============ Update a Ticket Request ============ //
-  const ongoingEditModal = $('#modalEditRequest');
-  const ongoingEditForm = $('#frmEditRequest');
-  const ongoingEditSaveBtn = $('#btnEditSaveRequest');
+  const ongoingEditModal = $('#modalEditOngoing');
+  const ongoingEditForm = $('#frmEditOngoing');
+  const ongoingEditSaveBtn = $('#btnEditSaveOngoing');
 
   handleUnsavedChanges(ongoingEditModal, ongoingEditForm, ongoingEditSaveBtn);
 
@@ -86,7 +163,7 @@ $(document).ready(function () {
     const editFormData = new FormData(ongoingEditForm[0]);
 
     $.ajax({
-      url: '/repair-maintenance/ticket-ongoings',
+      url: '/repair-maintenance/ongoing-maintenance',
       method: 'POST',
       data: editFormData,
       processData: false,
@@ -103,46 +180,6 @@ $(document).ready(function () {
       error: function (response) {
         showResponseAlert(response, 'error', ongoingEditModal, ongoingEditForm);
       },
-    });
-  });
-
-  ongoingsDatatable.on('click', '.btnSetStatus', function () {
-    const ongoingId = $(this).closest('tr').find('td[data-ongoing-id]').data('ongoing-id');
-    const ongoingName = $(this).closest('tr').find('.ongoing-name').text().trim();
-    const ongoingStatus = $(this).data('status');
-
-    Swal.fire({
-      title: 'Mark as complete?',
-      text: `Are you sure you want to mark "${ongoingName}" as complete?`,
-      icon: 'warning',
-      showCancelButton: true,
-      focusCancel: true,
-      confirmButtonText: `Yes, mark it as complete!`,
-      cancelButtonText: 'No, cancel!',
-      customClass: {
-        popup: 'bg-light rounded-3 shadow fs-4',
-        title: 'text-dark fs-1',
-        htmlContainer: 'text-body text-center fs-4',
-        confirmButton: `btn btn-sm btn-success`,
-        cancelButton: 'btn btn-sm btn-secondary',
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        $.ajax({
-          url: '/repair-maintenance/ongoing-maintenance',
-          method: 'PATCH',
-          data: {
-            id: ongoingId,
-            status: ongoingStatus,
-          },
-          success: function (response) {
-            showResponseAlert(response, 'success');
-          },
-          error: function (response) {
-            showResponseAlert(response, 'error');
-          },
-        });
-      }
     });
   });
   // ============ End Update Ticket Request ============ //
