@@ -222,7 +222,7 @@
                     <div class="btn-group position-static">
                       <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" data-bs-toggle="dropdown" type="button"></button>
                       <div class="dropdown-menu dropdown-menu-end mt-1">
-                        @if($borrowing->status == 'Pending')')
+                        @if($borrowing->status == 'Pending')
                           <button class="dropdown-item btnApproveRequest" type="button" data-borrow-num="{{ $borrowing->borrow_num }}" data-requester-name="{{ $borrowing->requester->name }}">
                             <i class="bi bi-check2-circle dropdown-item-icon text-success"></i> Approve
                           </button>
