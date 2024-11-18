@@ -21,6 +21,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TicketHistoryController;
 use App\Http\Controllers\TicketOngoingController;
 use App\Http\Controllers\TicketRequestController;
+use App\Http\Controllers\TransactionLogsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -149,6 +150,19 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
 
     // Borrowing Logs Routes
     Route::middleware('checkPermission:Borrow & Reservation')->prefix('borrow-reservation/borrow-logs')->name('borrow-logs.')->controller(BorrowingLogsController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+        Route::get('/view', 'show')->name('view')->middleware('expectsJson');
+        Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
+        Route::patch('/', 'update')->name('update');
+        Route::delete('/', 'destroy')->name('delete');
+        Route::fallback(function () {
+            abort(404);
+        });
+    });
+
+    // Transaction Logs Routes
+    Route::middleware('checkPermission:Borrow & Reservation')->prefix('borrow-reservation/transaction-logs')->name('transaction-logs.')->controller(TransactionLogsController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('store');
         Route::get('/view', 'show')->name('view')->middleware('expectsJson');

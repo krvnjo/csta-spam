@@ -62,6 +62,7 @@
                   <a class="nav-link" data-route="new-request.index" href="{{ route('new-request.index') }}">New Requests</a>
                   <a class="nav-link" data-route="ongoing-borrow.index" href="{{ route('ongoing-borrow.index') }}">Ongoing Borrowings</a>
                   <a class="nav-link" data-route="borrow-logs.index" href="{{ route('borrow-logs.index') }}">Borrow Logs</a>
+                  <a class="nav-link" data-route="transaction-logs.index" href="{{ route('transaction-logs.index') }}">Transaction Logs</a>
                 </div>
               </div>
               <!-- End Borrow & Reservation -->
