@@ -422,7 +422,7 @@ class PropertyChildController extends Controller
             return response()->json([
                 'success' => false,
                 'title' => 'Oops! Something went wrong.',
-                'message' => 'An error occurred while assigning the item.' . $e->getMessage(),
+                'message' => 'An error occurred while assigning the item.',
             ], 500);
         }
     }
