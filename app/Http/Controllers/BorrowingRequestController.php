@@ -210,11 +210,11 @@ class BorrowingRequestController extends Controller
 
                 } else {
 
-                    if ($propertyParent->count() < $borrowingItem->quantity) {
+                    if ($propertyParent->quantity < $borrowingItem->quantity) {
                         return response()->json([
                             'success' => false,
                             'title' => 'Insufficient Items!',
-                            'text' => 'Not enough available items to fulfill the request!',
+                            'text' => 'Not enough available items to fulfill the request!'. $propertyParent->count(),
                         ], 500);
                     }
 

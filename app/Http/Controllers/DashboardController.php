@@ -6,6 +6,9 @@ use App\Models\PropertyChild;
 use App\Models\PropertyParent;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Models\Borrowing;
+use App\Models\MaintenanceTicket;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
@@ -100,7 +103,40 @@ class DashboardController extends Controller
                 'lowStockConsumables'
             ));
         } else {
-            return view('pages.dashboard.default');
+            $propertyChildren = PropertyChild::with(['property', 'department', 'designation', 'condition', 'status'])
+                ->where('is_active', 1)
+                ->get();
+
+            $totalItems = $propertyChildren->count();
+            $itemsInStock = $propertyChildren->filter(function ($item) {
+                return is_null($item->inventory_date) && $item->condi_id == 1;
+            })->count();
+            $itemsAssigned = $propertyChildren->filter(function ($item) {
+                return !is_null($item->inventory_date);
+            })->count();
+            $lowStockConsumables = $propertyChildren->filter(function ($item) {
+                return $item->property->is_consumable && $item->property->quantity < 5;
+            })->count();
+
+            $totalRepairTickets = MaintenanceTicket::where('prog_id', 1)->count();
+
+            $totalBorrowRequests = Borrowing::where('prog_id', 1)->count();
+
+            $releaseBorrow = Borrowing::where('prog_id', 2)->get();
+            $progressRepair = MaintenanceTicket::where('prog_id', 4)->get();
+
+
+            return view('pages.dashboard.default', compact(
+                'totalItems', 'itemsInStock', 'itemsAssigned', 'lowStockConsumables','totalRepairTickets', 'totalBorrowRequests', 'releaseBorrow', 'progressRepair'
+            ));
         }
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
     }
 }
