@@ -54,18 +54,18 @@
 
               <div class="dropdown-menu dropdown-menu-sm-end w-100">
                 <span class="dropdown-header">Options</span>
-                <button class="dropdown-item" id="requestExportCopy" type="button">
+                <button class="dropdown-item" id="newRequestExportCopy" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/copy-icon.svg') }}" alt="Copy Icon"> Copy
                 </button>
-                <button class="dropdown-item" id="requestExportPrint" type="button">
+                <button class="dropdown-item" id="newRequestExportPrint" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/print-icon.svg') }}" alt="Print Icon"> Print
                 </button>
                 <div class="dropdown-divider"></div>
                 <span class="dropdown-header">Download</span>
-                <button class="dropdown-item" id="requestExportExcel" type="button">
+                <button class="dropdown-item" id="newRequestExportExcel" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/excel-icon.svg') }}" alt="Excel Icon"> Excel
                 </button>
-                <button class="dropdown-item" id="requestExportPdf" type="button">
+                <button class="dropdown-item" id="newRequestExportPdf" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/pdf-icon.svg') }}" alt="PDF Icon"> PDF
                 </button>
               </div>
@@ -88,21 +88,19 @@
               <!-- Priorities -->
               <div class="col-sm-12 col-md-4">
                 <div class="mb-3">
-                  <label class="form-label" for="requestPriorityFilter">Priorities</label>
+                  <label class="form-label" for="newRequestStatusFilter">Status</label>
                   <div class="tom-select-custom">
-                    <select class="js-select js-datatable-filter form-select" id="requestPriorityFilter" data-target-column-index="5"
+                    <select class="js-select js-datatable-filter form-select" id="newRequestStatusFilter" data-target-column-index="6"
                       data-hs-tom-select-options='{
                         "singleMultiple": true,
                         "hideSearch": true,
                         "hideSelected": false,
-                        "placeholder": "All Priorities"
+                        "placeholder": "All Status"
                       }'
                       multiple>
-                      {{--                      @foreach ($priorities as $priority) --}}
-                      {{--                        <option data-option-template='<span class="d-flex align-items-center"><span class="{{ $priority->color->class }}"></span>{{ $priority->name }}</span>' --}}
-                      {{--                                value="{{ $priority->name }}"> --}}
-                      {{--                        </option> --}}
-                      {{--                      @endforeach --}}
+                      @foreach ($progresses as $status)
+                        <option value="{{ $status->name }}">{{ $status->name }}</option>
+                      @endforeach
                     </select>
                   </div>
                 </div>
@@ -112,20 +110,18 @@
               <!-- Users -->
               <div class="col-sm-12 col-md-4">
                 <div class="mb-3">
-                  <label class="form-label" for="requestUserFilter">Users</label>
+                  <label class="form-label" for="newRequestRequestersFilter">Requesters</label>
                   <div class="tom-select-custom">
-                    <select class="js-select js-datatable-filter form-select" id="requestUserFilter" data-target-column-index="5"
+                    <select class="js-select js-datatable-filter form-select" id="newRequestRequestersFilter" data-target-column-index="2"
                       data-hs-tom-select-options='{
                         "singleMultiple": true,
                         "hideSelected": false,
-                        "placeholder": "All Users"
+                        "placeholder": "All Requesters"
                       }'
                       autocomplete="off" multiple>
-                      {{--                      @foreach ($users as $user) --}}
-                      {{--                        <option --}}
-                      {{--                          data-option-template='<span class="d-flex align-items-center"><img class="avatar avatar-xss avatar-circle me-2" src="{{ asset('storage/img/user-images/' . $user->user_image) }}" alt="User Image" /><span class="text-truncate">{{ $user->name }}</span></span>' --}}
-                      {{--                          value="{{ $user->name }}">{{ $user->name }}</option> --}}
-                      {{--                      @endforeach --}}
+                      @foreach ($requesters as $request)
+                        <option value="{{ $request->name }}">{{ $request->name }}</option>
+                      @endforeach
                     </select>
                   </div>
                 </div>
@@ -135,8 +131,8 @@
               <!-- Date Range -->
               <div class="col-sm-12 col-md-4">
                 <div class="mb-3">
-                  <label class="form-label" for="requestDateRangeFilter">Date Range</label>
-                  <input class="js-daterangepicker-clear js-datatable-filter form-control daterangepicker-custom-input" data-target-column-index="6"
+                  <label class="form-label" for="newRequestDateRangeFilter">Date Range Requested</label>
+                  <input class="js-daterangepicker-clear js-datatable-filter form-control daterangepicker-custom-input" data-target-column-index="7"
                     data-hs-daterangepicker-options='{
                       "autoUpdateInput": false,
                       "locale": {
@@ -180,13 +176,13 @@
                 <th>Quantity</th>
                 <th>Remarks</th>
                 <th>Status</th>
-                <th>Borrow Date</th>
-                <th>Date Created</th>
+                <th>Requested Date</th>
+                <th>Date Created/Approved</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              @foreach ($borrowings as $borrowing)
+              @foreach ($borrowings->whereIn('prog_id', [1, 2]) as $borrowing)
                 <tr>
                   <td class="d-none" data-borrow-id="{{ Crypt::encryptString($borrowing->id) }}"></td>
                   <td>{{ $borrowing->borrow_num }}</td>
@@ -194,12 +190,12 @@
                   <td>
                     @foreach ($borrowing->requestItems as $item)
                       <span style="color:gray"
-                            @if (!empty($borrowing->remarks) && strlen($item->property->name) > 25) data-bs-toggle="tooltip"
+                        @if (!empty($borrowing->remarks) && strlen($item->property->name) > 25) data-bs-toggle="tooltip"
                             data-bs-html="true"
                             data-bs-placement="top"
                             title="{{ $item->property->name }}" @endif>
-                      {{ Str::limit(!empty($item->property->name) ? $item->property->name : 'No remarks provided', 30) }}
-                    </span><br>
+                        {{ Str::limit(!empty($item->property->name) ? $item->property->name : 'No remarks provided', 30) }}
+                      </span><br>
                     @endforeach
                   </td>
                   <td>
@@ -209,11 +205,11 @@
                   </td>
                   <td>
                     <span style="color:gray"
-                      @if (!empty($borrowing->remarks) && strlen($borrowing->remarks) > 25) data-bs-toggle="tooltip"
+                      @if (!empty($borrowing->remarks) && strlen($borrowing->remarks) > 20) data-bs-toggle="tooltip"
                                             data-bs-html="true"
                                             data-bs-placement="top"
                                             title="{{ $borrowing->remarks }}" @endif>
-                      {{ Str::limit(!empty($borrowing->remarks) ? $borrowing->remarks : 'No remarks provided', 30) }}
+                      {{ Str::limit(!empty($borrowing->remarks) ? $borrowing->remarks : 'No remarks provided', 20) }}
                     </span>
                   </td>
                   <td>
@@ -222,7 +218,15 @@
                     </span>
                   </td>
                   <td><i class="bi-calendar-event me-1"></i>{{ \Carbon\Carbon::parse($borrowing->borrow_date)->format('F j, Y') }}</td>
-                  <td><i class="bi-calendar-plus me-1"></i>Created {{ \Carbon\Carbon::parse($borrowing->created_at)->diffForHumans() }}</td>
+                  <td>
+                    @if ($borrowing->prog_id == 1)
+                      <i class="bi-calendar-plus me-1"></i>
+                      Created {{ \Carbon\Carbon::parse($borrowing->created_at)->diffForHumans() }}
+                    @else
+                      <i class="bi bi-calendar-check me-1"></i>
+                      Approved {{ \Carbon\Carbon::parse($borrowing->approved_at)->diffForHumans() }}
+                    @endif
+                  </td>
                   <td>
                     <div class="btn-group position-static">
                       <button class="btn btn-white btn-sm" type="button"><i class="bi-eye"></i> View</button>
@@ -332,12 +336,12 @@
 
       daterangepickerClear.on('apply.daterangepicker', function(ev, picker) {
         $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
-        filterDatatableAndCount(newRequestsDatatable, "#requestsFilterCount");
+        filterDatatableAndCount(newRequestsDatatable, "#newRequestsFilterCount");
       });
 
       daterangepickerClear.on('cancel.daterangepicker', function() {
         $(this).val('');
-        filterDatatableAndCount(newRequestsDatatable, "#requestsFilterCount");
+        filterDatatableAndCount(newRequestsDatatable, "#newRequestsFilterCount");
       });
 
       HSCore.components.HSDatatables.init($("#newRequestsDatatable"), {
@@ -383,10 +387,10 @@
       const newRequestsDatatable = HSCore.components.HSDatatables.getItem(0);
 
       const exportButtons = {
-        "#requestExportCopy": ".buttons-copy",
-        "#requestExportPrint": ".buttons-print",
-        "#requestExportExcel": ".buttons-excel",
-        "#requestExportPdf": ".buttons-pdf"
+        "#newRequestExportCopy": ".buttons-copy",
+        "#newRequestExportPrint": ".buttons-print",
+        "#newRequestExportExcel": ".buttons-excel",
+        "#newRequestExportPdf": ".buttons-pdf"
       };
 
       $.each(exportButtons, function(exportId, exportClass) {

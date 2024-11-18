@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Borrowing;
 use App\Models\BorrowingItem;
+use App\Models\Progress;
 use App\Models\PropertyChild;
 use App\Models\PropertyParent;
 use App\Models\Requester;
@@ -23,11 +24,12 @@ class BorrowingRequestController extends Controller
     {
         $requesters = Requester::where('is_active', 1)->get();
         $items = PropertyParent::where('is_active', 1)->with('propertyChildren')->get();
+        $progresses = Progress::where('is_active', 1)->whereIn('id', [1,2])->get();
 
         $borrowings = Borrowing::with('requester', 'requestItems.property')->get();
 
 
-        return view('pages.borrowing-reservation.request', compact( 'requesters', 'items', 'borrowings'));
+        return view('pages.borrowing-reservation.request', compact( 'requesters', 'items', 'borrowings','progresses'));
     }
 
 
@@ -206,12 +208,21 @@ class BorrowingRequestController extends Controller
 
                 } else {
 
+                    if ($propertyParent->count() < $borrowingItem->quantity) {
+                        return response()->json([
+                            'success' => false,
+                            'title' => 'Insufficient Items!',
+                            'text' => 'Not enough available items to fulfill the request!',
+                        ], 500);
+                    }
+
                     $propertyParent->quantity -= $borrowingItem->quantity;
                     $propertyParent->save();
                 }
 
             }
 
+            $borrowing->released_at = now();
             $borrowing->prog_id = 3;
             $borrowing->save();
 
