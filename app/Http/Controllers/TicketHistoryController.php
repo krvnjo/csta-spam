@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Audit;
 use App\Models\MaintenanceTicket;
-use App\Models\Type;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Throwable;

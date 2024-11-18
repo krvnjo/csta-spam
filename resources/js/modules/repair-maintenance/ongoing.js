@@ -120,7 +120,7 @@ $(document).ready(function () {
           conditionSelect.on('change', function () {
             const selectedCondition = conditionSelect.val();
 
-            if (selectedCondition == '4') {
+            if (selectedCondition === '4') {
               // "Not Working" condition
               statusSelect.find('option[value="1"]').hide(); // Hide "Available"
             } else {
@@ -132,7 +132,7 @@ $(document).ready(function () {
           statusSelect.on('change', function () {
             const selectedStatus = statusSelect.val();
 
-            if (selectedStatus == '8' || selectedStatus == '9') {
+            if (selectedStatus === '8' || selectedStatus === '9') {
               // "For Replacement" or "For Disposal"
               conditionSelect.val('4'); // Automatically set to "Not Working"
               conditionSelect.prop('disabled', true); // Disable condition select

@@ -33,7 +33,7 @@
               <i class="bi-search"></i>
             </div>
             <input class="search form-control form-control-sm" type="search" placeholder="Search in CSTA-SPAM">
-            <a class="input-group-append input-group-text" href="javascript:;"><i class="bi-x" id="clearSearchResultsIcon" style="display: none;"></i></a>
+            <a class="input-group-append input-group-text" href="javascript:"><i class="bi-x" id="clearSearchResultsIcon" style="display: none;"></i></a>
           </div>
           <!-- End Input Group -->
 
