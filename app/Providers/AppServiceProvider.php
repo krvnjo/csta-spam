@@ -6,9 +6,9 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Department;
 use App\Models\Designation;
+use App\Models\MaintenanceTicket;
 use App\Models\Requester;
 use App\Models\Role;
-use App\Models\Ticket;
 use App\Models\User;
 use App\Observers\BrandObserver;
 use App\Observers\CategoryObserver;
@@ -47,7 +47,7 @@ class AppServiceProvider extends ServiceProvider
             return "<?php endif; ?>";
         });
 
-        Ticket::observe(TicketRequestObserver::class);
+        MaintenanceTicket::observe(TicketRequestObserver::class);
         User::observe(UserObserver::class);
         Role::observe(RoleObserver::class);
         Brand::observe(BrandObserver::class);

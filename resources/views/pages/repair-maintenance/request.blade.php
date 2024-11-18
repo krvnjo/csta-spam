@@ -83,28 +83,6 @@
                     <h5 class="card-header-title">Ticket Request Filters</h5>
                   </div>
                   <div class="card-body">
-                    <!-- Priorities Filter -->
-                    <div class="mb-4">
-                      <small class="text-cap text-body">Priorities</small>
-                      <div class="tom-select-custom">
-                        <select class="js-select js-datatable-filter form-select" data-target-column-index="5"
-                          data-hs-tom-select-options='{
-                            "singleMultiple": true,
-                            "hideSearch": true,
-                            "hideSelected": false,
-                            "placeholder": "All Priorities"
-                          }'
-                          multiple>
-                          @foreach ($priorities as $priority)
-                            <option data-option-template='<span class="d-flex align-items-center"><span class="{{ $priority->color->class }}"></span>{{ $priority->name }}</span>'
-                              value="{{ $priority->name }}">
-                            </option>
-                          @endforeach
-                        </select>
-                      </div>
-                    </div>
-                    <!-- End Priorities Filter -->
-
                     <!-- Status Filter -->
                     <div class="mb-2">
                       <small class="text-cap text-body">Status</small>
@@ -139,7 +117,7 @@
           <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100" id="requestsDatatable"
             data-hs-datatables-options='{
               "columnDefs": [{
-                 "targets": [3, 8],
+                 "targets": [3, 4, 8],
                  "orderable": false
                }],
               "order": [6, "asc"],
@@ -159,8 +137,8 @@
                 <th class="d-none"></th>
                 <th>Ticket No.</th>
                 <th>Subject</th>
+                <th>Description</th>
                 <th>Estimated Cost</th>
-                <th>Priority</th>
                 <th>Created At</th>
                 <th>Status</th>
                 <th>Action</th>
@@ -174,11 +152,9 @@
                   <td class="d-none" data-request-id="{{ Crypt::encryptString($ticket->id) }}"></td>
                   <td><a class="h5 btnViewRequest">{{ $ticket->ticket_num }}</a></td>
                   <td class="request-name">{{ $ticket->name }}</td>
+                  <td>{{ Str::limit($ticket->description, 30, '...') }}</td>
                   <td class="text-end">
-                    <strong>₱{{ number_format($ticket->estimated_cost, 2) }}</strong>
-                  </td>
-                  <td data-order="{{ $ticket->priority->id }}">
-                    <span class="{{ $ticket->priority->color->class }}"></span>{{ $ticket->priority->name }}
+                    <strong>₱{{ number_format($ticket->cost, 2) }}</strong>
                   </td>
                   <td data-order="{{ $ticket->created_at }}">
                     <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $ticket->created_at->format('D, M d, Y | h:i A') }}">
@@ -213,11 +189,11 @@
                                 </button>
                               @endaccess
                             @else
-                              <button class="dropdown-item btnSetStatus" data-status="3" type="button">
+                              <button class="dropdown-item btnSetStatus" data-status="4" type="button">
                                 <i class="bi bi-play-circle-fill text-primary dropdown-item-icon fs-7"></i> Start Request
                               </button>
                               <button class="dropdown-item btnSetStatus" data-status="1" type="button">
-                                <i class="bi bi-x-circle-fill text-danger dropdown-item-icon fs-7"></i> Unapprove
+                                <i class="bi bi-x-circle-fill text-danger dropdown-item-icon fs-7"></i> Cancel Request
                               </button>
                             @endif
                           </div>
@@ -269,9 +245,9 @@
 @endsection
 
 @section('sec-content')
-  <x-repair-maintenance.add-request :priorities="$priorities" :items="$items" />
+  <x-repair-maintenance.add-request :items="$items" />
   <x-repair-maintenance.view-request />
-  <x-repair-maintenance.edit-request :priorities="$priorities" :items="$items" />
+  <x-repair-maintenance.edit-request :items="$items" />
 @endsection
 
 @push('scripts')

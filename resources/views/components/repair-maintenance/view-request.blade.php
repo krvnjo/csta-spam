@@ -70,17 +70,6 @@
           </div>
           <!-- End Items -->
 
-          <!-- Priority -->
-          <div class="row mb-4">
-            <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
-              <p class="form-label fw-semibold mb-0">Priority:</p>
-            </div>
-            <div class="col-12 col-md-7 d-flex align-items-center">
-              <p class="fw-semibold mb-0" id="lblViewPriority"></p>
-            </div>
-          </div>
-          <!-- End Priority -->
-
           <!-- Status -->
           <div class="row mb-4">
             <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">

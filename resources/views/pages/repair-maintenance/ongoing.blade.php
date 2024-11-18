@@ -11,7 +11,7 @@
 @section('main-content')
   <main class="main" id="content">
     <div class="content container-fluid">
-      <!-- Ongoing Repairs Header -->
+      <!-- Ongoing Maintenance Header -->
       <div class="page-header">
         <div class="row align-items-center">
           <div class="col-sm mb-2 mb-sm-0">
@@ -19,7 +19,7 @@
               <li class="breadcrumb-item"><a class="breadcrumb-link" data-route="dashboard.index" href="{{ route('dashboard.index') }}">Home</a></li>
               <li class="breadcrumb-item active">Repair & Maintenance</li>
             </ol>
-            <h1 class="page-header-title">Ongoing Repairs</h1>
+            <h1 class="page-header-title">Ongoing Maintenance</h1>
             <p class="page-header-text">Manage and track active repair and maintenance ongoings.</p>
           </div>
         </div>
@@ -63,45 +63,6 @@
               </div>
             </div>
             <!-- End Export Dropdown -->
-
-            <!-- Filter Dropdown -->
-            <div class="dropdown">
-              <button class="btn btn-white btn-sm dropdown-toggle w-100" data-bs-toggle="dropdown" data-bs-auto-close="outside" type="button">
-                <i class="bi-filter me-2"></i> Filter <span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="ongoingsFilterCount"></span>
-              </button>
-
-              <div class="dropdown-menu dropdown-menu-sm-end custom-dropdown">
-                <div class="card">
-                  <div class="card-header card-header-content-between">
-                    <h5 class="card-header-title">Ongoing Repairs Filters</h5>
-                  </div>
-                  <div class="card-body">
-                    <!-- Priorities Filter -->
-                    <div class="mb-4">
-                      <small class="text-cap text-body">Priorities</small>
-                      <div class="tom-select-custom">
-                        <select class="js-select js-datatable-filter form-select" data-target-column-index="5"
-                          data-hs-tom-select-options='{
-                            "singleMultiple": true,
-                            "hideSearch": true,
-                            "hideSelected": false,
-                            "placeholder": "All Priorities"
-                          }'
-                          multiple>
-                          @foreach ($priorities as $priority)
-                            <option data-option-template='<span class="d-flex align-items-center"><span class="{{ $priority->color->class }}"></span>{{ $priority->name }}</span>'
-                              value="{{ $priority->name }}">
-                            </option>
-                          @endforeach
-                        </select>
-                      </div>
-                    </div>
-                    <!-- End Priorities Filter -->
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- End Filter Dropdown -->
           </div>
         </div>
         <!-- End Header -->
@@ -130,10 +91,10 @@
                 <th class="w-th" style="width: 5%;">#</th>
                 <th class="d-none"></th>
                 <th>Ticket No.</th>
-                <th>Ticket Name</th>
+                <th>Subject</th>
+                <th>Description</th>
                 <th>Estimated Cost</th>
-                <th>Priority</th>
-                <th>Created At</th>
+                <th>Started At</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
@@ -146,15 +107,13 @@
                   <td class="d-none" data-ongoing-id="{{ Crypt::encryptString($ticket->id) }}"></td>
                   <td><a class="h5 btnViewOngoing">{{ $ticket->ticket_num }}</a></td>
                   <td class="ongoing-name">{{ $ticket->name }}</td>
+                  <td>{{ Str::limit($ticket->description, 30, '...') }}</td>
                   <td class="text-end">
-                    <strong>₱{{ number_format($ticket->estimated_cost, 2) }}</strong>
+                    <strong>₱{{ number_format($ticket->cost, 2) }}</strong>
                   </td>
-                  <td data-order="{{ $ticket->priority->id }}">
-                    <span class="{{ $ticket->priority->color->class }}"></span>{{ $ticket->priority->name }}
-                  </td>
-                  <td data-order="{{ $ticket->created_at }}">
-                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $ticket->created_at->format('D, M d, Y | h:i A') }}">
-                      <i class="bi-calendar-plus me-1"></i> {{ $ticket->created_at->format('F d, Y') }}
+                  <td data-order="{{ $ticket->started_at }}">
+                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ \Carbon\Carbon::parse($ticket->started_at)->format('D, M d, Y | h:i A') }}">
+                      <i class="bi-calendar-plus me-1"></i> {{ \Carbon\Carbon::parse($ticket->started_at)->format('F d, Y') }}
                     </span>
                   </td>
                   <td>
@@ -170,11 +129,8 @@
                         <div class="btn-group position-static">
                           <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" data-bs-toggle="dropdown" type="button"></button>
                           <div class="dropdown-menu dropdown-menu-end mt-1">
-                            <button class="dropdown-item btnSetStatus" data-status="4" type="button">
-                              <i class="bi bi-check-circle-fill text-success dropdown-item-icon fs-7"></i> Mark as Completed
-                            </button>
                             <button class="dropdown-item btnEditOngoing" type="button">
-                              <i class="bi-pencil-fill dropdown-item-icon"></i> Update Request
+                              <i class="bi bi-check-circle-fill text-success dropdown-item-icon fs-7"></i> Mark as Completed
                             </button>
                           </div>
                         </div>

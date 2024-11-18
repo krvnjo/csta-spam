@@ -3,87 +3,126 @@
 namespace App\Observers;
 
 use App\Models\Audit;
-use App\Models\Ticket;
+use App\Models\MaintenanceTicket;
 
 class TicketRequestObserver
 {
     /**
-     * Handle the Ticket "created" event.
+     * Handle the MaintenanceTicket "created" event.
      */
-    public function created(Ticket $ticket): void
+    public function created(MaintenanceTicket $maintenanceTicket): void
     {
         (new Audit())
-            ->logName('Add Ticket Request')
-            ->logDesc("A new ticket request: '{$ticket->ticket_num}' has been created.")
-            ->performedOn($ticket)
+            ->logName('Add Maintenance Ticket')
+            ->logDesc("A new ticket request: '{$maintenanceTicket->ticket_num}' has been created.")
+            ->performedOn($maintenanceTicket)
             ->logEvent(1)
             ->logProperties([
-                'ticket number' => $ticket->ticket_num,
-                'name' => $ticket->name,
+                'ticket number' => $maintenanceTicket->ticket_num,
+                'name' => $maintenanceTicket->name,
                 'status' => 'Pending',
             ])
             ->log();
     }
 
     /**
-     * Handle the Ticket "updated" event.
+     * Handle the MaintenanceTicket "updated" event.
      */
-    public function updated(Ticket $ticket): void
+    public function updated(MaintenanceTicket $maintenanceTicket): void
     {
-        if ($ticket->isDirty()) {
+        if ($maintenanceTicket->isDirty()) {
             $changes = [
                 'old' => [],
                 'new' => []
             ];
 
-            foreach ($ticket->getDirty() as $attribute => $newValue) {
+            foreach ($maintenanceTicket->getDirty() as $attribute => $newValue) {
                 if ($attribute === 'is_active' || $attribute === 'updated_at') {
                     continue;
                 }
 
-                $oldValue = $ticket->getOriginal($attribute);
+                $oldValue = $maintenanceTicket->getOriginal($attribute);
 
                 $changes['old'][$attribute] = $oldValue;
                 $changes['new'][$attribute] = $newValue;
             }
 
-            if (!$ticket->isDirty('prog_id')) {
+            if (!$maintenanceTicket->isDirty('prog_id') && !$maintenanceTicket->isDirty('started_at') &&
+                !$maintenanceTicket->isDirty('completed_at')) {
                 (new Audit())
-                    ->logName('Edit Ticket Request')
-                    ->logDesc("The ticket request: '{$ticket->ticket_num}' has been updated.")
-                    ->performedOn($ticket)
+                    ->logName('Edit Maintenance Ticket')
+                    ->logDesc("The ticket request: '{$maintenanceTicket->ticket_num}' has been updated.")
+                    ->performedOn($maintenanceTicket)
                     ->logEvent(2)
                     ->logProperties($changes)
                     ->log();
             } else {
-                (new Audit())
-                    ->logName('Approved Ticket Request')
-                    ->logDesc("The ticket request: '{$ticket->ticket_num}'  have been approved.")
-                    ->performedOn($ticket)
-                    ->logEvent(2)
-                    ->logProperties([
-                        'ticket number' => $ticket->ticket_num,
-                        'name' => $ticket->name,
-                        'status' => 'Approved',
-                    ])
-                    ->log();
+                if ($maintenanceTicket->prog_id == 2) {
+                    (new Audit())
+                        ->logName('Approved Maintenance Ticket')
+                        ->logDesc("The ticket request: '{$maintenanceTicket->ticket_num}'  have been approved.")
+                        ->performedOn($maintenanceTicket)
+                        ->logEvent(2)
+                        ->logProperties([
+                            'ticket number' => $maintenanceTicket->ticket_num,
+                            'name' => $maintenanceTicket->name,
+                            'status' => 'Approved',
+                        ])
+                        ->log();
+                } elseif ($maintenanceTicket->prog_id == 4) {
+                    (new Audit())
+                        ->logName('Start Maintenance Ticket')
+                        ->logDesc("The ticket request: '{$maintenanceTicket->ticket_num}' have been started.")
+                        ->performedOn($maintenanceTicket)
+                        ->logEvent(2)
+                        ->logProperties([
+                            'ticket number' => $maintenanceTicket->ticket_num,
+                            'name' => $maintenanceTicket->name,
+                            'status' => 'Started',
+                        ])
+                        ->log();
+                } elseif ($maintenanceTicket->prog_id == 5) {
+                    (new Audit())
+                        ->logName('Complete Maintenance Ticket')
+                        ->logDesc("The ticket request: '{$maintenanceTicket->ticket_num}' has been completed.")
+                        ->performedOn($maintenanceTicket)
+                        ->logEvent(2)
+                        ->logProperties([
+                            'ticket number' => $maintenanceTicket->ticket_num,
+                            'name' => $maintenanceTicket->name,
+                            'status' => 'Completed',
+                        ])
+                        ->log();
+                } elseif ($maintenanceTicket->prog_id == 1) {
+                    (new Audit())
+                        ->logName('Cancelled Maintenance Ticket')
+                        ->logDesc("The ticket request: '{$maintenanceTicket->ticket_num}' has been cancelled.")
+                        ->performedOn($maintenanceTicket)
+                        ->logEvent(2)
+                        ->logProperties([
+                            'ticket number' => $maintenanceTicket->ticket_num,
+                            'name' => $maintenanceTicket->name,
+                            'status' => 'Cancelled',
+                        ])
+                        ->log();
+                }
             }
         }
     }
 
     /**
-     * Handle the Ticket "deleted" event.
+     * Handle the MaintenanceTicket "deleted" event.
      */
-    public function deleting(Ticket $ticket): void
+    public function deleting(MaintenanceTicket $maintenanceTicket): void
     {
         (new Audit())
-            ->logName('Delete Ticket Request')
-            ->logDesc("The ticket request: '{$ticket->name}' has been permanently deleted.")
-            ->performedOn($ticket)
+            ->logName('Delete Maintenance Ticket')
+            ->logDesc("The ticket request: '{$maintenanceTicket->name}' has been permanently deleted.")
+            ->performedOn($maintenanceTicket)
             ->logEvent(3)
             ->logProperties([
-                'ticket number' => $ticket->ticket_num,
-                'name' => $ticket->name,
+                'ticket number' => $maintenanceTicket->ticket_num,
+                'name' => $maintenanceTicket->name,
                 'status' => 'Deleted',
             ])
             ->log();

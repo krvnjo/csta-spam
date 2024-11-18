@@ -25,7 +25,7 @@ class TicketOngoingRequest extends FormRequest
     {
         $this->merge([
             'id' => $this->has('id') ? Crypt::decryptString($this->input('id')) : null,
-            'progress' => $this->input('status'),
+            'remarks' => $this->input('remarks'),
         ]);
     }
 
@@ -37,13 +37,16 @@ class TicketOngoingRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
+            'remarks' => [
+                'required',
+                'min:10',
+                'max:500',
+            ],
         ];
 
-        $idRule = ['id' => 'required|exists:tickets,id'];
+        $idRule = ['id' => 'required|exists:maintenance_tickets,id'];
 
-        if ($this->routeIs('request.create')) {
-            return $rules;
-        } elseif ($this->routeIs('request.update')) {
+        if ($this->routeIs('ongoing.update')) {
             return !isset($this->status) ? $idRule + $rules : $idRule + ['progress' => 'required'];
         } else {
             return $idRule;
@@ -56,6 +59,9 @@ class TicketOngoingRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'remarks.required' => 'The remarks is required.',
+            'remarks.min' => 'The remarks must be at least :min characters.',
+            'remarks.max' => 'The remarks may not be greater than :max characters.',
         ];
     }
 

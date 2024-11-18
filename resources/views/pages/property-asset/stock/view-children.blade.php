@@ -326,7 +326,7 @@
                     <td class="d-none"></td>
                   @else
                     <td>
-                      <span class="{{ $propertyChild->condition->color->class ?? '' }}"></span>{{ $propertyChild->condition->name ?? '' }}
+                      <span class="{{ $propertyChild->condition->color->class ?? '' }}"></span>{{ $propertyChild->condition->name ?? 'No condition yet' }}
                     </td>
                     <td>
                       <span class="{{ $propertyChild->status->color->class ?? '' }} fs-6">{{ $propertyChild->status->name ?? '' }}</span>

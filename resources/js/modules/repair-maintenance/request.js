@@ -68,7 +68,6 @@ $(document).ready(function () {
             },
           ],
 
-          priorityFields: { key: 'priority', selector: '#lblViewPriority' },
           progressFields: { key: 'progress', selector: '#lblViewProgress' },
 
           imageFields: [
@@ -99,6 +98,33 @@ $(document).ready(function () {
         requestEditModal.modal('toggle');
         $('#lblTicketNumber').text(response.num);
         populateEditForm(response);
+
+        const $select = $('#selEditItems');
+        const tomSelectControl = $select[0].tomselect;
+
+        if (tomSelectControl) {
+          tomSelectControl.destroy(); // Fully destroy the instance
+        }
+
+        $select.empty(); // Clear the original <select> options
+        response.items.forEach((item) => {
+          $select.append(
+            $('<option>', {
+              value: item.id,
+              text: item.text,
+            }),
+          );
+        });
+
+        new TomSelect('#selEditItems', {
+          hideSelected: true,
+          placeholder: 'Select an item',
+        });
+
+        const newTomSelectControl = $select[0].tomselect;
+        response.selectedItems.forEach((itemId) => {
+          newTomSelectControl.addItem(itemId);
+        });
       },
       error: function (response) {
         showResponseAlert(response, 'error');
@@ -145,7 +171,7 @@ $(document).ready(function () {
     const requestId = $(this).closest('tr').find('td[data-request-id]').data('request-id');
     const requestName = $(this).closest('tr').find('.request-name').text().trim();
     const requestStatus = $(this).data('status');
-    const statusName = requestStatus === 2 ? 'approve' : requestStatus === 3 ? 'start' : 'unapprove';
+    const statusName = requestStatus === 2 ? 'approve' : requestStatus === 4 ? 'start' : 'cancel';
 
     Swal.fire({
       title: 'Update request status?',
@@ -159,7 +185,7 @@ $(document).ready(function () {
         popup: 'bg-light rounded-3 shadow fs-4',
         title: 'text-dark fs-1',
         htmlContainer: 'text-body text-center fs-4',
-        confirmButton: `btn btn-sm ${requestStatus === 2 || requestStatus === 3 ? 'btn-success' : 'btn-danger'}`,
+        confirmButton: `btn btn-sm ${requestStatus === 2 || requestStatus === 4 ? 'btn-success' : 'btn-danger'}`,
         cancelButton: 'btn btn-sm btn-secondary',
       },
     }).then((result) => {

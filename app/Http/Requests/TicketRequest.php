@@ -29,7 +29,6 @@ class TicketRequest extends FormRequest
             'ticket' => $this->input('ticket'),
             'description' => $this->input('description'),
             'cost' => $this->input('cost'),
-            'priority' => $this->input('priority'),
             'progress' => $this->input('status'),
             'items' => $this->input('items'),
         ]);
@@ -48,7 +47,7 @@ class TicketRequest extends FormRequest
                 'regex:/^(?!.*([ .&\'-])\1)[a-zA-Z0-9][a-zA-Z0-9 .&\'-]*$/',
                 'min:5',
                 'max:30',
-                Rule::unique('tickets', 'name')->ignore($this->id),
+                Rule::unique('maintenance_tickets', 'name')->ignore($this->id),
             ],
             'description' => [
                 'required',
@@ -60,15 +59,12 @@ class TicketRequest extends FormRequest
                 'numeric',
                 'regex:/^\d+(\.\d{1,2})?$/',
                 'min:1'],
-            'priority' => [
-                'required',
-            ],
             'items' => [
                 'required',
             ],
         ];
 
-        $idRule = ['id' => 'required|exists:tickets,id'];
+        $idRule = ['id' => 'required|exists:maintenance_tickets,id'];
 
         if ($this->routeIs('request.create')) {
             return $rules;
@@ -99,8 +95,6 @@ class TicketRequest extends FormRequest
             'cost.numeric' => 'The estimated cost must be a number.',
             'cost.regex' => 'The estimated cost must be a number with up to 2 decimal places.',
             'cost.min' => 'The estimated cost must be at least :min.',
-
-            'priority.required' => 'The priority is required.',
 
             'items.required' => 'Please select at least one item!',
         ];

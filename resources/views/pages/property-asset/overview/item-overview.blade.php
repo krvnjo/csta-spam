@@ -139,12 +139,12 @@
                   <label class="form-label" for="itemOverviewDesignationFilter">Designation</label>
                   <div class="tom-select-custom">
                     <select class="js-select js-datatable-filter form-select" id="itemOverviewDesignationFilter" data-target-column-index="5"
-                            data-hs-tom-select-options='{
+                      data-hs-tom-select-options='{
                         "singleMultiple": true,
                         "hideSelected": false,
                         "placeholder": "All Designation"
                       }'
-                            autocomplete="off" multiple>
+                      autocomplete="off" multiple>
                       @foreach ($designations as $designation)
                         <option value="{{ $designation->name }}">{{ $designation->name }}</option>
                       @endforeach
@@ -181,14 +181,15 @@
                   <label class="form-label" for="itemOverviewConditionFilter">Condition</label>
                   <div class="tom-select-custom">
                     <select class="js-select js-datatable-filter form-select" id="itemOverviewConditionFilter" data-target-column-index="6"
-                            data-hs-tom-select-options='{
+                      data-hs-tom-select-options='{
                         "singleMultiple": true,
                         "hideSelected": false,
                         "placeholder": "All Conditions"
                       }'
-                            autocomplete="off" multiple>
+                      autocomplete="off" multiple>
                       @foreach ($conditions as $condition)
-                        <option data-option-template='<span class="d-flex align-items-center"><span class="{{ $condition->color->class }}"></span>{{ $condition->name }}</span>' value="{{ $condition->name }}">
+                        <option data-option-template='<span class="d-flex align-items-center"><span class="{{ $condition->color->class }}"></span>{{ $condition->name }}</span>'
+                          value="{{ $condition->name }}">
                         </option>
                       @endforeach
                     </select>
@@ -203,12 +204,12 @@
                   <label class="form-label" for="itemOverviewStatusFilter">Status</label>
                   <div class="tom-select-custom">
                     <select class="js-select js-datatable-filter form-select" id="itemOverviewStatusFilter" data-target-column-index="7"
-                            data-hs-tom-select-options='{
+                      data-hs-tom-select-options='{
                         "singleMultiple": true,
                         "hideSelected": false,
                         "placeholder": "All Status"
                       }'
-                            autocomplete="off" multiple>
+                      autocomplete="off" multiple>
                       @foreach ($statuses as $status)
                         <option value="{{ $status->name }}">{{ $status->name }}</option>
                       @endforeach
@@ -235,24 +236,24 @@
               <!-- End Date Range -->
 
               <!-- Item Type -->
-{{--              <div class="col-sm-12 col-md-6 col-lg-2">--}}
-{{--                <div class="mb-3">--}}
-{{--                  <label class="form-label" for="itemOverviewDepartmentsFilter">Item Type</label>--}}
-{{--                  <div class="tom-select-custom">--}}
-{{--                    <select class="js-select js-datatable-filter form-select" id="itemOverviewDepartmentsFilter" data-target-column-index="4"--}}
-{{--                      data-hs-tom-select-options='{--}}
-{{--                        "singleMultiple": true,--}}
-{{--                        "hideSelected": false,--}}
-{{--                        "placeholder": "All Subjects"--}}
-{{--                      }'--}}
-{{--                      autocomplete="off" multiple>--}}
-{{--                      @foreach ($departments as $department)--}}
-{{--                        <option value="{{ $department->code }}">{{ $department->code }}</option>--}}
-{{--                      @endforeach--}}
-{{--                    </select>--}}
-{{--                  </div>--}}
-{{--                </div>--}}
-{{--              </div>--}}
+              {{--              <div class="col-sm-12 col-md-6 col-lg-2"> --}}
+              {{--                <div class="mb-3"> --}}
+              {{--                  <label class="form-label" for="itemOverviewDepartmentsFilter">Item Type</label> --}}
+              {{--                  <div class="tom-select-custom"> --}}
+              {{--                    <select class="js-select js-datatable-filter form-select" id="itemOverviewDepartmentsFilter" data-target-column-index="4" --}}
+              {{--                      data-hs-tom-select-options='{ --}}
+              {{--                        "singleMultiple": true, --}}
+              {{--                        "hideSelected": false, --}}
+              {{--                        "placeholder": "All Subjects" --}}
+              {{--                      }' --}}
+              {{--                      autocomplete="off" multiple> --}}
+              {{--                      @foreach ($departments as $department) --}}
+              {{--                        <option value="{{ $department->code }}">{{ $department->code }}</option> --}}
+              {{--                      @endforeach --}}
+              {{--                    </select> --}}
+              {{--                  </div> --}}
+              {{--                </div> --}}
+              {{--              </div> --}}
               <!-- End Item Type -->
             </div>
           </div>
@@ -294,9 +295,9 @@
             </thead>
 
             <tbody>
-            @php
-              $focusedChildId = request('focus');
-            @endphp
+              @php
+                $focusedChildId = request('focus');
+              @endphp
               @foreach ($propertyChildren->where('is_active', 1)->sortByDesc('updated_at') as $propertyChild)
                 <tr>
                   <td class="table-column-pe-0">
@@ -324,14 +325,14 @@
                   <td>
                     {{ $propertyChild->designation->name }}
                   </td>
-                  <td data-full-value="{{ $propertyChild->condition->name ?? ''}}">
+                  <td data-full-value="{{ $propertyChild->condition->name ?? '' }}">
                     @if ($propertyChild->property->is_consumable)
                       <span class="badge bg-soft-secondary text-secondary">Consumable</span>
                     @else
-                      <span class="{{ $propertyChild->condition->color->class ?? '' }}"></span>{{ $propertyChild->condition->name ?? '' }}
+                      <span class="{{ $propertyChild->condition->color->class ?? '' }}"></span>{{ $propertyChild->condition->name ?? 'No condition yet' }}
                     @endif
                   </td>
-                  <td data-full-value="{{ $propertyChild->status->name ?? ''}}">
+                  <td data-full-value="{{ $propertyChild->status->name ?? '' }}">
                     @if ($propertyChild->property->is_consumable)
                       <span class="badge bg-soft-secondary text-secondary">Consumable</span>
                     @else
