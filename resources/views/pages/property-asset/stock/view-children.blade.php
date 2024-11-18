@@ -408,8 +408,8 @@
                       {{ $propertyChild->prop_code }}
                     @endif
                   </td>
-                  <td>{{ $propertyChild->designation->name }}</td>
-                  <td data-full-value="{{ $propertyChild->designation->department->name }}">{{ $propertyChild->designation->department->code }}</td>
+                  <td>{{ $propertyChild->designation->name ?? 'No designation provided' }}</td>
+                  <td data-full-value="{{ $propertyChild->designation->department->name ?? 'No designation provided' }}">{{ $propertyChild->designation->department->code ?? 'No department provided' }}</td>
                   @if ($propertyParents->is_consumable)
                     <td class="d-none"></td>
                     <td class="d-none"></td>
@@ -494,6 +494,12 @@
                                 <a class="dropdown-item" href="{{ route('prop-asset.child.generate', ['propertyParent' => $propertyParents->id, 'id' => $encryptedId]) }}">
                                   <i class="bi bi-qr-code dropdown-item-icon"></i> Generate QR
                                 </a>
+                                <button class="dropdown-item btnMissing" type="button">
+                                  <i class="bi bi-question-octagon dropdown-item-icon text-danger"></i> Missing
+                                </button>
+                                <button class="dropdown-item btnReturn" type="button">
+                                  <i class="bi bi-box-arrow-in-right dropdown-item-icon text-info"></i> Return
+                                </button>
                               @endif
                             @endif
                           </div>
@@ -557,6 +563,8 @@
   <x-property-asset.stock.edit-children :propertyParents="$propertyParents" :propertyChildren="$propertyChildren" :conditions="$conditions" :acquisitions="$acquisitions" />
   <x-property-asset.stock.view-details-children />
   <x-property-asset.stock.move-children :designations="$designations" />
+  <x-property-asset.stock.return-children :conditions="$conditions"  />
+
   {{--  <x-modals.edit-property-child :propertyParents="$propertyParents" :conditions="$conditions" :acquisitions="$acquisitions" :propertyChildren="$propertyChildren" /> --}}
   {{--  <x-modals.move-property :designations="$designations" :departments="$departments" :statuses="$statuses"/> --}}
 @endsection
