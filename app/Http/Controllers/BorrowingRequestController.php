@@ -23,7 +23,7 @@ class BorrowingRequestController extends Controller
     public function index()
     {
         $requesters = Requester::where('is_active', 1)->get();
-        $items = PropertyParent::where('is_active', 1)->with('propertyChildren')->get();
+        $items = PropertyParent::where('is_active', 1)->where('is_consumable', 0)->with('propertyChildren')->get();
         $progresses = Progress::where('is_active', 1)->whereIn('id', [1,2])->get();
 
         $borrowings = Borrowing::with('requester', 'requestItems.property')->get();
@@ -52,7 +52,6 @@ class BorrowingRequestController extends Controller
                 'requester.required' => 'Please choose a requester!',
                 'when.required' => 'Please enter a borrow date!',
                 'when.date' => 'The borrow date must be a valid date!',
-                'when.after' => 'The borrow date must be at least 3 days after the request date.',
                 'remarks.required' => 'Please enter a remarks!',
                 'remarks.regex' => 'The remarks may only contain letters, spaces, periods, and hyphens.',
                 'remarks.min' => 'The remarks must be at least :min characters.',
@@ -67,7 +66,7 @@ class BorrowingRequestController extends Controller
 
             $borrowingValidators = Validator::make($request->all(), [
                 'requester' => 'required',
-                'when' => 'required|date|after:' . now()->addDays(3)->toDateString(),
+                'when' => 'required|date',
                 'remarks' => ['required', 'regex:/^[A-Za-z0-9%,\- ×."\'"]+$/', 'min:3', 'max:100'],
                 'items' => 'required|array|min:1',
                 'items.*' => 'required|exists:property_parents,id',
