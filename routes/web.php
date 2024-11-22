@@ -11,6 +11,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\HelpController;
+use App\Http\Controllers\ItemTransactionController;
 use App\Http\Controllers\OngoingBorrowController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\PropertyChildController;
@@ -172,6 +173,19 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
         Route::get('/view', 'show')->name('view')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
         Route::patch('/', 'update')->name('update');
+        Route::delete('/', 'destroy')->name('delete');
+        Route::fallback(function () {
+            abort(404);
+        });
+    });
+
+    Route::middleware('checkPermission:Borrow & Reservation')->prefix('item-transactions/new-transaction')->name('new-transaction.')->controller(ItemTransactionController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+        Route::get('/view', 'show')->name('view')->middleware('expectsJson');
+        Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
+        Route::patch('/', 'update')->name('update');
+        Route::patch('/release', 'release')->name('release');
         Route::delete('/', 'destroy')->name('delete');
         Route::fallback(function () {
             abort(404);
