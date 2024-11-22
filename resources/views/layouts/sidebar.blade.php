@@ -140,7 +140,7 @@
             @endaccess
             <!-- End File Maintenance -->
 
-            @access('Audit History', 'View Only, Read and Write, Full Access')
+            @access('Audit History', 'Full Access')
               <!-- Audit History -->
               <div class="nav-item">
                 <a class="nav-link" data-placement="left" data-route="audit.index" href="{{ route('audit.index') }}">
@@ -149,6 +149,17 @@
                 </a>
               </div>
               <!-- End Audit History -->
+            @endaccess
+
+            @access('System Settings', 'Full Access')
+              <!-- System Settings -->
+              <div class="nav-item">
+                <a class="nav-link" data-placement="left" data-route="system.index" href="{{ route('system.index') }}">
+                  <i class="bi-gear nav-icon"></i>
+                  <span class="nav-link-title">System Settings</span>
+                </a>
+              </div>
+              <!-- End System Settings -->
             @endaccess
           </div>
           <!-- End Others -->
@@ -178,19 +189,19 @@
           </li>
           <!-- End System Appearance -->
 
-          {{--          <!-- Help Resources --> --}}
-          {{--          <li class="navbar-vertical-footer-list-item"> --}}
-          {{--            <div class="dropdown dropup"> --}}
-          {{--              <button class="btn btn-ghost-secondary btn-icon rounded-circle" id="helpResourcesDropdown" data-bs-toggle="dropdown" data-bs-dropdown-animation type="button"> --}}
-          {{--                <i class="bi-info-circle"></i> --}}
-          {{--              </button> --}}
-          {{--              <div class="dropdown-menu navbar-dropdown-menu-borderless"> --}}
-          {{--                <a class="dropdown-item" href="{{ route('help.about') }}"><i class="bi-question-circle me-2"></i>About Us</a> --}}
-          {{--                <a class="dropdown-item" href="{{ route('help.guide') }}"><i class="bi-journal-text me-2"></i>User Guide</a> --}}
-          {{--              </div> --}}
-          {{--            </div> --}}
-          {{--          </li> --}}
-          {{--          <!-- End Help Resources --> --}}
+          <!-- Help Resources -->
+          <li class="navbar-vertical-footer-list-item">
+            <div class="dropdown dropup">
+              <button class="btn btn-ghost-secondary btn-icon rounded-circle" id="helpResourcesDropdown" data-bs-toggle="dropdown" data-bs-dropdown-animation type="button">
+                <i class="bi-info-circle"></i>
+              </button>
+              <div class="dropdown-menu navbar-dropdown-menu-borderless">
+                <a class="dropdown-item" href="{{ route('help.about') }}"><i class="bi-question-circle me-2"></i>About Us</a>
+                <a class="dropdown-item" href="{{ route('help.guide') }}"><i class="bi-journal-text me-2"></i>User Guide</a>
+              </div>
+            </div>
+          </li>
+          <!-- End Help Resources -->
         </ul>
       </div>
       <!-- End Footer -->

@@ -20,6 +20,9 @@ $(document).ready(function () {
         if (response.success) {
           window.location.href = response.redirect;
         } else {
+          if (response.redirect) {
+            window.location.href = response.redirect;
+          }
           handleValidationErrors(response, 'Login');
           toggleButtonState(userLoginBtn, false);
         }
@@ -122,4 +125,54 @@ $(document).ready(function () {
     });
   });
   // ============ End Reset Password ============ //
+
+  // ============ Change Password ============ //
+  const changePasswordForm = $('#frmChangePassword');
+  const changePasswordBtn = $('#btnChangePassword');
+  changePasswordForm.find('input[type="text"]').first().focus();
+
+  changePasswordForm.on('submit', function (e) {
+    e.preventDefault();
+    toggleButtonState(changePasswordBtn, true);
+
+    const changePasswordFormData = new FormData(changePasswordForm[0]);
+
+    $.ajax({
+      url: '/change-password/' + changePasswordFormData.get('token'),
+      method: 'POST',
+      data: changePasswordFormData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        if (response.success) {
+          toggleButtonState(changePasswordBtn, false);
+
+          Swal.fire({
+            title: response.title,
+            text: response.text,
+            icon: 'success',
+            confirmButtonText: 'Done',
+            focusCancel: true,
+            customClass: {
+              popup: 'bg-light rounded-3 shadow fs-4',
+              title: 'fs-1',
+              htmlContainer: 'text-muted text-center fs-4',
+              confirmButton: 'btn btn-sm btn-secondary',
+            },
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = response.redirect;
+            }
+          });
+        } else {
+          handleValidationErrors(response, 'Change');
+          toggleButtonState(changePasswordBtn, false);
+        }
+      },
+      error: function (response) {
+        showResponseAlert(response, 'error');
+      },
+    });
+  });
+  // ============ End Change Password ============ //
 });

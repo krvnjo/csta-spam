@@ -37,7 +37,7 @@ class UserObserver
             ];
 
             foreach ($user->getDirty() as $attribute => $newValue) {
-                if ($attribute === 'is_active' || $attribute === 'updated_at') {
+                if ($attribute === 'is_active' || $attribute === 'updated_at' || $attribute === 'pass_hash') {
                     continue;
                 }
 

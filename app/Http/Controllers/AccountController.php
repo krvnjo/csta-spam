@@ -133,6 +133,7 @@ class AccountController extends Controller
                     ]);
                 }
                 $user->pass_hash = Hash::make($request->new);
+                $user->pass_changed_at = now();
             }
             $user->save();
 

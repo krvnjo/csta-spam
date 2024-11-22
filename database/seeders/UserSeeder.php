@@ -40,6 +40,7 @@ class UserSeeder extends Seeder
                 'User Management',
                 'File Maintenance',
                 'Audit History',
+                'System Settings',
             ],
         ];
 
@@ -106,10 +107,15 @@ class UserSeeder extends Seeder
 
             foreach ($data['permissions'] as $permissionName) {
                 $permission = Permission::where('name', $permissionName)->first();
+
+                $accessId = ($permissionName === 'Audit History' || $permissionName === 'System Settings')
+                    ? $accessLevels['Full Access']->id
+                    : $accessLevel->id;
+
                 RolePermission::insert([
                     'role_id' => $role->id,
                     'perm_id' => $permission->id,
-                    'access_id' => $accessLevel->id,
+                    'access_id' => $accessId,
                 ]);
             }
         }
@@ -140,6 +146,7 @@ class UserSeeder extends Seeder
                 'email' => 'dev.jt1005@gmail.com',
                 'phone_num' => '0934-221-6405',
                 'user_image' => 'jt.jpg',
+                'pass_changed_at' => now(),
             ],
             [
                 'user_name' => '21-00155',
@@ -153,6 +160,7 @@ class UserSeeder extends Seeder
                 'email' => 'rm.bunag2202@gmail.com',
                 'phone_num' => '0916-437-4284',
                 'user_image' => 'rob.jpg',
+                'pass_changed_at' => now(),
             ],
             [
                 'user_name' => '21-00132',
@@ -166,6 +174,7 @@ class UserSeeder extends Seeder
                 'email' => 'khervinjohnquimora@gmail.com',
                 'phone_num' => '0976-216-2403',
                 'user_image' => 'kj.jpg',
+                'pass_changed_at' => now(),
             ],
         ];
 
@@ -182,6 +191,7 @@ class UserSeeder extends Seeder
                 'email' => $data['email'],
                 'phone_num' => $data['phone_num'],
                 'user_image' => $data['user_image'],
+                'pass_changed_at' => $data['pass_changed_at'] ?? null,
             ]);
         }
 

@@ -4,13 +4,13 @@
 
 This capstone project is titled "SPAM: Systematized Property and Assets Management for Colegio de Sta. Teresa de Avila".
 It aims to create a management solution that improves the efficiency and accuracy of tracking the institution’s
-property, equipment, and assets. The system features QR code generation for streamlined tracking and prescriptive
-analytics for better decision-making. The study demonstrates how systematic asset management enhances operational
+property, equipment, and assets. The system features QR code generation for streamlined tracking for better
+decision-making. The study demonstrates how systematic asset management enhances operational
 efficiency, reduces errors, and supports optimal resource allocation.
 
 ## Main Features
 
-- Dashboard w/ Prescriptive Analytics
+- Dashboard
 - Item Inventory Management
 - Borrowing and Reservation
 - Repair and Maintenance
