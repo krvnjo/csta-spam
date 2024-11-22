@@ -96,11 +96,20 @@
                                 "placeholder": "No access to this permission"
                               }'>
                               <option value=""></option>
-                              @foreach ($accesses as $access)
+                              @if (in_array($permission->name, ['Audit History', 'System Settings']))
+                                @php
+                                  $fullAccess = $accesses->firstWhere('name', 'Full Access');
+                                @endphp
                                 <option
-                                  data-option-template='<div class="d-flex align-items-start"><div class="flex-shrink-0"></div><div class="flex-grow-1"><span class="d-block fw-semibold">{{ $access->name }}</span><span class="tom-select-custom-hide small">{{ $access->description }}</span></div></div>'
-                                  value="{{ $access->id }}">{{ $access->name }}</option>
-                              @endforeach
+                                  data-option-template='<div class="d-flex align-items-start"><div class="flex-shrink-0"></div><div class="flex-grow-1"><span class="d-block fw-semibold">{{ $fullAccess->name }}</span><span class="tom-select-custom-hide small">{{ $fullAccess->description }}</span></div></div>'
+                                  value="{{ $fullAccess->id }}">{{ $fullAccess->name }}</option>
+                              @else
+                                @foreach ($accesses as $access)
+                                  <option
+                                    data-option-template='<div class="d-flex align-items-start"><div class="flex-shrink-0"></div><div class="flex-grow-1"><span class="d-block fw-semibold">{{ $access->name }}</span><span class="tom-select-custom-hide small">{{ $access->description }}</span></div></div>'
+                                    value="{{ $access->id }}">{{ $access->name }}</option>
+                                @endforeach
+                              @endif
                             </select>
                           </div>
                         </div>

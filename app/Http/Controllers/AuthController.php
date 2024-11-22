@@ -6,8 +6,11 @@ use App\Http\Requests\AuthRequest;
 use App\Models\Audit;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 use Throwable;
 
 class AuthController extends Controller
@@ -44,6 +47,16 @@ class AuthController extends Controller
                 return response()->json([
                     'success' => false,
                     'errors' => ['pass' => ['Incorrect password!']],
+                ]);
+            }
+
+            if ($user->pass_changed_at && Carbon::parse($user->pass_changed_at)->lt(now()->subMonths(6))) {
+                $token = Str::random(64);
+                Session::put('password_change_token', $token);
+
+                return response()->json([
+                    'success' => false,
+                    'redirect' => route('password.change', ['token' => $token]),
                 ]);
             }
 

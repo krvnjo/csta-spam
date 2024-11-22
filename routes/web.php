@@ -18,6 +18,7 @@ use App\Http\Controllers\PropertyOverviewController;
 use App\Http\Controllers\PropertyParentController;
 use App\Http\Controllers\RequesterController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SystemController;
 use App\Http\Controllers\TicketHistoryController;
 use App\Http\Controllers\TicketOngoingController;
 use App\Http\Controllers\TicketRequestController;
@@ -40,6 +41,8 @@ Route::middleware(['guest', 'noCache'])->group(function () {
         Route::post('/forgot-password', 'forgot')->name('email');
         Route::get('/reset-password/{token}', 'reset_index')->name('reset');
         Route::post('/reset-password/{token}', 'reset')->name('update');
+        Route::get('/change-password/{token}', 'change_index')->name('change');
+        Route::post('/change-password/{token}', 'change')->name('expire');
     });
 });
 
@@ -292,6 +295,12 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
     Route::middleware('checkPermission:Audit History')->prefix('audit-history')->name('audit.')->controller(AuditController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/view', 'show')->name('view')->middleware('expectsJson');
+    });
+
+    // System Settings Routes
+    Route::middleware('checkPermission:System Settings')->prefix('system-settings')->name('system.')->controller(SystemController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::patch('/', 'update')->name('update');
     });
 
     // ============ End Other Routes ============ //

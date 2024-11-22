@@ -58,7 +58,8 @@ class UserController extends Controller
                 'role_id' => $validated['role'],
                 'dept_id' => $validated['department'],
                 'email' => trim($validated['email']),
-                'phone_num' => trim($validated['phone'])
+                'phone_num' => trim($validated['phone']),
+                'pass_changed_at' => now(),
             ]);
 
             if ($request->hasFile('image')) {
@@ -189,6 +190,7 @@ class UserController extends Controller
                         ]);
                     }
                     $user->pass_hash = Hash::make($validated['pass']);
+                    $user->pass_changed_at = now();
                 }
 
                 $user->update([
