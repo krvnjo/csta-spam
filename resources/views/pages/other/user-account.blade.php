@@ -269,7 +269,7 @@
   <script src="{{ Vite::asset('resources/vendor/hs-toggle-password/dist/js/hs-toggle-password.js') }}"></script>
 
   <!-- JS Modules -->
-  <script src="{{ Vite::asset('resources/js/modules/account/account.js') }}"></script>
+  <script src="{{ Vite::asset('resources/js/modules/other/account.js') }}"></script>
 
   <!-- JS Themes -->
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>

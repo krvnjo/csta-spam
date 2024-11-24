@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Setting;
 use Illuminate\Http\Request;
 
 class SystemController extends Controller
@@ -11,53 +12,25 @@ class SystemController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $sessionDuration = Setting::where('key', 'session_timeout')->first()->value;
+        $passwordExpiration = Setting::where('key', 'password_expiry')->first()->value;
+        $clearAuditLog = Setting::where('key', 'clear_audit_log')->first()->value;
+        $cachingDuration = Setting::where('key', 'caching_duration')->first()->value;
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        return view('pages.other.system-setting',
+            compact(
+                'sessionDuration',
+                'passwordExpiration',
+                'clearAuditLog',
+                'cachingDuration'
+            )
+        );
     }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
     {
         //
     }
