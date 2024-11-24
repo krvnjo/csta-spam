@@ -85,43 +85,22 @@
         <div class="collapse" id="newTransactionFilterSearchCollapse">
           <div class="card-body">
             <div class="row">
-              <!-- Priorities -->
-              <div class="col-sm-12 col-md-4">
-                <div class="mb-3">
-                  <label class="form-label" for="newRequestStatusFilter">Status</label>
-                  <div class="tom-select-custom">
-                    <select class="js-select js-datatable-filter form-select" id="newRequestStatusFilter" data-target-column-index="6"
-                            data-hs-tom-select-options='{
-                        "singleMultiple": true,
-                        "hideSearch": true,
-                        "hideSelected": false,
-                        "placeholder": "All Status"
-                      }'
-                            multiple>
-{{--                      @foreach ($progresses as $status)--}}
-{{--                        <option value="{{ $status->name }}">{{ $status->name }}</option>--}}
-{{--                      @endforeach--}}
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <!-- End Priorities -->
 
               <!-- Users -->
               <div class="col-sm-12 col-md-4">
                 <div class="mb-3">
-                  <label class="form-label" for="newRequestRequestersFilter">Requesters</label>
+                  <label class="form-label" for="newTransactionRequestersFilter">Requesters</label>
                   <div class="tom-select-custom">
-                    <select class="js-select js-datatable-filter form-select" id="newRequestRequestersFilter" data-target-column-index="2"
+                    <select class="js-select js-datatable-filter form-select" id="newTransactionRequestersFilter" data-target-column-index="2"
                             data-hs-tom-select-options='{
                         "singleMultiple": true,
                         "hideSelected": false,
                         "placeholder": "All Requesters"
                       }'
                             autocomplete="off" multiple>
-{{--                      @foreach ($requesters as $request)--}}
-{{--                        <option value="{{ $request->name }}">{{ $request->name }}</option>--}}
-{{--                      @endforeach--}}
+                      @foreach ($requesters as $request)
+                        <option value="{{ $request->name }}">{{ $request->name }}</option>
+                      @endforeach
                     </select>
                   </div>
                 </div>
@@ -131,7 +110,23 @@
               <!-- Date Range -->
               <div class="col-sm-12 col-md-4">
                 <div class="mb-3">
-                  <label class="form-label" for="newRequestDateRangeFilter">Date Range Requested</label>
+                  <label class="form-label" for="newTransactionDateRangeFilter">Date Range Transaction</label>
+                  <input class="js-daterangepicker-clear js-datatable-filter form-control daterangepicker-custom-input" data-target-column-index="6"
+                         data-hs-daterangepicker-options='{
+                      "autoUpdateInput": false,
+                      "locale": {
+                        "cancelLabel": "Clear"
+                      }
+                    }'
+                         type="text" placeholder="Select date range">
+                </div>
+              </div>
+              <!-- End Date Range -->
+
+              <!-- Date Range -->
+              <div class="col-sm-12 col-md-4">
+                <div class="mb-3">
+                  <label class="form-label" for="newTransactionDateRangeFilter">Date Range Created</label>
                   <input class="js-daterangepicker-clear js-datatable-filter form-control daterangepicker-custom-input" data-target-column-index="7"
                          data-hs-daterangepicker-options='{
                       "autoUpdateInput": false,
@@ -153,10 +148,10 @@
           <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100" id="newTransactionDatatable"
                  data-hs-datatables-options='{
               "columnDefs": [{
-                 "targets": [9],
+                 "targets": [8],
                  "orderable": false
                }],
-              "order": [8, "desc"],
+              "order": [7, "desc"],
               "info": {
                 "totalQty": "#newTransactionDatatableWithPagination"
               },
@@ -175,91 +170,54 @@
               <th>Requested Items</th>
               <th>Quantity</th>
               <th>Remarks</th>
-              <th>Status</th>
               <th>Transaction Date</th>
-              <th>Date Created/Approved</th>
+              <th>Date Created</th>
               <th>Action</th>
             </tr>
             </thead>
             <tbody>
-{{--            @foreach ($borrowings->whereIn('prog_id', [1, 2]) as $borrowing)--}}
-{{--              <tr>--}}
-{{--                <td class="d-none" data-borrow-id="{{ Crypt::encryptString($borrowing->id) }}"></td>--}}
-{{--                <td>{{ $borrowing->borrow_num }}</td>--}}
-{{--                <td>{{ $borrowing->requester->name }} | {{ $borrowing->requester->department->code }}</td>--}}
-{{--                <td>--}}
-{{--                  @foreach ($borrowing->requestItems as $item)--}}
-{{--                    <span style="color:gray"--}}
-{{--                          @if (!empty($borrowing->remarks) && strlen($item->property->name) > 25) data-bs-toggle="tooltip"--}}
-{{--                          data-bs-html="true"--}}
-{{--                          data-bs-placement="top"--}}
-{{--                          title="{{ $item->property->name }}" @endif>--}}
-{{--                        {{ Str::limit(!empty($item->property->name) ? $item->property->name : 'No remarks provided', 30) }}--}}
-{{--                      </span><br>--}}
-{{--                  @endforeach--}}
-{{--                </td>--}}
-{{--                <td>--}}
-{{--                  @foreach ($borrowing->requestItems as $item)--}}
-{{--                    {{ $item->quantity }} - {{ $item->property->unit->name }}<br>--}}
-{{--                  @endforeach--}}
-{{--                </td>--}}
-{{--                <td>--}}
-{{--                    <span style="color:gray"--}}
-{{--                          @if (!empty($borrowing->remarks) && strlen($borrowing->remarks) > 20) data-bs-toggle="tooltip"--}}
-{{--                          data-bs-html="true"--}}
-{{--                          data-bs-placement="top"--}}
-{{--                          title="{{ $borrowing->remarks }}" @endif>--}}
-{{--                      {{ Str::limit(!empty($borrowing->remarks) ? $borrowing->remarks : 'No remarks provided', 20) }}--}}
-{{--                    </span>--}}
-{{--                </td>--}}
-{{--                <td>--}}
-{{--                    <span class="{{ $borrowing->progress->badge->class }}">--}}
-{{--                      <span class="{{ $borrowing->progress->legend->class }}"></span>{{ $borrowing->progress->name }}--}}
-{{--                    </span>--}}
-{{--                </td>--}}
-{{--                <td><i class="bi-calendar-event me-1"></i>{{ \Carbon\Carbon::parse($borrowing->borrow_date)->format('F j, Y') }}</td>--}}
-{{--                <td>--}}
-{{--                  @if ($borrowing->prog_id == 1)--}}
-{{--                    <i class="bi-calendar-plus me-1"></i>--}}
-{{--                    Created {{ \Carbon\Carbon::parse($borrowing->created_at)->diffForHumans() }}--}}
-{{--                  @else--}}
-{{--                    <i class="bi bi-calendar-check me-1"></i>--}}
-{{--                    Approved {{ \Carbon\Carbon::parse($borrowing->approved_at)->diffForHumans() }}--}}
-{{--                  @endif--}}
-{{--                </td>--}}
-{{--                <td>--}}
-{{--                  <div class="btn-group position-static">--}}
-{{--                    <button class="btn btn-white btn-sm" type="button"><i class="bi-eye"></i> View</button>--}}
-
-{{--                    <div class="btn-group position-static">--}}
-{{--                      <button class="btn btn-white btn-icon btn-sm dropdown-toggle dropdown-toggle-empty" data-bs-toggle="dropdown" type="button"></button>--}}
-{{--                      <div class="dropdown-menu dropdown-menu-end mt-1">--}}
-{{--                        @if ($borrowing->prog_id == 1)--}}
-{{--                          <button class="dropdown-item btnApproveRequest" data-borrow-num="{{ $borrowing->borrow_num }}" data-requester-name="{{ $borrowing->requester->name }}" type="button">--}}
-{{--                            <i class="bi bi-check2-circle dropdown-item-icon text-success"></i> Approve--}}
-{{--                          </button>--}}
-{{--                          <button class="dropdown-item" type="button">--}}
-{{--                            <i class="bi bi-x-circle dropdown-item-icon text-danger"></i> Reject--}}
-{{--                          </button>--}}
-{{--                        @endif--}}
-{{--                        @if ($borrowing->prog_id == 2)--}}
-{{--                          <button class="dropdown-item btnReleaseRequest" type="button">--}}
-{{--                            <i class="bi bi-eject dropdown-item-icon text-warning"></i> Release--}}
-{{--                          </button>--}}
-{{--                        @endif--}}
-{{--                        <button class="dropdown-item" type="button">--}}
-{{--                          <i class="bi-pencil-fill dropdown-item-icon"></i> Edit Record--}}
-{{--                        </button>--}}
-{{--                        <div class="dropdown-divider"></div>--}}
-{{--                        <button class="dropdown-item text-danger" type="button">--}}
-{{--                          <i class="bi bi-trash3-fill dropdown-item-icon text-danger"></i> Delete--}}
-{{--                        </button>--}}
-{{--                      </div>--}}
-{{--                    </div>--}}
-{{--                  </div>--}}
-{{--                </td>--}}
-{{--              </tr>--}}
-{{--            @endforeach--}}
+            @foreach ($transactions as $transaction)
+              <tr>
+                <td class="d-none" data-borrow-id="{{ Crypt::encryptString($transaction->id) }}"></td>
+                <td>{{ $transaction->transaction_num }}</td>
+                <td>{{ $transaction->requester->department->code }} | {{ $transaction->requester->name }}</td>
+                <td>
+                  @foreach ($transaction->transactionItems as $item)
+                    <span style="color:gray"
+                          @if (!empty($transaction->remarks) && strlen($item->property->name) > 25) data-bs-toggle="tooltip"
+                          data-bs-html="true"
+                          data-bs-placement="top"
+                          title="{{ $item->property->name }}" @endif>
+                        {{ Str::limit(!empty($item->property->name) ? $item->property->name : 'No remarks provided', 30) }}
+                      </span><br>
+                  @endforeach
+                </td>
+                <td>
+                  @foreach ($transaction->transactionItems as $item)
+                    {{ $item->quantity }} - {{ $item->property->unit->name }}<br>
+                  @endforeach
+                </td>
+                <td>
+                    <span style="color:gray"
+                          @if (!empty($transaction->remarks) && strlen($transaction->remarks) > 20) data-bs-toggle="tooltip"
+                          data-bs-html="true"
+                          data-bs-placement="top"
+                          title="{{ $transaction->remarks }}" @endif>
+                      {{ Str::limit(!empty($transaction->remarks) ? $transaction->remarks : 'No remarks provided', 20) }}
+                    </span>
+                </td>
+                <td><i class="bi-calendar-event me-1"></i>{{ \Carbon\Carbon::parse($transaction->transaction_date)->format('F j, Y') }}</td>
+                <td>
+                    <i class="bi-calendar-plus me-1"></i>
+                    Created {{ \Carbon\Carbon::parse($transaction->created_at)->diffForHumans() }}
+                </td>
+                <td>
+                  <div class="btn-group position-static">
+                    <button class="btn btn-white btn-sm" type="button"><i class="bi-eye"></i> View</button>
+                  </div>
+                </td>
+              </tr>
+            @endforeach
             </tbody>
           </table>
         </div>

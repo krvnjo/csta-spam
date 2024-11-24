@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Borrowing;
-use App\Models\BorrowingItem;
 use App\Models\ItemTransaction;
 use App\Models\PropertyParent;
 use App\Models\Requester;
@@ -23,7 +21,9 @@ class ItemTransactionController extends Controller
         $requesters = Requester::where('is_active', 1)->get();
         $items = PropertyParent::where('is_active', 1)->where('is_consumable', 1)->get();
 
-        return view('pages.item-transactions.new-transaction', compact('requesters', 'items'));
+        $transactions = ItemTransaction::with('requester', 'transactionItems.property')->get();
+
+        return view('pages.item-transactions.new-transaction', compact('requesters', 'items', 'transactions'));
     }
 
     /**

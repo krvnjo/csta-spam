@@ -25,7 +25,7 @@ class TransactionItem extends Model
     /**
      * Relationship with the parent property (consumable item).
      */
-    public function parent()
+    public function property()
     {
         return $this->belongsTo(PropertyParent::class, 'parent_id');
     }
