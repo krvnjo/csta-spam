@@ -25,4 +25,9 @@ class Requester extends Model
     {
         return $this->hasOne(Department::class, 'id', 'dept_id');
     }
+
+    public function itemTransactions()
+    {
+        return $this->hasMany(ItemTransaction::class, 'requester_id');
+    }
 }

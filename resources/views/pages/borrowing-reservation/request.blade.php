@@ -431,7 +431,26 @@
         // =======================================================
         new HSAddField('.js-add-field', {
           addedField: field => {
-            HSCore.components.HSTomSelect.init(field.querySelector('.js-select-dynamic'))
+
+            HSCore.components.HSTomSelect.init(field.querySelector('.js-select-dynamic'));
+
+            const selectElement = field.querySelector('select[name="items[]"]');
+            const inputElement = field.querySelector('input[name="quantities[]"]');
+
+            if (selectElement) {
+              selectElement.setAttribute('required', 'true');
+            }
+
+            if (inputElement) {
+              inputElement.setAttribute('required', 'true');
+            }
+
+            selectElement.addEventListener('change', function () {
+              const selectedOption = selectElement.selectedOptions[0];
+              const maxQuantity = selectedOption ? selectedOption.getAttribute('data-max') : 0;
+
+              inputElement.setAttribute('max', maxQuantity);
+            });
           }
         });
 

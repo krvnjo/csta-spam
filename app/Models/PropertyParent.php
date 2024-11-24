@@ -45,4 +45,9 @@ class PropertyParent extends Model
     {
         return $this->belongsTo(Unit::class, 'unit_id');
     }
+
+    public function transactionItems()
+    {
+        return $this->hasMany(TransactionItem::class, 'parent_id');
+    }
 }

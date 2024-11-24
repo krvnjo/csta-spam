@@ -302,10 +302,11 @@
 @endsection
 
 @section('sec-content')
-
+<x-item-transactions.add-transaction :requesters="$requesters" :items="$items" />
 @endsection
 
 @push('scripts')
+  <script src="{{ Vite::asset('resources/js/modules/item-transactions/new-transaction.js') }}"></script>
 
   <script src="{{ Vite::asset('resources/vendor/tom-select/dist/js/tom-select.complete.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/hs-add-field/dist/hs-add-field.min.js') }}"></script>
@@ -425,14 +426,33 @@
         // =======================================================
         HSCore.components.HSTomSelect.init(".js-select");
 
-
         // INITIALIZATION OF ADD FIELD
         // =======================================================
         new HSAddField('.js-add-field', {
           addedField: field => {
-            HSCore.components.HSTomSelect.init(field.querySelector('.js-select-dynamic'))
+
+            HSCore.components.HSTomSelect.init(field.querySelector('.js-select-dynamic'));
+
+            const selectElement = field.querySelector('select[name="items[]"]');
+            const inputElement = field.querySelector('input[name="quantities[]"]');
+
+            if (selectElement) {
+              selectElement.setAttribute('required', 'true');
+            }
+
+            if (inputElement) {
+              inputElement.setAttribute('required', 'true');
+            }
+
+            selectElement.addEventListener('change', function () {
+              const selectedOption = selectElement.selectedOptions[0];
+              const maxQuantity = selectedOption ? selectedOption.getAttribute('data-max') : 0;
+
+              inputElement.setAttribute('max', maxQuantity);
+            });
           }
         });
+
 
       };
     })();
