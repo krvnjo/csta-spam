@@ -39,13 +39,13 @@
             </div>
           </div>
 
-{{--          <div class="d-grid d-sm-flex justify-content-sm-center justify-content-md-end align-items-sm-center gap-2">--}}
-{{--            <!-- Filter Collapse Trigger -->--}}
-{{--            <a class="btn btn-white btn-sm dropdown-toggle" data-bs-toggle="collapse" href="#ongoingBorrowFilterSearchCollapse">--}}
-{{--              <i class="bi-funnel me-1"></i> Filters <span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="ongoingBorrowFilterCount"></span>--}}
-{{--            </a>--}}
-{{--            <!-- End Filter Collapse Trigger -->--}}
-{{--          </div>--}}
+          {{--          <div class="d-grid d-sm-flex justify-content-sm-center justify-content-md-end align-items-sm-center gap-2"> --}}
+          {{--            <!-- Filter Collapse Trigger --> --}}
+          {{--            <a class="btn btn-white btn-sm dropdown-toggle" data-bs-toggle="collapse" href="#ongoingBorrowFilterSearchCollapse"> --}}
+          {{--              <i class="bi-funnel me-1"></i> Filters <span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="ongoingBorrowFilterCount"></span> --}}
+          {{--            </a> --}}
+          {{--            <!-- End Filter Collapse Trigger --> --}}
+          {{--          </div> --}}
         </div>
         <!-- End Header -->
 
@@ -144,7 +144,7 @@
                 <th>Quantity</th>
                 <th>Remarks</th>
                 <th>Status</th>
-                <th>Requested Date</th>
+                <th>Due Date</th>
                 <th>Date Released</th>
                 <th>Action</th>
               </tr>
@@ -185,11 +185,24 @@
                     </span>
                   </td>
                   <td>
-                    <span class="{{ $borrowing->progress->badge->class }}">
-                      <span class="{{ $borrowing->progress->legend->class }}"></span>{{ $borrowing->progress->name }}
-                    </span>
+                    @if (\Carbon\Carbon::parse($borrowing->due_date)->isPast() && !$borrowing->returned_at)
+                      <span class="badge bg-soft-danger text-danger">
+                        <span class="legend-indicator bg-danger"></span> Overdue
+                      </span>
+                    @elseif (\Carbon\Carbon::parse($borrowing->due_date)->isToday() && !$borrowing->returned_at)
+                      <span class="badge bg-soft-warning text-warning">
+                        <span class="legend-indicator bg-warning"></span> Due Today
+                      </span>
+                    @else
+                      <span class="{{ $borrowing->progress->badge->class }}">
+                        <span class="{{ $borrowing->progress->legend->class }}"></span>{{ $borrowing->progress->name }}
+                      </span>
+                    @endif
                   </td>
-                  <td><i class="bi-calendar-event me-1"></i>{{ \Carbon\Carbon::parse($borrowing->borrow_date)->format('F j, Y') }}</td>
+                  <td>
+                    <i class="bi-calendar-event me-1"></i>
+                    {{ \Carbon\Carbon::parse($borrowing->due_date)->format('F j, Y') }}
+                  </td>
                   <td>
                     <i class="bi bi-calendar-check me-1"></i>
                     Released {{ \Carbon\Carbon::parse($borrowing->released_at)->diffForHumans() }}

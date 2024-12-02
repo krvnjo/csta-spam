@@ -97,8 +97,8 @@ class ItemTransactionController extends Controller
             $transaction = ItemTransaction::create([
                 'requester_id' => $request->requester,
                 'transaction_num' => $code,
-                'remarks' => $request->remarks,
-                'received_by' => $request->received,
+                'remarks' => ucwords(strtolower(trim($request->remarks))),
+                'received_by' => ucwords(strtolower(trim($request->received))),
                 'transaction_date' => now(),
             ]);
 

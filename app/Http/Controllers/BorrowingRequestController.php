@@ -225,12 +225,13 @@ class BorrowingRequestController extends Controller
 
             $borrowing->released_at = now();
             $borrowing->prog_id = 3;
+            $borrowing->due_date = Carbon::parse($request->borrow_date)->addDays(7);
             $borrowing->save();
 
             return response()->json([
                 'success' => true,
-                'title' => 'Approved Successfully!',
-                'text' => 'The borrow request has been approved successfully!',
+                'title' => 'Released Successfully!',
+                'text' => 'The borrow request has been released successfully!',
             ]);
 
         } catch (Throwable $e) {
