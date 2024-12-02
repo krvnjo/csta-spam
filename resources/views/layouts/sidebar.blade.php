@@ -51,6 +51,15 @@
             @endaccess
 
             @access('Borrow & Reservation', 'View Only, Read and Write, Full Access')
+              <!-- Item Transactions -->
+              <div class="nav-item">
+                <a class="nav-link" data-placement="left" data-route="new-transaction.index" href="{{ route('new-transaction.index') }}">
+                  <i class="bi bi-arrow-left-right nav-icon"></i>
+                  <span class="nav-link-title">Item Transactions</span>
+                </a>
+              </div>
+              <!-- End Item Transactions -->
+
               <!-- Borrow & Reservation -->
               <div class="nav-item">
                 <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesBorrowReservation">
@@ -65,20 +74,6 @@
                 </div>
               </div>
               <!-- End Borrow & Reservation -->
-
-            <!-- Item Transactions -->
-            <div class="nav-item">
-              <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesItemTransactions">
-                <i class="bi bi-box-arrow-right nav-icon"></i>
-                <span class="nav-link-title">Item Transactions</span>
-              </a>
-
-              <div class="nav-collapse collapse" id="navbarVerticalMenuPagesItemTransactions" data-bs-parent="#navbarVerticalMenuMainMenu">
-                <a class="nav-link" data-route="new-transaction.index" href="{{ route('new-transaction.index') }}">New Transaction</a>
-                <a class="nav-link" data-route="" href="">Transaction Logs</a>
-              </div>
-            </div>
-            <!-- End Item Transactions -->
             @endaccess
 
             @access('Repair & Maintenance', 'View Only, Read and Write, Full Access')

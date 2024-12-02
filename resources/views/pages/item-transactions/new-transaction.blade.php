@@ -170,8 +170,8 @@
               <th>Requested Items</th>
               <th>Quantity</th>
               <th>Remarks</th>
+              <th>Received By</th>
               <th>Transaction Date</th>
-              <th>Date Created</th>
               <th>Action</th>
             </tr>
             </thead>
@@ -206,11 +206,8 @@
                       {{ Str::limit(!empty($transaction->remarks) ? $transaction->remarks : 'No remarks provided', 20) }}
                     </span>
                 </td>
+                <td>{{ $transaction->received_by }}</td>
                 <td><i class="bi-calendar-event me-1"></i>{{ \Carbon\Carbon::parse($transaction->transaction_date)->format('F j, Y') }}</td>
-                <td>
-                    <i class="bi-calendar-plus me-1"></i>
-                    Created {{ \Carbon\Carbon::parse($transaction->created_at)->diffForHumans() }}
-                </td>
                 <td>
                   <div class="btn-group position-static">
                     <button class="btn btn-white btn-sm" type="button"><i class="bi-eye"></i> View</button>

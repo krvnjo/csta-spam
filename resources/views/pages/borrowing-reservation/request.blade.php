@@ -186,7 +186,7 @@
                 <tr>
                   <td class="d-none" data-borrow-id="{{ Crypt::encryptString($borrowing->id) }}"></td>
                   <td>{{ $borrowing->borrow_num }}</td>
-                  <td>{{ $borrowing->requester->name }} | {{ $borrowing->requester->department->code }}</td>
+                  <td>{{ $borrowing->requester->department->code }} | {{ $borrowing->requester->name }}</td>
                   <td>
                     @foreach ($borrowing->requestItems as $item)
                       <span style="color:gray"
