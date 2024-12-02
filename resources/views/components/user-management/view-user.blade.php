@@ -28,7 +28,7 @@
           <!-- End User Image -->
 
           <!-- User Name -->
-          <div class="row mb-4 mt-3">
+          <div class="row mb-4 mt-2">
             <div class="col-12 col-sm-5 d-flex align-items-center mb-2 mb-sm-0">
               <p class="form-label fw-semibold mb-0">User Name:</p>
             </div>
@@ -93,38 +93,27 @@
           </div>
           <!-- End Department -->
 
-          <!-- Email Address -->
+          <!-- Email -->
           <div class="row mb-4">
             <div class="col-12 col-sm-5 d-flex align-items-center mb-2 mb-sm-0">
-              <p class="form-label fw-semibold mb-0">Email Address:</p>
+              <p class="form-label fw-semibold mb-0">Email:</p>
             </div>
             <div class="col-12 col-sm-7 d-flex align-items-center">
               <p class="fw-semibold mb-0" id="lblViewEmail"></p>
             </div>
           </div>
-          <!-- End Email Address -->
+          <!-- End Email -->
 
-          <!-- Phone Number -->
+          <!-- Phone -->
           <div class="row mb-4">
             <div class="col-12 col-sm-5 d-flex align-items-center mb-2 mb-sm-0">
-              <p class="form-label fw-semibold mb-0">Phone Number:</p>
+              <p class="form-label fw-semibold mb-0">Phone:</p>
             </div>
             <div class="col-12 col-sm-7 d-flex align-items-center">
               <p class="fw-semibold mb-0" id="lblViewPhone"></p>
             </div>
           </div>
-          <!-- End Phone Number -->
-
-          <!-- Last Login -->
-          <div class="row mb-4">
-            <div class="col-12 col-sm-5 d-flex align-items-center mb-2 mb-sm-0">
-              <p class="form-label fw-semibold mb-0">Last Login:</p>
-            </div>
-            <div class="col-12 col-sm-7 d-flex align-items-center">
-              <p class="fw-semibold mb-0" id="lblViewLogin"></p>
-            </div>
-          </div>
-          <!-- End Last Login -->
+          <!-- End Phone -->
 
           <!-- Status -->
           <div class="row mb-4">

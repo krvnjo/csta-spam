@@ -175,7 +175,7 @@
   <script src="{{ Vite::asset('resources/vendor/tom-select/dist/js/tom-select.complete.min.js') }}"></script>
 
   <!-- JS Modules -->
-  <script src="{{ Vite::asset('resources/js/modules/user-management/role-crud.js') }}"></script>
+  <script src="{{ Vite::asset('resources/js/modules/user-management/role.js') }}"></script>
 
   <!-- JS Themes -->
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>

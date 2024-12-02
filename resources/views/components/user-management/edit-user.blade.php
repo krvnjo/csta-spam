@@ -123,25 +123,25 @@
           </div>
           <!-- End Department -->
 
-          <!-- Email Address -->
+          <!-- Email -->
           <div class="row mb-4">
-            <label class="col-sm-3 col-form-label form-label" for="txtEditEmail">Email Address</label>
+            <label class="col-sm-3 col-form-label form-label" for="txtEditEmail">Email</label>
             <div class="col-sm-9">
               <input class="form-control" id="txtEditEmail" name="email" type="email" placeholder="Enter your email address">
               <span class="invalid-feedback" id="valEditEmail"></span>
             </div>
           </div>
-          <!-- End Email Address -->
+          <!-- End Email -->
 
           <!-- Phone -->
           <div class="row">
-            <label class="col-sm-3 col-form-label form-label" for="txtEditPhone">Phone Number</label>
+            <label class="col-sm-3 col-form-label form-label" for="txtEditPhone">Phone</label>
             <div class="col-sm-9">
               <div class="input-group">
                 <input class="js-input-mask form-control" id="txtEditPhone" name="phone" data-hs-mask-options='{
-                    "mask": "0900-000-0000"
+                    "mask": "0000-000-0000"
                   }' type="text"
-                  placeholder="####-###-####">
+                  placeholder="09##-###-####">
                 <span class="invalid-feedback" id="valEditPhone"></span>
               </div>
             </div>
@@ -152,12 +152,14 @@
 
           <!-- Username -->
           <div class="row mb-4">
-            <label class="col-sm-3 col-form-label form-label" for="txtEditUser">Username</label>
+            <label class="col-sm-3 col-form-label form-label" for="txtEditUser">
+              Username <i class="bi-question-circle text-body ms-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Your employee or student number. Format: ##-#####"></i>
+            </label>
             <div class="col-sm-9">
               <input class="js-input-mask form-control" id="txtEditUser" name="user" data-hs-mask-options='{
                   "mask": "00-00000"
                 }' type="text"
-                placeholder="##-#####">
+                placeholder="Enter your username">
               <span class="invalid-feedback" id="valEditUser"></span>
             </div>
           </div>
