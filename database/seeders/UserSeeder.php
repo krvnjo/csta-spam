@@ -137,7 +137,7 @@ class UserSeeder extends Seeder
             [
                 'user_name' => '21-00017',
                 'pass_hash' => bcrypt('JtAchondo05!'),
-                'name' => 'Joshua Trazen Achondo',
+                'name' => 'Joshua Trazen D. Achondo',
                 'fname' => 'Joshua Trazen',
                 'mname' => 'Delos Santos',
                 'lname' => 'Achondo',
@@ -151,7 +151,7 @@ class UserSeeder extends Seeder
             [
                 'user_name' => '21-00155',
                 'pass_hash' => bcrypt('RobBunag22!'),
-                'name' => 'Rob Meynard Bunag',
+                'name' => 'Rob Meynard P. Bunag',
                 'fname' => 'Rob Meynard',
                 'mname' => 'Pumento',
                 'lname' => 'Bunag',
@@ -165,7 +165,7 @@ class UserSeeder extends Seeder
             [
                 'user_name' => '21-00132',
                 'pass_hash' => bcrypt('KjQuimora24!'),
-                'name' => 'Khervin John Quimora',
+                'name' => 'Khervin John P. Quimora',
                 'fname' => 'Khervin John',
                 'mname' => 'Pastoral',
                 'lname' => 'Quimora',

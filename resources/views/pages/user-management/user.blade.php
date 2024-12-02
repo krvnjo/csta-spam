@@ -89,12 +89,12 @@
                     <div class="mb-4">
                       <small class="text-cap text-body">Roles</small>
                       <div class="tom-select-custom">
-                        <select class="js-select js-datatable-filter form-select" data-target-column-index="4"
+                        <select class="js-select js-datatable-filter form-select" data-target-column-index="3"
                           data-hs-tom-select-options='{
-                            "singleMultiple": true,
                             "hideSearch": true,
                             "hideSelected": false,
-                            "placeholder": "All Roles"
+                            "placeholder": "All Roles",
+                            "singleMultiple": true
                           }'
                           multiple>
                           @foreach ($roles as $role)
@@ -109,12 +109,12 @@
                     <div class="mb-4">
                       <small class="text-cap text-body">Departments</small>
                       <div class="tom-select-custom">
-                        <select class="js-select js-datatable-filter form-select" data-target-column-index="4"
+                        <select class="js-select js-datatable-filter form-select" data-target-column-index="3"
                           data-hs-tom-select-options='{
-                            "singleMultiple": true,
                             "hideSearch": true,
                             "hideSelected": false,
-                            "placeholder": "All Departments"
+                            "placeholder": "All Departments",
+                            "singleMultiple": true
                           }'
                           multiple>
                           @foreach ($departments as $department)
@@ -129,7 +129,7 @@
                     <div class="mb-2">
                       <small class="text-cap text-body">Status</small>
                       <div class="tom-select-custom">
-                        <select class="js-select js-datatable-filter form-select" data-target-column-index="8"
+                        <select class="js-select js-datatable-filter form-select" data-target-column-index="7"
                           data-hs-tom-select-options='{
                             "allowEmptyOption": true,
                             "hideSearch": true,
@@ -156,7 +156,7 @@
           <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100" id="usersDatatable"
             data-hs-datatables-options='{
               "columnDefs": [{
-                "targets": [8],
+                "targets": [0, 4, 8],
                 "orderable": false
               }],
               "order": [6, "desc"],
@@ -183,9 +183,23 @@
                 <th>Action</th>
               </tr>
             </thead>
-
             <tbody>
               @foreach ($users as $user)
+                @php
+                  $userExportData = $users->map(function ($user) {
+                      return [
+                          'Username' => $user->user_name,
+                          'First Name' => $user->fname,
+                          'Middle Name' => $user->mname,
+                          'Last Name' => $user->lname,
+                          'Role' => $user->role->name,
+                          'Department' => $user->department->name,
+                          'Email' => $user->email,
+                          'Phone' => $user->phone_num ?? 'N/A',
+                          'Status' => $user->is_active ? 'Active' : 'Inactive',
+                      ];
+                  });
+                @endphp
                 <tr>
                   <td>{{ $loop->iteration }}</td>
                   <td class="d-none" data-user-id="{{ Crypt::encryptString($user->id) }}"></td>
@@ -202,18 +216,18 @@
                     <span class="d-block h5 mb-0">{{ $user->role->name }}</span>
                     <span class="d-block fs-5">{{ $user->department->name }}</span>
                   </td>
-                  <td data-order="{{ $user->email }}">
+                  <td>
                     <span class="d-block h5 mb-0">{{ $user->email }}</span>
                     <span class="d-block fs-5">{{ $user->phone_num ?? 'N/A' }}</span>
                   </td>
                   <td data-order="{{ $user->created_at }}">
-                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $user->created_at->format('D, M d, Y | h:i A') }}">
+                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $user->created_at->format('D, M d, Y | g:i A') }}">
                       <i class="bi-calendar-plus me-1"></i>
                       {{ $user->created_at->format('F d, Y') }}
                     </span>
                   </td>
                   <td data-order="{{ $user->updated_at }}">
-                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $user->updated_at->format('D, M d, Y | h:i A') }}">
+                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $user->updated_at->format('D, M d, Y | g:i A') }}">
                       <i class="bi-calendar2-event me-1"></i> Updated
                       {{ $user->updated_at->diffForHumans() }}
                     </span>
@@ -319,7 +333,7 @@
   <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
 
   <!-- JS Modules -->
-  <script src="{{ Vite::asset('resources/js/modules/user-management/user-crud.js') }}"></script>
+  <script src="{{ Vite::asset('resources/js/modules/user-management/user.js') }}"></script>
 
   <!-- JS Themes -->
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>
@@ -328,41 +342,142 @@
   <script>
     // Initialization of DataTable
     $(document).on("ready", function() {
+      let userExportData = @json($userExportData);
+
       HSCore.components.HSDatatables.init($("#usersDatatable"), {
         dom: "Bfrtip",
         buttons: [{
             extend: "copy",
             className: "d-none",
             exportOptions: {
-              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8)):not(:nth-child(10))'
+              columns: [2, 3, 4, 5, 7]
             }
           },
           {
             extend: "print",
             className: "d-none",
             exportOptions: {
-              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8)):not(:nth-child(10))'
+              columns: [2, 3, 4, 5, 7]
             }
           },
           {
             extend: "excel",
             className: "d-none",
+            filename: "User List - CSTA-SPAM",
             exportOptions: {
-              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8)):not(:nth-child(10))'
-            }
+              columns: [2, 3, 4, 5, 7]
+            },
+            customize: function(xlsx) {
+              const sheet = xlsx.xl.worksheets['sheet1.xml'];
+
+              // Add column headers with "No." column added before "Username"
+              const columnHeaders = `
+            <row>
+              <c t="inlineStr"><is><t>No.</t></is></c>
+              <c t="inlineStr"><is><t>Username</t></is></c>
+              <c t="inlineStr"><is><t>First Name</t></is></c>
+              <c t="inlineStr"><is><t>Middle Name</t></is></c>
+              <c t="inlineStr"><is><t>Last Name</t></is></c>
+              <c t="inlineStr"><is><t>Role</t></is></c>
+              <c t="inlineStr"><is><t>Department</t></is></c>
+              <c t="inlineStr"><is><t>Email</t></is></c>
+              <c t="inlineStr"><is><t>Phone</t></is></c>
+              <c t="inlineStr"><is><t>Status</t></is></c>
+            </row>
+          `;
+
+              // Add data rows dynamically, adding the row number for "No." column
+              let rows = '';
+              userExportData.forEach(function(user, index) {
+                rows += `
+              <row>
+                <c t="inlineStr"><is><t>${index + 1}</t></is></c>
+                <c t="inlineStr"><is><t>${user['Username']}</t></is></c>
+                <c t="inlineStr"><is><t>${user['First Name']}</t></is></c>
+                <c t="inlineStr"><is><t>${user['Middle Name']}</t></is></c>
+                <c t="inlineStr"><is><t>${user['Last Name']}</t></is></c>
+                <c t="inlineStr"><is><t>${user['Role']}</t></is></c>
+                <c t="inlineStr"><is><t>${user['Department']}</t></is></c>
+                <c t="inlineStr"><is><t>${user['Email']}</t></is></c>
+                <c t="inlineStr"><is><t>${user['Phone']}</t></is></c>
+                <c t="inlineStr"><is><t>${user['Status']}</t></is></c>
+              </row>
+            `;
+              });
+
+              // Inject into the sheet
+              $(sheet).find("sheetData").html(columnHeaders + rows);
+
+              // Adjust column widths (adjust as needed based on your data)
+              const colWidths = [{
+                  col: 1,
+                  width: 5
+                }, // No.
+                {
+                  col: 2,
+                  width: 20
+                }, // Username
+                {
+                  col: 3,
+                  width: 20
+                }, // First Name
+                {
+                  col: 4,
+                  width: 20
+                }, // Middle Name
+                {
+                  col: 5,
+                  width: 20
+                }, // Last Name
+                {
+                  col: 6,
+                  width: 20
+                }, // Role
+                {
+                  col: 7,
+                  width: 25
+                }, // Department
+                {
+                  col: 8,
+                  width: 30
+                }, // Email
+                {
+                  col: 9,
+                  width: 20
+                }, // Phone
+                {
+                  col: 10,
+                  width: 20
+                } // Status
+              ];
+
+              // Set column width
+              colWidths.forEach(function(item) {
+                $(sheet).find(`cols col:nth-child(${item.col})`).attr('width', item.width);
+              });
+            },
           },
           {
             extend: "pdf",
             className: "d-none",
+            filename: "User List - CSTA-SPAM",
             exportOptions: {
-              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(8)):not(:nth-child(10))'
-            }
-          }
+              columns: [2, 3, 4, 5, 7]
+            },
+          },
+          {
+            extend: "pdf",
+            className: "d-none",
+            filename: "User List - CSTA-SPAM",
+            exportOptions: {
+              columns: [2, 3, 4, 5, 7]
+            },
+          },
         ],
         language: {
           zeroRecords: `<div class="text-center p-4">
-              <img class="mb-3" src="{{ Vite::asset('resources/svg/illustrations/oc-error.svg') }}" alt="No records to display." style="width: 10rem;" data-hs-theme-appearance="default">
-              <img class="mb-3" src="{{ Vite::asset('resources/svg/illustrations-light/oc-error.svg') }}" alt="No records to display." style="width: 10rem;" data-hs-theme-appearance="dark">
+            <img class="mb-3" src="{{ Vite::asset('resources/svg/illustrations/oc-error.svg') }}" alt="No records to display." style="width: 10rem;" data-hs-theme-appearance="default">
+            <img class="mb-3" src="{{ Vite::asset('resources/svg/illustrations-light/oc-error.svg') }}" alt="No records to display." style="width: 10rem;" data-hs-theme-appearance="dark">
             <p class="mb-0">No records to display.</p>
           </div>`
         }
@@ -370,17 +485,9 @@
 
       const usersDatatable = HSCore.components.HSDatatables.getItem(0);
 
-      const exportButtons = {
-        "#userExportCopy": ".buttons-copy",
-        "#userExportPrint": ".buttons-print",
-        "#userExportExcel": ".buttons-excel",
-        "#userExportPdf": ".buttons-pdf"
-      };
-
-      $.each(exportButtons, function(exportId, exportClass) {
-        $(exportId).click(function() {
-          usersDatatable.button(exportClass).trigger();
-        });
+      $("#userExportCopy, #userExportPrint, #userExportExcel, #userExportPdf").on("click", function() {
+        const exportClass = `.buttons-${this.id.replace("userExport", "").toLowerCase()}`;
+        usersDatatable.button(exportClass).trigger();
       });
 
       $(".js-datatable-filter").on("change", function() {
