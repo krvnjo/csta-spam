@@ -36,4 +36,34 @@ $(document).ready(function () {
     });
 
     // ============ End Create a Transaction ============ //
+
+    // ============ View a Item Transaction ============ //
+    newTransactionDatatable.on('click', '.btnViewItem', function () {
+        const transactionId = $(this).closest('tr').find('td[data-transaction-id]').data('transaction-id');
+
+        $.ajax({
+            url: '/item-transactions/new-transaction/view',
+            method: 'GET',
+            data: { id: transactionId },
+            success: function (response) {
+                $('#modalViewItemTransaction').modal('toggle');
+
+                $('#lblViewTransaction').text(response.transaction);
+                $('#lblViewRequester').text(response.requester);
+                $('#lblViewReceived').text(response.received);
+                $('#lblViewRemarks').text(response.remarks);
+                let itemsHtml = response.items
+                    .map(item => `${item.name} (Qty: ${item.quantity})`)
+                    .join('<br>');
+                $('#lblViewItems').html(itemsHtml);
+                $('#lblViewDateCreated').text(response.dateCreated);
+
+
+            },
+            error: function (response) {
+                showResponseAlert(response, 'error');
+            },
+        });
+    });
+    // ============ End View a Item Transaction ============ //
 });

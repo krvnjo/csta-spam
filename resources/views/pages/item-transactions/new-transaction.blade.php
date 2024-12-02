@@ -209,7 +209,7 @@
                 <td><i class="bi-calendar-event me-1"></i>{{ \Carbon\Carbon::parse($transaction->transaction_date)->format('F j, Y') }}</td>
                 <td>
                   <div class="btn-group position-static">
-                    <button class="btn btn-white btn-sm" type="button"><i class="bi-eye"></i> View</button>
+                    <button class="btn btn-white btn-sm btnViewItem" type="button"><i class="bi-eye"></i> View</button>
                   </div>
                 </td>
               </tr>
@@ -257,6 +257,7 @@
 
 @section('sec-content')
 <x-item-transactions.add-transaction :requesters="$requesters" :items="$items" />
+<x-item-transactions.view-transaction />
 @endsection
 
 @push('scripts')

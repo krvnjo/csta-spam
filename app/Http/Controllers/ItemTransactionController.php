@@ -8,6 +8,7 @@ use App\Models\Requester;
 use App\Models\TransactionItem;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
 
@@ -148,11 +149,33 @@ class ItemTransactionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request)
     {
-        //
-    }
+        try {
+            $transaction = ItemTransaction::query()->findOrFail(Crypt::decryptString($request->input('id')));
 
+            return response()->json([
+                'success' => true,
+                'transaction' => $transaction->transaction_num,
+                'requester' => $transaction->requester->name ?? "-",
+                'received' => $transaction->received_by ?? "-",
+                'remarks' => $transaction->remarks ?? "-",
+                'items' => $transaction->transactionItems->map(function ($item) {
+                    return [
+                        'name' => $item->property->name,
+                        'quantity' => $item->quantity,
+                    ];
+                }),
+                'dateCreated' => $transaction->created_at->format('D, F d, Y | h:i:s A'),
+            ]);
+        } catch (Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'title' => 'Oops! Something went wrong.',
+                'message' => 'An error occurred while fetching the item transaction. ' . $e->getMessage(),
+            ], 500);
+        }
+    }
     /**
      * Show the form for editing the specified resource.
      */
