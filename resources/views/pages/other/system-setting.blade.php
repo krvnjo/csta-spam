@@ -94,8 +94,8 @@
                       <div class="tom-select-custom">
                         <select class="js-select form-select" id="selSettingSession"
                           data-hs-tom-select-options='{
-                            "searchInDropdown": false,
-                            "placeholder": "Select session timeout duration"
+                            "hideSearch": "true",
+                            "placeholder": "Select session duration"
                           }'>
                           <option value=""></option>
                           <option value="60" {{ $sessionDuration == 60 ? 'selected' : '' }}>1 hour duration per session</option>
@@ -249,7 +249,6 @@
             </div>
             <!-- End Database Backup -->
           </div>
-
           <div id="stickyBlockEndPoint"></div>
         </div>
         <!-- End Settings Content -->
