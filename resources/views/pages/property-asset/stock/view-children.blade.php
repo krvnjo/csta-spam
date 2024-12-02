@@ -399,10 +399,10 @@
                   @endif
                   <td class="d-none" data-child-id="{{ Crypt::encryptString($propertyChild->id) }}"></td>
                   <td>
-                    @if ($propertyChild->created_at == $propertyChild->updated_at)
+                    @if ($propertyChild->created_at == $propertyChild->updated_at && $propertyChild->created_at->diffInDays(\Carbon\Carbon::now()) < 3)
                       <span class="badge bg-success">New</span>
                       {{ $propertyChild->prop_code }}
-                    @elseif ($propertyChild->created_at->diffInDays(\Carbon\Carbon::now()) >= 7)
+                    @elseif ($propertyChild->created_at->diffInDays(\Carbon\Carbon::now()) >= 3)
                       {{ $propertyChild->prop_code }}
                     @else
                       {{ $propertyChild->prop_code }}

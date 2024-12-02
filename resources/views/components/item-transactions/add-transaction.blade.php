@@ -1,17 +1,17 @@
 <!-- Add Request Modal -->
-<div class="modal fade" id="modalAddNewRequest" data-bs-backdrop="static" tabindex="-1" aria-label="new request">
+<div class="modal fade" id="modalAddNewTransaction" data-bs-backdrop="static" tabindex="-1" aria-label="new transaction">
   <div class="modal-dialog modal-dialog-centered modal-xl">
     <div class="modal-content">
       <!-- Header -->
       <div class="modal-header">
-        <h4 class="modal-title">Create New Request</h4>
+        <h4 class="modal-title">Create New Transaction</h4>
         <button class="btn-close" data-bs-dismiss="modal" type="button"></button>
       </div>
       <!-- End Header -->
 
       <!-- Body -->
       <div class="modal-body">
-        <form id="frmAddNewRequest" method="POST">
+        <form id="frmAddNewTransaction" method="POST">
           @csrf
 
           <div class="row">
@@ -20,7 +20,7 @@
               <div class="card mb-3 mb-lg-5">
                 <!-- Header -->
                 <div class="card-header">
-                  <h4 class="card-header-title">Borrowing Request Information</h4>
+                  <h4 class="card-header-title">Item Transaction Information</h4>
                 </div>
                 <!-- End Header -->
 
@@ -33,7 +33,7 @@
                         <label class="form-label" for="selAddRequester">Requester</label>
                         <div class="tom-select-custom">
                           <select class="js-select form-select" id="selAddRequester" name="requester"
-                            data-hs-tom-select-options='{
+                                  data-hs-tom-select-options='{
                               "placeholder": "Select requester"
                             }' autocomplete="off">
                             <option value="" disabled selected>Select requester</option>
@@ -50,9 +50,9 @@
                     <!-- Borrow Date -->
                     <div class="col-sm">
                       <div class="mb-4">
-                        <label class="form-label" for="txtAddDate">Borrow Date</label>
-                        <input class="form-control" id="txtAddWhen" name="when" type="date" min="{{ now()->toDateString() }}" />
-                        <span class="invalid-feedback" id="valAddWhen"></span>
+                        <label class="form-label" for="txtAddReceived">Received By</label>
+                        <input class="form-control" id="txtAddReceived" name="received" type="text" placeholder="Enter Received By" />
+                        <span class="invalid-feedback" id="valAddReceived"></span>
                       </div>
                     </div>
                     <!-- End Borrow Date -->
@@ -80,7 +80,7 @@
                 <!-- Add Items Section -->
                 <div class="card-body">
                   <div class="js-add-field"
-                    data-hs-add-field-options='{
+                       data-hs-add-field-options='{
                           "template": "#addItemFieldTemplate",
                           "container": "#addItemFieldContainer",
                           "defaultCreated": 0,
@@ -90,7 +90,7 @@
                     <div class="row mb-4">
                       <div class="col-sm-9">
                         <div class="tom-select-custom">
-                          <select class="js-select form-select" id="txtAddItems" name="items[]" data-hs-tom-select-options='{
+                          <select class="js-select form-select" id="selAddItems" name="items[]" data-hs-tom-select-options='{
                                 "placeholder": "Select an item"
                               }' autocomplete="off" required>
                             <option value="" disabled selected>Select item</option>
@@ -129,12 +129,14 @@
                     <div class="row mb-4">
                       <div class="col-sm-9">
                         <div class="tom-select-custom">
-                          <select class="js-select-dynamic form-select" id="txtAddItems" name="items[]" data-hs-tom-select-options='{
-                                  "placeholder": "Select an item"
-                                }' autocomplete="off">
+                          <select class="js-select-dynamic form-select" id="selAddItems" name="items[]" data-hs-tom-select-options='{
+                                "placeholder": "Select an item"
+                              }' autocomplete="off">
                             <option value="" disabled selected>Select item</option>
                             @foreach ($items as $item)
-                              <option value="{{ $item->id }}" data-max="{{ $item->quantity }}"> {{ $item->name }} | {{ $item->specification }}  | Available: {{ $item->quantity }}-{{ $item->unit->name }}</option>
+                              <option value="{{ $item->id }}" data-max="{{ $item->quantity }}">
+                                {{ $item->name }} | {{ $item->specification }} | Available: {{ $item->quantity }}-{{ $item->unit->name }}
+                              </option>
                             @endforeach
                           </select>
                           <span class="invalid-feedback" id="valAddItems"></span>
@@ -153,7 +155,6 @@
                   </div>
                   <!-- End Add Item Field Template -->
                 </div>
-
               </div>
               <!-- End Items Card -->
             </div>
@@ -167,7 +168,7 @@
         <div class="row align-items-sm-center flex-grow-1 mx-n2">
           <div class="col d-flex justify-content-end gap-2">
             <button class="btn btn-white" data-bs-dismiss="modal" type="button">Cancel</button>
-            <button class="btn btn-primary" id="btnAddSaveNewRequest" form="frmAddNewRequest" type="submit" disabled>
+            <button class="btn btn-primary" id="btnAddSaveNewTransaction" form="frmAddNewTransaction" type="submit" disabled>
               <span class="spinner-label">Create</span>
               <span class="spinner-border spinner-border-sm d-none"></span>
             </button>
@@ -181,7 +182,7 @@
 <!-- End Add Request Modal -->
 
 <script>
-  document.getElementById('txtAddItems').addEventListener('change', function () {
+  document.getElementById('selAddItems').addEventListener('change', function () {
     const selectedOption = this.options[this.selectedIndex];
     const maxQuantity = selectedOption.getAttribute('data-max');
 

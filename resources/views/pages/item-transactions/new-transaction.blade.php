@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-  Transaction Logs
+  New Transaction
 @endsection
 
 @push('styles')
@@ -19,10 +19,16 @@
           <div class="col-sm mb-2 mb-sm-0">
             <ol class="breadcrumb breadcrumb-no-gutter">
               <li class="breadcrumb-item"><a class="breadcrumb-link" data-route="dashboard.index" href="{{ route('dashboard.index') }}">Home</a></li>
-              <li class="breadcrumb-item active">Borrow & Reservation</li>
+              <li class="breadcrumb-item active">Item Transactions</li>
             </ol>
-            <h1 class="page-header-title">Transaction Logs</h1>
-            <p class="page-header-text">Monitor borrow and reservation transaction logs.</p>
+            <h1 class="page-header-title">New Transaction</h1>
+            <p class="page-header-text">Create and monitor item transactions.</p>
+          </div>
+
+          <div class="col-sm-auto mt-2 mt-sm-0">
+            <button class="btn btn-primary w-100 w-sm-auto" id="btnAddNewTransactionModal" data-bs-toggle="modal" data-bs-target="#modalAddNewTransaction">
+              <i class="bi-plus-lg me-1"></i> Create Transaction
+            </button>
           </div>
         </div>
       </div>
@@ -35,7 +41,7 @@
           <div class="mb-2 mb-md-0">
             <div class="input-group input-group-merge input-group-flush">
               <div class="input-group-prepend input-group-text"><i class="bi-search"></i></div>
-              <input class="form-control" id="borrowLogsDatatableSearch" type="search" placeholder="Search">
+              <input class="form-control" id="newTransactionDatatableSearch" type="search" placeholder="Search">
             </div>
           </div>
 
@@ -48,18 +54,18 @@
 
               <div class="dropdown-menu dropdown-menu-sm-end w-100">
                 <span class="dropdown-header">Options</span>
-                <button class="dropdown-item" id="borrowLogsExportCopy" type="button">
+                <button class="dropdown-item" id="newTransactionExportCopy" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/copy-icon.svg') }}" alt="Copy Icon"> Copy
                 </button>
-                <button class="dropdown-item" id="borrowLogsExportPrint" type="button">
+                <button class="dropdown-item" id="newTransactionExportPrint" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/illustrations/print-icon.svg') }}" alt="Print Icon"> Print
                 </button>
                 <div class="dropdown-divider"></div>
                 <span class="dropdown-header">Download</span>
-                <button class="dropdown-item" id="borrowLogsExportExcel" type="button">
+                <button class="dropdown-item" id="newTransactionExportExcel" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/excel-icon.svg') }}" alt="Excel Icon"> Excel
                 </button>
-                <button class="dropdown-item" id="borrowLogsExportPdf" type="button">
+                <button class="dropdown-item" id="newTransactionExportPdf" type="button">
                   <img class="avatar avatar-xss avatar-4x3 me-2" src="{{ Vite::asset('resources/svg/brands/pdf-icon.svg') }}" alt="PDF Icon"> PDF
                 </button>
               </div>
@@ -67,8 +73,8 @@
             <!-- End Export Dropdown -->
 
             <!-- Filter Collapse Trigger -->
-            <a class="btn btn-white btn-sm dropdown-toggle" data-bs-toggle="collapse" href="#borrowLogsFilterSearchCollapse">
-              <i class="bi-funnel me-1"></i> Filters <span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="newRequestsFilterCount"></span>
+            <a class="btn btn-white btn-sm dropdown-toggle" data-bs-toggle="collapse" href="#newTransactionFilterSearchCollapse">
+              <i class="bi-funnel me-1"></i> Filters <span class="badge bg-soft-dark text-dark rounded-circle ms-1" id="newTransactionFilterCount"></span>
             </a>
             <!-- End Filter Collapse Trigger -->
           </div>
@@ -76,46 +82,25 @@
         <!-- End Header -->
 
         <!-- Filter Search Collapse -->
-        <div class="collapse" id="borrowLogsFilterSearchCollapse">
+        <div class="collapse" id="newTransactionFilterSearchCollapse">
           <div class="card-body">
             <div class="row">
-              <!-- Priorities -->
-              <div class="col-sm-12 col-md-4">
-                <div class="mb-3">
-                  <label class="form-label" for="newRequestStatusFilter">Status</label>
-                  <div class="tom-select-custom">
-                    <select class="js-select js-datatable-filter form-select" id="newRequestStatusFilter" data-target-column-index="6"
-                            data-hs-tom-select-options='{
-                        "singleMultiple": true,
-                        "hideSearch": true,
-                        "hideSelected": false,
-                        "placeholder": "All Status"
-                      }'
-                            multiple>
-                      {{--                      @foreach ($progresses as $status) --}}
-                      {{--                        <option value="{{ $status->name }}">{{ $status->name }}</option> --}}
-                      {{--                      @endforeach --}}
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <!-- End Priorities -->
 
               <!-- Users -->
               <div class="col-sm-12 col-md-4">
                 <div class="mb-3">
-                  <label class="form-label" for="newRequestRequestersFilter">Requesters</label>
+                  <label class="form-label" for="newTransactionRequestersFilter">Requesters</label>
                   <div class="tom-select-custom">
-                    <select class="js-select js-datatable-filter form-select" id="newRequestRequestersFilter" data-target-column-index="2"
+                    <select class="js-select js-datatable-filter form-select" id="newTransactionRequestersFilter" data-target-column-index="2"
                             data-hs-tom-select-options='{
                         "singleMultiple": true,
                         "hideSelected": false,
                         "placeholder": "All Requesters"
                       }'
                             autocomplete="off" multiple>
-                      {{--                      @foreach ($requesters as $request) --}}
-                      {{--                        <option value="{{ $request->name }}">{{ $request->name }}</option> --}}
-                      {{--                      @endforeach --}}
+                      @foreach ($requesters as $request)
+                        <option value="{{ $request->name }}">{{ $request->name }}</option>
+                      @endforeach
                     </select>
                   </div>
                 </div>
@@ -125,7 +110,23 @@
               <!-- Date Range -->
               <div class="col-sm-12 col-md-4">
                 <div class="mb-3">
-                  <label class="form-label" for="newRequestDateRangeFilter">Date Range Requested</label>
+                  <label class="form-label" for="newTransactionDateRangeFilter">Date Range Transaction</label>
+                  <input class="js-daterangepicker-clear js-datatable-filter form-control daterangepicker-custom-input" data-target-column-index="6"
+                         data-hs-daterangepicker-options='{
+                      "autoUpdateInput": false,
+                      "locale": {
+                        "cancelLabel": "Clear"
+                      }
+                    }'
+                         type="text" placeholder="Select date range">
+                </div>
+              </div>
+              <!-- End Date Range -->
+
+              <!-- Date Range -->
+              <div class="col-sm-12 col-md-4">
+                <div class="mb-3">
+                  <label class="form-label" for="newTransactionDateRangeFilter">Date Range Created</label>
                   <input class="js-daterangepicker-clear js-datatable-filter form-control daterangepicker-custom-input" data-target-column-index="7"
                          data-hs-daterangepicker-options='{
                       "autoUpdateInput": false,
@@ -144,46 +145,46 @@
 
         <!-- Body -->
         <div class="table-responsive datatable-custom">
-          <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100" id="borrowLogsDatatable"
+          <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100" id="newTransactionDatatable"
                  data-hs-datatables-options='{
               "columnDefs": [{
-                 "targets": [0],
+                 "targets": [8],
                  "orderable": false
                }],
-              "order": [8, "desc"],
+              "order": [7, "desc"],
               "info": {
-                "totalQty": "#borrowLogsDatatableWithPagination"
+                "totalQty": "#newTransactionDatatableWithPagination"
               },
-              "search": "#borrowLogsDatatableSearch",
-              "entries": "#borrowLogsDatatableEntries",
+              "search": "#newTransactionDatatableSearch",
+              "entries": "#newTransactionDatatableEntries",
               "pageLength": 10,
               "isResponsive": false,
               "isShowPaging": false,
-              "pagination": "borrowLogsDatatablePagination"
+              "pagination": "newTransactionDatatablePagination"
             }'>
             <thead class="thead-light">
             <tr>
               <th class="d-none"></th>
-              <th>Borrow No.</th>
-              <th>Borrower Name</th>
-              <th>Borrowed Items</th>
+              <th>Transaction No.</th>
+              <th>Requester</th>
+              <th>Requested Items</th>
               <th>Quantity</th>
               <th>Remarks</th>
-              <th>Status</th>
-              <th>Requested Date</th>
-              <th>Date Returned</th>
+              <th>Received By</th>
+              <th>Transaction Date</th>
+              <th>Action</th>
             </tr>
             </thead>
             <tbody>
-            @foreach ($borrowings->whereIn('prog_id', [7]) as $borrowing)
+            @foreach ($transactions as $transaction)
               <tr>
-                <td class="d-none" data-borrow-id="{{ Crypt::encryptString($borrowing->id) }}"></td>
-                <td>{{ $borrowing->borrow_num }}</td>
-                <td>{{ $borrowing->requester->name }} | {{ $borrowing->requester->department->code }}</td>
+                <td class="d-none" data-borrow-id="{{ Crypt::encryptString($transaction->id) }}"></td>
+                <td>{{ $transaction->transaction_num }}</td>
+                <td>{{ $transaction->requester->department->code }} | {{ $transaction->requester->name }}</td>
                 <td>
-                  @foreach ($borrowing->requestItems as $item)
+                  @foreach ($transaction->transactionItems as $item)
                     <span style="color:gray"
-                          @if (!empty($borrowing->remarks) && strlen($item->property->name) > 25) data-bs-toggle="tooltip"
+                          @if (!empty($transaction->remarks) && strlen($item->property->name) > 25) data-bs-toggle="tooltip"
                           data-bs-html="true"
                           data-bs-placement="top"
                           title="{{ $item->property->name }}" @endif>
@@ -192,28 +193,25 @@
                   @endforeach
                 </td>
                 <td>
-                  @foreach ($borrowing->requestItems as $item)
+                  @foreach ($transaction->transactionItems as $item)
                     {{ $item->quantity }} - {{ $item->property->unit->name }}<br>
                   @endforeach
                 </td>
                 <td>
                     <span style="color:gray"
-                          @if (!empty($borrowing->remarks) && strlen($borrowing->remarks) > 20) data-bs-toggle="tooltip"
+                          @if (!empty($transaction->remarks) && strlen($transaction->remarks) > 20) data-bs-toggle="tooltip"
                           data-bs-html="true"
                           data-bs-placement="top"
-                          title="{{ $borrowing->remarks }}" @endif>
-                      {{ Str::limit(!empty($borrowing->remarks) ? $borrowing->remarks : 'No remarks provided', 20) }}
+                          title="{{ $transaction->remarks }}" @endif>
+                      {{ Str::limit(!empty($transaction->remarks) ? $transaction->remarks : 'No remarks provided', 20) }}
                     </span>
                 </td>
+                <td>{{ $transaction->received_by }}</td>
+                <td><i class="bi-calendar-event me-1"></i>{{ \Carbon\Carbon::parse($transaction->transaction_date)->format('F j, Y') }}</td>
                 <td>
-                    <span class="{{ $borrowing->progress->badge->class }}">
-                      <span class="{{ $borrowing->progress->legend->class }}"></span>{{ $borrowing->progress->name }}
-                    </span>
-                </td>
-                <td><i class="bi-calendar-event me-1"></i>{{ \Carbon\Carbon::parse($borrowing->borrow_date)->format('F j, Y') }}</td>
-                <td>
-                  <i class="bi bi-calendar-check me-1"></i>
-                  Returned {{ \Carbon\Carbon::parse($borrowing->returned_at)->diffForHumans() }}
+                  <div class="btn-group position-static">
+                    <button class="btn btn-white btn-sm" type="button"><i class="bi-eye"></i> View</button>
+                  </div>
                 </td>
               </tr>
             @endforeach
@@ -229,7 +227,7 @@
               <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
                 <span class="me-2">Showing:</span>
                 <div class="tom-select-custom tom-page-w">
-                  <select class="js-select form-select form-select-borderless" id="borrowLogsDatatableEntries"
+                  <select class="js-select form-select form-select-borderless" id="newTransactionDatatableEntries"
                           data-hs-tom-select-options='{
                       "hideSearch": true,
                       "searchInDropdown": false
@@ -240,13 +238,13 @@
                   </select>
                 </div>
                 <span class="text-secondary me-2">of</span>
-                <span id="borrowLogsDatatableWithPagination"></span>
+                <span id="newTransactionDatatableWithPagination"></span>
                 <span class="text-secondary ms-2">records</span>
               </div>
             </div>
             <div class="col-sm-auto">
               <div class="d-flex justify-content-center justify-content-sm-end">
-                <nav id="borrowLogsDatatablePagination"></nav>
+                <nav id="newTransactionDatatablePagination"></nav>
               </div>
             </div>
           </div>
@@ -259,9 +257,12 @@
 @endsection
 
 @section('sec-content')
+<x-item-transactions.add-transaction :requesters="$requesters" :items="$items" />
 @endsection
 
 @push('scripts')
+  <script src="{{ Vite::asset('resources/js/modules/item-transactions/new-transaction.js') }}"></script>
+
   <script src="{{ Vite::asset('resources/vendor/tom-select/dist/js/tom-select.complete.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/hs-add-field/dist/hs-add-field.min.js') }}"></script>
   <script src="{{ Vite::asset('resources/vendor/daterangepicker/moment.min.js') }}"></script>
@@ -290,15 +291,15 @@
 
       daterangepickerClear.on('apply.daterangepicker', function(ev, picker) {
         $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
-        filterDatatableAndCount(newRequestsDatatable, "#newRequestsFilterCount");
+        filterDatatableAndCount(newTransactionDatatable, "#newTransactionFilterCount");
       });
 
       daterangepickerClear.on('cancel.daterangepicker', function() {
         $(this).val('');
-        filterDatatableAndCount(newRequestsDatatable, "#newRequestsFilterCount");
+        filterDatatableAndCount(newTransactionDatatable, "#newTransactionFilterCount");
       });
 
-      HSCore.components.HSDatatables.init($("#borrowLogsDatatable"), {
+      HSCore.components.HSDatatables.init($("#newTransactionDatatable"), {
         dom: "Bfrtip",
         buttons: [{
           extend: "copy",
@@ -338,23 +339,23 @@
         }
       });
 
-      const newRequestsDatatable = HSCore.components.HSDatatables.getItem(0);
+      const newTransactionDatatable = HSCore.components.HSDatatables.getItem(0);
 
       const exportButtons = {
-        "#borrowLogsExportCopy": ".buttons-copy",
-        "#borrowLogsExportPrint": ".buttons-print",
-        "#borrowLogsExportExcel": ".buttons-excel",
-        "#borrowLogsExportPdf": ".buttons-pdf"
+        "#newTransactionExportCopy": ".buttons-copy",
+        "#newTransactionExportPrint": ".buttons-print",
+        "#newTransactionExportExcel": ".buttons-excel",
+        "#newTransactionExportPdf": ".buttons-pdf"
       };
 
       $.each(exportButtons, function(exportId, exportClass) {
         $(exportId).click(function() {
-          newRequestsDatatable.button(exportClass).trigger();
+          newTransactionDatatable.button(exportClass).trigger();
         });
       });
 
       $(".js-datatable-filter").on("change", function() {
-        filterDatatableAndCount(newRequestsDatatable, "#borrowLogsFilterCount");
+        filterDatatableAndCount(newTransactionDatatable, "#newTransactionFilterCount");
       });
     });
 
@@ -380,16 +381,62 @@
         // =======================================================
         HSCore.components.HSTomSelect.init(".js-select");
 
-
         // INITIALIZATION OF ADD FIELD
         // =======================================================
         new HSAddField('.js-add-field', {
           addedField: field => {
-            HSCore.components.HSTomSelect.init(field.querySelector('.js-select-dynamic'))
+
+            HSCore.components.HSTomSelect.init(field.querySelector('.js-select-dynamic'));
+
+            const selectElement = field.querySelector('select[name="items[]"]');
+            const inputElement = field.querySelector('input[name="quantities[]"]');
+
+            if (selectElement) {
+              selectElement.setAttribute('required', 'true');
+            }
+
+            if (inputElement) {
+              inputElement.setAttribute('required', 'true');
+            }
+
+            selectElement.addEventListener('change', function () {
+              const selectedOption = selectElement.selectedOptions[0];
+              const maxQuantity = selectedOption ? selectedOption.getAttribute('data-max') : 0;
+
+              inputElement.setAttribute('max', maxQuantity);
+            });
           }
         });
 
+
       };
     })();
+
+    $(document).ready(function() {
+      const itemSelects = $(".js-select-dynamic");
+
+      itemSelects.on("change", function() {
+        const selectedItems = [];
+
+        itemSelects.each(function() {
+          const value = $(this).val();
+          if (value) {
+            selectedItems.push(value);
+          }
+        });
+
+        itemSelects.each(function() {
+          const currentItemValue = $(this).val();
+          $(this).find("option").each(function() {
+            const optionValue = $(this).val();
+            if (selectedItems.includes(optionValue) && optionValue !== currentItemValue) {
+              $(this).attr("disabled", "disabled");
+            } else {
+              $(this).removeAttr("disabled");
+            }
+          });
+        });
+      });
+    });
   </script>
 @endpush
