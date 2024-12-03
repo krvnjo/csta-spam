@@ -188,7 +188,6 @@ Route::middleware(['auth', 'noCache', 'checkAuth'])->group(function () {
         Route::get('/view', 'show')->name('view')->middleware('expectsJson');
         Route::get('/edit', 'edit')->name('edit')->middleware('expectsJson');
         Route::patch('/', 'update')->name('update');
-        Route::patch('/release', 'release')->name('release');
         Route::delete('/', 'destroy')->name('delete');
         Route::fallback(function () {
             abort(404);

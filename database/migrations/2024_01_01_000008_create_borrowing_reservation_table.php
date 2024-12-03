@@ -22,6 +22,7 @@ return new class extends Migration
             $table->foreignIdFor(Progress::class, 'prog_id')->default(1)->constrained('progresses')->cascadeOnDelete();
             $table->text('remarks')->nullable();
             $table->date('borrow_date')->nullable();
+            $table->date('due_date')->nullable();
             $table->dateTime('approved_at')->nullable();
             $table->dateTime('released_at')->nullable();
             $table->dateTime('returned_at')->nullable();

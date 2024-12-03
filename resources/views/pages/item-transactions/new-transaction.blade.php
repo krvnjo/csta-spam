@@ -21,7 +21,7 @@
               <li class="breadcrumb-item"><a class="breadcrumb-link" data-route="dashboard.index" href="{{ route('dashboard.index') }}">Home</a></li>
               <li class="breadcrumb-item active">Item Transactions</li>
             </ol>
-            <h1 class="page-header-title">New Transaction</h1>
+            <h1 class="page-header-title">Item Transactions</h1>
             <p class="page-header-text">Create and monitor item transactions.</p>
           </div>
 
@@ -151,7 +151,6 @@
                  "targets": [8],
                  "orderable": false
                }],
-              "order": [7, "desc"],
               "info": {
                 "totalQty": "#newTransactionDatatableWithPagination"
               },
@@ -176,9 +175,9 @@
             </tr>
             </thead>
             <tbody>
-            @foreach ($transactions as $transaction)
+            @foreach ($transactions->sortByDesc('created_at') as $transaction)
               <tr>
-                <td class="d-none" data-borrow-id="{{ Crypt::encryptString($transaction->id) }}"></td>
+                <td class="d-none" data-transaction-id="{{ Crypt::encryptString($transaction->id) }}"></td>
                 <td>{{ $transaction->transaction_num }}</td>
                 <td>{{ $transaction->requester->department->code }} | {{ $transaction->requester->name }}</td>
                 <td>
@@ -210,7 +209,7 @@
                 <td><i class="bi-calendar-event me-1"></i>{{ \Carbon\Carbon::parse($transaction->transaction_date)->format('F j, Y') }}</td>
                 <td>
                   <div class="btn-group position-static">
-                    <button class="btn btn-white btn-sm" type="button"><i class="bi-eye"></i> View</button>
+                    <button class="btn btn-white btn-sm btnViewItem" type="button"><i class="bi-eye"></i> View</button>
                   </div>
                 </td>
               </tr>
@@ -258,6 +257,7 @@
 
 @section('sec-content')
 <x-item-transactions.add-transaction :requesters="$requesters" :items="$items" />
+<x-item-transactions.view-transaction />
 @endsection
 
 @push('scripts')
