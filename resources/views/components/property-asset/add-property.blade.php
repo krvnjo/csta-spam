@@ -18,7 +18,7 @@
       <form id="frmAddProperty" method="post" novalidate enctype="multipart/form-data">
         @csrf
         <div class="modal-body custom-modal-body">
-          <div id="alertContainer" class="alert alert-info" role="alert" style="display: none;">
+          <div class="alert alert-info" id="alertContainer" role="alert" style="display: none;">
             <small><i class="bi bi-arrow-down-circle me-2"></i>Additional fields are available below. Please scroll down to fill them out.</small>
           </div>
           <div class="row">
@@ -59,7 +59,12 @@
                     <div class="col-12">
                       <div class="form-floating">
                         <textarea class="form-control" id="txtSpecification" name="specification" style="height: 3.5rem; resize: vertical; min-height: 3.5rem; max-height: 5rem;" placeholder="Specification"></textarea>
-                        <label for="txtSpecification">Specifications</label>
+                        <label for="txtSpecification">
+                          Specifications:
+                          <span class="text-muted">
+                            Tip! Use a key-value pair format separated by commas (e.g., Material: Steel, Size: Medium)
+                          </span>
+                        </label>
                         <span class="invalid-feedback" id="valAddSpecification"></span>
                       </div>
                     </div>
@@ -90,12 +95,14 @@
                           <div class="col-auto">
                             <a class="js-minus btn btn-outline-secondary btn-xs btn-icon rounded-circle">
                               <svg width="8" height="2" viewBox="0 0 8 2" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M0 1C0 0.723858 0.223858 0.5 0.5 0.5H7.5C7.77614 0.5 8 0.723858 8 1C8 1.27614 7.77614 1.5 7.5 1.5H0.5C0.223858 1.5 0 1.27614 0 1Z" fill="currentColor"/>
+                                <path d="M0 1C0 0.723858 0.223858 0.5 0.5 0.5H7.5C7.77614 0.5 8 0.723858 8 1C8 1.27614 7.77614 1.5 7.5 1.5H0.5C0.223858 1.5 0 1.27614 0 1Z" fill="currentColor" />
                               </svg>
                             </a>
                             <a class="js-plus btn btn-outline-secondary btn-xs btn-icon rounded-circle">
                               <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M4 0C4.27614 0 4.5 0.223858 4.5 0.5V3.5H7.5C7.77614 3.5 8 3.72386 8 4C8 4.27614 7.77614 4.5 7.5 4.5H4.5V7.5C4.5 7.77614 4.27614 8 4 8C3.72386 8 3.5 7.77614 3.5 7.5V4.5H0.5C0.223858 4.5 0 4.27614 0 4C0 3.72386 0.223858 3.5 0.5 3.5H3.5V0.5C3.5 0.223858 3.72386 0 4 0Z" fill="currentColor"/>
+                                <path
+                                  d="M4 0C4.27614 0 4.5 0.223858 4.5 0.5V3.5H7.5C7.77614 3.5 8 3.72386 8 4C8 4.27614 7.77614 4.5 7.5 4.5H4.5V7.5C4.5 7.77614 4.27614 8 4 8C3.72386 8 3.5 7.77614 3.5 7.5V4.5H0.5C0.223858 4.5 0 4.27614 0 4C0 3.72386 0.223858 3.5 0.5 3.5H3.5V0.5C3.5 0.223858 3.72386 0 4 0Z"
+                                  fill="currentColor" />
                               </svg>
                             </a>
                           </div>
@@ -147,33 +154,33 @@
               </div>
               <div id="nonConsumableFields1" style="display: none;">
                 <div class="card mb-4">
-                <div class="card-header bg-light">
-                  <h5 class="card-title mb-0">Residual Value & Useful Life <span class="text-muted ps-2" style="font-size: 10pt">Tip: Hover for info</span></h5>
-                </div>
-                <div class="card-body">
-                  <div class="row g-3">
-                    <div class="col-md-6">
-                      <div class="input-group">
-                        <span class="input-group-text">₱</span>
-                        <div class="form-floating">
-                          <input class="form-control text-end" id="txtResidualValue" name="residualValue" type="number" step="0.01" min="0" placeholder="Residual Value"
-                                 data-bs-toggle="tooltip" title="The residual value is the estimated value of the asset at the end of its useful life."/>
-                          <label for="txtResidualValue">Residual Value</label>
+                  <div class="card-header bg-light">
+                    <h5 class="card-title mb-0">Residual Value & Useful Life <span class="text-muted ps-2" style="font-size: 10pt">Tip: Hover for info</span></h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="row g-3">
+                      <div class="col-md-6">
+                        <div class="input-group">
+                          <span class="input-group-text">₱</span>
+                          <div class="form-floating">
+                            <input class="form-control text-end" id="txtResidualValue" name="residualValue" data-bs-toggle="tooltip" type="number"
+                              title="The residual value is the estimated value of the asset at the end of its useful life." step="0.01" min="0" placeholder="Residual Value" />
+                            <label for="txtResidualValue">Residual Value</label>
+                          </div>
+                          <span class="invalid-feedback d-block" id="valAddResidualValue"></span>
                         </div>
-                        <span class="invalid-feedback d-block" id="valAddResidualValue"></span>
                       </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="form-floating">
-                        <input class="form-control" id="txtUsefulLife" name="usefulLife" type="number" min="0" placeholder="Useful Life"
-                               data-bs-toggle="tooltip" title="The useful life refers to the expected number of years an asset will be in use."/>
-                        <label for="txtUsefulLife">Useful Life (years)</label>
-                        <span class="invalid-feedback" id="valAddUsefulLife"></span>
+                      <div class="col-md-6">
+                        <div class="form-floating">
+                          <input class="form-control" id="txtUsefulLife" name="usefulLife" data-bs-toggle="tooltip" type="number"
+                            title="The useful life refers to the expected number of years an asset will be in use." min="0" placeholder="Useful Life" />
+                          <label for="txtUsefulLife">Useful Life (years)</label>
+                          <span class="invalid-feedback" id="valAddUsefulLife"></span>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
               </div>
             </div>
 
@@ -202,7 +209,7 @@
                       <select class="js-select form-select" id="cbxCondition" name="condition" required>
                         <option value="" disabled selected>Select Condition...</option>
                         @foreach ($conditions as $condition)
-                          <option value="{{ $condition->id }}" data-name="{{ $condition->name }}" data-description="{{ $condition->description }}">
+                          <option data-name="{{ $condition->name }}" data-description="{{ $condition->description }}" value="{{ $condition->id }}">
                             {{ $condition->name }}
                           </option>
                         @endforeach
@@ -282,6 +289,7 @@
   }
 
   .form-floating {
+
     .ts-wrapper.form-control,
     .ts-wrapper.form-select {
       height: auto !important;
@@ -293,17 +301,17 @@
       padding-bottom: 0.625rem;
     }
 
-    .ts-wrapper.form-control ~ label,
-    .ts-wrapper.form-select ~ label {
+    .ts-wrapper.form-control~label,
+    .ts-wrapper.form-select~label {
       transform: scale(1) translateY(0) translateX(0);
       color: rgba(var(--bs-body-color-rgb), 1);
     }
 
-    .ts-wrapper.form-control.focus ~ label,
-    .ts-wrapper.form-control.full ~ label,
-    .ts-wrapper.form-select.focus ~ label,
-    .ts-wrapper.form-select.full ~ label,
-    .ts-wrapper.form-select.has-items ~ label {
+    .ts-wrapper.form-control.focus~label,
+    .ts-wrapper.form-control.full~label,
+    .ts-wrapper.form-select.focus~label,
+    .ts-wrapper.form-select.full~label,
+    .ts-wrapper.form-select.has-items~label {
       transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
       color: rgba(var(--bs-body-color-rgb), 0.65);
     }
@@ -313,5 +321,3 @@
     }
   }
 </style>
-
-

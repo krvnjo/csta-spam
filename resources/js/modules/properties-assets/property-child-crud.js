@@ -65,6 +65,7 @@ $(document).ready(function () {
         $('#cbxEditCondition')[0].tomselect.setValue(response.condi_id);
         $('#txtEditDateAcquired').val(response.acquiredDate);
         $('#txtEditWarrantyDate').val(response.warrantyDate);
+        $('#txtEditComponentNotes').val(response.componentNotes);
       },
       error: function (response) {
         showResponseAlert(response, 'error');
@@ -86,6 +87,7 @@ $(document).ready(function () {
     editFormData.append('condition', $('#cbxEditCondition').val());
     editFormData.append('acquiredDate', $('#txtEditDateAcquired').val());
     editFormData.append('warranty', $('#txtEditWarrantyDate').val());
+    editFormData.append('componentNotes', $('#txtEditComponentNotes').val());
 
     $.ajax({
       url: '/properties-assets/' + parentId + '/child-stocks/',
@@ -121,6 +123,10 @@ $(document).ready(function () {
           if (response.errors.warranty) {
             $('#txtEditWarrantyDate').addClass('is-invalid');
             $('#valEditWarranty').text(response.errors.warranty[0]);
+          }
+          if (response.errors.componentNotes) {
+            $('#txtEditComponentNotes').addClass('is-invalid');
+            $('#valEditComponentNotes').text(response.errors.componentNotes[0]);
           }
         }
       },
@@ -199,6 +205,7 @@ $(document).ready(function () {
             : `<span class="badge bg-soft-danger text-danger"><span class="legend-indicator bg-danger"></span>Inactive</span>`;
         $('#lblViewStatus').html(childStatus);
         $('#lblViewRemarks').text(response.remarks || '-');
+        $('#lblViewComponentNotes').text(response.componentNotes || '-');
         $('#lblViewAcquiredType').text(response.acquiredType);
         $('#lblViewItemStatus').text(response.itemStatus);
         $('#lblViewAcquiredDate').text(response.acquiredDate);
@@ -206,6 +213,7 @@ $(document).ready(function () {
         $('#lblViewWarrantyDate').text(response.warrantyDate);
         $('#lblViewDateCreated').text(response.dateCreated);
         $('#lblViewDateUpdated').text(response.dateUpdated);
+
       },
       error: function (response) {
         showResponseAlert(response, 'error');

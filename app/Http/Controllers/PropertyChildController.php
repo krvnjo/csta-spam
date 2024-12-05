@@ -187,6 +187,7 @@ class PropertyChildController extends Controller
                 'condition' => $child->condition->name ?? 'Consumable Item',
                 'itemStatus' => $child->status->name ?? 'Consumable Item',
                 'remarks' => $child->remarks ?? "No remarks provided",
+                'componentNotes' => $child->component_notes ?? "No component notes provided",
                 'acquiredType' => $acquiredType,
                 'acquiredDate' => $child->acq_date ? Carbon::parse($child->acq_date)->format('F d, Y') : "No acquired date provided",
                 'status' => $child->is_active,
@@ -224,6 +225,7 @@ class PropertyChildController extends Controller
                 'remarks' => $propertyChild->remarks,
                 'type_id' => $propertyChild->type_id,
                 'condi_id' => $propertyChild->condi_id,
+                'componentNotes' => $propertyChild->component_notes,
                 'acquiredDate' => $propertyChild->acq_date,
                 'warrantyDate' => $propertyChild->warranty_date,
             ]);
@@ -244,7 +246,7 @@ class PropertyChildController extends Controller
         try {
             $children = PropertyChild::query()->findOrFail(Crypt::decryptString($request->input('id')));
 
-            if ($request->has(['serialNumber', 'remarks', 'acquiredType', 'condition', 'acquiredDate', 'warranty',])) {
+            if ($request->has(['serialNumber', 'remarks', 'acquiredType', 'condition', 'acquiredDate', 'warranty', 'componentNotes'])) {
                 $childrenValidationMessages = [
                     'remarks.regex' => 'The remarks may only contain letters, spaces, and hyphens.',
                     'remarks.min' => 'The remarks must be at least :min characters.',
@@ -264,7 +266,12 @@ class PropertyChildController extends Controller
                     'serialNumber.unique' => 'This serial number already exists.',
 
                     'warranty.after_or_equal' => 'The warranty date must be today or a future date.',
-                    'warranty.before_or_equal' => 'The warranty date cannot be later than December 31, 2100.'
+                    'warranty.before_or_equal' => 'The warranty date cannot be later than December 31, 2100.',
+
+                    'componentNotes.regex' => 'The notes may only contain letters, spaces, and hyphens.',
+                    'componentNotes.min' => 'The notes must be at least :min characters.',
+                    'componentNotes.max' => 'The notes may not be greater than :max characters.',
+
                 ];
 
                 $childrenValidator = Validator::make($request->all(), [
@@ -299,6 +306,12 @@ class PropertyChildController extends Controller
                     'condition' => [
                         'required'
                     ],
+                    'componentNotes' => [
+                        'nullable',
+                        'regex:/^[A-Za-z0-9%,\- ×."\'\":]+$/',
+                        'min:3',
+                        'max:70'
+                    ],
                 ], $childrenValidationMessages);
 
                 if ($childrenValidator->fails()) {
@@ -308,11 +321,13 @@ class PropertyChildController extends Controller
                     ]);
                 } else {
                     $children->serial_num = $request->input('serialNumber');
-                    $children->remarks = $request->input('remarks');
+
+                    $children->remarks = ucwords(strtolower(trim($request->input('remarks'))));
                     $children->type_id = $request->input('acquiredType');
                     $children->condi_id = $request->input('condition');
                     $children->acq_date = $request->input('acquiredDate');
                     $children->warranty_date = $request->input('warranty');
+                    $children->component_notes = ucwords(strtolower(trim($request->input('componentNotes'))));
                 }
             } else {
                 $children->is_active = $request->input('status');
