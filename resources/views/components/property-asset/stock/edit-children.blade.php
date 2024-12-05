@@ -102,6 +102,16 @@
               </div>
             </div>
           </div>
+
+          <div class="row">
+            <div class="col">
+              <div class="mb-3">
+                <label for="txtEditComponentNotes" class="form-label">Component Notes</label>
+                <textarea class="form-control" id="txtEditComponentNotes" name="componentNotes" style="height: 3.5rem; resize: vertical; min-height: 3.5rem; max-height: 5rem;" placeholder="Component Notes"></textarea>
+                <span class="invalid-feedback" id="valEditComponentNotes"></span>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="modal-footer">

@@ -52,6 +52,7 @@ return new class extends Migration {
             $table->foreignIdFor(Condition::class, 'condi_id')->nullable()->constrained('conditions')->cascadeOnDelete();
             $table->foreignIdFor(Status::class, 'status_id')->nullable()->constrained('statuses')->cascadeOnDelete();
             $table->string('remarks')->nullable();
+            $table->string('component_notes')->nullable();
             $table->unsignedTinyInteger('is_active')->default(1);
             $table->timestamps();
         });

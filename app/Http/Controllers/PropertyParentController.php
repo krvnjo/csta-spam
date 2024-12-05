@@ -98,7 +98,7 @@ class PropertyParentController extends Controller
             'itemType' => ['required'],
             'quantity' => ['required', 'integer', 'min:1', 'max:500'],
             'unit' => ['required'],
-            'specification' => ['required', 'regex:/^[A-Za-z0-9%,\- ×."\'"]+$/', 'min:3', 'max:100'],
+            'specification' => ['required', 'regex:/^[A-Za-z0-9%,\- ×."\'\":]+$/', 'min:3', 'max:100'],
             'description' => ['nullable', 'regex:/^[A-Za-z0-9%,\- ×."\'"]+$/', 'min:3', 'max:100'],
             'purchasePrice' => ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/', 'min:1'],
         ];
@@ -415,7 +415,7 @@ class PropertyParentController extends Controller
                 ],
                 'specification' => [
                     'required',
-                    'regex:/^[A-Za-z0-9%,\- ×."\'"]+$/',
+                    'regex:/^[A-Za-z0-9%,\- ×."\'\":]+$/',
                     'min:3',
                     'max:100'
                 ],

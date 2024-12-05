@@ -25,6 +25,7 @@ class PropertyChild extends Model
         'status_id',
         'ticket_id',
         'remarks',
+        'component_notes',
         'is_active'
     ];
     protected $casts = [
