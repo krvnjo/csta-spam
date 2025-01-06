@@ -8,8 +8,7 @@
         "php": "^8.2",
         "laravel/framework": "11.31.0",
         "laravel/tinker": "^2.9",
-        "simplesoftwareio/simple-qrcode": "~4",
-        "spatie/laravel-backup": "^9.2"
+        "simplesoftwareio/simple-qrcode": "~4"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.14",
