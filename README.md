@@ -10,7 +10,7 @@ efficiency, reduces errors, and supports optimal resource allocation.
 
 ## Main Features
 
-- Dashboard
+- Dashboardd
 - Item Inventory Management
 - Borrowing and Reservation
 - Repair and Maintenance
