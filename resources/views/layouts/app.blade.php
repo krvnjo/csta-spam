@@ -23,7 +23,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- JS Window Config -->
-    <script src="{{ Vite::asset('resources/js/hs-window-config') }}"></script>
+    <script src="{{ Vite::asset('resources/js/hs-window-config.js') }}"></script>
   </head>
   <body class="has-navbar-vertical-aside navbar-vertical-aside-show-xl footer-offset">
     <!-- JS Appearance -->
