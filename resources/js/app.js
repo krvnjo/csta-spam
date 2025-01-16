@@ -2,6 +2,9 @@ import './bootstrap';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import Swal from 'sweetalert2';
 
+import.meta.glob(['../img/**/*.{svg,png,jpg,jpeg,gif}']);
+import.meta.glob(['../svg/**/*.{svg,png,jpg,jpeg,gif}']);
+
 window.Swal = Swal;
 
 $(document).ready(function () {
