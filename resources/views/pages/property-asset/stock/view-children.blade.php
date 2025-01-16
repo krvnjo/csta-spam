@@ -5,9 +5,9 @@
 @endsection
 
 @push('styles')
-  <link href="{{ Vite::asset('resources/vendor/daterangepicker/daterangepicker.css') }}" rel="stylesheet">
-  <link href="{{ Vite::asset('resources/vendor/jsvectormap/dist/css/jsvectormap.min.css') }}" rel="stylesheet">
-  <link href="{{ Vite::asset('resources/vendor/tom-select/dist/css/tom-select.bootstrap5.css') }}" rel="stylesheet">
+  <link href="{{ asset('vendor/daterangepicker/daterangepicker.css') }}" rel="stylesheet">
+  <link href="{{ asset('vendor/jsvectormap/dist/css/jsvectormap.min.css') }}" rel="stylesheet">
+  <link href="{{ asset('vendor/tom-select/dist/css/tom-select.bootstrap5.css') }}" rel="stylesheet">
 @endpush
 
 @section('main-content')
@@ -409,7 +409,8 @@
                     @endif
                   </td>
                   <td>{{ $propertyChild->designation->name ?? 'No designation provided' }}</td>
-                  <td data-full-value="{{ $propertyChild->designation->department->name ?? 'No designation provided' }}">{{ $propertyChild->designation->department->code ?? 'No department provided' }}</td>
+                  <td data-full-value="{{ $propertyChild->designation->department->name ?? 'No designation provided' }}">
+                    {{ $propertyChild->designation->department->code ?? 'No department provided' }}</td>
                   @if ($propertyParents->is_consumable)
                     <td class="d-none"></td>
                     <td class="d-none"></td>
@@ -461,7 +462,7 @@
                               <button class="dropdown-item btnEditPropChild" type="button">
                                 <i class="bi-pencil-fill me-1 dropdown-item-icon"></i>Edit
                               </button>
-                              @if($propertyChild->status->id == 9)
+                              @if ($propertyChild->status->id == 9)
                                 <button class="dropdown-item btnDisposed" data-dispose-id="{{ $propertyChild->id }}" type="button">
                                   <i class="bi bi-database-exclamation dropdown-item-icon text-danger"></i> Dispose
                                 </button>
@@ -563,7 +564,7 @@
   <x-property-asset.stock.edit-children :propertyParents="$propertyParents" :propertyChildren="$propertyChildren" :conditions="$conditions" :acquisitions="$acquisitions" />
   <x-property-asset.stock.view-details-children />
   <x-property-asset.stock.move-children :designations="$designations" />
-  <x-property-asset.stock.return-children :conditions="$conditions"  />
+  <x-property-asset.stock.return-children :conditions="$conditions" />
 
   {{--  <x-modals.edit-property-child :propertyParents="$propertyParents" :conditions="$conditions" :acquisitions="$acquisitions" :propertyChildren="$propertyChildren" /> --}}
   {{--  <x-modals.move-property :designations="$designations" :departments="$departments" :statuses="$statuses"/> --}}
@@ -573,24 +574,24 @@
   <!-- JS Other Plugins -->
   <script src="{{ Vite::asset('resources/js/modules/properties-assets/property-child-crud.js') }}"></script>
 
-  <script src="{{ Vite::asset('resources/vendor/hs-toggle-password/dist/js/hs-toggle-password.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/hs-file-attach/dist/hs-file-attach.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/hs-nav-scroller/dist/hs-nav-scroller.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/hs-step-form/dist/hs-step-form.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/hs-counter/dist/hs-counter.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/appear/dist/appear.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/imask/dist/imask.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/tom-select/dist/js/tom-select.complete.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/datatables/media/js/jquery.dataTables.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/datatables.net.extensions/select/select.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.flash.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/jszip/dist/jszip.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/pdfmake/build/pdfmake.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/pdfmake/build/vfs_fonts.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
+  <script src="{{ asset('vendor/hs-toggle-password/dist/js/hs-toggle-password.js') }}"></script>
+  <script src="{{ asset('vendor/hs-file-attach/dist/hs-file-attach.min.js') }}"></script>
+  <script src="{{ asset('vendor/hs-nav-scroller/dist/hs-nav-scroller.min.js') }}"></script>
+  <script src="{{ asset('vendor/hs-step-form/dist/hs-step-form.min.js') }}"></script>
+  <script src="{{ asset('vendor/hs-counter/dist/hs-counter.min.js') }}"></script>
+  <script src="{{ asset('vendor/appear/dist/appear.min.js') }}"></script>
+  <script src="{{ asset('vendor/imask/dist/imask.min.js') }}"></script>
+  <script src="{{ asset('vendor/tom-select/dist/js/tom-select.complete.min.js') }}"></script>
+  <script src="{{ asset('vendor/datatables/media/js/jquery.dataTables.min.js') }}"></script>
+  <script src="{{ asset('vendor/datatables.net.extensions/select/select.min.js') }}"></script>
+  <script src="{{ asset('vendor/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
+  <script src="{{ asset('vendor/datatables.net-buttons/js/buttons.flash.min.js') }}"></script>
+  <script src="{{ asset('vendor/jszip/dist/jszip.min.js') }}"></script>
+  <script src="{{ asset('vendor/pdfmake/build/pdfmake.min.js') }}"></script>
+  <script src="{{ asset('vendor/pdfmake/build/vfs_fonts.js') }}"></script>
+  <script src="{{ asset('vendor/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
+  <script src="{{ asset('vendor/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
+  <script src="{{ asset('vendor/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
 
   <!-- JS Themes -->
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>

@@ -5,8 +5,8 @@
 @endsection
 
 @push('styles')
-  <link href="{{ Vite::asset('resources/vendor/daterangepicker/daterangepicker.css') }}" rel="stylesheet">
-  <link href="{{ Vite::asset('resources/vendor/tom-select/dist/css/tom-select.bootstrap5.css') }}" rel="stylesheet">
+  <link href="{{ asset('vendor/daterangepicker/daterangepicker.css') }}" rel="stylesheet">
+  <link href="{{ asset('vendor/tom-select/dist/css/tom-select.bootstrap5.css') }}" rel="stylesheet">
 @endpush
 
 @section('main-content')
@@ -118,155 +118,155 @@
       </div>
       <!-- End Card -->
 
-{{--      <!-- Card -->--}}
-{{--      <div class="card mb-3 mb-lg-5">--}}
-{{--        <!-- Header -->--}}
-{{--        <div class="card-header card-header-content-sm-between">--}}
-{{--          <h4 class="card-header-title mb-2 mb-sm-0">Items Requisition Tracker<i class="bi-question-circle text-body ms-1" data-bs-toggle="tooltip" data-bs-placement="top"--}}
-{{--              title="(Borrowing Trend) Indicates the timely item borrowing movements. "></i></h4>--}}
+      {{--      <!-- Card --> --}}
+      {{--      <div class="card mb-3 mb-lg-5"> --}}
+      {{--        <!-- Header --> --}}
+      {{--        <div class="card-header card-header-content-sm-between"> --}}
+      {{--          <h4 class="card-header-title mb-2 mb-sm-0">Items Requisition Tracker<i class="bi-question-circle text-body ms-1" data-bs-toggle="tooltip" data-bs-placement="top" --}}
+      {{--              title="(Borrowing Trend) Indicates the timely item borrowing movements. "></i></h4> --}}
 
-{{--          <div class="d-grid d-sm-flex gap-2">--}}
-{{--            <!-- Daterangepicker -->--}}
-{{--            <button class="btn btn-white btn-sm dropdown-toggle" id="js-daterangepicker-predefined">--}}
-{{--              <i class="bi-calendar-week"></i>--}}
-{{--              <span class="js-daterangepicker-predefined-preview ms-1"></span>--}}
-{{--            </button>--}}
-{{--            <!-- End Daterangepicker -->--}}
-{{--          </div>--}}
-{{--        </div>--}}
-{{--        <!-- End Header -->--}}
+      {{--          <div class="d-grid d-sm-flex gap-2"> --}}
+      {{--            <!-- Daterangepicker --> --}}
+      {{--            <button class="btn btn-white btn-sm dropdown-toggle" id="js-daterangepicker-predefined"> --}}
+      {{--              <i class="bi-calendar-week"></i> --}}
+      {{--              <span class="js-daterangepicker-predefined-preview ms-1"></span> --}}
+      {{--            </button> --}}
+      {{--            <!-- End Daterangepicker --> --}}
+      {{--          </div> --}}
+      {{--        </div> --}}
+      {{--        <!-- End Header --> --}}
 
-{{--        <!-- Body -->--}}
-{{--        <div class="card-body">--}}
-{{--          <div class="row col-lg-divider">--}}
-{{--            <div class="col-lg-9 mb-5 mb-lg-0">--}}
-{{--              <!-- Bar Chart -->--}}
-{{--              <div class="chartjs-custom mb-4">--}}
-{{--                <canvas class="js-chart" id="ecommerce-sales"--}}
-{{--                  data-hs-chartjs-options='{--}}
-{{--                          "type": "bar",--}}
-{{--                          "data": {--}}
-{{--                            "labels": ["8AM","9AM","10AM","11AM","1PM","2PM","3PM","4PM","5PM"],--}}
-{{--                            "datasets": [{--}}
-{{--                              "data": [200, 300, 290, 350, 150, 350, 300, 100, 125, 220, 200, 300, 290, 350, 150, 350, 300, 100, 125, 220, 225],--}}
-{{--                              "backgroundColor": "#377dff",--}}
-{{--                              "hoverBackgroundColor": "#377dff",--}}
-{{--                              "borderColor": "#377dff",--}}
-{{--                              "maxBarThickness": "10"--}}
-{{--                            },--}}
-{{--                            {--}}
-{{--                              "data": [150, 230, 382, 204, 169, 290, 300, 100, 300, 225, 120, 150, 230, 382, 204, 169, 290, 300, 100, 300, 140],--}}
-{{--                              "backgroundColor": "#e7eaf3",--}}
-{{--                              "borderColor": "#e7eaf3",--}}
-{{--                              "maxBarThickness": "10"--}}
-{{--                            }]--}}
-{{--                          },--}}
-{{--                          "options": {--}}
-{{--                            "scales": {--}}
-{{--                              "y": {--}}
-{{--                                "grid": {--}}
-{{--                                  "color": "#e7eaf3",--}}
-{{--                                  "drawBorder": false,--}}
-{{--                                  "zeroLineColor": "#e7eaf3"--}}
-{{--                                },--}}
-{{--                                "ticks": {--}}
-{{--                                  "beginAtZero": true,--}}
-{{--                                  "stepSize": 100,--}}
-{{--                                  "color": "#97a4af",--}}
-{{--                                    "font": {--}}
-{{--                                      "size": 12,--}}
-{{--                                      "family": "Open Sans, sans-serif"--}}
-{{--                                    },--}}
-{{--                                  "padding": 10--}}
-{{--                                }--}}
-{{--                              },--}}
-{{--                              "x": {--}}
-{{--                                "grid": {--}}
-{{--                                  "display": false,--}}
-{{--                                  "drawBorder": false--}}
-{{--                                },--}}
-{{--                                "ticks": {--}}
-{{--                                  "color": "#97a4af",--}}
-{{--                                    "font": {--}}
-{{--                                      "size": 12,--}}
-{{--                                      "family": "Open Sans, sans-serif"--}}
-{{--                                    },--}}
-{{--                                  "padding": 5--}}
-{{--                                },--}}
-{{--                                "categoryPercentage": 0.5,--}}
-{{--                                "maxBarThickness": "10"--}}
-{{--                              }--}}
-{{--                            },--}}
-{{--                            "cornerRadius": 2,--}}
-{{--                            "plugins": {--}}
-{{--                              "tooltip": {--}}
-{{--                                "hasIndicator": true,--}}
-{{--                                "mode": "index",--}}
-{{--                                "intersect": false--}}
-{{--                              }--}}
-{{--                            },--}}
-{{--                            "hover": {--}}
-{{--                              "mode": "nearest",--}}
-{{--                              "intersect": true--}}
-{{--                            }--}}
-{{--                          }--}}
-{{--                        }'--}}
-{{--                  style="height: 15rem;"></canvas>--}}
-{{--              </div>--}}
-{{--              <!-- End Bar Chart -->--}}
+      {{--        <!-- Body --> --}}
+      {{--        <div class="card-body"> --}}
+      {{--          <div class="row col-lg-divider"> --}}
+      {{--            <div class="col-lg-9 mb-5 mb-lg-0"> --}}
+      {{--              <!-- Bar Chart --> --}}
+      {{--              <div class="chartjs-custom mb-4"> --}}
+      {{--                <canvas class="js-chart" id="ecommerce-sales" --}}
+      {{--                  data-hs-chartjs-options='{ --}}
+      {{--                          "type": "bar", --}}
+      {{--                          "data": { --}}
+      {{--                            "labels": ["8AM","9AM","10AM","11AM","1PM","2PM","3PM","4PM","5PM"], --}}
+      {{--                            "datasets": [{ --}}
+      {{--                              "data": [200, 300, 290, 350, 150, 350, 300, 100, 125, 220, 200, 300, 290, 350, 150, 350, 300, 100, 125, 220, 225], --}}
+      {{--                              "backgroundColor": "#377dff", --}}
+      {{--                              "hoverBackgroundColor": "#377dff", --}}
+      {{--                              "borderColor": "#377dff", --}}
+      {{--                              "maxBarThickness": "10" --}}
+      {{--                            }, --}}
+      {{--                            { --}}
+      {{--                              "data": [150, 230, 382, 204, 169, 290, 300, 100, 300, 225, 120, 150, 230, 382, 204, 169, 290, 300, 100, 300, 140], --}}
+      {{--                              "backgroundColor": "#e7eaf3", --}}
+      {{--                              "borderColor": "#e7eaf3", --}}
+      {{--                              "maxBarThickness": "10" --}}
+      {{--                            }] --}}
+      {{--                          }, --}}
+      {{--                          "options": { --}}
+      {{--                            "scales": { --}}
+      {{--                              "y": { --}}
+      {{--                                "grid": { --}}
+      {{--                                  "color": "#e7eaf3", --}}
+      {{--                                  "drawBorder": false, --}}
+      {{--                                  "zeroLineColor": "#e7eaf3" --}}
+      {{--                                }, --}}
+      {{--                                "ticks": { --}}
+      {{--                                  "beginAtZero": true, --}}
+      {{--                                  "stepSize": 100, --}}
+      {{--                                  "color": "#97a4af", --}}
+      {{--                                    "font": { --}}
+      {{--                                      "size": 12, --}}
+      {{--                                      "family": "Open Sans, sans-serif" --}}
+      {{--                                    }, --}}
+      {{--                                  "padding": 10 --}}
+      {{--                                } --}}
+      {{--                              }, --}}
+      {{--                              "x": { --}}
+      {{--                                "grid": { --}}
+      {{--                                  "display": false, --}}
+      {{--                                  "drawBorder": false --}}
+      {{--                                }, --}}
+      {{--                                "ticks": { --}}
+      {{--                                  "color": "#97a4af", --}}
+      {{--                                    "font": { --}}
+      {{--                                      "size": 12, --}}
+      {{--                                      "family": "Open Sans, sans-serif" --}}
+      {{--                                    }, --}}
+      {{--                                  "padding": 5 --}}
+      {{--                                }, --}}
+      {{--                                "categoryPercentage": 0.5, --}}
+      {{--                                "maxBarThickness": "10" --}}
+      {{--                              } --}}
+      {{--                            }, --}}
+      {{--                            "cornerRadius": 2, --}}
+      {{--                            "plugins": { --}}
+      {{--                              "tooltip": { --}}
+      {{--                                "hasIndicator": true, --}}
+      {{--                                "mode": "index", --}}
+      {{--                                "intersect": false --}}
+      {{--                              } --}}
+      {{--                            }, --}}
+      {{--                            "hover": { --}}
+      {{--                              "mode": "nearest", --}}
+      {{--                              "intersect": true --}}
+      {{--                            } --}}
+      {{--                          } --}}
+      {{--                        }' --}}
+      {{--                  style="height: 15rem;"></canvas> --}}
+      {{--              </div> --}}
+      {{--              <!-- End Bar Chart --> --}}
 
-{{--              <div class="row justify-content-center">--}}
-{{--                <div class="col-auto">--}}
-{{--                  <span class="legend-indicator"></span> Consumables--}}
-{{--                </div>--}}
-{{--                <!-- End Col -->--}}
+      {{--              <div class="row justify-content-center"> --}}
+      {{--                <div class="col-auto"> --}}
+      {{--                  <span class="legend-indicator"></span> Consumables --}}
+      {{--                </div> --}}
+      {{--                <!-- End Col --> --}}
 
-{{--                <div class="col-auto">--}}
-{{--                  <span class="legend-indicator bg-primary"></span> Non-Consumables--}}
-{{--                </div>--}}
-{{--                <!-- End Col -->--}}
-{{--              </div>--}}
-{{--              <!-- End Row -->--}}
-{{--            </div>--}}
+      {{--                <div class="col-auto"> --}}
+      {{--                  <span class="legend-indicator bg-primary"></span> Non-Consumables --}}
+      {{--                </div> --}}
+      {{--                <!-- End Col --> --}}
+      {{--              </div> --}}
+      {{--              <!-- End Row --> --}}
+      {{--            </div> --}}
 
-{{--            <div class="col-lg-3">--}}
-{{--              <div class="row">--}}
-{{--                <div class="col-sm-6 col-lg-12">--}}
-{{--                  <!-- Stats -->--}}
-{{--                  <div class="d-flex justify-content-center flex-column" style="min-height: 9rem;">--}}
-{{--                    <h6 class="card-subtitle">Non Consumables Dispatched</h6>--}}
-{{--                    <span class="d-block display-4 text-dark mb-1 me-3">4</span>--}}
-{{--                    <span class="d-block text-success">--}}
-{{--                      <i class="bi-graph-up me-1"></i> 2,401.02 (3.7%)--}}
-{{--                    </span>--}}
-{{--                  </div>--}}
-{{--                  <!-- End Stats -->--}}
+      {{--            <div class="col-lg-3"> --}}
+      {{--              <div class="row"> --}}
+      {{--                <div class="col-sm-6 col-lg-12"> --}}
+      {{--                  <!-- Stats --> --}}
+      {{--                  <div class="d-flex justify-content-center flex-column" style="min-height: 9rem;"> --}}
+      {{--                    <h6 class="card-subtitle">Non Consumables Dispatched</h6> --}}
+      {{--                    <span class="d-block display-4 text-dark mb-1 me-3">4</span> --}}
+      {{--                    <span class="d-block text-success"> --}}
+      {{--                      <i class="bi-graph-up me-1"></i> 2,401.02 (3.7%) --}}
+      {{--                    </span> --}}
+      {{--                  </div> --}}
+      {{--                  <!-- End Stats --> --}}
 
-{{--                  <hr class="d-none d-lg-block my-0">--}}
-{{--                </div>--}}
-{{--                <!-- End Col -->--}}
+      {{--                  <hr class="d-none d-lg-block my-0"> --}}
+      {{--                </div> --}}
+      {{--                <!-- End Col --> --}}
 
-{{--                <div class="col-sm-6 col-lg-12">--}}
-{{--                  <!-- Stats -->--}}
-{{--                  <div class="d-flex justify-content-center flex-column" style="min-height: 9rem;">--}}
-{{--                    <h6 class="card-subtitle">Consumables Dispatched</h6>--}}
-{{--                    <span class="d-block display-4 text-dark mb-1 me-3">10</span>--}}
-{{--                    <span class="d-block text-danger">--}}
-{{--                      <i class="bi-graph-down me-1"></i> +3,301 (1.2%)--}}
-{{--                    </span>--}}
-{{--                  </div>--}}
-{{--                  <!-- End Stats -->--}}
-{{--                </div>--}}
-{{--                <!-- End Col -->--}}
-{{--              </div>--}}
-{{--              <!-- End Row -->--}}
-{{--            </div>--}}
-{{--          </div>--}}
-{{--          <!-- End Row -->--}}
-{{--        </div>--}}
-{{--        <!-- End Body -->--}}
-{{--      </div>--}}
-{{--      <!-- End Card -->--}}
+      {{--                <div class="col-sm-6 col-lg-12"> --}}
+      {{--                  <!-- Stats --> --}}
+      {{--                  <div class="d-flex justify-content-center flex-column" style="min-height: 9rem;"> --}}
+      {{--                    <h6 class="card-subtitle">Consumables Dispatched</h6> --}}
+      {{--                    <span class="d-block display-4 text-dark mb-1 me-3">10</span> --}}
+      {{--                    <span class="d-block text-danger"> --}}
+      {{--                      <i class="bi-graph-down me-1"></i> +3,301 (1.2%) --}}
+      {{--                    </span> --}}
+      {{--                  </div> --}}
+      {{--                  <!-- End Stats --> --}}
+      {{--                </div> --}}
+      {{--                <!-- End Col --> --}}
+      {{--              </div> --}}
+      {{--              <!-- End Row --> --}}
+      {{--            </div> --}}
+      {{--          </div> --}}
+      {{--          <!-- End Row --> --}}
+      {{--        </div> --}}
+      {{--        <!-- End Body --> --}}
+      {{--      </div> --}}
+      {{--      <!-- End Card --> --}}
 
       <div class="row">
         <div class="col-lg-6 mb-3 mb-lg-5">
@@ -286,7 +286,7 @@
                   <!-- List Group -->
                   <ul class="list-group list-group-flush list-group-start-bordered">
 
-                    @foreach($progressRepair as $repair)
+                    @foreach ($progressRepair as $repair)
                       <!-- Item -->
                       <li class="list-group-item">
                         <a class="list-group-item-action border-primary" href="{{ route('ongoing.index') }}">
@@ -338,7 +338,7 @@
                   <!-- List Group -->
                   <ul class="list-group list-group-flush list-group-start-bordered">
 
-                    @foreach($releaseBorrow as $borrow)
+                    @foreach ($releaseBorrow as $borrow)
                       <!-- Item -->
                       <li class="list-group-item">
                         <a class="list-group-item-action border-success" href="{{ route('new-request.index') }}">
@@ -381,11 +381,11 @@
 @endsection
 
 @push('scripts')
-  <script src="{{ Vite::asset('resources/vendor/daterangepicker/moment.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/daterangepicker/daterangepicker.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/chart.js/dist/Chart.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/chartjs-chart-matrix/dist/chartjs-chart-matrix.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/tom-select/dist/js/tom-select.complete.min.js') }}"></script>
+  <script src="{{ asset('vendor/daterangepicker/moment.min.js') }}"></script>
+  <script src="{{ asset('vendor/daterangepicker/daterangepicker.js') }}"></script>
+  <script src="{{ asset('vendor/chart.js/dist/Chart.min.js') }}"></script>
+  <script src="{{ asset('vendor/chartjs-chart-matrix/dist/chartjs-chart-matrix.min.js') }}"></script>
+  <script src="{{ asset('vendor/tom-select/dist/js/tom-select.complete.min.js') }}"></script>
 
   <!-- JS Themes -->
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>

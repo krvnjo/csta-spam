@@ -5,7 +5,7 @@
 @endsection
 
 @push('styles')
-  <link href="{{ Vite::asset('resources/vendor/hs-img-compare/hs-img-compare.css') }}" rel="stylesheet">
+  <link href="{{ asset('vendor/hs-img-compare/hs-img-compare.css') }}" rel="stylesheet">
 @endpush
 
 @section('main-content')
@@ -334,9 +334,9 @@
 @endsection
 
 @push('scripts')
-  <script src="{{ Vite::asset('resources/vendor/hs-header/dist/hs-header.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/hs-img-compare/hs-img-compare.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/hs-go-to/dist/hs-go-to.min.js') }}"></script>
+  <script src="{{ asset('vendor/hs-header/dist/hs-header.min.js') }}"></script>
+  <script src="{{ asset('vendor/hs-img-compare/hs-img-compare.js') }}"></script>
+  <script src="{{ asset('vendor/hs-go-to/dist/hs-go-to.min.js') }}"></script>
 
   <!-- JS Themes -->
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>

@@ -28,7 +28,7 @@
   <body class="has-navbar-vertical-aside navbar-vertical-aside-show-xl footer-offset">
     <!-- JS Appearance -->
     <script src="{{ Vite::asset('resources/js/hs.theme-appearance.js') }}"></script>
-    <script src="{{ Vite::asset('resources/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js') }}"></script>
+    <script src="{{ asset('vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js') }}"></script>
 
     <!-- ========== Header ========== -->
     @include('layouts.header')
@@ -51,12 +51,12 @@
     <!-- ========== End Secondary Content ========== -->
 
     <!-- JS Global Compulsory -->
-    <script src="{{ Vite::asset('resources/vendor/jquery/dist/jquery.min.js') }}"></script>
-    <script src="{{ Vite::asset('resources/vendor/jquery-migrate/dist/jquery-migrate.min.js') }}"></script>
-    <script src="{{ Vite::asset('resources/vendor/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ Vite::asset('resources/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside.min.js') }}"></script>
-    <script src="{{ Vite::asset('resources/vendor/hs-form-search/dist/hs-form-search.min.js') }}"></script>
-    <script src="{{ Vite::asset('resources/vendor/list.js/dist/list.min.js') }}"></script>
+    <script src="{{ asset('vendor/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ asset('vendor/jquery-migrate/dist/jquery-migrate.min.js') }}"></script>
+    <script src="{{ asset('vendor/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside.min.js') }}"></script>
+    <script src="{{ asset('vendor/hs-form-search/dist/hs-form-search.min.js') }}"></script>
+    <script src="{{ asset('vendor/list.js/dist/list.min.js') }}"></script>
 
     <!-- JS Plugins -->
     @stack('scripts')

@@ -26,7 +26,7 @@
   <body>
     <!-- JS Appearance -->
     <script src="{{ Vite::asset('resources/js/hs.theme-appearance.js') }}"></script>
-    <script src="{{ Vite::asset('resources/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js') }}"></script>
+    <script src="{{ asset('vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js') }}"></script>
 
     <!-- ========== Main Content ========== -->
     <main class="main" id="content">
@@ -68,9 +68,9 @@
     <!-- ========== End Main Content ========== -->
 
     <!-- JS Global Compulsory -->
-    <script src="{{ Vite::asset('resources/vendor/jquery/dist/jquery.min.js') }}"></script>
-    <script src="{{ Vite::asset('resources/vendor/jquery-migrate/dist/jquery-migrate.min.js') }}"></script>
-    <script src="{{ Vite::asset('resources/vendor/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('vendor/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ asset('vendor/jquery-migrate/dist/jquery-migrate.min.js') }}"></script>
+    <script src="{{ asset('vendor/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
 
     <!-- JS Themes -->
     <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>

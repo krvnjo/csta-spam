@@ -5,7 +5,7 @@
 @endsection
 
 @push('styles')
-  <link href="{{ Vite::asset('resources/vendor/daterangepicker/daterangepicker.css') }}" rel="stylesheet">
+  <link href="{{ asset('vendor/daterangepicker/daterangepicker.css') }}" rel="stylesheet">
 @endpush
 
 @section('main-content')
@@ -407,9 +407,9 @@
 @endsection
 
 @push('scripts')
-  <script src="{{ Vite::asset('resources/vendor/chart.js/dist/Chart.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/daterangepicker/moment.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/daterangepicker/daterangepicker.js') }}"></script>
+  <script src="{{ asset('vendor/chart.js/dist/Chart.min.js') }}"></script>
+  <script src="{{ asset('vendor/daterangepicker/moment.min.js') }}"></script>
+  <script src="{{ asset('vendor/daterangepicker/daterangepicker.js') }}"></script>
 
   <!-- JS Themes -->
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>

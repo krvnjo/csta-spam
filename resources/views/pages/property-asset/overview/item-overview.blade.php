@@ -5,9 +5,9 @@
 @endsection
 
 @push('styles')
-  <link href="{{ Vite::asset('resources/vendor/daterangepicker/daterangepicker.css') }}" rel="stylesheet">
-  <link href="{{ Vite::asset('resources/vendor/jsvectormap/dist/css/jsvectormap.min.css') }}" rel="stylesheet">
-  <link href="{{ Vite::asset('resources/vendor/tom-select/dist/css/tom-select.bootstrap5.css') }}" rel="stylesheet">
+  <link href="{{ asset('vendor/daterangepicker/daterangepicker.css') }}" rel="stylesheet">
+  <link href="{{ asset('vendor/jsvectormap/dist/css/jsvectormap.min.css') }}" rel="stylesheet">
+  <link href="{{ asset('vendor/tom-select/dist/css/tom-select.bootstrap5.css') }}" rel="stylesheet">
 @endpush
 
 @section('main-content')
@@ -419,30 +419,30 @@
 
 @push('scripts')
   <!-- JS Other Plugins -->
-  <script src="{{ Vite::asset('resources/vendor/hs-toggle-password/dist/js/hs-toggle-password.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/hs-file-attach/dist/hs-file-attach.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/hs-nav-scroller/dist/hs-nav-scroller.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/hs-step-form/dist/hs-step-form.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/hs-counter/dist/hs-counter.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/appear/dist/appear.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/imask/dist/imask.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/tom-select/dist/js/tom-select.complete.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/datatables/media/js/jquery.dataTables.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/datatables.net.extensions/select/select.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.flash.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/jszip/dist/jszip.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/pdfmake/build/pdfmake.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/pdfmake/build/vfs_fonts.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/chart.js/dist/chart.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/daterangepicker/moment.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/daterangepicker/daterangepicker.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/chartjs-chart-matrix/dist/chartjs-chart-matrix.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js') }}"></script>
+  <script src="{{ asset('vendor/hs-toggle-password/dist/js/hs-toggle-password.js') }}"></script>
+  <script src="{{ asset('vendor/hs-file-attach/dist/hs-file-attach.min.js') }}"></script>
+  <script src="{{ asset('vendor/hs-nav-scroller/dist/hs-nav-scroller.min.js') }}"></script>
+  <script src="{{ asset('vendor/hs-step-form/dist/hs-step-form.min.js') }}"></script>
+  <script src="{{ asset('vendor/hs-counter/dist/hs-counter.min.js') }}"></script>
+  <script src="{{ asset('vendor/appear/dist/appear.min.js') }}"></script>
+  <script src="{{ asset('vendor/imask/dist/imask.min.js') }}"></script>
+  <script src="{{ asset('vendor/tom-select/dist/js/tom-select.complete.min.js') }}"></script>
+  <script src="{{ asset('vendor/datatables/media/js/jquery.dataTables.min.js') }}"></script>
+  <script src="{{ asset('vendor/datatables.net.extensions/select/select.min.js') }}"></script>
+  <script src="{{ asset('vendor/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
+  <script src="{{ asset('vendor/datatables.net-buttons/js/buttons.flash.min.js') }}"></script>
+  <script src="{{ asset('vendor/jszip/dist/jszip.min.js') }}"></script>
+  <script src="{{ asset('vendor/pdfmake/build/pdfmake.min.js') }}"></script>
+  <script src="{{ asset('vendor/pdfmake/build/vfs_fonts.js') }}"></script>
+  <script src="{{ asset('vendor/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
+  <script src="{{ asset('vendor/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
+  <script src="{{ asset('vendor/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
+  <script src="{{ asset('vendor/chart.js/dist/chart.min.js') }}"></script>
+  <script src="{{ asset('vendor/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js') }}"></script>
+  <script src="{{ asset('vendor/daterangepicker/moment.min.js') }}"></script>
+  <script src="{{ asset('vendor/daterangepicker/daterangepicker.js') }}"></script>
+  <script src="{{ asset('vendor/chartjs-chart-matrix/dist/chartjs-chart-matrix.min.js') }}"></script>
+  <script src="{{ asset('vendor/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js') }}"></script>
 
   <!-- JS Themes -->
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>

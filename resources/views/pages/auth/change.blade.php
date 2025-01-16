@@ -129,8 +129,8 @@
 @endsection
 
 @push('scripts')
-  <script src="{{ Vite::asset('resources/vendor/imask/dist/imask.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/hs-toggle-password/dist/js/hs-toggle-password.js') }}"></script>
+  <script src="{{ asset('vendor/imask/dist/imask.min.js') }}"></script>
+  <script src="{{ asset('vendor/hs-toggle-password/dist/js/hs-toggle-password.js') }}"></script>
 
   <!-- JS Modules -->
   <script src="{{ Vite::asset('resources/js/modules/auth/auth-user.js') }}"></script>

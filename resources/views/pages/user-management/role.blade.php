@@ -5,7 +5,7 @@
 @endsection
 
 @push('styles')
-  <link href="{{ Vite::asset('resources/vendor/tom-select/dist/css/tom-select.bootstrap5.css') }}" rel="stylesheet">
+  <link href="{{ asset('vendor/tom-select/dist/css/tom-select.bootstrap5.css') }}" rel="stylesheet">
 @endpush
 
 @section('main-content')
@@ -171,8 +171,8 @@
 @endsection
 
 @push('scripts')
-  <script src="{{ Vite::asset('resources/vendor/hs-count-characters/dist/js/hs-count-characters.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/tom-select/dist/js/tom-select.complete.min.js') }}"></script>
+  <script src="{{ asset('vendor/hs-count-characters/dist/js/hs-count-characters.js') }}"></script>
+  <script src="{{ asset('vendor/tom-select/dist/js/tom-select.complete.min.js') }}"></script>
 
   <!-- JS Modules -->
   <script src="{{ Vite::asset('resources/js/modules/user-management/role.js') }}"></script>

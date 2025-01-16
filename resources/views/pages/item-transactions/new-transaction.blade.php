@@ -5,9 +5,9 @@
 @endsection
 
 @push('styles')
-  <link href="{{ Vite::asset('resources/vendor/daterangepicker/daterangepicker.css') }}" rel="stylesheet">
-  <link href="{{ Vite::asset('resources/vendor/jsvectormap/dist/css/jsvectormap.min.css') }}" rel="stylesheet">
-  <link href="{{ Vite::asset('resources/vendor/tom-select/dist/css/tom-select.bootstrap5.css') }}" rel="stylesheet">
+  <link href="{{ asset('vendor/daterangepicker/daterangepicker.css') }}" rel="stylesheet">
+  <link href="{{ asset('vendor/jsvectormap/dist/css/jsvectormap.min.css') }}" rel="stylesheet">
+  <link href="{{ asset('vendor/tom-select/dist/css/tom-select.bootstrap5.css') }}" rel="stylesheet">
 @endpush
 
 @section('main-content')
@@ -92,12 +92,12 @@
                   <label class="form-label" for="newTransactionRequestersFilter">Requesters</label>
                   <div class="tom-select-custom">
                     <select class="js-select js-datatable-filter form-select" id="newTransactionRequestersFilter" data-target-column-index="2"
-                            data-hs-tom-select-options='{
+                      data-hs-tom-select-options='{
                         "singleMultiple": true,
                         "hideSelected": false,
                         "placeholder": "All Requesters"
                       }'
-                            autocomplete="off" multiple>
+                      autocomplete="off" multiple>
                       @foreach ($requesters as $request)
                         <option value="{{ $request->name }}">{{ $request->name }}</option>
                       @endforeach
@@ -112,13 +112,13 @@
                 <div class="mb-3">
                   <label class="form-label" for="newTransactionDateRangeFilter">Date Range Transaction</label>
                   <input class="js-daterangepicker-clear js-datatable-filter form-control daterangepicker-custom-input" data-target-column-index="6"
-                         data-hs-daterangepicker-options='{
+                    data-hs-daterangepicker-options='{
                       "autoUpdateInput": false,
                       "locale": {
                         "cancelLabel": "Clear"
                       }
                     }'
-                         type="text" placeholder="Select date range">
+                    type="text" placeholder="Select date range">
                 </div>
               </div>
               <!-- End Date Range -->
@@ -128,13 +128,13 @@
                 <div class="mb-3">
                   <label class="form-label" for="newTransactionDateRangeFilter">Date Range Created</label>
                   <input class="js-daterangepicker-clear js-datatable-filter form-control daterangepicker-custom-input" data-target-column-index="7"
-                         data-hs-daterangepicker-options='{
+                    data-hs-daterangepicker-options='{
                       "autoUpdateInput": false,
                       "locale": {
                         "cancelLabel": "Clear"
                       }
                     }'
-                         type="text" placeholder="Select date range">
+                    type="text" placeholder="Select date range">
                 </div>
               </div>
               <!-- End Date Range -->
@@ -146,7 +146,7 @@
         <!-- Body -->
         <div class="table-responsive datatable-custom">
           <table class="table table-lg table-borderless table-thead-bordered table-hover table-nowrap table-align-middle card-table w-100" id="newTransactionDatatable"
-                 data-hs-datatables-options='{
+            data-hs-datatables-options='{
               "columnDefs": [{
                  "targets": [8],
                  "orderable": false
@@ -162,58 +162,58 @@
               "pagination": "newTransactionDatatablePagination"
             }'>
             <thead class="thead-light">
-            <tr>
-              <th class="d-none"></th>
-              <th>Transaction No.</th>
-              <th>Requester</th>
-              <th>Requested Items</th>
-              <th>Quantity</th>
-              <th>Remarks</th>
-              <th>Received By</th>
-              <th>Transaction Date</th>
-              <th>Action</th>
-            </tr>
+              <tr>
+                <th class="d-none"></th>
+                <th>Transaction No.</th>
+                <th>Requester</th>
+                <th>Requested Items</th>
+                <th>Quantity</th>
+                <th>Remarks</th>
+                <th>Received By</th>
+                <th>Transaction Date</th>
+                <th>Action</th>
+              </tr>
             </thead>
             <tbody>
-            @foreach ($transactions->sortByDesc('created_at') as $transaction)
-              <tr>
-                <td class="d-none" data-transaction-id="{{ Crypt::encryptString($transaction->id) }}"></td>
-                <td>{{ $transaction->transaction_num }}</td>
-                <td>{{ $transaction->requester->department->code }} | {{ $transaction->requester->name }}</td>
-                <td>
-                  @foreach ($transaction->transactionItems as $item)
-                    <span style="color:gray"
-                          @if (!empty($transaction->remarks) && strlen($item->property->name) > 25) data-bs-toggle="tooltip"
+              @foreach ($transactions->sortByDesc('created_at') as $transaction)
+                <tr>
+                  <td class="d-none" data-transaction-id="{{ Crypt::encryptString($transaction->id) }}"></td>
+                  <td>{{ $transaction->transaction_num }}</td>
+                  <td>{{ $transaction->requester->department->code }} | {{ $transaction->requester->name }}</td>
+                  <td>
+                    @foreach ($transaction->transactionItems as $item)
+                      <span style="color:gray"
+                        @if (!empty($transaction->remarks) && strlen($item->property->name) > 25) data-bs-toggle="tooltip"
                           data-bs-html="true"
                           data-bs-placement="top"
                           title="{{ $item->property->name }}" @endif>
                         {{ Str::limit(!empty($item->property->name) ? $item->property->name : 'No remarks provided', 30) }}
                       </span><br>
-                  @endforeach
-                </td>
-                <td>
-                  @foreach ($transaction->transactionItems as $item)
-                    {{ $item->quantity }} - {{ $item->property->unit->name }}<br>
-                  @endforeach
-                </td>
-                <td>
+                    @endforeach
+                  </td>
+                  <td>
+                    @foreach ($transaction->transactionItems as $item)
+                      {{ $item->quantity }} - {{ $item->property->unit->name }}<br>
+                    @endforeach
+                  </td>
+                  <td>
                     <span style="color:gray"
-                          @if (!empty($transaction->remarks) && strlen($transaction->remarks) > 20) data-bs-toggle="tooltip"
+                      @if (!empty($transaction->remarks) && strlen($transaction->remarks) > 20) data-bs-toggle="tooltip"
                           data-bs-html="true"
                           data-bs-placement="top"
                           title="{{ $transaction->remarks }}" @endif>
                       {{ Str::limit(!empty($transaction->remarks) ? $transaction->remarks : 'No remarks provided', 20) }}
                     </span>
-                </td>
-                <td>{{ $transaction->received_by }}</td>
-                <td><i class="bi-calendar-event me-1"></i>{{ \Carbon\Carbon::parse($transaction->transaction_date)->format('F j, Y') }}</td>
-                <td>
-                  <div class="btn-group position-static">
-                    <button class="btn btn-white btn-sm btnViewItem" type="button"><i class="bi-eye"></i> View</button>
-                  </div>
-                </td>
-              </tr>
-            @endforeach
+                  </td>
+                  <td>{{ $transaction->received_by }}</td>
+                  <td><i class="bi-calendar-event me-1"></i>{{ \Carbon\Carbon::parse($transaction->transaction_date)->format('F j, Y') }}</td>
+                  <td>
+                    <div class="btn-group position-static">
+                      <button class="btn btn-white btn-sm btnViewItem" type="button"><i class="bi-eye"></i> View</button>
+                    </div>
+                  </td>
+                </tr>
+              @endforeach
             </tbody>
           </table>
         </div>
@@ -227,7 +227,7 @@
                 <span class="me-2">Showing:</span>
                 <div class="tom-select-custom tom-page-w">
                   <select class="js-select form-select form-select-borderless" id="newTransactionDatatableEntries"
-                          data-hs-tom-select-options='{
+                    data-hs-tom-select-options='{
                       "hideSearch": true,
                       "searchInDropdown": false
                     }'>
@@ -256,27 +256,27 @@
 @endsection
 
 @section('sec-content')
-<x-item-transactions.add-transaction :requesters="$requesters" :items="$items" />
-<x-item-transactions.view-transaction />
+  <x-item-transactions.add-transaction :requesters="$requesters" :items="$items" />
+  <x-item-transactions.view-transaction />
 @endsection
 
 @push('scripts')
   <script src="{{ Vite::asset('resources/js/modules/item-transactions/new-transaction.js') }}"></script>
 
-  <script src="{{ Vite::asset('resources/vendor/tom-select/dist/js/tom-select.complete.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/hs-add-field/dist/hs-add-field.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/daterangepicker/moment.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/daterangepicker/daterangepicker.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/datatables/media/js/jquery.dataTables.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/datatables.net.extensions/select/select.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.flash.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/jszip/dist/jszip.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/pdfmake/build/pdfmake.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/pdfmake/build/vfs_fonts.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
+  <script src="{{ asset('vendor/tom-select/dist/js/tom-select.complete.min.js') }}"></script>
+  <script src="{{ asset('vendor/hs-add-field/dist/hs-add-field.min.js') }}"></script>
+  <script src="{{ asset('vendor/daterangepicker/moment.min.js') }}"></script>
+  <script src="{{ asset('vendor/daterangepicker/daterangepicker.js') }}"></script>
+  <script src="{{ asset('vendor/datatables/media/js/jquery.dataTables.min.js') }}"></script>
+  <script src="{{ asset('vendor/datatables.net.extensions/select/select.min.js') }}"></script>
+  <script src="{{ asset('vendor/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
+  <script src="{{ asset('vendor/datatables.net-buttons/js/buttons.flash.min.js') }}"></script>
+  <script src="{{ asset('vendor/jszip/dist/jszip.min.js') }}"></script>
+  <script src="{{ asset('vendor/pdfmake/build/pdfmake.min.js') }}"></script>
+  <script src="{{ asset('vendor/pdfmake/build/vfs_fonts.js') }}"></script>
+  <script src="{{ asset('vendor/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
+  <script src="{{ asset('vendor/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
+  <script src="{{ asset('vendor/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
 
   <!-- JS Themes -->
   <script src="{{ Vite::asset('resources/js/theme.min.js') }}"></script>
@@ -302,12 +302,12 @@
       HSCore.components.HSDatatables.init($("#newTransactionDatatable"), {
         dom: "Bfrtip",
         buttons: [{
-          extend: "copy",
-          className: "d-none",
-          exportOptions: {
-            columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(5)):not(:nth-child(7))'
-          }
-        },
+            extend: "copy",
+            className: "d-none",
+            exportOptions: {
+              columns: ':not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(5)):not(:nth-child(7))'
+            }
+          },
           {
             extend: "print",
             className: "d-none",
@@ -399,7 +399,7 @@
               inputElement.setAttribute('required', 'true');
             }
 
-            selectElement.addEventListener('change', function () {
+            selectElement.addEventListener('change', function() {
               const selectedOption = selectElement.selectedOptions[0];
               const maxQuantity = selectedOption ? selectedOption.getAttribute('data-max') : 0;
 

@@ -5,7 +5,7 @@
 @endsection
 
 @push('styles')
-  <link href="{{ Vite::asset('resources/vendor/tom-select/dist/css/tom-select.bootstrap5.css') }}" rel="stylesheet">
+  <link href="{{ asset('vendor/tom-select/dist/css/tom-select.bootstrap5.css') }}" rel="stylesheet">
 @endpush
 
 @section('main-content')
@@ -304,18 +304,18 @@
 @endsection
 
 @push('scripts')
-  <script src="{{ Vite::asset('resources/vendor/tom-select/dist/js/tom-select.complete.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/imask/dist/imask.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/datatables/media/js/jquery.dataTables.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/datatables.net.extensions/select/select.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.flash.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/jszip/dist/jszip.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/pdfmake/build/pdfmake.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/pdfmake/build/vfs_fonts.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
-  <script src="{{ Vite::asset('resources/vendor/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
+  <script src="{{ asset('vendor/tom-select/dist/js/tom-select.complete.min.js') }}"></script>
+  <script src="{{ asset('vendor/imask/dist/imask.min.js') }}"></script>
+  <script src="{{ asset('vendor/datatables/media/js/jquery.dataTables.min.js') }}"></script>
+  <script src="{{ asset('vendor/datatables.net.extensions/select/select.min.js') }}"></script>
+  <script src="{{ asset('vendor/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
+  <script src="{{ asset('vendor/datatables.net-buttons/js/buttons.flash.min.js') }}"></script>
+  <script src="{{ asset('vendor/jszip/dist/jszip.min.js') }}"></script>
+  <script src="{{ asset('vendor/pdfmake/build/pdfmake.min.js') }}"></script>
+  <script src="{{ asset('vendor/pdfmake/build/vfs_fonts.js') }}"></script>
+  <script src="{{ asset('vendor/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
+  <script src="{{ asset('vendor/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
+  <script src="{{ asset('vendor/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
 
   <!-- JS Modules -->
   <script src="{{ Vite::asset('resources/js/modules/file-maintenance/requester-crud.js') }}"></script>

@@ -270,9 +270,9 @@
     <!-- ========== End Secondary Content ========== -->
 
     <!-- JS Global Compulsory -->
-    <script src="{{ Vite::asset('resources/vendor/jquery/dist/jquery.min.js') }}"></script>
-    <script src="{{ Vite::asset('resources/vendor/jquery-migrate/dist/jquery-migrate.min.js') }}"></script>
-    <script src="{{ Vite::asset('resources/vendor/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('vendor/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ asset('vendor/jquery-migrate/dist/jquery-migrate.min.js') }}"></script>
+    <script src="{{ asset('vendor/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
 
     <!-- JS Plugins -->
     @stack('scripts')
