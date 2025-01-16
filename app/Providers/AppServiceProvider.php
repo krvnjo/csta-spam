@@ -25,6 +25,7 @@ use App\Observers\UserObserver;
 use App\Services\AccessService;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -43,6 +44,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if (env('APP_ENV') !== 'local') {
+            URL::forceScheme('https');
+        }
         Blade::directive('access', function ($expression) {
             return "<?php if(app('App\\Services\\AccessService')->hasAccess($expression)): ?>";
         });
